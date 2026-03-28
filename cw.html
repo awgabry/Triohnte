@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triohnte | Crônicas</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- ESTILIZAÇÃO --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* Mesma cor de fundo do site principal */
+            background-color: #050505; 
+            color: #a39b8f;
+            font-family: 'Crimson Pro', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* Container Principal */
+        .conteudo-central {
+            max-width: 800px;
+            width: 100%;
+            text-align: center; /* Centraliza o Título */
+            border: 1px solid #1a1a1a; /* Bordas padronizadas */
+            padding: 60px 40px;
+            background: #0a0a0a; /* Leve destaque do fundo */
+            position: relative;
+        }
+
+        /* Detalhe de borda lateral (opcional, seguindo o estilo dos cards) */
+        .conteudo-central::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #ffc88a; /* Cor bege/osso que você definiu */
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: #ffdab3;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        .texto-secao {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            text-align: justify; /* Texto Justificado */
+            color: #a39b8f;
+        }
+
+        /* Responsividade para celulares */
+        @media (max-width: 600px) {
+            .conteudo-central {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="conteudo-central">
+        <h1>Título da Crônica</h1>
+        
+        <div class="texto-secao">
+            <p>
+                Escreva aqui o seu texto sobre Walingardyn. Este parágrafo está configurado para ser totalmente 
+                justificado, garantindo que as margens esquerda e direita fiquem alinhadas, criando um visual 
+                organizado e profissional para a leitura de contos e documentos históricos do seu universo. 
+                As bordas seguem o padrão sóbrio e minimalista que estabelecemos para o projeto Triohnte.
+            </p>
+            <br>
+            <p>
+                O fundo mantém a cor escura profunda para garantir o contraste ideal com a fonte em tom de osso, 
+                evitando o cansaço visual durante leituras longas. Sinta-se à vontade para adicionar quantos 
+                parágrafos desejar dentro desta seção.
+            </p>
+        </div>
+    </section>
+
+</body>
+</html>
