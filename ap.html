@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Triohnte | Crônicas</title>
+    <title>Ruínas de Mavul</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 
     <style>
-        /* --- ESTILIZAÇÃO --- */
+        /* --- ESTILIZAÇÃO BASE --- */
         * {
             margin: 0;
             padding: 0;
@@ -16,84 +16,166 @@
         }
 
         body {
-            /* Mesma cor de fundo do site principal */
             background-color: #050505; 
             color: #a39b8f;
             font-family: 'Crimson Pro', serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 40px 20px;
         }
 
-        /* Container Principal */
-        .conteudo-central {
+        .conteudo-central, .nova-secao {
             max-width: 800px;
             width: 100%;
-            text-align: center; /* Centraliza o Título */
-            border: 1px solid #1a1a1a; /* Bordas padronizadas */
+            text-align: center;
+            border: 1px solid #1a1a1a;
             padding: 60px 40px;
-            background: #0a0a0a; /* Leve destaque do fundo */
-            position: relative;
+            background: #0a0a0a;
+            margin-bottom: 40px;
         }
 
-        /* Detalhe de borda lateral (opcional, seguindo o estilo dos cards) */
-        .conteudo-central::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 3px;
-            background: #ffc88a; /* Cor bege/osso que você definiu */
+        .imagem-secao {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: block;
+            margin: 0 auto 40px auto;
         }
 
-        h1 {
+
+
+
+/* --- REGRA PARA O EFEITO DE DEGRADÊ NOS TÍTULOS (H1 e H2) --- */
+h1, h2 {
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    display: inline-block; /* Necessário para o gradiente preencher apenas o texto */
+    
+    /* Gradiente Metálico */
+    background: linear-gradient(
+        to bottom, 
+        #f1d5a5 0%,   /* Topo claro */
+        #d4a356 45%,  /* Dourado médio */
+        #4e3419 50%,  /* Linha de sombra central (o "corte" do metal) */
+        #b88640 55%,  /* Retorno ao dourado */
+        #8a5d2e 100%  /* Base bronze escuro */
+    );
+    
+    /* Clips para fazer o degradê aparecer apenas no texto */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    
+    font-weight: 700;
+    
+    /* Filtro para profundidade */
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
+}
+
+h1 { 
+    font-size: 2.5rem; 
+    margin-bottom: 40px; 
+}
+
+h2 { 
+    font-size: 1.8rem; 
+    margin-bottom: 20px; 
+}
+
+
+
+        
+        h1, h2 {
             font-family: 'Cinzel', serif;
             color: #ffdab3;
-            font-size: 2.5rem;
-            margin-bottom: 40px;
-            letter-spacing: 5px;
             text-transform: uppercase;
+            letter-spacing: 5px;
         }
+
+        h1 { font-size: 2.5rem; margin-bottom: 40px; }
+        h2 { font-size: 1.8rem; margin-bottom: 20px; }
 
         .texto-secao {
             font-size: 1.25rem;
             line-height: 1.8;
-            text-align: justify; /* Texto Justificado */
+            text-align: justify;
             color: #a39b8f;
+        }   
+
+        /* --- SOLUÇÃO DOS BRASÕES (20x20) --- */
+        .lista-soberanias {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
         }
 
-        /* Responsividade para celulares */
+        .item-soberania {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Centraliza a linha de texto + brasão */
+            margin-bottom: 10px;
+        }
+
+        /* O !important garante que o tamanho não seja sobrescrito */
+        .foto-reino {
+            width: 100px !important;
+            height: 100px !important;
+            min-width: 20px !important;
+            object-fit: contain;
+            margin-left: 10px;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
         @media (max-width: 600px) {
-            .conteudo-central {
-                padding: 30px 20px;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
+            .conteudo-central, .nova-secao { padding: 30px 20px; }
+            h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 
     <section class="conteudo-central">
-        <h1>Título da Crônica</h1>
-        
+        <img src="seserttemple.png" alt="Ruínas de Mavul" class="imagem-secao">
+        <h1>Ruínas de Mavul</h1>
         <div class="texto-secao">
-            <p>
-                Escreva aqui o seu texto sobre Walingardyn. Este parágrafo está configurado para ser totalmente 
-                justificado, garantindo que as margens esquerda e direita fiquem alinhadas, criando um visual 
-                organizado e profissional para a leitura de contos e documentos históricos do seu universo. 
-                As bordas seguem o padrão sóbrio e minimalista que estabelecemos para o projeto Triohnte.
-            </p>
+            <p>Localizadas no continente de Mavul, as ruínas do antigo império de Cyannon descansam sobre o território do reino de Brangoshy o que impede que exploradores se aproximem do local. Considerado um local quase sagrado para fundação civilizacional do mundo de Walingardyn.</p>
             <br>
-            <p>
-                O fundo mantém a cor escura profunda para garantir o contraste ideal com a fonte em tom de osso, 
-                evitando o cansaço visual durante leituras longas. Sinta-se à vontade para adicionar quantos 
-                parágrafos desejar dentro desta seção.
-            </p>
+            <p>No local descansam templos enormes com paredes que medem metros de altura, com portas arqueadas, algumas submerssas em terra e escombros, ofuscando cômodos e salões inteiros. Nas paredes, desenhos das letras que hoje conhecemos como Alfabeto Mavulês, graças aos materiais de estudo escritos por Cahatsh Balmu Sell, um estudioso Mavulês.</p>
+        </div>
+        <img src="sell.png" alt="Estudo Arqueológico" class="imagem-secao" style="margin-top: 40px; margin-bottom: 0;">
+    </section>
+
+    <section class="nova-secao">
+        <img src="mavul.png" alt="Mapa de Mavul" class="imagem-secao">
+        <h2>Reinos, Terras e Famílias Mavulêsas</h2>
+        <div class="texto-secao">
+            <p style="text-align: center;">Mavul possui três reinos territoriais de impressionante diametro, que se conectam na ponta interior do Estuário Continental do Sangue Verde, importante área de desembarque de recursos dentro do continente e pesca. No mundo de Walingardyn existem familias de grande e pequeno porte. As familias mais fortes de Mavul são: </p>
+            <ul class="lista-soberanias">
+                <li class="item-soberania">
+                    <span><strong>Reino de Sartaha:</strong> Família <em>Korsorovýh</em></span>
+                    <img src="reinosdemavul/korsorovyh.png" class="foto-reino">
+                </li>
+                <li class="item-soberania">
+                    <span><strong>Reino de Montblawn:</strong> Família <em>Serantha</em></span>
+                    <img src="reinosdemavul/serantha.png" class="foto-reino">
+                </li>
+                <li class="item-soberania">
+                    <span><strong>Reino de Brangoshy:</strong> Família <em>Vheynnaris</em></span>
+                    <img src="reinosdemavul/vheynnaris.png" class="foto-reino">
+                </li>
+            </ul>
+        </div>
+
+         <div class="texto-secao">
+            <p>Localizadas no continente de Mavul, as ruínas do antigo império de Cyannon descansam sobre o território do reino de Brangoshy o que impede que exploradores se aproximem do local. Considerado um local quase sagrado para fundação civilizacional do mundo de Walingardyn.</p>
+            <br>
+            <p>No local descansam templos enormes com paredes que medem metros de altura, com portas arqueadas, algumas submerssas em terra e escombros, ofuscando cômodos e salões inteiros. Nas paredes, desenhos das letras que hoje conhecemos como Alfabeto Mavulês, graças aos materiais de estudo escritos por Cahatsh Balmu Sell, um estudioso Mavulês.</p>
         </div>
     </section>
 
