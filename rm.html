@@ -20,13 +20,13 @@
             color: #a39b8f;
             font-family: 'Crimson Pro', serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column; /* Organiza os containers verticalmente */
             align-items: center;
             min-height: 100vh;
             padding: 40px 20px;
         }
 
-        /* Container Principal */
+        /* Container Principal (Seção das Ruínas) */
         .conteudo-central {
             max-width: 800px;
             width: 100%;
@@ -34,10 +34,25 @@
             border: 1px solid #1a1a1a;
             padding: 60px 40px;
             background: #0a0a0a;
-            position: relative;
+            margin-bottom: 40px; /* Espaçamento para a próxima seção */
         }
 
-        /* A linha lateral foi removida conforme solicitado */
+        /* Imagens */
+        .imagem-secao {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #333; /* Borda sutil nas imagens */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Sombra para profundidade */
+            display: block; /* Garante que margens automáticas funcionem */
+        }
+
+        .imagem-topo {
+            margin: 0 auto 40px auto; /* Centraliza e dá espaço para o título */
+        }
+
+        .imagem-final {
+            margin: 40px auto 0 auto; /* Espaço após o texto e centraliza */
+        }
 
         h1 {
             font-family: 'Cinzel', serif;
@@ -55,13 +70,34 @@
             color: #a39b8f;
         }
 
+        /* --- Nova Seção --- */
+        .nova-secao {
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            background: #080808; /* Tom ligeiramente diferente */
+            border: 1px solid #1a1a1a;
+            text-align: center;
+        }
+
+        .nova-secao h2 {
+            font-family: 'Cinzel', serif;
+            color: #ffdab3;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
         /* Responsividade para celulares */
         @media (max-width: 600px) {
-            .conteudo-central {
+            .conteudo-central, .nova-secao {
                 padding: 30px 20px;
             }
             h1 {
                 font-size: 1.8rem;
+            }
+            h2 {
+                font-size: 1.4rem;
             }
         }
     </style>
@@ -69,6 +105,9 @@
 <body>
 
     <section class="conteudo-central">
+        
+        <img src="caminho/para/sua-foto-topo.jpg" alt="Visão panorâmica das Ruínas de Mavul" class="imagem-secao imagem-topo">
+
         <h1>Ruínas de Mavul</h1>
         
         <div class="texto-secao">
@@ -77,7 +116,19 @@
             </p>
             <br>
             <p>
-                No local descansam templos enormes com paredes que medem metros de altura, com portas arqueadas, algumas submersas em terra e escombros, ofuscando cômodos e salões inteiros. Nas paredes, desenhos das letras que hoje conhecemos como Alfabeto Mavulês, graças aos materiais de estudo escritos por Cahatsh Balmu Sell, um estudioso Mavulês.
+                No local descansam templos enormes com paredes que medem metros de altura, com portas arqueadas, algumas submerssas em terra e escombros, ofuscando cômodos e salões inteiros. Nas paredes, desenhos das letras que hoje conhecemos como Alfabeto Mavulês, graças aos materiais de estudo escritos por Cahatsh Balmu Sell, um estudioso Mavulês.
+            </p>
+        </div>
+
+        <img src="caminho/para/sua-foto-final.jpg" alt="Detalhe arqueológico nas Ruínas de Mavul" class="imagem-secao imagem-final">
+
+    </section>
+
+    <section class="nova-secao">
+        <h2>Próximas Explorações</h2>
+        <div class="texto-secao">
+            <p>
+                Novas expedições arqueológicas estão sendo planejadas para investigar os níveis subterrâneos recentemente descobertos. Acredita-se que textos ainda mais antigos possam estar preservados, revelando segredos esquecidos sobre a origem da magia em Walingardyn. Os interessados devem contatar o Conselho de Brangoshy para obter as permissões necessárias.
             </p>
         </div>
     </section>
