@@ -1,2 +1,2 @@
-# Walingardyn-map
-Projeto de Triohnte
+# Site de Triohnte
+Projeto Triohnte
