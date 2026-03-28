@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 
     <style>
-        /* --- ESTILIZAÇÃO --- */
+        /* --- ESTILIZAÇÃO BASE --- */
         * {
             margin: 0;
             padding: 0;
@@ -20,48 +20,40 @@
             color: #a39b8f;
             font-family: 'Crimson Pro', serif;
             display: flex;
-            flex-direction: column; /* Organiza os containers verticalmente */
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 40px 20px;
         }
 
-        /* Container Principal (Seção das Ruínas) */
-        .conteudo-central {
+        .conteudo-central, .nova-secao {
             max-width: 800px;
             width: 100%;
             text-align: center;
             border: 1px solid #1a1a1a;
             padding: 60px 40px;
             background: #0a0a0a;
-            margin-bottom: 40px; /* Espaçamento para a próxima seção */
+            margin-bottom: 40px;
         }
 
-        /* Imagens */
         .imagem-secao {
             max-width: 100%;
             height: auto;
-            border: 1px solid #333; /* Borda sutil nas imagens */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Sombra para profundidade */
-            display: block; /* Garante que margens automáticas funcionem */
+            border: 1px solid #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: block;
+            margin: 0 auto 40px auto;
         }
 
-        .imagem-topo {
-            margin: 0 auto 40px auto; /* Centraliza e dá espaço para o título */
-        }
-
-        .imagem-final {
-            margin: 40px auto 0 auto; /* Espaço após o texto e centraliza */
-        }
-
-        h1 {
+        h1, h2 {
             font-family: 'Cinzel', serif;
             color: #ffdab3;
-            font-size: 2.5rem;
-            margin-bottom: 40px;
-            letter-spacing: 5px;
             text-transform: uppercase;
+            letter-spacing: 5px;
         }
+
+        h1 { font-size: 2.5rem; margin-bottom: 40px; }
+        h2 { font-size: 1.8rem; margin-bottom: 20px; }
 
         .texto-secao {
             font-size: 1.25rem;
@@ -70,82 +62,67 @@
             color: #a39b8f;
         }
 
-        /* --- Nova Seção --- */
-        .nova-secao {
-            max-width: 800px;
-            width: 100%;
-            padding: 40px;
-            background: #080808; /* Tom ligeiramente diferente */
-            border: 1px solid #1a1a1a;
-            text-align: center;
+        /* --- SOLUÇÃO DOS BRASÕES (20x20) --- */
+        .lista-soberanias {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
         }
 
-        .nova-secao h2 {
-            font-family: 'Cinzel', serif;
-            color: #ffdab3;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            text-transform: uppercase;
+        .item-soberania {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Centraliza a linha de texto + brasão */
+            margin-bottom: 10px;
         }
 
-        /* Responsividade para celulares */
+        /* O !important garante que o tamanho não seja sobrescrito */
+        .foto-reino {
+            width: 20px !important;
+            height: 20px !important;
+            min-width: 20px !important;
+            object-fit: contain;
+            margin-left: 10px;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
         @media (max-width: 600px) {
-            .conteudo-central, .nova-secao {
-                padding: 30px 20px;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-            h2 {
-                font-size: 1.4rem;
-            }
+            .conteudo-central, .nova-secao { padding: 30px 20px; }
+            h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 
     <section class="conteudo-central">
-        
-        <img src="seserttemple.png" alt="Visão panorâmica das Ruínas de Mavul" class="imagem-secao imagem-topo">
-
+        <img src="seserttemple.png" alt="Ruínas de Mavul" class="imagem-secao">
         <h1>Ruínas de Mavul</h1>
-        
         <div class="texto-secao">
-            <p>
-                Localizadas no continente de Mavul, as ruínas do antigo império de Cyannon descansam sobre o território do reino de Brangoshy o que impede que exploradores se aproximem do local. Considerado um local quase sagrado para fundação civilizacional do mundo de Walingardyn. 
-            </p>
+            <p>Localizadas no continente de Mavul, as ruínas do antigo império de Cyannon descansam sobre o território do reino de Brangoshy...</p>
             <br>
-            <p>
-                No local descansam templos enormes com paredes que medem metros de altura, com portas arqueadas, algumas submerssas em terra e escombros, ofuscando cômodos e salões inteiros. Nas paredes, desenhos das letras que hoje conhecemos como Alfabeto Mavulês, graças aos materiais de estudo escritos por Cahatsh Balmu Sell, um estudioso Mavulês.
-            </p>
+            <p>No local descansam templos enormes... desenhados com o Alfabeto Mavulês.</p>
         </div>
-
-        <img src="sell.png" alt="Detalhe arqueológico nas Ruínas de Mavul" class="imagem-secao imagem-final">
-
+        <img src="sell.png" alt="Estudo Arqueológico" class="imagem-secao" style="margin-top: 40px; margin-bottom: 0;">
     </section>
 
-   <section class="nova-secao">
-        
-        <img src="mavul.png" alt="Visão panorâmica das Ruínas de Mavul" class="imagem-secao imagem-topo">
     <section class="nova-secao">
-<h2>Reinos, Terras e Famílias Mavulesas</h2>
+        <img src="mavul.png" alt="Mapa de Mavul" class="imagem-secao">
+        <h2>Reinos, Terras e Famílias Mavulesas</h2>
         <div class="texto-secao">
-            <p style="text-align: center;">
-                Mavul é dividida em três grandes soberanias, cada uma sob a guarda de linhagens nobres que moldam o destino do continente:
-            </p>
-            <br>
+            <p style="text-align: center;">Mavul é dividida em três grandes soberanias:</p>
             <ul class="lista-soberanias">
                 <li class="item-soberania">
-                    <span><strong>Reino de Sartaha:</strong> Dominado pela família <em>Korsorovýh</em></span>
-                    <img src="reinosdemavul/korsorovyh.png" alt="Brasão Sartaha" class="foto-reino">
+                    <span><strong>Sartaha:</strong> Família <em>Korsorovýh</em></span>
+                    <img src="reinosdemavul/korsorovyh.png" class="foto-reino">
                 </li>
                 <li class="item-soberania">
-                    <span><strong>Reino de Montblawn:</strong> Dominado pela família <em>Serantha</em></span>
-                    <img src="reinosdemavul/serantha.png" alt="Brasão Montblawn" class="foto-reino">
+                    <span><strong>Montblawn:</strong> Família <em>Serantha</em></span>
+                    <img src="reinosdemavul/serantha.png" class="foto-reino">
                 </li>
                 <li class="item-soberania">
-                    <span><strong>Reino de Brangoshy:</strong> Dominado pela família <em>Vheynnaris</em></span>
-                    <img src="vheynnaris.png" alt="Brasão Brangoshy" class="foto-reino">
+                    <span><strong>Brangoshy:</strong> Família <em>Vheynnaris</em></span>
+                    <img src="vheynnaris.png" class="foto-reino">
                 </li>
             </ul>
         </div>
