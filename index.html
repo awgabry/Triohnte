@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Triohnte</title>
+    <title>Triohnte | Walingardyn</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
     
@@ -51,7 +51,6 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            /* IMAGEM CORRIGIDA PARA LINK DIRETO */
             background: linear-gradient(to bottom, rgba(5,5,5,0.4), #050505),
                         url('https://raw.githubusercontent.com/awgabry/Triohnte/main/map%203.png'); 
             background-size: cover;
@@ -64,22 +63,14 @@
             font-size: clamp(3rem, 10vw, 6rem);
             color: #ffdab3;
             letter-spacing: 20px;
-            text-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+            /* REMOVIDO: Brilho vermelho retirado para limpeza visual */
+            text-shadow: none; 
             animation: flicker 4s infinite alternate;
         }
 
         @keyframes flicker {
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-            20%, 24%, 55% { opacity: 0.7; }
-        }
-
-        .subtitulo {
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            margin-top: 10px;
-            color: #666;
-            font-weight: 300;
+            20%, 24%, 55% { opacity: 0.8; }
         }
 
         /* Navegação */
@@ -148,18 +139,13 @@
             transition: 0.5s;
         }
 
-      /* Localize este bloco no seu código (dentro de <style>) */
-.card::before {
-    content: '';
-    position: absolute;
-    left: 0; 
-    top: 0; 
-    height: 100%; 
-    width: 2px; /* Aqui você muda a espessura da linha */
-    background: #ffc88a; /* <--- MUDE AQUI (Exemplo: #d4af37 para Dourado ou #ffffff para Branco) */
-    transform: scaleY(0);
-    transition: 0.5s;
-}
+        .card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; height: 100%; width: 2px;
+            background: #ffc88a; 
+            transform: scaleY(0);
+            transition: 0.5s;
         }
 
         .card:hover {
@@ -214,20 +200,20 @@
                 <li><a href="#historia">Ruínas de Mavul</a></li>
                 <li><a href="#geografia">Terras de Walingardyn</a></li>
                 <li><a href="#bestiario">Compêndio Walingardyano</a></li>
-                <li><a href="#leis">Estruturas arquitônicas de poder de Walingardyn</a></li>
+                <li><a href="#leis">Arquiteturas de Poder</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
         <section class="intro-text">
-            <h2>O legado</h2>
-            <p>"Todo legado precisa de um começo e Triohnte é raiz de uma enorme arvore a crescer pouco a pouco."</p>
+            <h2>O Legado</h2>
+            <p>"Todo legado precisa de um começo e Triohnte é a raiz de uma enorme árvore a crescer pouco a pouco."</p>
         </section>
 
         <section class="lore-grid">
             <div class="card">
-                <h3>O Panteão dos deuses</h3>
+                <h3>O Panteão dos Deuses</h3>
                 <p>Onde estão os deuses quando as cidades queimam? Conheça os mitos sobre as divindades que ajudaram a moldar civilizações pelo mundo de Walingardyn.</p>
             </div>
 
@@ -237,13 +223,13 @@
             </div>
 
             <div class="card">
-                <h3>Conflito dos deuses primordiais e a criação do artefato mais poderoso do mundo</h3>
-                <p>A magia em Triohnte não é um dom, é uma transação. Descubra os rituais proibidos e o custo terrível de cada feitiço.</p>
+                <h3>Conflitos Primordiais</h3>
+                <p>A magia em Triohnte não é um dom, é uma transação. Descubra os rituais proibidos e o custo terrível de cada feitiço e artefato.</p>
             </div>
 
             <div class="card">
-                <h3>Os motivos de guerra ao longas das Eras</h3>
-                <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um grande império.</p>
+                <h3>Motivos de Guerra</h3>
+                <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um grande império através das Eras.</p>
             </div>
         </section>
     </main>
