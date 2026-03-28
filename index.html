@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triohnte | O Códice das Sombras</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- ESTILIZAÇÃO CSS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #050505; /* Um preto quase absoluto */
+            color: #a39b8f; /* Cor de osso/pergaminho velho */
+            font-family: 'Crimson Pro', serif;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Efeito de Vinheta (Sombreamento nas bordas) */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 15vw rgba(0,0,0,1);
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Animação de Entrada */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cabeçalho de Impacto */
+        header {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(5,5,5,0.2), #050505),
+                        url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop'); 
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid #1a0000;
+        }
+
+        .titulo-principal {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3rem, 10vw, 6rem);
+            color: #ffdab3; /* Vermelho Sangue */
+            letter-spacing: 20px;
+            text-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+            animation: flicker 4s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.7; }
+        }
+
+        .subtitulo {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-top: 10px;
+            color: #666;
+            font-weight: 300;
+        }
+
+        /* Navegação */
+        nav {
+            margin-top: 50px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 40px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #888;
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            letter-spacing: 2px;
+        }
+
+        nav a:hover {
+            color: #fff;
+            text-shadow: 0 0 8px #fff;
+            letter-spacing: 4px;
+        }
+
+        /* Conteúdo Principal */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 30px;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .intro-text {
+            text-align: center;
+            margin-bottom: 120px;
+        }
+
+        .intro-text h2 {
+            font-family: 'Cinzel', serif;
+            color: #d1d1d1;
+            font-size: 2rem;
+            margin-bottom: 25px;
+        }
+
+        .intro-text p {
+            font-size: 1.3rem;
+            font-style: italic;
+        }
+
+        /* Grid de Lore */
+        .lore-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .card {
+            background: #0a0a0a;
+            padding: 40px;
+            border: 1px solid #1a1a1a;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; height: 100%; width: 2px;
+            background: #8b0000;
+            transform: scaleY(0);
+            transition: 0.5s;
+        }
+
+        .card:hover {
+            background: #0f0f0f;
+            border-color: #333;
+        }
+
+        .card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .card h3 {
+            font-family: 'Cinzel', serif;
+            color: #eee;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 100px 20px;
+            border-top: 1px solid #111;
+            margin-top: 50px;
+        }
+
+        .footer-logo {
+            font-family: 'Cinzel', serif;
+            color: #333;
+            letter-spacing: 5px;
+            font-size: 1.5rem;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            nav ul { flex-direction: column; align-items: center; gap: 20px; }
+            .titulo-principal { letter-spacing: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="vignette"></div>
+
+    <header>
+        <div class="logo-area">
+            <h1 class="titulo-principal">TRIOHNTE</h1>
+            <p class="subtitulo">Crônicas da Fantasia Sombria</p>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="#historia">O Abismo</a></li>
+                <li><a href="#geografia">Mapa de Sangue</a></li>
+                <li><a href="#bestiario">Bestas</a></li>
+                <li><a href="#leis">As Leis</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="intro-text">
+            <h2>A esperança é uma moeda sem valor.</h2>
+            <p>"Neste mundo, o sol não se põe por cansaço, mas por medo do que desperta quando as luzes se apagam. Triohnte aguarda aqueles corajosos o suficiente para ler suas cicatrizes."</p>
+        </section>
+
+        <section class="lore-grid">
+            <div class="card">
+                <h3>O Panteão Silencioso</h3>
+                <p>Onde estão os deuses quando as cidades queimam? Conheça os mitos sobre as divindades que deram as costas à criação.</p>
+            </div>
+
+            <div class="card">
+                <h3>As Terras do Nevoeiro</h3>
+                <p>Uma exploração pelas regiões de Triohnte, onde a própria geografia parece conspirar contra a sanidade dos viajantes.</p>
+            </div>
+
+            <div class="card">
+                <h3>A Maldição do Sangue</h3>
+                <p>A magia em Triohnte não é um dom, é uma transação. Descubra os rituais proibidos e o custo terrível de cada feitiço.</p>
+            </div>
+
+            <div class="card">
+                <h3>Linhagens de Ferro</h3>
+                <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um grande império.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-logo">TRIOHNTE</div>
+        <p style="margin-top: 15px; font-size: 0.8rem; color: #444;">Desenvolvido para imersão narrativa &copy; 2026</p>
+    </footer>
+
+</body>
+</html>
