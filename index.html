@@ -148,6 +148,31 @@
             margin: 0 auto;
             padding: 100px 30px;
             animation: fadeIn 2s ease-out;
+            /* ADICIONANDO AS BORDAS LATERAIS serd.png */
+            position: relative;
+        }
+
+        /* Pseudo-elementos para as bordas laterais */
+        main::before,
+        main::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 50px; /* Ajuste a largura conforme o tamanho da sua imagem de borda */
+            height: 100%;
+            background-image: url('serd.png');
+            background-repeat: repeat-y;
+            background-size: contain;
+            pointer-events: none; /* Garante que as bordas não interfiram com o conteúdo */
+            z-index: -1; /* Coloca as bordas atrás do conteúdo principal */
+        }
+
+        main::before {
+            left: -50px; /* Move para a borda esquerda, ajuste se necessário */
+        }
+
+        main::after {
+            right: -50px; /* Move para a borda direita, ajuste se necessário */
         }
 
         .intro-text {
@@ -223,6 +248,9 @@
         @media (max-width: 768px) {
             nav ul { flex-direction: column; align-items: center; gap: 20px; }
             .intro-text h2 { font-size: 1.8rem; }
+            /* Esconde as bordas em telas menores para não quebrar o layout */
+            main::before,
+            main::after { display: none; }
         }
     </style>
 </head>
@@ -253,8 +281,8 @@
                 conexão com a realidade social eram abafados por batalhas judiais. Nas próprias palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
             <div>
                <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael,
-               Gabriel decidiu senar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha
-               das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
+                Gabriel decidiu senar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha
+                das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
                 <div>
                     <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas crìticas
                     Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, 
@@ -281,7 +309,7 @@
 
             <div class="card">
                 <h3>Motivos de Guerra</h3>
-                <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um grande império através das Eras.</p>
+                <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um great império através das Eras.</p>
             </div>
         </section>
     </main>
