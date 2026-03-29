@@ -17,22 +17,21 @@
             box-sizing: border-box;
         }
 
-        /* --- DEFINIÇÃO DO DEGRADÊ METÁLICO (Dourado) --- */
-        /* Criamos uma variável CSS para reutilizar o degradê facilmente */
+        /* --- O NOVO DEGRADÊ IDÊNTICO À IMAGEM --- */
         :root {
             --gold-gradient: linear-gradient(
                 to bottom, 
-                #f1d5a5 0%,   
-                #d4a356 45%,  
-                #4e3419 50%,  
-                #b88640 55%,  
+                #c59d5f 0%,   
+                #e3c38f 40%,  /* Brilho superior */
+                #f3e1b5 48%,  /* Linha de luz central */
+                #7a542a 52%,  /* Sombra imediata abaixo da linha */
+                #b88640 60%,  
                 #8a5d2e 100%  
             );
-            /* Sombra padrão para o efeito metálico */
-            --gold-shadow: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
+            --gold-shadow: drop-shadow(0 3px 3px rgba(0,0,0,0.9));
         }
 
-        /* Aplicação do degradê nos textos */
+        /* Texto com o novo degradê */
         .intro-text h2, 
         .card h3, 
         .footer-logo {
@@ -46,33 +45,27 @@
             filter: var(--gold-shadow);
         }
 
-        /* --- APLICAÇÃO DO DEGRADÊ NA LOGO (TRIWO.PNG) --- */
+        /* Logo Central com o novo degradê */
         .img-titulo, .footer-logo-img {
             background: var(--gold-gradient);
-            
-            /* A máscara que define o formato da logo */
             -webkit-mask-image: url('triwo.png');
             mask-image: url('triwo.png');
             -webkit-mask-size: contain;
             mask-size: contain;
             -webkit-mask-repeat: no-repeat;
             -webkit-mask-position: center;
-
-            /* Remove a cor original da tag <img> */
             background-clip: border-box;
             object-position: -9999px; 
-            
-            /* Sombra e brilho */
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.9)) drop-shadow(0 0 5px rgba(212, 163, 86, 0.3));
+            filter: drop-shadow(0 0 10px rgba(212, 163, 86, 0.2)) var(--gold-shadow);
         }
 
         .img-titulo {
             width: 1000px; 
-            height: 300px; 
+            height: 350px; 
             max-width: 100%;
             display: block;
             margin: 0 auto;
-            animation: flicker 4s infinite alternate;
+            animation: flicker 5s infinite alternate;
         }
 
         body {
@@ -83,149 +76,83 @@
             overflow-x: hidden;
         }
 
-        .vignette {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            box-shadow: inset 0 0 15vw rgba(0,0,0,1);
-            pointer-events: none;
-            z-index: 100;
-        }
-
         header {
-            height: 80vh;
+            height: 85vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: linear-gradient(to bottom, rgba(5,5,5,0.4), #050505),
+            background: linear-gradient(to bottom, rgba(5,5,5,0.2), #050505),
                         url('https://raw.githubusercontent.com/awgabry/Triohnte/main/map%203.png'); 
             background-size: cover;
             background-position: center;
             border-bottom: 1px solid #1a0000;
-            position: relative; /* Necessário para as bordas */
+            position: relative;
         }
 
-        /* --- BORDAS LATERAIS (SERD.PNG) COM DEGRADÊ --- */
+        /* --- BORDAS LATERAIS serd.png COM O MESMO EFEITO --- */
         .borda-lateral {
             position: absolute;
-            top: 0;
-            height: 100%;
-            width: 40px; /* Ajuste a largura conforme o arquivo serd.png */
+            top: 20px; /* Pequeno recuo do topo como na imagem */
+            bottom: 20px;
+            width: 35px; /* Ajuste conforme a espessura da serd.png */
             z-index: 10;
-
-            /* 1. Aplicamos o degradê dourado como fundo */
             background: var(--gold-gradient);
-
-            /* 2. Usamos serd.png como máscara para definir o formato */
             -webkit-mask-image: url('serd.png');
             mask-image: url('serd.png');
-            -webkit-mask-size: contain;
-            
-            /* Importante: a máscara deve repetir verticalmente */
-            -webkit-mask-repeat: repeat-y; 
-            mask-repeat: repeat-y;
-
-            /* 3. Adicionamos a sombra metálica */
+            -webkit-mask-size: 100% auto;
+            -webkit-mask-repeat: repeat-y;
             filter: var(--gold-shadow);
         }
 
-        .borda-esquerda {
-            left: 10px;
+        .borda-esquerda { left: 15px; }
+        .borda-direita { 
+            right: 15px; 
+            transform: scaleX(-1); /* Inverte para o lado direito */
         }
 
-        .borda-direita {
-            right: 10px;
-            /* Inverte a máscara horizontalmente para o lado direito */
-            -webkit-mask-position: right;
-            mask-position: right;
-            transform: scaleX(-1); 
+        /* --- RESTANTE DO SITE --- */
+        .vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 0 15vw rgba(0,0,0,1);
+            pointer-events: none;
+            z-index: 100;
         }
 
         @keyframes flicker {
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-            20%, 24%, 55% { opacity: 0.8; }
+            20%, 24%, 55% { opacity: 0.9; }
         }
 
-        nav { margin-top: 50px; }
+        nav { margin-top: 40px; }
         nav ul { list-style: none; display: flex; gap: 40px; }
         nav a {
             text-decoration: none;
             color: #888;
             font-family: 'Cinzel', serif;
             font-size: 0.85rem;
-            transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: 0.6s;
             letter-spacing: 2px;
         }
-        nav a:hover {
-            color: #fff;
-            text-shadow: 0 0 8px #fff;
-            letter-spacing: 4px;
-        }
+        nav a:hover { color: #fff; text-shadow: 0 0 8px #fff; letter-spacing: 4px; }
 
-        main {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 100px 30px;
-            animation: fadeIn 2s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        main { max-width: 900px; margin: 0 auto; padding: 100px 30px; }
         .intro-text { text-align: center; margin-bottom: 120px; }
-        .intro-text h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 2.5rem; 
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-        }
-        .intro-text p { font-size: 1.3rem; font-style: italic; }
+        .intro-text h2 { font-family: 'Cinzel', serif; font-size: 2.5rem; margin-bottom: 25px; }
+        .intro-text p { font-size: 1.3rem; font-style: italic; margin-bottom: 20px; }
 
-        .lore-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
+        .lore-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .card { background: #0a0a0a; padding: 40px; border: 1px solid #1a1a1a; position: relative; transition: 0.5s; }
+        .card h3 { font-family: 'Cinzel', serif; margin-bottom: 20px; }
 
-        .card {
-            background: #0a0a0a;
-            padding: 40px;
-            border: 1px solid #1a1a1a;
-            position: relative;
-            transition: 0.5s;
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0; height: 100%; width: 2px;
-            background: #ffc88a; 
-            transform: scaleY(0);
-            transition: 0.5s;
-        }
-        .card:hover { background: #0f0f0f; border-color: #333; }
-        .card:hover::before { transform: scaleY(1); }
-        .card h3 { font-family: 'Cinzel', serif; margin-bottom: 20px; font-size: 1.4rem; letter-spacing: 1px; }
-
-        footer {
-            text-align: center;
-            padding: 100px 20px;
-            border-top: 1px solid #111;
-            margin-top: 50px;
-        }
-
+        footer { text-align: center; padding: 100px 20px; border-top: 1px solid #111; }
         .footer-logo-img { height: 40px; width: 150px; display: inline-block; }
 
         @media (max-width: 768px) {
-            nav ul { flex-direction: column; align-items: center; gap: 20px; }
-            .intro-text h2 { font-size: 1.8rem; }
-            .borda-lateral { display: none; } /* Oculta em celulares */
+            nav ul { flex-direction: column; gap: 20px; }
+            .borda-lateral { display: none; }
         }
     </style>
 </head>
@@ -254,39 +181,14 @@
     <main>
         <section class="intro-text">
             <h2>O Legado</h2>
-            <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos
-                devido a separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pode ser uma "pessoa normal", momentos de maior
-                conexão com a realidade social eram abafados por batalhas judiais. Nas próprias palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
-            <br>
-            <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael,
-                Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca of 100 linhas. Posteriormente o conto: Cyannon e a batalha
-                das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
-            <br>
-            <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas
-                    Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, 
-                    mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo.</p>
+            <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor...</p>
+            <p>Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo...</p>
+            <p>"Trionte, O segredo do império", prazo que terá seu fim logo.</p>
         </section>
 
         <section class="lore-grid">
-            <div class="card">
-                <h3>O Panteão dos Deuses</h3>
-                <p>Onde estão os deuses quando as cidades queimam? Conheça os mitos sobre as divindades que ajudaram a moldar civilizações pelo mundo de Walingardyn.</p>
-            </div>
-
-            <div class="card">
-                <h3>Contorno de Triohnte</h3>
-                <p>Uma exploração pelas regiões de Triohnte, onde a própria geografia e clima parecem conspirar contra a sanidade dos viajantes.</p>
-            </div>
-
-            <div class="card">
-                <h3>Conflitos Primordiais</h3>
-                <p>A magia em Triohnte não é um dom, é uma transação. Descubra os rituais proibidos e o custo terrível de cada feitiço e artefato.</p>
-            </div>
-
-            <div class="card">
-                <h3>Motivos de Guerra</h3>
-                <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um grande império através das Eras.</p>
-            </div>
+            <div class="card"><h3>O Panteão dos Deuses</h3><p>Onde estão os deuses quando as cidades queimam?</p></div>
+            <div class="card"><h3>Contorno de Triohnte</h3><p>Uma exploração pelas regiões de Triohnte...</p></div>
         </section>
     </main>
 
