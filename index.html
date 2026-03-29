@@ -17,7 +17,6 @@
             box-sizing: border-box;
         }
 
-        /* REGRA PARA O EFEITO DE DEGRADÊ NOS TÍTULOS E AGORA NA IMAGEM */
         .intro-text h2, 
         .card h3, 
         .footer-logo {
@@ -38,9 +37,7 @@
             filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
         }
 
-   /* --- APLICAÇÃO DO DEGRADÊ NA LOGO (TRIWO.PNG) --- */
         .img-titulo, .footer-logo-img {
-            /* 1. O gradiente idêntico ao dos títulos */
             background: linear-gradient(
                 to bottom, 
                 #f1d5a5 0%,   
@@ -49,26 +46,20 @@
                 #b88640 55%,  
                 #8a5d2e 100%  
             );
-            
-            /* 2. A máscara que define o formato da logo */
             -webkit-mask-image: url('triwo.png');
             mask-image: url('triwo.png');
             -webkit-mask-size: contain;
             mask-size: contain;
             -webkit-mask-repeat: no-repeat;
             -webkit-mask-position: center;
-
-            /* 3. IMPORTANTE: Remove a cor original da tag <img> para não interferir */
             background-clip: border-box;
-            object-position: -9999px; /* Joga a imagem original para fora da visão */
-            
-            /* 4. Sombra e brilho para simular o metal do texto */
+            object-position: -9999px; 
             filter: drop-shadow(0 2px 2px rgba(0,0,0,0.9)) drop-shadow(0 0 5px rgba(212, 163, 86, 0.3));
         }
 
         .img-titulo {
             width: 1000px; 
-            height: 300px; /* Ajuste para caber sua logo */
+            height: 300px; 
             max-width: 100%;
             display: block;
             margin: 0 auto;
@@ -94,11 +85,6 @@
             z-index: 100;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         header {
             height: 80vh;
             display: flex;
@@ -111,6 +97,28 @@
             background-size: cover;
             background-position: center;
             border-bottom: 1px solid #1a0000;
+            position: relative; /* Necessário para posicionar as bordas */
+        }
+
+        /* --- BORDAS LATERAIS (serd.png) --- */
+        .borda-lateral {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 40px; /* Ajuste a largura conforme o arquivo serd.png */
+            background-image: url('serd.png');
+            background-repeat: repeat-y;
+            background-size: contain;
+            z-index: 10;
+        }
+
+        .borda-esquerda {
+            left: 10px; /* Espaçamento da borda esquerda */
+        }
+
+        .borda-direita {
+            right: 10px; /* Espaçamento da borda direita */
+            transform: scaleX(-1); /* Inverte a imagem para o lado direito se necessário */
         }
 
         @keyframes flicker {
@@ -118,16 +126,8 @@
             20%, 24%, 55% { opacity: 0.8; }
         }
 
-        nav {
-            margin-top: 50px;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 40px;
-        }
-
+        nav { margin-top: 50px; }
+        nav ul { list-style: none; display: flex; gap: 40px; }
         nav a {
             text-decoration: none;
             color: #888;
@@ -136,7 +136,6 @@
             transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             letter-spacing: 2px;
         }
-
         nav a:hover {
             color: #fff;
             text-shadow: 0 0 8px #fff;
@@ -148,38 +147,14 @@
             margin: 0 auto;
             padding: 100px 30px;
             animation: fadeIn 2s ease-out;
-            /* ADICIONANDO AS BORDAS LATERAIS serd.png */
-            position: relative;
         }
 
-        /* Pseudo-elementos para as bordas laterais */
-        main::before,
-        main::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            width: 50px; /* Ajuste a largura conforme o tamanho da sua imagem de borda */
-            height: 100%;
-            background-image: url('serd.png');
-            background-repeat: repeat-y;
-            background-size: contain;
-            pointer-events: none; /* Garante que as bordas não interfiram com o conteúdo */
-            z-index: -1; /* Coloca as bordas atrás do conteúdo principal */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        main::before {
-            left: -50px; /* Move para a borda esquerda, ajuste se necessário */
-        }
-
-        main::after {
-            right: -50px; /* Move para a borda direita, ajuste se necessário */
-        }
-
-        .intro-text {
-            text-align: center;
-            margin-bottom: 120px;
-        }
-
+        .intro-text { text-align: center; margin-bottom: 120px; }
         .intro-text h2 {
             font-family: 'Cinzel', serif;
             font-size: 2.5rem; 
@@ -187,11 +162,7 @@
             text-transform: uppercase;
             letter-spacing: 4px;
         }
-
-        .intro-text p {
-            font-size: 1.3rem;
-            font-style: italic;
-        }
+        .intro-text p { font-size: 1.3rem; font-style: italic; }
 
         .lore-grid {
             display: grid;
@@ -206,7 +177,6 @@
             position: relative;
             transition: 0.5s;
         }
-
         .card::before {
             content: '';
             position: absolute;
@@ -215,22 +185,9 @@
             transform: scaleY(0);
             transition: 0.5s;
         }
-
-        .card:hover {
-            background: #0f0f0f;
-            border-color: #333;
-        }
-
-        .card:hover::before {
-            transform: scaleY(1);
-        }
-
-        .card h3 {
-            font-family: 'Cinzel', serif;
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-            letter-spacing: 1px;
-        }
+        .card:hover { background: #0f0f0f; border-color: #333; }
+        .card:hover::before { transform: scaleY(1); }
+        .card h3 { font-family: 'Cinzel', serif; margin-bottom: 20px; font-size: 1.4rem; letter-spacing: 1px; }
 
         footer {
             text-align: center;
@@ -239,18 +196,12 @@
             margin-top: 50px;
         }
 
-        .footer-logo-img {
-            height: 40px;
-            width: 150px; /* Ajuste conforme a proporção da sua logo */
-            display: inline-block;
-        }
+        .footer-logo-img { height: 40px; width: 150px; display: inline-block; }
 
         @media (max-width: 768px) {
             nav ul { flex-direction: column; align-items: center; gap: 20px; }
             .intro-text h2 { font-size: 1.8rem; }
-            /* Esconde as bordas em telas menores para não quebrar o layout */
-            main::before,
-            main::after { display: none; }
+            .borda-lateral { display: none; } /* Oculta em celulares para não cobrir o texto */
         }
     </style>
 </head>
@@ -259,6 +210,9 @@
     <div class="vignette"></div>
 
     <header>
+        <div class="borda-lateral borda-esquerda"></div>
+        <div class="borda-lateral borda-direita"></div>
+
         <div class="logo-area">
             <img src="triwo.png" alt="Triohnte" class="img-titulo">
         </div>
@@ -279,16 +233,14 @@
             <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos
                 devido a separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pode ser uma "pessoa normal", momentos de maior
                 conexão com a realidade social eram abafados por batalhas judiais. Nas próprias palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
-            <div>
-               <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael,
-                Gabriel decidiu senar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha
+            <br>
+            <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael,
+                Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha
                 das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
-                <div>
-                    <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas crìticas
+            <br>
+            <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas
                     Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, 
                     mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo.</p>
-               </div>
-            </div>
         </section>
 
         <section class="lore-grid">
@@ -309,17 +261,17 @@
 
             <div class="card">
                 <h3>Motivos de Guerra</h3>
-                <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um great império através das Eras.</p>
+                <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um grande império através das Eras.</p>
             </div>
         </section>
     </main>
 
- <footer>
-    <div class="footer-logo">
-        <img src="triwo.png" alt="TRIOHNTE" class="footer-logo-img">
-    </div>
-    <p style="margin-top: 15px; font-size: 0.8rem; color: #444;">Copyright Triohnte &copy; 2026</p>
-</footer>
+    <footer>
+        <div class="footer-logo">
+            <img src="triwo.png" alt="TRIOHNTE" class="footer-logo-img">
+        </div>
+        <p style="margin-top: 15px; font-size: 0.8rem; color: #444;">Copyright Triohnte &copy; 2026</p>
+    </footer>
 
 </body>
 </html>
