@@ -17,29 +17,50 @@
             box-sizing: border-box;
         }
 
-        /* REGRA PARA O EFEITO DE DEGRADÊ NOS TÍTULOS */
+        /* REGRA PARA O EFEITO DE DEGRADÊ NOS TÍTULOS E AGORA NA IMAGEM */
         .intro-text h2, 
         .card h3, 
         .footer-logo {
-            display: inline-block; /* Necessário para o gradiente preencher apenas o texto */
+            display: inline-block;
             background: linear-gradient(
                 to bottom, 
-                #f1d5a5 0%,   /* Topo claro */
-                #d4a356 45%,  /* Dourado médio */
-                #4e3419 50%,  /* Linha de sombra central (o "corte" do metal) */
-                #b88640 55%,  /* Retorno ao dourado */
-                #8a5d2e 100%  /* Base bronze escuro */
+                #f1d5a5 0%,   
+                #d4a356 45%,  
+                #4e3419 50%,  
+                #b88640 55%,  
+                #8a5d2e 100%  
             );
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             color: transparent;
             font-weight: 700;
-            /* Filtro para dar profundidade e brilho */
             filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
         }
 
-        /* --- MÓDULO DA LOGO (IMAGEM) --- */
+        /* --- APLICAÇÃO DO DEGRADÊ NA LOGO (TRIWO.PNG) --- */
+        .img-titulo, .footer-logo-img {
+            background: linear-gradient(
+                to bottom, 
+                #f1d5a5 0%,   
+                #d4a356 45%,  
+                #4e3419 50%,  
+                #b88640 55%,  
+                #8a5d2e 100%  
+            );
+            /* Usa a imagem como máscara */
+            -webkit-mask-image: url('triwo.png');
+            mask-image: url('triwo.png');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            
+            /* Remove a visualização da imagem original para mostrar apenas o degradê no formato dela */
+            object-opacity: 0; 
+        }
+
         .logo-area {
             display: flex;
             justify-content: center;
@@ -49,7 +70,7 @@
 
         .img-titulo {
             width: 1000px; 
-            height: auto;
+            height: 250px; /* Definir altura ajuda na renderização da máscara */
             max-width: 100%;
             filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.8));
             animation: flicker 4s infinite alternate;
@@ -138,7 +159,7 @@
 
         .intro-text h2 {
             font-family: 'Cinzel', serif;
-            font-size: 2.5rem; /* Ajustado para dar destaque ao degradê */
+            font-size: 2.5rem; 
             margin-bottom: 25px;
             text-transform: uppercase;
             letter-spacing: 4px;
@@ -195,10 +216,10 @@
             margin-top: 50px;
         }
 
-        .footer-logo {
-            font-family: 'Cinzel', serif;
-            letter-spacing: 5px;
-            font-size: 1.5rem;
+        .footer-logo-img {
+            height: 40px;
+            width: 150px; /* Ajuste conforme a proporção da sua logo */
+            display: inline-block;
         }
 
         @media (max-width: 768px) {
@@ -231,8 +252,8 @@
             <h2>O Legado</h2>
             <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos
                 devido a separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pode ser uma "pessoa normal", momentos de maior
-            conexão com a realidade social eram abafados por batalhas judiais. Nas próprias palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
-           <div>
+                conexão com a realidade social eram abafados por batalhas judiais. Nas próprias palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
+            <div>
                <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael,
                Gabriel decidiu senar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha
                das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
@@ -240,7 +261,8 @@
                     <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas crìticas
                     Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, 
                     mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo.</p>
-           </div>
+               </div>
+            </div>
         </section>
 
         <section class="lore-grid">
@@ -268,7 +290,7 @@
 
  <footer>
     <div class="footer-logo">
-        <img src="triwo.png" alt="TRIOHNTE" style="max-height: 40px; width: auto;">
+        <img src="triwo.png" alt="TRIOHNTE" class="footer-logo-img">
     </div>
     <p style="margin-top: 15px; font-size: 0.8rem; color: #444;">Copyright Triohnte &copy; 2026</p>
 </footer>
