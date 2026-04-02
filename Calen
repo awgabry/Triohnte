@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Códice de Walingardyn - Compacto</title>
+
+    <!-- Fonte opcional -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --ouro: #b38728; --bg: #050505; }
+
+        body {
+            background: var(--bg);
+            color: #fff;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Cinzel', serif;
+        }
+
+        .viewport {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mecanismo {
+            position: relative;
+            width: 700px;
+            height: 700px;
+        }
+
+        .disco {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background-size: cover;
+            background-position: center;
+            transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow:
+                inset 0 0 40px rgba(0,0,0,0.8),
+                inset 0 0 80px rgba(0,0,0,0.6);
+        }
+
+        /* DISCOS */
+        #d1 {
+            width: 700px;
+            height: 700px;
+            background-image: url('pedra.jpg'), url('DISCO 1.png');
+            background-blend-mode: multiply;
+            z-index: 1;
+        }
+
+        #mv {
+            width: 500px;
+            height: 500px;
+            background-image: url('pedra.jpg'), url('MAVULES.png');
+            background-blend-mode: overlay;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        #d2 {
+            width: 500px;
+            height: 500px;
+            background-image: url('pedra.jpg'), url('DISCO 2.png');
+            background-blend-mode: multiply;
+            z-index: 3;
+        }
+
+        #d3 {
+            width: 300px;
+            height: 300px;
+            background-image: url('pedra.jpg'), url('DISCO 3.png');
+            background-blend-mode: multiply;
+            z-index: 5;
+        }
+
+        /* CARDS */
+        .card-no-disco {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--ouro);
+            left: 50%; top: 50%;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 30;
+        }
+
+        .card-no-disco img {
+            width: 80%;
+            height: 55%;
+            object-fit: contain;
+            filter: sepia(0.4);
+        }
+
+        .card-no-disco span {
+            font-size: 7px;
+            color: var(--ouro);
+            text-align: center;
+            margin-top: 2px;
+            font-weight: bold;
+        }
+
+        /* PAINEL LATERAL */
+        .painel {
+            width: 320px;
+            background: #080808;
+            border-left: 2px solid var(--ouro);
+            transform: translateX(100%);
+            transition: 0.6s ease;
+            z-index: 100;
+        }
+
+        .painel.active { transform: translateX(0); }
+
+        /* BANNER COM IMAGEM REAL */
+        .banner {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 1px solid var(--ouro);
+        }
+
+        .banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        /* EFEITO DRAMÁTICO */
+        .banner::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent, #080808);
+        }
+
+        .info {
+            padding: 20px;
+        }
+
+        .info h2 {
+            color: #fcf6ba;
+            margin: 15px 0 10px 0;
+            font-size: 1.2em;
+            text-transform: uppercase;
+        }
+
+        .info p {
+            color: #ccc;
+            line-height: 1.4;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .btn-fechar {
+            padding: 15px;
+            color: var(--ouro);
+            cursor: pointer;
+            text-align: right;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="viewport">
+    <div class="mecanismo">
+        <div class="disco" id="d1"></div>
+        <div class="disco" id="mv"></div>
+        <div class="disco" id="d2"></div>
+        <div class="disco" id="d3"></div>
+    </div>
+</div>
+
+<aside class="painel" id="painel">
+    <div class="btn-fechar" onclick="fechar()">[ FECHAR ]</div>
+
+    <div class="banner">
+        <img id="p-foto" src="" alt="">
+    </div>
+
+    <div class="info">
+        <h2 id="p-tit"></h2>
+        <p id="p-desc"></p>
+    </div>
+</aside>
+
+<script>
+const eras = [
+    { nome: "I Era Imperial", img: "reu.jpg", disco: "d1", ang: 0, raio: 300 },
+    { nome: "II Era Imperial", img: "image_ea0f59.jpg", disco: "d1", ang: 120, raio: 300 },
+    { nome: "III Era Imperial", img: "image_ea0f59.jpg", disco: "d1", ang: 240, raio: 300 },
+
+    { nome: "Era das Trevas", img: "image_ea83d6.jpg", disco: "d2", ang: 0, raio: 200 },
+    { nome: "Era de Bronze", img: "image_ea83d6.jpg", disco: "d2", ang: 180, raio: 200 },
+
+    { nome: "Era Profética", img: "image_ea83d6.jpg", disco: "d3", ang: 0, raio: 0 }
+];
+
+eras.forEach(era => {
+    const discoPai = document.getElementById(era.disco);
+    const card = document.createElement('div');
+    card.className = 'card-no-disco';
+
+    const rad = (era.ang - 90) * (Math.PI / 180);
+    const x = Math.cos(rad) * era.raio;
+    const y = Math.sin(rad) * era.raio;
+
+    card.style.transform =
+        `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${era.ang}deg)`;
+
+    card.innerHTML = `<img src="${era.img}"><span>${era.nome}</span>`;
+
+    card.onclick = (e) => {
+        e.stopPropagation();
+
+        discoPai.style.transform =
+            `translate(-50%, -50%) rotate(${-era.ang}deg)`;
+
+        document.getElementById('p-tit').innerText = era.nome;
+        document.getElementById('p-desc').innerText =
+            "Crônicas detalhadas do Códice de Walingardyn.";
+
+        const foto = document.getElementById('p-foto');
+        foto.src = era.img;
+        foto.style.display = "block";
+
+        document.getElementById('painel').classList.add('active');
+    };
+
+    discoPai.appendChild(card);
+});
+
+function fechar() {
+    document.getElementById('painel').classList.remove('active');
+}
+</script>
+
+</body>
+</html>
