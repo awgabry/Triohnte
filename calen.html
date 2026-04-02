@@ -163,12 +163,13 @@
             text-transform: uppercase;
         }
 
-        .info p {
-            color: #ccc;
-            line-height: 1.4;
-            font-size: 13px;
-            text-transform: uppercase;
-        }
+       .info p {
+    color: #ccc;
+    line-height: 1.6; /* Aumentado para melhor leitura */
+    font-size: 13px;
+    text-transform: uppercase;
+    white-space: pre-wrap; /* Mantém as quebras de linha do JavaScript */
+}
 
         .btn-fechar {
     position: absolute; /* Isso faz o botão "flutuar" sobre a imagem */
@@ -284,22 +285,23 @@ eras.forEach(era => {
 
     card.innerHTML = `<img src="${era.img}"><span>${era.nome}</span>`;
 
-    card.onclick = (e) => {
-        e.stopPropagation();
+// Localize esta parte no seu código original e altere para:
+card.onclick = (e) => {
+    e.stopPropagation();
 
-        discoPai.style.transform =
-            `translate(-50%, -50%) rotate(${-era.ang}deg)`;
+    discoPai.style.transform = `translate(-50%, -50%) rotate(${-era.ang}deg)`;
 
-        document.getElementById('p-tit').innerText = era.nome;
-        document.getElementById('p-desc').innerText =
-            "Crônicas detalhadas do Códice de Walingardyn.";
+    document.getElementById('p-tit').innerText = era.nome;
+    
+    // ALTERAÇÃO AQUI: Agora ele usa a descrição específica de cada era
+    document.getElementById('p-desc').innerText = era.descricao;
 
-        const foto = document.getElementById('p-foto');
-        foto.src = era.img;
-        foto.style.display = "block";
+    const foto = document.getElementById('p-foto');
+    foto.src = era.img;
+    foto.style.display = "block";
 
-        document.getElementById('painel').classList.add('active');
-    };
+    document.getElementById('painel').classList.add('active');
+};
 
     discoPai.appendChild(card);
 });
