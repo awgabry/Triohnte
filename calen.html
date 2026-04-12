@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Códice de Walingardyn - Compacto</title>
 
-    <!-- Fonte opcional -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
 
     <style>
@@ -243,17 +242,9 @@
     color: var(--ouro);
 }
 
-
-
-
-
-        
     </style>
 </head>
 <body>
-
-
-
 
 <aside class="painel-curiosidades" id="aba-curiosidades">
     <h3>CURIOSIDADES DA ERA</h3>
@@ -267,9 +258,6 @@
     </audio>
 </div>
 
-
-
-    
 <div class="viewport">
     <div class="mecanismo">
         <div class="disco" id="d1"></div>
@@ -294,19 +282,6 @@
 
 <script>
 
-
-
-
-// Exemplo de como deve ficar cada item:
-{ 
-    nome: "I Era Imperial", 
-    // ... campos anteriores ...
-    curiosidade: "Diz-se que o cristal de Nabulork emite um zumbido imperceptível aos humanos, mas que atrai criaturas das sombras."
-},
-
-    
-
-
 const eras = [
     { 
         nome: "I Era Imperial", 
@@ -314,7 +289,8 @@ const eras = [
         disco: "d1", 
         ang: 0, 
         raio: 300,
-        descricao: "Haragum e seu irmão Nabulork são escolhidos dentre o panteão para governar juntos o mundo de Walingardyn. A maldição dos perdidos atinge Nabulork e o converte ao lado escuro do poder. Nabulork investe contra o irmão dando início à formulação da magia profunda a partir do poder dos deuses. Haragum tenta salvá-lo criando algo chamado Cristal de Nabulork, mas na verdade consegue apenas prender o irmão e a magia no cristal."
+        descricao: "Haragum e seu irmão Nabulork são escolhidos dentre o panteão para governar juntos o mundo de Walingardyn. A maldição dos perdidos atinge Nabulork e o converte ao lado escuro do poder. Nabulork investe contra o irmão dando início à formulação da magia profunda a partir do poder dos deuses. Haragum tenta salvá-lo criando algo chamado Cristal de Nabulork, mas na verdade consegue apenas prender o irmão e a magia no cristal.",
+        curiosidade: "Diz-se que o cristal de Nabulork emite um zumbido imperceptível aos humanos, mas que atrai criaturas das sombras."
     },
     { 
         nome: "II Era Imperial", 
@@ -322,7 +298,8 @@ const eras = [
         disco: "d1", 
         ang: 120, 
         raio: 300,
-        descricao: "Uma batalha de 400 anos foi travada e vencida pela luz. Haragum cria os primeiros seres mágicos primitivos. A humanidade é criada 70 anos de Era depois. A humanidade aprende o manuseio da magia e começa a usar os conhecimentos ao seu próprio benefício. Haragum volta ao primeiro céu carregando consigo o manto do poder e seu cajado de luz quebrado e Nabulork fica em Walingardyn. Um navio de um império distante desembarca no continente 63 anos de Era depois, portando uma família real, dois reis, (Haniseff & Matthwel), acreditavam se tratar de terras pobres ao princípio, com o passar do tempo foram firmando as bases e construíram o primeiro reino. (reino de Araldean)" 
+        descricao: "Uma batalha de 400 anos foi travada e vencida pela luz. Haragum cria os primeiros seres mágicos primitivos. A humanidade é criada 70 anos de Era depois. A humanidade aprende o manuseio da magia e começa a usar os conhecimentos ao seu próprio benefício. Haragum volta ao primeiro céu carregando consigo o manto do poder e seu cajado de luz quebrado e Nabulork fica em Walingardyn. Um navio de um império distante desembarca no continente 63 anos de Era depois, portando uma família real, dois reis, (Haniseff & Matthwel), acreditavam se tratar de terras pobres ao princípio, com o passar do tempo foram firmando as bases e construíram o primeiro reino. (reino de Araldean)",
+        curiosidade: "O cajado de luz de Haragum, embora quebrado, ainda é capaz de iluminar todo o continente se banhado em águas puras."
     },
     { 
         nome: "III Era Imperial", 
@@ -330,7 +307,8 @@ const eras = [
         disco: "d1", 
         ang: 240, 
         raio: 300,
-        descricao: "Sob a ajuda invisível de Nabulork, Haniseff conheceu os poderes dos antigos seres em uma expedição mata adentro. Por influência da magia obscura, decidiu escravizar estes seres e ordenou aos seus homens que deles extraíssem toda a magia que pudessem. A magia se voltou contra aqueles que juraram a proteger, a humanidade perdeu os dias de glória Haragunica e entrou no período das trevas." 
+        descricao: "Sob a ajuda invisível de Nabulork, Haniseff conheceu os poderes dos antigos seres em uma expedição mata adentro. Por influência da magia obscura, decidiu escravizar estes seres e ordenou aos seus homens que deles extraíssem toda a magia que pudessem. A magia se voltou contra aqueles que juraram a proteger, a humanidade perdeu os dias de glória Haragunica e entrou no período das trevas.",
+        curiosidade: "A família real Haniseff mantinha os seres mágicos em jaulas feitas de um metal que anulava qualquer tentativa de teletransporte."
     },
     { 
         nome: "Era das Trevas", 
@@ -338,7 +316,8 @@ const eras = [
         disco: "d2", 
         ang: 0, 
         raio: 200,
-        descricao: "O medo, mortes e fome começam a se alastrar pelo vasto continente de Triohnte. A realidade da coroa tomada pela maldade vem à tona, diversas alianças em escala continental são formadas e os lordes buscam a todo custo manter a soberania de suas casas em uma fortificação forjada a favor da monarquia O Parlamento de Linowland com o apoio do exército capital, executam a Ordem da Coroa (Um conchavo criado a fim de promover ideias revolucionárias anti-monarquistas no continente e fora dele). Hoklamoh Askarung, General superior do exército capital, ordena centenas de prisões aos lordes que se opunham. Depois, executam emboscadas contra o imperador, tomam palácios e fortes. Ganham força durante um tempo." 
+        descricao: "O medo, mortes e fome começam a se alastrar pelo vasto continente de Triohnte. A realityade da coroa tomada pela maldade vem à tona, diversas alianças em escala continental são formadas e os lordes buscam a todo custo manter a soberania de suas casas em uma fortificação forjada a favor da monarquia O Parlamento de Linowland com o apoio do exército capital, executam a Ordem da Coroa (Um conchavo criado a fim de promover ideias revolucionárias anti-monarquistas no continente e fora dele). Hoklamoh Askarung, General superior do exército capital, ordena centenas de prisões aos lordes que se opunham. Depois, executam emboscadas contra o imperador, tomam palácios e fortes. Ganham força durante um tempo.",
+        curiosidade: "A Ordem da Coroa utilizava corvos treinados para trocar mensagens codificadas entre as casas rebeldes."
     },
     { 
         nome: "Era de Bronze", 
@@ -346,7 +325,8 @@ const eras = [
         disco: "d2", 
         ang: 180, 
         raio: 200,
-        descricao: "Agaroff invoca o Conselho de Esguardian que envia soldados espalhados por todo o mundo para Triohnte. Juntos conseguem contra-atacar e tomar o poder do continente de volta em suas mãos. O cenário é de completa destruição e desolo. Líderes anti-monarquistas são presos e torturados até a morte." 
+        descricao: "Agaroff invoca o Conselho de Esguardian que envia soldados espalhados por todo o mundo para Triohnte. Juntos conseguem contra-atacar e tomar o poder do continente de volta em suas mãos. O cenário é de completa destruição e desolo. Líderes anti-monarquistas são presos e torturados até a morte.",
+        curiosidade: "O bronze desta era era fundido com poeira estelar, o que dava às armaduras uma resistência sobrenatural contra magia negra."
     },
     { 
         nome: "Era Profética", 
@@ -354,19 +334,11 @@ const eras = [
         disco: "d3", 
         ang: 0, 
         raio: 0,
-        descricao: "As visões que moldarão o futuro do mundo." 
+        descricao: "As visões que moldarão o futuro do mundo.",
+        curiosidade: "Muitos acreditam que as profecias não são sobre o futuro, mas sim lembranças de um ciclo que já aconteceu milhares de vezes."
     }
 ];
 
-
-
-
-
-
-
-
-
-    
 eras.forEach(era => {
     const discoPai = document.getElementById(era.disco);
     const card = document.createElement('div');
@@ -376,67 +348,43 @@ eras.forEach(era => {
     const x = Math.cos(rad) * era.raio;
     const y = Math.sin(rad) * era.raio;
 
-    card.style.transform =
-        `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${era.ang}deg)`;
-
+    card.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${era.ang}deg)`;
     card.innerHTML = `<img src="${era.img}"><span>${era.nome}</span>`;
 
+    card.onclick = (e) => {
+        e.stopPropagation();
+        
+        // Gira o mecanismo
+        discoPai.style.transform = `translate(-50%, -50%) rotate(${-era.ang}deg)`;
 
+        // Atualiza Painel Direito (Informações)
+        document.getElementById('p-tit').innerText = era.nome;
+        document.getElementById('p-desc').innerText = era.descricao;
+        const foto = document.getElementById('p-foto');
+        foto.src = era.img;
+        foto.style.display = "block";
+        document.getElementById('painel').classList.add('active');
 
-
-
-
-card.onclick = (e) => {
-    e.stopPropagation();
-    discoPai.style.transform = `translate(-50%, -50%) rotate(${-era.ang}deg)`;
-
-    // Preenchimento dos dados existentes
-    document.getElementById('p-tit').innerText = era.nome;
-    document.getElementById('p-desc').innerText = era.descricao;
-    
-    // NOVO: Atualiza curiosidade e ativa aba esquerda
-    document.getElementById('texto-curiosidade').innerText = era.curiosidade;
-    document.getElementById('aba-curiosidades').classList.add('active');
-
-    const foto = document.getElementById('p-foto');
-    foto.src = era.img;
-    document.getElementById('painel').classList.add('active');
-};
-
-
-
-
-
-
-
-
-    
-
-    
-    
-    // ALTERAÇÃO AQUI: Agora ele usa a descrição específica de cada era
-    document.getElementById('p-desc').innerText = era.descricao;
-
-    const foto = document.getElementById('p-foto');
-    foto.src = era.img;
-    foto.style.display = "block";
-
-    document.getElementById('painel').classList.add('active');
-};
+        // ATUALIZA PAINEL ESQUERDO (Curiosidades)
+        document.getElementById('texto-curiosidade').innerText = era.curiosidade;
+        document.getElementById('aba-curiosidades').classList.add('active');
+    };
 
     discoPai.appendChild(card);
 });
 
 function fechar() {
+    // Fecha ambos os painéis
     document.getElementById('painel').classList.remove('active');
-    document.getElementById('aba-curiosidades').classList.remove('active'); // Fecha a esquerda também
+    document.getElementById('aba-curiosidades').classList.remove('active');
 }
 
 function toggleMute() {
     const audio = document.getElementById('audio-tema');
     const status = document.getElementById('music-status');
+    
     if (audio.paused) {
-        audio.play();
+        audio.play().catch(e => console.log("O navegador bloqueou o autoplay. Clique novamente."));
         status.innerText = "♫ MUSIC: ON";
     } else {
         audio.pause();
