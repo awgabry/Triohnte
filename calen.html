@@ -252,6 +252,24 @@
 </head>
 <body>
 
+
+
+
+<aside class="painel-curiosidades" id="aba-curiosidades">
+    <h3>CURIOSIDADES DA ERA</h3>
+    <p id="texto-curiosidade">Os segredos do tempo serão revelados ao selecionar uma era no mecanismo...</p>
+</aside>
+
+<div class="music-box" onclick="toggleMute()">
+    <span id="music-status">♫ MUSIC: OFF</span>
+    <audio id="audio-tema" loop>
+        <source src="link_da_sua_musica.mp3" type="audio/mpeg">
+    </audio>
+</div>
+
+
+
+    
 <div class="viewport">
     <div class="mecanismo">
         <div class="disco" id="d1"></div>
@@ -278,6 +296,15 @@
 
 
 
+
+// Exemplo de como deve ficar cada item:
+{ 
+    nome: "I Era Imperial", 
+    // ... campos anteriores ...
+    curiosidade: "Diz-se que o cristal de Nabulork emite um zumbido imperceptível aos humanos, mas que atrai criaturas das sombras."
+},
+
+    
 
 
 const eras = [
@@ -354,13 +381,38 @@ eras.forEach(era => {
 
     card.innerHTML = `<img src="${era.img}"><span>${era.nome}</span>`;
 
-// Localize esta parte no seu código original e altere para:
+
+
+
+
+
 card.onclick = (e) => {
     e.stopPropagation();
-
     discoPai.style.transform = `translate(-50%, -50%) rotate(${-era.ang}deg)`;
 
+    // Preenchimento dos dados existentes
     document.getElementById('p-tit').innerText = era.nome;
+    document.getElementById('p-desc').innerText = era.descricao;
+    
+    // NOVO: Atualiza curiosidade e ativa aba esquerda
+    document.getElementById('texto-curiosidade').innerText = era.curiosidade;
+    document.getElementById('aba-curiosidades').classList.add('active');
+
+    const foto = document.getElementById('p-foto');
+    foto.src = era.img;
+    document.getElementById('painel').classList.add('active');
+};
+
+
+
+
+
+
+
+
+    
+
+    
     
     // ALTERAÇÃO AQUI: Agora ele usa a descrição específica de cada era
     document.getElementById('p-desc').innerText = era.descricao;
@@ -377,6 +429,19 @@ card.onclick = (e) => {
 
 function fechar() {
     document.getElementById('painel').classList.remove('active');
+    document.getElementById('aba-curiosidades').classList.remove('active'); // Fecha a esquerda também
+}
+
+function toggleMute() {
+    const audio = document.getElementById('audio-tema');
+    const status = document.getElementById('music-status');
+    if (audio.paused) {
+        audio.play();
+        status.innerText = "♫ MUSIC: ON";
+    } else {
+        audio.pause();
+        status.innerText = "♫ MUSIC: OFF";
+    }
 }
 </script>
 
