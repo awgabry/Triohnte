@@ -179,6 +179,75 @@
     cursor: pointer;
     z-index: 110;       /* Garante que ele fique na frente da foto */
 }
+
+
+/* Painel de Curiosidades (Esquerda) */
+.painel-curiosidades {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 280px;
+    height: 100vh;
+    background: linear-gradient(to right, #080808, transparent);
+    border-right: 1px solid rgba(179, 135, 40, 0.3);
+    padding: 40px 20px;
+    box-sizing: border-box;
+    transform: translateX(-100%); /* Escondido por padrão */
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 90;
+}
+
+.painel-curiosidades.active {
+    transform: translateX(0);
+}
+
+.painel-curiosidades h3 {
+    color: var(--ouro);
+    font-size: 14px;
+    letter-spacing: 2px;
+    border-bottom: 1px solid var(--ouro);
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+.painel-curiosidades p {
+    color: #888;
+    font-size: 12px;
+    line-height: 1.8;
+    font-style: italic;
+}
+
+/* Widget de Música */
+.music-box {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,0,0,0.6);
+    padding: 8px 15px;
+    border: 1px solid var(--ouro);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.music-box:hover {
+    background: rgba(179, 135, 40, 0.2);
+}
+
+.music-box span {
+    font-size: 10px;
+    color: var(--ouro);
+}
+
+
+
+
+
+        
     </style>
 </head>
 <body>
