@@ -1,8 +1,110 @@
-<section class="nova-secao">
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terras de Walingardyn</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- ESTILIZAÇÃO BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #050505; 
+            color: #a39b8f;
+            font-family: 'Crimson Pro', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .conteudo-principal, .nova-secao {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid #1a1a1a;
+            padding: 60px 40px;
+            background: #0a0a0a;
+            margin-bottom: 40px;
+        }
+
+        .imagem-secao {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: block;
+            margin: 0 auto 40px auto;
+        }
+
+        /* --- REGRA PARA O EFEITO DE DEGRADÊ NOS TÍTULOS (H1 e H2) --- */
+        h1, h2 {
+            font-family: 'Cinzel', serif;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            display: inline-block;
+            
+            /* Gradiente Metálico */
+            background: linear-gradient(
+                to bottom, 
+                #f1d5a5 0%,   /* Topo claro */
+                #d4a356 45%,  /* Dourado médio */
+                #4e3419 50%,  /* Linha de sombra central */
+                #b88640 55%,  /* Retorno ao dourado */
+                #8a5d2e 100%  /* Base bronze escuro */
+            );
+            
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 40px; }
+        h2 { font-size: 1.8rem; margin-bottom: 20px; }
+
+        .texto-secao {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            text-align: justify;
+            color: #a39b8f;
+        }   
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .conteudo-principal, .nova-secao { padding: 30px 20px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="conteudo-principal">
+        <img src="seserttemple.png" alt="Ruínas de Mavul" class="imagem-secao">
+        <h1>Terras de Walingardyn</h1>
+        <div class="texto-secao">
+            <p>Localizadas no continente de Mavul, as ruínas do antigo império de Cyannon descansam sobre o território do reino de Brangoshy o que impede que exploradores se aproximem do local. Considerado um local quase sagrado para fundação civilizacional do mundo de Walingardyn.</p>
+            <br>
+            <p>Nas paredes, desenhos das letras que hoje conhecemos como Alfabeto Mavulês, graças aos materiais de estudo escritos por Cahatsh Balmu Sell, um estudioso Mavulês.</p>
+        </div>
+    </section>
+
+    <section class="nova-secao">
         <img src="vale_gelido.png" alt="Vale dos Ventos Gélidos" class="imagem-secao">
         <h2>O Vale dos Ventos Gélidos</h2>
         <div class="texto-secao">
-            <p>Ao norte das ruínas de Mavul, estende-se uma imensidão branca onde o frio não é apenas uma temperatura, mas uma força mágica latente. Dizem que os picos nevados guardam os segredos dos primeiros gigantes que caminharam por Walingardyn.</p>
+            <p>Ao norte das ruínas de Mavul, estende-se uma imensidão branca onde o frio não é apenas uma temperatura, mas uma força mágica latente. Dizem que os picos nevados guardam os segredos dos primeiros gigantes que caminharam por Walingardyn antes da ascensão de Cyannon.</p>
         </div>
     </section>
 
@@ -10,7 +112,7 @@
         <img src="floresta_ambar.png" alt="Floresta de Âmbar" class="imagem-secao">
         <h2>A Floresta de Âmbar</h2>
         <div class="texto-secao">
-            <p>Conhecida por suas árvores cujas folhas nunca caem e brilham como ouro ao entardecer. É o refúgio das criaturas feéricas e o pulmão espiritual do continente, onde o tempo parece fluir de maneira distinta do resto do mundo.</p>
+            <p>Conhecida por suas árvores cujas folhas nunca caem e brilham como ouro ao entardecer. É o refúgio das criaturas feéricas e o pulmão espiritual do continente, onde o tempo parece fluir de maneira distinta do resto do mundo mortal.</p>
         </div>
     </section>
 
@@ -18,7 +120,7 @@
         <img src="abismo_khardum.png" alt="Abismo de Khar-Dum" class="imagem-secao">
         <h2>O Abismo de Khar-Dum</h2>
         <div class="texto-secao">
-            <p>Uma fenda colossal que rasga o solo de Mavul. Nas suas profundezas, os mineradores de Brangoshy buscam o minério negro, uma substância capaz de absorver luz, essencial para a forja das armas de elite do reino.</p>
+            <p>Uma fenda colossal que rasga o solo de Mavul. Nas suas profundezas, os mineradores de Brangoshy buscam o minério negro, uma substância capaz de absorver luz, essencial para a forja das armas de elite que protegem o reino.</p>
         </div>
     </section>
 
@@ -26,7 +128,7 @@
         <img src="ilhas_zenith.png" alt="Ilhas Flutuantes de Zenith" class="imagem-secao">
         <h2>As Ilhas Flutuantes de Zenith</h2>
         <div class="texto-secao">
-            <p>Mantidas no ar por cristais de levitação milenares, estas ilhas abrigam a Academia de Magia Celestial. Somente aqueles que dominam as correntes de ar conseguem alcançar seus portões dourados.</p>
+            <p>Mantidas no ar por cristais de levitação milenares, estas ilhas abrigam a Academia de Magia Celestial. Somente aqueles que dominam as correntes de ar ou possuem montarias aladas conseguem alcançar seus portões de marfim.</p>
         </div>
     </section>
 
@@ -34,7 +136,7 @@
         <img src="pantano_lamentos.png" alt="Pântano dos Lamentos" class="imagem-secao">
         <h2>O Pântano dos Lamentos</h2>
         <div class="texto-secao">
-            <p>Um território hostil e nebuloso que separa as terras civilizadas das regiões selvagens. Suas águas turvas escondem segredos de civilizações esquecidas que sucumbiram à ganância antes da era de Cyannon.</p>
+            <p>Um território hostil e nebuloso que separa as terras civilizadas das regiões selvagens. Suas águas turvas escondem segredos de civilizações esquecidas que sucumbiram à ganância muito antes da escrita mavulesa ser catalogada.</p>
         </div>
     </section>
 
@@ -42,15 +144,7 @@
         <img src="cidadela_brangoshy.png" alt="Cidadela de Brangoshy" class="imagem-secao">
         <h2>A Cidadela de Brangoshy</h2>
         <div class="texto-secao">
-            <p>O coração militar e político de Walingardyn. Suas muralhas são revestidas de aço e pedra mávula, tornando-a uma fortaleza impenetrável que vigia atentamente as fronteiras com as ruínas proibidas.</p>
-        </div>
-    </section>
-
-    <section class="nova-secao">
-        <img src="deserto_salkhar.png" alt="Deserto de Sal-Khar" class="imagem-secao">
-        <h2>O Deserto de Sal-Khar</h2>
-        <div class="texto-secao">
-            <p>Onde o sol castiga as dunas de areia vermelha. É o lar dos nômades que guardam as rotas comerciais e conhecem as localizações das raras fontes de água mágica que sustentam a vida no calor extremo.</p>
+            <p>O coração militar e político de Walingardyn. Suas muralhas são revestidas de aço reforçado, tornando-a uma fortaleza impenetrável que vigia atentamente as fronteiras com as ruínas proibidas do império caído.</p>
         </div>
     </section>
 
@@ -58,6 +152,9 @@
         <img src="porto_destinos.png" alt="Porto dos Destinos" class="imagem-secao">
         <h2>O Porto dos Destinos</h2>
         <div class="texto-secao">
-            <p>O ponto de encontro de todas as raças e culturas. Navios de todos os cantos atracam aqui para trocar especiarias, pergaminhos antigos e histórias sobre as maravilhas e perigos que cercam Walingardyn.</p>
+            <p>O ponto de encontro de todas as raças. Navios de todos os cantos do mundo de Walingardyn atracam aqui para trocar especiarias, pergaminhos antigos e histórias sobre as maravilhas e perigos que cercam o continente de Mavul.</p>
         </div>
     </section>
+
+</body>
+</html>
