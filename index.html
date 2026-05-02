@@ -17,14 +17,13 @@
             box-sizing: border-box;
         }
 
-        /* --- CONFIGURAÇÃO DO DEGRADÊ METÁLICO (Igual à imagem) --- */
         :root {
             --gold-gradient: linear-gradient(
                 to bottom, 
                 #c59d5f 0%,   
                 #e3c38f 40%,  
-                #f3e1b5 48%,  /* Linha de brilho central */
-                #7a542a 52%,  /* Sombra de contraste */
+                #f3e1b5 48%, 
+                #7a542a 52%, 
                 #b88640 60%,  
                 #8a5d2e 100%  
             );
@@ -44,7 +43,6 @@
             filter: var(--gold-shadow);
         }
 
-        /* --- APLICAÇÃO DO DEGRADÊ NA LOGO --- */
         .img-titulo, .footer-logo-img {
             background: var(--gold-gradient);
             -webkit-mask-image: url('triwo.png');
@@ -101,7 +99,6 @@
             position: relative;
         }
 
-        /* --- BORDAS LATERAIS (SERD.PNG) COM DEGRADÊ --- */
         .borda-lateral {
             position: absolute;
             top: 0;
@@ -112,7 +109,7 @@
             -webkit-mask-image: url('serd.png');
             mask-image: url('serd.png');
             -webkit-mask-size: contain;
-            -webkit-mask-repeat: repeat-y;
+            mask-repeat: repeat-y;
             filter: var(--gold-shadow);
         }
 
@@ -156,27 +153,34 @@
             text-transform: uppercase;
             letter-spacing: 4px;
         }
-        .intro-text p { font-size: 1.3rem; font-style: italic; }
+        .intro-text p { font-size: 1.3rem; font-style: italic; margin-bottom: 20px; }
 
-     .lore-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 40px;
-    align-items: stretch; /* Essencial para alinhar as alturas */
-}
+        /* --- GRID E CARDS (CORREÇÃO DE ALINHAMENTO E LINKS) --- */
+        .lore-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            align-items: stretch;
+        }
 
-      .card {
-    background: #0a0a0a;
-    padding: 40px;
-    border: 1px solid #1a1a1a;
-    position: relative;
-    transition: 0.5s;
-    /* Adicione estas linhas abaixo */
-    width: 100%; 
-    display: flex;
-    flex-direction: column;
-    height: 100%; 
-}
+        .lore-grid a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+        }
+
+        .card {
+            background: #0a0a0a;
+            padding: 40px;
+            border: 1px solid #1a1a1a;
+            position: relative;
+            transition: 0.5s;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
         .card::before {
             content: '';
             position: absolute;
@@ -226,26 +230,15 @@
         </nav>
     </header>
 
- <main>
+    <main>
         <section class="intro-text">
             <h2>O Legado</h2>
-            <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos
-                devido a separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pode ser uma "pessoa normal", momentos de maior
-                conexão com a realidade social eram abafados por batalhas judiciais. Nas próprias palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
-            <div>
-               <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael,
-                Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha
-                das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
-                <div>
-                    <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas crìticas
-                    Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, 
-                    mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo.</p>
-               </div>
-            </div>
+            <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos devido a separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pode ser uma "pessoa normal", momentos de maior conexão com a realidade social eram abafados por batalhas judiciais. Nas próprias palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
+            <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
+            <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo.</p>
         </section>
 
-     <section class="lore-grid">
-
+        <section class="lore-grid">
             <a href="panteao.html">
                 <div class="card">
                     <h3>O Panteão dos Deuses</h3>
@@ -280,7 +273,6 @@
                     <p>Entenda o tempo em Triohnte e em Walingardyn.</p>
                 </div>
             </a>
-            
         </section>
     </main>
 
