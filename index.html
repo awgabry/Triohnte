@@ -158,19 +158,25 @@
         }
         .intro-text p { font-size: 1.3rem; font-style: italic; }
 
-        .lore-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
+     .lore-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    align-items: stretch; /* Essencial para alinhar as alturas */
+}
 
-        .card {
-            background: #0a0a0a;
-            padding: 40px;
-            border: 1px solid #1a1a1a;
-            position: relative;
-            transition: 0.5s;
-        }
+      .card {
+    background: #0a0a0a;
+    padding: 40px;
+    border: 1px solid #1a1a1a;
+    position: relative;
+    transition: 0.5s;
+    /* Adicione estas linhas abaixo */
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+}
         .card::before {
             content: '';
             position: absolute;
@@ -238,37 +244,43 @@
             </div>
         </section>
 
-        <section class="lore-grid">
+     <section class="lore-grid">
 
-             <a href="panteao.html" style="text-decoration: none; color: inherit;">
-            <div class="card">
-                <h3>O Panteão dos Deuses</h3>
-                <p>Onde estão os deuses quando as cidades queimam? Conheça os mitos sobre as divindades que ajudaram a moldar civilizações pelo mundo de Walingardyn.</p>
-            </div>
+            <a href="panteao.html">
+                <div class="card">
+                    <h3>O Panteão dos Deuses</h3>
+                    <p>Onde estão os deuses quando as cidades queimam? Conheça os mitos sobre as divindades que ajudaram a moldar civilizações pelo mundo de Walingardyn.</p>
+                </div>
+            </a>
 
-            <div class="card">
-                <h3>Contorno de Triohnte</h3>
-                <p>Uma exploração pelas regiões de Triohnte, onde a própria geografia e clima parecem conspirar contra a sanidade dos viajantes.</p>
-            </div>
+            <a href="#">
+                <div class="card">
+                    <h3>Contorno de Triohnte</h3>
+                    <p>Uma exploração pelas regiões de Triohnte, onde a própria geografia e clima parecem conspirar contra a sanidade dos viajantes.</p>
+                </div>
+            </a>
 
-            <div class="card">
-                   <a href="conflito.html" style="text-decoration: none; color: inherit;">
-                <h3>Conflitos Primordiais</h3>
-                <p>A magia em Triohnte não é um dom, é uma transação. Descubra os rituais proibidos e o custo terrível de cada feitiço e artefato.</p>
-            </div>
+            <a href="conflito.html">
+                <div class="card">
+                    <h3>Conflitos Primordiais</h3>
+                    <p>A magia em Triohnte não é um dom, é uma transação. Descubra os rituais proibidos e o custo terrível de cada feitiço e artefato.</p>
+                </div>
+            </a>
 
-            <div class="card">
-                <h3>Motivos de Guerra</h3>
-                <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um grande império através das Eras.</p>
-            </div>
+            <a href="#">
+                <div class="card">
+                    <h3>Motivos de Guerra</h3>
+                    <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um grande império através das Eras.</p>
+                </div>
+            </a>
 
-            
-           <a href="calen.html" style="text-decoration: none; color: inherit;">
+            <a href="calen.html">
                 <div class="card">
                     <h3>Calendário Triohntino</h3>
                     <p>Entenda o tempo em Triohnte e em Walingardyn.</p>
                 </div>
             </a>
+            
         </section>
     </main>
 
