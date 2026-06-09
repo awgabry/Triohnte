@@ -19,19 +19,24 @@
             box-sizing: border-box;
         }
 
-        /* Estilo do Título Principal */
+        /* Estilo do Título Principal Corrigido */
         .main-title {
             font-size: 3rem;
             text-transform: uppercase;
             letter-spacing: 3px;
+            margin-top: 0; /* Remove margens extras que causam bugs */
             margin-bottom: 40px;
             text-align: center;
             font-weight: bold;
+            line-height: 1.2; /* Garante que o texto tenha altura para renderizar */
+            display: block; /* Força o elemento a se comportar como bloco visível */
+            
+            /* Efeito de degradê dourado */
             background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent;
+            -webkit-text-fill-color: transparent;
+            color: #bf953f; /* Cor alternativa caso o degradê falhe em algum navegador */
         }
 
         /* Container principal que organiza os blocos de deuses */
@@ -92,22 +97,22 @@
             font-weight: bold;
             background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             background-clip: text;
+            -webkit-text-fill-color: transparent;
             color: transparent;
         }
 
         /* Painel de História Expandido (Abaixo dos cards) */
         .history-dropdown {
             width: 100%;
-            max-width: 800px; /* Alinhado centralizado com a largura da fileira */
+            max-width: 800px;
             background-color: #111;
             border: 1px solid #bf953f;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(191, 149, 63, 0.2);
-            padding: 0px; /* Começa zerado para efeito suave */
-            max-height: 0; /* Oculto inicialmente */
-            overflow: hidden; /* Esconde o texto quando fechado */
+            padding: 0px;
+            max-height: 0;
+            overflow: hidden;
             opacity: 0;
             transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.3s ease;
             box-sizing: border-box;
@@ -117,7 +122,7 @@
 
         /* Quando ativo, expande suavemente */
         .history-dropdown.open {
-            max-height: 500px; /* Altura máxima permitida para expansão */
+            max-height: 500px;
             padding: 25px;
             opacity: 1;
         }
@@ -129,8 +134,8 @@
             font-weight: bold;
             background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             background-clip: text;
+            -webkit-text-fill-color: transparent;
             color: transparent;
         }
 
@@ -195,7 +200,6 @@
             const dropdownTitle = document.getElementById('dropdownTitle');
             const dropdownText = document.getElementById('dropdownText');
 
-            // Se o usuário clicar no card que JÁ está aberto, fecha a gaveta
             if (currentActiveCard === cardElement) {
                 cardElement.classList.remove('active');
                 dropdown.classList.remove('open');
@@ -203,20 +207,16 @@
                 return;
             }
 
-            // Remove classe active do card anterior (se houver)
             if (currentActiveCard) {
                 currentActiveCard.classList.remove('active');
             }
 
-            // Ativa o novo card selecionado
             cardElement.classList.add('active');
             currentActiveCard = cardElement;
 
-            // Coleta os textos guardados no HTML do card clicado
             const title = cardElement.getAttribute('data-title');
             const history = cardElement.getAttribute('data-history');
 
-            // Se a gaveta já estiver aberta, faz uma troca rápida piscando o conteúdo
             if (dropdown.classList.contains('open')) {
                 dropdown.style.opacity = '0';
                 setTimeout(() => {
@@ -225,7 +225,6 @@
                     dropdown.style.opacity = '1';
                 }, 200);
             } else {
-                // Se estava fechada, insere o texto e abre com a transição suave
                 dropdownTitle.innerText = title;
                 dropdownText.innerText = history;
                 dropdown.classList.add('open');
