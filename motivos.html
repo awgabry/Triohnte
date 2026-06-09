@@ -155,11 +155,18 @@ O continente de Triohnte havia recem saido de uma guerra com um preterido herdei
             </div>
         </div>
 
-        <div class="conflito-item">
-            <div class="conflito-header" onclick="toggleConflito(this)" data-target="card2">
-                <div class="arrow-button"></div>
-                
-                  
+        <script>
+        function toggleConflito(headerElement) {
+            // Pega o ID do card associado a este cabeçalho clicado
+            const targetId = headerElement.getAttribute('data-target');
+            const targetCard = document.getElementById(targetId);
+
+            // Alterna a abertura do card clicado
+            targetCard.classList.toggle('open');
+            
+            // Alterna a rotação da seta correspondente
+            headerElement.classList.toggle('active');
+        }
     </script>
 
 </body>
