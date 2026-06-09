@@ -10,22 +10,97 @@
             color: white;
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column; /* Alinha o aviso e os cards verticalmente */
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh; /* Permite que a página cresça se faltar espaço */
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
+        
         .container {
             text-align: center;
             border: 1px solid #333;
             padding: 20px;
             border-radius: 10px;
+            margin-bottom: 30px; /* Espaço entre o aviso e os cards */
+        }
+
+        /* Container que envolve todos os cards */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px; /* Espaçamento entre os cards */
+            max-width: 1200px;
+        }
+
+        /* Estilo individual de cada card */
+        .card {
+            background-color: #111;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            width: 200px;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.05); /* Efeito de zoom ao passar o mouse */
+        }
+
+        /* Estilo das imagens dos deuses */
+        .card img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        /* Efeito de Degradê Dourado no Texto */
+        .god-name {
+            font-size: 1.4rem;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent; /* Fallback para navegadores antigos */
         }
     </style>
 </head>
 <body>
 
+    <div class="container">
         <p>Estamos trabalhando nesta página.</p>
+    </div>
+
+    <div class="cards-container">
+        
+        <div class="card">
+            <img src="deuses/gaugyal.png" alt="Gaugyal">
+            <div class="god-name">Gaugyal</div>
+        </div>
+
+        <div class="card">
+            <img src="deuses/haragum.png" alt="Haragum">
+            <div class="god-name">Haragum</div>
+        </div>
+
+        <div class="card">
+            <img src="deuses/hyobdor.png" alt="Hyobdor">
+            <div class="god-name">Hyobdor</div>
+        </div>
+
+        <div class="card">
+            <img src="deuses/nabulork.png" alt="Nabulork">
+            <div class="god-name">Nabulork</div>
+        </div>
+
     </div>
 
 </body>
