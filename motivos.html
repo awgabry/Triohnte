@@ -3,30 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panteão dos deuses</title>
+    <title>Motivos de guerra em Walingardyn</title>
     <style>
         body {
             background-color: black;
             color: white;
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 40px 20px;
+            box-sizing: border-box;
         }
-        .container {
+
+        /* Título Principal da Página */
+        .main-title {
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 50px;
             text-align: center;
+            font-weight: bold;
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #bf953f;
+        }
+
+        /* Container da lista de conflitos */
+        .conflitos-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 30px; /* Espaço entre cada bloco de linha/card */
+            width: 100%;
+            max-width: 700px;
+        }
+
+        /* Estrutura da linha: Agrupa a Seta e o Título lado a lado */
+        .conflito-header {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Espaço entre a seta e o texto */
+            cursor: pointer;
+            width: fit-content;
+        }
+
+        /* Seta em CSS puro com o degradê dourado */
+        .arrow-button {
+            width: 35px;
+            height: 35px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            
+            /* Formato geométrico idêntico ao enviado */
+            clip-path: polygon(0% 15%, 55% 50%, 0% 85%, 25% 50%, 0% 15%, 100% 50%);
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+        }
+
+        /* Título que fica à frente de cada seta */
+        .conflito-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin: 0;
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #bf953f;
+            transition: opacity 0.2s;
+        }
+
+        /* Efeitos visuais ao passar o mouse na linha interativa */
+        .conflito-header:hover .arrow-button {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 5px rgba(191, 149, 63, 0.6));
+        }
+
+        /* Quando o menu está aberto, a seta gira para baixo */
+        .conflito-header.active .arrow-button {
+            transform: rotate(90deg);
+        }
+
+        /* Card Suspenso Oculto (Abaixo de cada linha) */
+        .content-card {
+            background-color: #111;
+            border: 1px solid #bf953f;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(191, 149, 63, 0.15);
+            padding: 0px;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.3s ease;
+            box-sizing: border-box;
+            margin-top: -10px; /* Aproxima o card aberto do cabeçalho */
+        }
+
+        /* Estado aberto do Card */
+        .content-card.open {
+            max-height: 700px;
+            padding: 25px;
+            opacity: 1;
+            margin-top: 10px;
+        }
+
+        /* Imagem interna do Card */
+        .card-image {
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
             border: 1px solid #333;
-            padding: 20px;
-            border-radius: 10px;
+        }
+
+        /* Texto descritivo interno */
+        .card-text {
+            color: #ddd;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
         }
     </style>
 </head>
 <body>
 
-        <p>Estamos trabalhando nesta página.</p>
+    <h1 class="main-title">Conflitos Primordiais</h1>
+
+    <div class="conflitos-lista">
+        
+        <div class="conflito-item">
+            <div class="conflito-header" onclick="toggleConflito(this)" data-target="card1">
+                <div class="arrow-button"></div>
+                <h2 class="conflito-title">Primeira Era: A Fratura do Vazio</h2>
+            </div>
+            <div class="content-card" id="card1">
+                <img src="deuses/conflito1.png" alt="A Fratura do Vazio" class="card-image">
+                <p class="card-text">
+                    No alvorecer dos tempos, as forças de Gaugyal e Nabulork se chocaram pela primeira vez. Esse choque de luz e sombras colapsou a matéria primordial, gerando as fundações físicas do universo e dividindo os reinos espirituais.
+                </p>
+            </div>
+        </div>
+
+        <div class="conflito-item">
+            <div class="conflito-header" onclick="toggleConflito(this)" data-target="card2">
+                <div class="arrow-button"></div>
+                <h2 class="conflito-title">Segunda Era: A Fúria dos Ventos</h2>
+            </div>
+            <div class="content-card" id="card2">
+                <img src="deuses/conflito2.png" alt="A Fúria dos Ventos" class="card-image">
+                <p class="card-text">
+                    As tempestades de Haragum varreram as matas protegidas por Hyobdor. Um conflito de eras que moldou os oceanos, ergueu as montanhas mais altas e testou os limites entre a expansão da civilização e a preservação da natureza.
+                </p>
+            </div>
+        </div>
+
+        <div class="conflito-item">
+            <div class="conflito-header" onclick="toggleConflito(this)" data-target="card3">
+                <div class="arrow-button"></div>
+                <h2 class="conflito-title">Terceira Era: O Crepúsculo dos Deuses</h2>
+            </div>
+            <div class="content-card" id="card3">
+                <img src="deuses/conflito3.png" alt="O Crepúsculo dos Deuses" class="card-image">
+                <p class="card-text">
+                    O alinhamento final onde todas as divindades precisaram intervir para conter o avanço do vazio. Um pacto de silêncio foi selado, isolando o panteão do contato direto com os mortais.
+                </p>
+            </div>
+        </div>
+
     </div>
+
+    <script>
+        function toggleConflito(headerElement) {
+            // Pega o ID do card associado a este cabeçalho clicado
+            const targetId = headerElement.getAttribute('data-target');
+            const targetCard = document.getElementById(targetId);
+
+            // Alterna a abertura do card clicado
+            targetCard.classList.toggle('open');
+            
+            // Alterna a rotação da seta correspondente
+            headerElement.classList.toggle('active');
+        }
+    </script>
 
 </body>
 </html>
