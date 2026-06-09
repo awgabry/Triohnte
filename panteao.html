@@ -34,57 +34,23 @@
             color: transparent;
         }
 
-        /* Layout de duas colunas: História na esquerda, Cards na direita */
-        .panteon-layout {
+        /* Container principal que organiza os blocos de deuses */
+        .panteon-container {
             display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            gap: 40px;
-            max-width: 1400px;
+            flex-direction: column;
+            align-items: center;
             width: 100%;
+            max-width: 1200px;
         }
 
-        /* Card de História (Lado Esquerdo) */
-        .history-panel {
-            background-color: #111;
-            border: 2px solid #bf953f; /* Borda dourada fixa */
-            box-shadow: 0 0 15px rgba(191, 149, 63, 0.3);
-            border-radius: 12px;
-            padding: 25px;
-            width: 300px;
-            min-height: 350px;
-            box-sizing: border-box;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            /* Começa oculto ou mostrando instruções */
-            opacity: 1; 
-        }
-
-        .history-title {
-            font-size: 1.5rem;
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-weight: bold;
-            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .history-text {
-            color: #ccc;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* Container dos Cards dos Deuses (Lado Direito) */
-        .cards-container {
+        /* Linha onde os cards dos deuses ficam lado a lado */
+        .cards-row {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
-            max-width: 900px;
+            width: 100%;
+            margin-bottom: 20px;
         }
 
         /* Estilo individual de cada card */
@@ -102,11 +68,11 @@
             transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
         }
 
-        /* Estado de Hover e Selecionado nos cards */
+        /* Hover e estado ativo */
         .card:hover, .card.active {
             transform: scale(1.05);
             border-color: #bf953f;
-            box-shadow: 0 0 10px rgba(191, 149, 63, 0.5);
+            box-shadow: 0 0 10px rgba(191, 149, 63, 0.4);
         }
 
         /* Imagens dos deuses */
@@ -115,7 +81,7 @@
             height: 250px;
             border-radius: 6px;
             object-fit: cover;
-            pointer-events: none; /* Evita arrastar a imagem por engano */
+            pointer-events: none;
         }
 
         /* Nomes dos deuses nos cards */
@@ -131,17 +97,48 @@
             color: transparent;
         }
 
-        /* Responsividade para telas menores (empilha a história acima dos cards se faltar espaço) */
-        @media (max-width: 900px) {
-            .panteon-layout {
-                flex-direction: column;
-                align-items: center;
-            }
-            .history-panel {
-                width: 100%;
-                max-width: 500px;
-                min-height: auto;
-            }
+        /* Painel de História Expandido (Abaixo dos cards) */
+        .history-dropdown {
+            width: 100%;
+            max-width: 800px; /* Alinhado centralizado com a largura da fileira */
+            background-color: #111;
+            border: 1px solid #bf953f;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(191, 149, 63, 0.2);
+            padding: 0px; /* Começa zerado para efeito suave */
+            max-height: 0; /* Oculto inicialmente */
+            overflow: hidden; /* Esconde o texto quando fechado */
+            opacity: 0;
+            transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.3s ease;
+            box-sizing: border-box;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        /* Quando ativo, expande suavemente */
+        .history-dropdown.open {
+            max-height: 500px; /* Altura máxima permitida para expansão */
+            padding: 25px;
+            opacity: 1;
+        }
+
+        .history-title {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .history-text {
+            color: #ccc;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
         }
     </style>
 </head>
@@ -149,37 +146,32 @@
 
     <h1 class="main-title">Panteão dos Deuses</h1>
 
-    <div class="panteon-layout">
+    <div class="panteon-container">
         
-        <div class="history-panel" id="historyPanel">
-            <h2 class="history-title" id="historyTitle">Selecione um Deus</h2>
-            <p class="history-text" id="historyText">Clique no card de qualquer divindade à direita para invocar suas crônicas sagradas e desvendar os segredos do panteão.</p>
-        </div>
-
-        <div class="cards-container">
+        <div class="cards-row">
             
-            <div class="card" onclick="selectGod(this)" 
+            <div class="card" onclick="toggleHistory(this)" 
                  data-title="Gaugyal, a Deusa da Luz" 
                  data-history="Originária do grande deserto, Gaugyal desperta o sol com seu toque e molda a areia em templos sagrados. Diz-se que sua voz é o primeiro raio da manhã. Uma vez salvou seu povo de um milênio de escuridão profunda.">
                 <img src="deuses/gaugyal.png" alt="Gaugyal">
                 <h3 class="god-name">Gaugyal</h3>
             </div>
 
-            <div class="card" onclick="selectGod(this)" 
+            <div class="card" onclick="toggleHistory(this)" 
                  data-title="Haragum, o Senhor dos Céus" 
                  data-history="Guardião das tempestades e das constelações antigas. Com seu cetro de ouro puro, Haragum dita as estações e rege o destino dos ventos. Ele é a justiça implacável e a calmaria após a tempestade.">
                 <img src="deuses/haragum.png" alt="Haragum">
                 <h3 class="god-name">Haragum</h3>
             </div>
 
-            <div class="card" onclick="selectGod(this)" 
+            <div class="card" onclick="toggleHistory(this)" 
                  data-title="Hyobdor, o Protetor das Matas" 
                  data-history="Nascido das profundezas das florestas sagradas, Hyobdor é a força viva da natureza. Carrega a tocha do conhecimento e usa sua coroa de folhas raras para se comunicar com todas as criaturas e feras vivas.">
                 <img src="deuses/hyobdor.png" alt="Hyobdor">
                 <h3 class="god-name">Hyobdor</h3>
             </div>
 
-            <div class="card" onclick="selectGod(this)" 
+            <div class="card" onclick="toggleHistory(this)" 
                  data-title="Nabulork, o Soberano das Sombras" 
                  data-history="Mestre do submundo e dos mistérios ocultos. Nabulork governa o que não pode ser visto, canalizando a energia do vazio e o fogo etéreo. Ele não representa o mal, mas sim o equilíbrio necessário do descanso eterno.">
                 <img src="deuses/nabulork.png" alt="Nabulork">
@@ -188,35 +180,56 @@
 
         </div>
 
+        <div class="history-dropdown" id="dropdownPanel">
+            <h2 class="history-title" id="dropdownTitle"></h2>
+            <p class="history-text" id="dropdownText"></p>
+        </div>
+
     </div>
 
     <script>
-        function selectGod(cardElement) {
-            // Remove a classe 'active' de todos os cards para tirar o brilho dourado antigo
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(c => c.classList.remove('active'));
+        let currentActiveCard = null;
 
-            // Adiciona o brilho dourado ao card clicado
+        function toggleHistory(cardElement) {
+            const dropdown = document.getElementById('dropdownPanel');
+            const dropdownTitle = document.getElementById('dropdownTitle');
+            const dropdownText = document.getElementById('dropdownText');
+
+            // Se o usuário clicar no card que JÁ está aberto, fecha a gaveta
+            if (currentActiveCard === cardElement) {
+                cardElement.classList.remove('active');
+                dropdown.classList.remove('open');
+                currentActiveCard = null;
+                return;
+            }
+
+            // Remove classe active do card anterior (se houver)
+            if (currentActiveCard) {
+                currentActiveCard.classList.remove('active');
+            }
+
+            // Ativa o novo card selecionado
             cardElement.classList.add('active');
+            currentActiveCard = cardElement;
 
-            // Captura os dados salvos nos atributos do HTML do card clicado
+            // Coleta os textos guardados no HTML do card clicado
             const title = cardElement.getAttribute('data-title');
             const history = cardElement.getAttribute('data-history');
 
-            // Aplica uma animação rápida de fade out/in para a troca de texto suave
-            const panel = document.getElementById('historyPanel');
-            panel.style.opacity = '0';
-            panel.style.transform = 'scale(0.98)';
-
-            setTimeout(() => {
-                // Altera o texto do painel esquerdo
-                document.getElementById('historyTitle').innerText = title;
-                document.getElementById('historyText').innerText = history;
-                
-                // Restaura o fade in
-                panel.style.opacity = '1';
-                panel.style.transform = 'scale(1)';
-            }, 150);
+            // Se a gaveta já estiver aberta, faz uma troca rápida piscando o conteúdo
+            if (dropdown.classList.contains('open')) {
+                dropdown.style.opacity = '0';
+                setTimeout(() => {
+                    dropdownTitle.innerText = title;
+                    dropdownText.innerText = history;
+                    dropdown.style.opacity = '1';
+                }, 200);
+            } else {
+                // Se estava fechada, insere o texto e abre com a transição suave
+                dropdownTitle.innerText = title;
+                dropdownText.innerText = history;
+                dropdown.classList.add('open');
+            }
         }
     </script>
 
