@@ -15,8 +15,23 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px; /* Aumentado o padding superior para dar respiro */
             box-sizing: border-box;
+        }
+
+        /* Estilo do Título Principal */
+        .main-title {
+            font-size: 3rem; /* Tamanho grande e imponente */
+            text-transform: uppercase; /* Letras maiúsculas */
+            letter-spacing: 3px; /* Espaçamento elegante entre as letras */
+            margin-bottom: 40px; /* Empurra os cards para baixo, criando o espaço ideal */
+            text-align: center;
+            font-weight: bold;
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
         }
 
         /* Container que envolve todos os cards */
@@ -24,7 +39,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px; /* Espaçamento entre os cards */
+            gap: 20px;
             max-width: 1200px;
         }
 
@@ -43,19 +58,19 @@
         }
 
         .card:hover {
-            transform: scale(1.05); /* Efeito de zoom ao passar o mouse */
-            border-color: #bf953f; /* Sutil borda dourada ao passar o mouse */
+            transform: scale(1.05);
+            border-color: #bf953f;
         }
 
-        /* Estilo das imagens dos deuses (ajustado para perfeita simetria) */
+        /* Estilo das imagens dos deuses */
         .card img {
             width: 100%;
-            height: 280px; /* Altura fixa para alinhar todos os cards igualmente */
+            height: 280px;
             border-radius: 6px;
-            object-fit: cover; /* Corta a imagem proporcionalmente sem distorcer */
+            object-fit: cover;
         }
 
-        /* Efeito de Degradê Dourado no Texto */
+        /* Efeito de Degradê Dourado nos nomes */
         .god-name {
             font-size: 1.3rem;
             margin-top: 15px;
@@ -70,6 +85,8 @@
     </style>
 </head>
 <body>
+
+    <h1 class="main-title">Panteão dos Deuses</h1>
 
     <div class="cards-container">
         
