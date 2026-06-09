@@ -10,21 +10,13 @@
             color: white;
             font-family: Arial, sans-serif;
             display: flex;
-            flex-direction: column; /* Alinha o aviso e os cards verticalmente */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Permite que a página cresça se faltar espaço */
+            min-height: 100vh;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
-        }
-        
-        .container {
-            text-align: center;
-            border: 1px solid #333;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px; /* Espaço entre o aviso e os cards */
         }
 
         /* Container que envolve todos os cards */
@@ -44,24 +36,28 @@
             padding: 15px;
             text-align: center;
             width: 200px;
-            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, border-color 0.2s;
         }
 
         .card:hover {
             transform: scale(1.05); /* Efeito de zoom ao passar o mouse */
+            border-color: #bf953f; /* Sutil borda dourada ao passar o mouse */
         }
 
-        /* Estilo das imagens dos deuses */
+        /* Estilo das imagens dos deuses (ajustado para perfeita simetria) */
         .card img {
             width: 100%;
-            height: auto;
+            height: 280px; /* Altura fixa para alinhar todos os cards igualmente */
             border-radius: 6px;
-            object-fit: cover;
+            object-fit: cover; /* Corta a imagem proporcionalmente sem distorcer */
         }
 
         /* Efeito de Degradê Dourado no Texto */
         .god-name {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             margin-top: 15px;
             margin-bottom: 5px;
             font-weight: bold;
@@ -69,7 +65,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent; /* Fallback para navegadores antigos */
+            color: transparent;
         }
     </style>
 </head>
@@ -79,22 +75,22 @@
         
         <div class="card">
             <img src="deuses/gaugyal.png" alt="Gaugyal">
-            <div class="god-name">Gaugyal</div>
+            <h3 class="god-name">Gaugyal</h3>
         </div>
 
         <div class="card">
             <img src="deuses/haragum.png" alt="Haragum">
-            <div class="god-name">Haragum</div>
+            <h3 class="god-name">Haragum</h3>
         </div>
 
         <div class="card">
             <img src="deuses/hyobdor.png" alt="Hyobdor">
-            <div class="god-name">Hyobdor</div>
+            <h3 class="god-name">Hyobdor</h3>
         </div>
 
         <div class="card">
             <img src="deuses/nabulork.png" alt="Nabulork">
-            <div class="god-name">Nabulork</div>
+            <h3 class="god-name">Nabulork</h3>
         </div>
 
     </div>
