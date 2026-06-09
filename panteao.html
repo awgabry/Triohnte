@@ -15,16 +15,16 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 40px 20px; /* Aumentado o padding superior para dar respiro */
+            padding: 40px 20px;
             box-sizing: border-box;
         }
 
         /* Estilo do Título Principal */
         .main-title {
-            font-size: 3rem; /* Tamanho grande e imponente */
-            text-transform: uppercase; /* Letras maiúsculas */
-            letter-spacing: 3px; /* Espaçamento elegante entre as letras */
-            margin-bottom: 40px; /* Empurra os cards para baixo, criando o espaço ideal */
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
             text-align: center;
             font-weight: bold;
             background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
@@ -34,13 +34,57 @@
             color: transparent;
         }
 
-        /* Container que envolve todos os cards */
+        /* Layout de duas colunas: História na esquerda, Cards na direita */
+        .panteon-layout {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        /* Card de História (Lado Esquerdo) */
+        .history-panel {
+            background-color: #111;
+            border: 2px solid #bf953f; /* Borda dourada fixa */
+            box-shadow: 0 0 15px rgba(191, 149, 63, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            width: 300px;
+            min-height: 350px;
+            box-sizing: border-box;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            /* Começa oculto ou mostrando instruções */
+            opacity: 1; 
+        }
+
+        .history-title {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .history-text {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Container dos Cards dos Deuses (Lado Direito) */
         .cards-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
-            max-width: 1200px;
+            max-width: 900px;
         }
 
         /* Estilo individual de cada card */
@@ -50,29 +94,33 @@
             border-radius: 8px;
             padding: 15px;
             text-align: center;
-            width: 200px;
+            width: 180px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.2s, border-color 0.2s;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
         }
 
-        .card:hover {
+        /* Estado de Hover e Selecionado nos cards */
+        .card:hover, .card.active {
             transform: scale(1.05);
             border-color: #bf953f;
+            box-shadow: 0 0 10px rgba(191, 149, 63, 0.5);
         }
 
-        /* Estilo das imagens dos deuses */
+        /* Imagens dos deuses */
         .card img {
             width: 100%;
-            height: 280px;
+            height: 250px;
             border-radius: 6px;
             object-fit: cover;
+            pointer-events: none; /* Evita arrastar a imagem por engano */
         }
 
-        /* Efeito de Degradê Dourado nos nomes */
+        /* Nomes dos deuses nos cards */
         .god-name {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-top: 15px;
             margin-bottom: 5px;
             font-weight: bold;
@@ -82,35 +130,95 @@
             background-clip: text;
             color: transparent;
         }
+
+        /* Responsividade para telas menores (empilha a história acima dos cards se faltar espaço) */
+        @media (max-width: 900px) {
+            .panteon-layout {
+                flex-direction: column;
+                align-items: center;
+            }
+            .history-panel {
+                width: 100%;
+                max-width: 500px;
+                min-height: auto;
+            }
+        }
     </style>
 </head>
 <body>
 
     <h1 class="main-title">Panteão dos Deuses</h1>
 
-    <div class="cards-container">
+    <div class="panteon-layout">
         
-        <div class="card">
-            <img src="deuses/gaugyal.png" alt="Gaugyal">
-            <h3 class="god-name">Gaugyal</h3>
+        <div class="history-panel" id="historyPanel">
+            <h2 class="history-title" id="historyTitle">Selecione um Deus</h2>
+            <p class="history-text" id="historyText">Clique no card de qualquer divindade à direita para invocar suas crônicas sagradas e desvendar os segredos do panteão.</p>
         </div>
 
-        <div class="card">
-            <img src="deuses/haragum.png" alt="Haragum">
-            <h3 class="god-name">Haragum</h3>
-        </div>
+        <div class="cards-container">
+            
+            <div class="card" onclick="selectGod(this)" 
+                 data-title="Gaugyal, a Deusa da Luz" 
+                 data-history="Originária do grande deserto, Gaugyal desperta o sol com seu toque e molda a areia em templos sagrados. Diz-se que sua voz é o primeiro raio da manhã. Uma vez salvou seu povo de um milênio de escuridão profunda.">
+                <img src="deuses/gaugyal.png" alt="Gaugyal">
+                <h3 class="god-name">Gaugyal</h3>
+            </div>
 
-        <div class="card">
-            <img src="deuses/hyobdor.png" alt="Hyobdor">
-            <h3 class="god-name">Hyobdor</h3>
-        </div>
+            <div class="card" onclick="selectGod(this)" 
+                 data-title="Haragum, o Senhor dos Céus" 
+                 data-history="Guardião das tempestades e das constelações antigas. Com seu cetro de ouro puro, Haragum dita as estações e rege o destino dos ventos. Ele é a justiça implacável e a calmaria após a tempestade.">
+                <img src="deuses/haragum.png" alt="Haragum">
+                <h3 class="god-name">Haragum</h3>
+            </div>
 
-        <div class="card">
-            <img src="deuses/nabulork.png" alt="Nabulork">
-            <h3 class="god-name">Nabulork</h3>
+            <div class="card" onclick="selectGod(this)" 
+                 data-title="Hyobdor, o Protetor das Matas" 
+                 data-history="Nascido das profundezas das florestas sagradas, Hyobdor é a força viva da natureza. Carrega a tocha do conhecimento e usa sua coroa de folhas raras para se comunicar com todas as criaturas e feras vivas.">
+                <img src="deuses/hyobdor.png" alt="Hyobdor">
+                <h3 class="god-name">Hyobdor</h3>
+            </div>
+
+            <div class="card" onclick="selectGod(this)" 
+                 data-title="Nabulork, o Soberano das Sombras" 
+                 data-history="Mestre do submundo e dos mistérios ocultos. Nabulork governa o que não pode ser visto, canalizando a energia do vazio e o fogo etéreo. Ele não representa o mal, mas sim o equilíbrio necessário do descanso eterno.">
+                <img src="deuses/nabulork.png" alt="Nabulork">
+                <h3 class="god-name">Nabulork</h3>
+            </div>
+
         </div>
 
     </div>
+
+    <script>
+        function selectGod(cardElement) {
+            // Remove a classe 'active' de todos os cards para tirar o brilho dourado antigo
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(c => c.classList.remove('active'));
+
+            // Adiciona o brilho dourado ao card clicado
+            cardElement.classList.add('active');
+
+            // Captura os dados salvos nos atributos do HTML do card clicado
+            const title = cardElement.getAttribute('data-title');
+            const history = cardElement.getAttribute('data-history');
+
+            // Aplica uma animação rápida de fade out/in para a troca de texto suave
+            const panel = document.getElementById('historyPanel');
+            panel.style.opacity = '0';
+            panel.style.transform = 'scale(0.98)';
+
+            setTimeout(() => {
+                // Altera o texto do painel esquerdo
+                document.getElementById('historyTitle').innerText = title;
+                document.getElementById('historyText').innerText = history;
+                
+                // Restaura o fade in
+                panel.style.opacity = '1';
+                panel.style.transform = 'scale(1)';
+            }, 150);
+        }
+    </script>
 
 </body>
 </html>
