@@ -3,30 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panteão dos deuses</title>
+    <title>Conflitos primordiais</title>
     <style>
         body {
             background-color: black;
             color: white;
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-        }
-        .container {
-            text-align: center;
-            border: 1px solid #333;
             padding: 20px;
-            border-radius: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Título Principal com Degradê */
+        .main-title {
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #bf953f;
+        }
+
+        /* Container que envolve a seta e o card */
+        .interactive-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Seta interativa gerada por CSS com degradê */
+        .arrow-button {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-bottom: 25px;
+            
+            /* Máscara que cria o formato exato da sua imagem usando caminhos clipados */
+            clip-path: polygon(0% 15%, 55% 50%, 0% 85%, 25% 50%, 0% 15%, 100% 50%);
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+        }
+
+        /* Efeito visual ao passar o mouse na seta e quando o card estiver ativo */
+        .arrow-button:hover, .arrow-button.active {
+            transform: scale(1.15) rotate(90deg); /* Gira a seta para apontar para baixo ao abrir */
+            filter: drop-shadow(0 0 8px rgba(191, 149, 63, 0.6));
+        }
+
+        /* Card Suspenso Oculto por padrão */
+        .content-card {
+            width: 100%;
+            background-color: #111;
+            border: 1px solid #bf953f;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(191, 149, 63, 0.15);
+            padding: 0px;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s ease, padding 0.5s ease, opacity 0.4s ease;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        /* Estado aberto do Card (ativado via JS) */
+        .content-card.open {
+            max-height: 800px; /* Limite seguro para acomodar a imagem e texto */
+            padding: 25px;
+            opacity: 1;
+        }
+
+        /* Espaço da Imagem interna do Card */
+        .card-image {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+
+        /* Texto interno do Card */
+        .card-text {
+            color: #ddd;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin: 0;
+            text-align: left; /* Garante boa leitura de textos longos */
         }
     </style>
 </head>
 <body>
 
-        <p>Estamos trabalhando nesta página.</p>
+    <h1 class="main-title">Conflitos Primordiais</h1>
+
+    <div class="interactive-container">
+        
+        <div class="arrow-button" id="toggleArrow" onclick="toggleCard()" title="Clique para abrir as crônicas"></div>
+
+        <div class="content-card" id="dropdownCard">
+            <img src="deuses/conflito_preview.png" alt="Cenário do Conflito" class="card-image">
+            
+            <p class="card-text">
+                No alvorecer dos tempos, antes mesmo do panteão ser erguido, as forças elementares digladiavam-se pelo domínio do vazio absoluto. Gaugyal e Nabulork travaram o primeiro embate nas fronteiras da realidade, um confronto que fraturou o espaço e deu origem ao mundo mortal como o conhecemos hoje.
+            </p>
+        </div>
+
     </div>
+
+    <script>
+        function toggleCard() {
+            const card = document.getElementById('dropdownCard');
+            const arrow = document.getElementById('toggleArrow');
+
+            // Alterna as classes que ativam as transições no CSS
+            card.classList.toggle('open');
+            arrow.classList.toggle('active');
+        }
+    </script>
 
 </body>
 </html>
