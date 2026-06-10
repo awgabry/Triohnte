@@ -376,7 +376,7 @@
         <section class="intro-text">
             <h2>O Legado</h2>
             <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos devido a separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pode ser uma "pessoa normal", momentos de maior conexão com a realidade social eram abafados por batalhas judiciais. Nas palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
-            <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
+            <p>Tal problema se estendeu por years, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
             <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo. 
 
 Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto final no desgoverno da própria história e reescrever o destino. Isso é a arte, um baita chute no saco do universo.</p>
@@ -479,7 +479,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     if (!response.ok) throw new Error("Erro ao buscar banco de dados.");
                     
                     const data = await response.getJson ? await response.getJson() : await response.json();
-                    container.innerHTML = ""; // Limpa a área para reconstruir a lista oficial
+                    container.innerHTML = ""; // Garante que a área comece limpa
 
                     if (data) {
                         // Converte o objeto do Firebase em uma lista ordenada por data
@@ -487,10 +487,8 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                         sortedPosts.forEach(post => {
                             renderPost(post.text, post.date);
                         });
-                    } else {
-                        // Fallback estético caso a nuvem esteja vazia no primeiro acesso
-                        renderPost("A reescrita do arco final de Walingardyn entrou na reta de revisão gramatical. O planejamento visual dos mapas também está avançando bem. O prazo estipulado de 7 anos se aproxima da sua conclusão com maestria.", "10 de Junho, 2026");
                     }
+                    // Removido o post padrão (fallback). Se não houver posts no Firebase, fica vazio.
                 } catch (error) {
                     console.error("Falha na conexão global:", error);
                 }
