@@ -17,6 +17,12 @@
             margin: 0;
             padding: 40px 20px;
             box-sizing: border-box;
+
+            /* BLOQUEIO POR CSS: Impede a seleção de texto em todo o corpo da página */
+            -webkit-user-select: none;  /* Safari */
+            -moz-user-select: none;     /* Firefox */
+            -ms-user-select: none;      /* IE10+/Edge */
+            user-select: none;          /* Padrão (Chrome, Opera, etc.) */
         }
 
         /* Título Principal da Página */
@@ -105,7 +111,7 @@
 
         /* Estado aberto do Card */
         .content-card.open {
-            max-height: 900px; /* Aumentado ligeiramente para garantir que o texto longo caiba sem scroll */
+            max-height: 900px;
             padding: 25px;
             opacity: 1;
             margin-top: 10px;
@@ -171,17 +177,36 @@
     </div>
 
     <script>
+        // Função original para abrir/fechar o menu
         function toggleConflito(headerElement) {
-            // Pega o ID do card associado a este cabeçalho clicado
             const targetId = headerElement.getAttribute('data-target');
             const targetCard = document.getElementById(targetId);
-
-            // Alterna a abertura do card clicado
             targetCard.classList.toggle('open');
-            
-            // Alterna a rotação da seta correspondente
             headerElement.classList.toggle('active');
         }
+
+        // BLOQUEIO POR JAVASCRIPT
+
+        // 1. Bloqueia o clique com o botão direito do mouse (Menu de Contexto)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // 2. Bloqueia os atalhos de teclado mais comuns para cópia e inspeção (Ctrl+C, Ctrl+U, Ctrl+Shift+I)
+        document.addEventListener('keydown', function(e) {
+            // Bloqueia Ctrl+C (Copiar) e Ctrl+X (Recortar)
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'x' || e.key === 'C' || e.key === 'X')) {
+                e.preventDefault();
+            }
+            // Bloqueia Ctrl+U (Ver código-fonte da página)
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
+                e.preventDefault();
+            }
+            // Bloqueia Ctrl+Shift+I ou F12 (Inspecionar Elemento)
+            if ((e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) || e.key === 'F12') {
+                e.preventDefault();
+            }
+        });
     </script>
 
 </body>
