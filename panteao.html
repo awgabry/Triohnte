@@ -17,6 +17,12 @@
             margin: 0;
             padding: 40px 20px;
             box-sizing: border-box;
+            
+            /* BLOQUEIO DE SELEÇÃO DE TEXTO (CSS) */
+            -webkit-user-select: none;  /* Safari */
+            -moz-user-select: none;     /* Firefox */
+            -ms-user-select: none;      /* IE10+ */
+            user-select: none;          /* Padrão */
         }
 
         /* Estilo do Título Principal Corrigido */
@@ -24,19 +30,19 @@
             font-size: 3rem;
             text-transform: uppercase;
             letter-spacing: 3px;
-            margin-top: 0; /* Remove margens extras que causam bugs */
+            margin-top: 0; 
             margin-bottom: 40px;
             text-align: center;
             font-weight: bold;
-            line-height: 1.2; /* Garante que o texto tenha altura para renderizar */
-            display: block; /* Força o elemento a se comportar como bloco visível */
+            line-height: 1.2; 
+            display: block; 
             
             /* Efeito de degradê dourado */
             background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            color: #bf953f; /* Cor alternativa caso o degradê falhe em algum navegador */
+            color: #bf953f; 
         }
 
         /* Container principal que organiza os blocos de deuses */
@@ -145,13 +151,20 @@
             line-height: 1.6;
             margin: 0;
         }
+
+        /* ESTILO PARA OCULTAR O CONTEÚDO DURANTE CAPTURAS */
+        .blur-protection {
+            filter: blur(20px) !important;
+            opacity: 0 !important;
+            transition: none !important;
+        }
     </style>
 </head>
 <body>
 
     <h1 class="main-title">Panteão dos Deuses</h1>
 
-    <div class="panteon-container">
+    <div class="panteon-container" id="mainContent">
         
         <div class="cards-row">
             
@@ -230,6 +243,48 @@
                 dropdown.classList.add('open');
             }
         }
+
+        /* ==========================================================
+           SCRIPTS DE PROTEÇÃO CONTRA CÓPIA E CAPTURA DE TELA (PRINT)
+           ========================================================== */
+
+        const content = document.getElementById('mainContent');
+
+        // 1. Bloqueia o Clique Direito (Menu de Contexto)
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // 2. Bloqueia Atalhos de Teclado (Ctrl+C, Ctrl+S, Ctrl+U, PrintScreen, etc.)
+        document.addEventListener('keydown', (e) => {
+            // Bloqueia Ctrl+C, Ctrl+X, Ctrl+U (Ver código), Ctrl+S (Salvar)
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'c' || e.key === 'x' || e.key === 'u' || e.key === 's' || e.key === 'p')) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Bloqueia a tecla PrintScreen isolada limpa a área de transferência
+            if (e.key === 'PrintScreen') {
+                navigator.clipboard.writeText('');
+                alert('Capturas de tela não são permitidas nesta página.');
+                e.preventDefault();
+            }
+        });
+
+        // 3. Mitigação para Win+Shift+S e ferramentas de captura de terceiros
+        // Quando a janela perde o foco (o que acontece quando o Win+Shift+S é ativado), a tela fica preta/invisível
+        window.addEventListener('blur', () => {
+            content.classList.add('blur-protection');
+            document.body.style.backgroundColor = 'black';
+        });
+
+        window.addEventListener('focus', () => {
+            content.classList.remove('blur-protection');
+        });
+
+        // 4. Limpeza constante do Clipboard (Área de transferência) caso tentem copiar algo fora
+        document.addEventListener('copy', (e) => {
+            e.clipboardData.setData('text/plain', 'Conteúdo Protegido!');
+            e.preventDefault();
+        });
     </script>
 
 </body>
