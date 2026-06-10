@@ -121,12 +121,27 @@
             border: 1px solid #333;
         }
 
-        /* Texto descritivo interno */
+        /* Texto descritivo interno - ALINHADO E JUSTIFICADO */
         .card-text {
             color: #ddd;
             font-size: 1rem;
             line-height: 1.6;
             margin: 0;
+            text-align: justify;
+        }
+
+        /* Subtítulo do Segundo Texto - ESTILIZADO */
+        .card-subtitle {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #bf953f;
+            text-align: left;
         }
     </style>
 </head>
@@ -143,18 +158,19 @@
             </div>
             <div class="content-card" id="card1">
                 <img src="derj.png" alt="Batalha de Dyllewalt" class="card-image">
-                <p class="card-text">
+                <div class="card-text">
                     Pouco se fala nos livros sobre o motivo por tras do ataque direto do reino de Niwdem ao reino de Dyllewalt, e isso tem haver com um conflito milenar entre uma familia, uma profecia e um segredo muito bem guardado. Mas não foi apenas essa questão mágica, na verdade, Eras antes, precisamente desde a Era de Bronze, Dyllewalt e Niwdem trocam farpas, algumas delas ligadas a religião, já que a familia real de Niwdem cultua o deus Nabulork e Triohnte cultua Haragum, ambos os reinos, monoteístas, no entato com deuses ligados a lados diferentes da mesma história. O conflito nunca antes havia escalado para um ataque direto, mas Niwdem quebrou esse fato enviando tropas para invadir o continente.
-<div>
 
-Como eles entram sem resistência?
+                    <h3 class="card-subtitle">Como eles entram sem resistência?</h3>
 
-O continente de Triohnte havia recem saido de uma guerra com um preterido herdeiro ao trono do reino de Agaroff, Ikholar Vheynnaris, um jovem esquecido, exilado em Queóbia por seu pai, Saygon Vheynnaris. Ikholar retornou do exílio com um exército numeroso, saqueou cidades, reduziu Darmalyan, capital de Agaroff a escombros, matou seu irmão: Eknnor Vheynnaris e esposa e tomou a cidade, enquanto fazia isso, seu exército avançava contra os soldados de outros reinos. Mais tarde foi morto por Lobin Hayght e seu exército foi subjulgado ao poder do novo regente. Nessa "brincadeira", Agaroff, Kwazahdar, Castindell e Dyllewalt perderam força militar com baixas significativas; prato cheio para Niwdem que assistia tudo de longe, munido com informações enviadas por seus espiões em solo triohntino.
-                </p>
+                    O continente de Triohnte havia recem saido de uma guerra com um preterido herdeiro ao trono do reino de Agaroff, Ikholar Vheynnaris, um jovem esquecido, exilado em Queóbia por seu pai, Saygon Vheynnaris. Ikholar retornou do exílio com um exército numeroso, saqueou cidades, reduziu Darmalyan, capital de Agaroff a escombros, matou seu irmão: Eknnor Vheynnaris e esposa e tomou a cidade, enquanto fazia isso, seu exército avançava contra os soldados de outros reinos. Mais tarde foi morto por Lobin Hayght e seu exército foi subjulgado ao poder do novo regente. Nessa "brincadeira", Agaroff, Kwazahdar, Castindell e Dyllewalt perderam força militar com baixas significativas; prato cheio para Niwdem que assistia tudo de longe, munido com informações enviadas por seus espiões em solo triohntino.
+                </div>
             </div>
         </div>
 
-        <script>
+    </div>
+
+    <script>
         function toggleConflito(headerElement) {
             // Pega o ID do card associado a este cabeçalho clicado
             const targetId = headerElement.getAttribute('data-target');
