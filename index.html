@@ -221,7 +221,7 @@
         }
         .progress-bar {
             height: 24px;
-            width: 46%; 
+            width: 75%; 
             background: var(--gold-gradient);
             border-radius: 2px;
             box-shadow: 0 0 10px rgba(197, 157, 95, 0.4);
@@ -407,7 +407,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             <a href="motivos.html">
                 <div class="card">
                     <h3>Motivos de Guerra</h3>
-                    <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um grande império através das Eras.</p>
+                    <p>As casas nobres e facções que ainda lutam por power entre as ruínas do que um dia foi um grande império através das Eras.</p>
                 </div>
             </a>
 
@@ -424,40 +424,19 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             <div class="progress-container">
                 <div class="progress-bar"></div>
             </div>
-            <div class="progress-text">46% Concluído</div>
+            <div class="progress-text">75% Concluído</div>
         </section>
 
         <section class="forum-section">
             <h2>Crônicas do Autor</h2>
             
             <div class="forum-form">
-                <textarea id="forumInput" rows="3" placeholder="Escreva uma nova atualização sobre o volume..."></textarea>
+                <textarea id="forumInput" rows="3" placeholder="Escreva uma nova atualização global sobre o volume..."></textarea>
                 <button type="button" id="publishBtn" class="forum-btn">Publicar</button>
             </div>
 
             <div id="forumPosts" class="forum-posts">
-                
-                <div class="post-card">
-                    <div class="post-header">
-                        <span class="post-author">Gabriel Aquino</span>
-                        <span class="post-date">10 de Junho, 2026</span>
-                    </div>
-                    <div class="post-content">
-                        <p>A reescrita do arco final de Walingardyn entrou na reta de revisão gramatical. O planejamento visual dos mapas também está avançando bem. O prazo estipulado de 7 anos se aproxima da sua conclusão com maestria.</p>
-                    </div>
                 </div>
-
-                <div class="post-card">
-                    <div class="post-header">
-                        <span class="post-author">Gabriel Aquino</span>
-                        <span class="post-date">14 de Março, 2026</span>
-                    </div>
-                    <div class="post-content">
-                        <p>O Calendário Triohntino foi totalmente integrado à cronologia oficial do novo rascunho. O sistema de passagem de tempo agora faz sentido absoluto com as Eras de guerra.</p>
-                    </div>
-                </div>
-
-            </div>
         </section>
     </main>
 
@@ -474,16 +453,11 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             const btn = document.getElementById("publishBtn");
             const container = document.getElementById("forumPosts");
 
-            // Carrega os posts guardados no navegador do usuário
-            const loadPosts = () => {
-                const savedPosts = JSON.parse(localStorage.getItem("triohnte_posts")) || [];
-                savedPosts.forEach(post => {
-                    renderPost(post.text, post.date, true);
-                });
-            };
+            // URL da REST API para a rota de posts do seu Firebase Database
+            const dbUrl = "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app/posts.json";
 
-            // Insere a caixinha do post no HTML
-            const renderPost = (text, date, isFromStorage = false) => {
+            // Renderiza os posts no HTML na ordem correta
+            const renderPost = (text, date) => {
                 const postDiv = document.createElement("div");
                 postDiv.className = "post-card";
                 postDiv.innerHTML = `
@@ -495,38 +469,68 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                         <p>${text.replace(/\n/g, '<br>')}</p>
                     </div>
                 `;
-                
-                if (isFromStorage) {
-                    // Posts salvos de antes entram no topo, mas abaixo do campo de texto
-                    container.appendChild(postDiv);
-                } else {
-                    // Post novinho entra no topo imediato
-                    container.insertBefore(postDiv, container.firstChild);
+                container.insertBefore(postDiv, container.firstChild);
+            };
+
+            // Busca os dados globais salvos no Firebase
+            const loadGlobalPosts = async () => {
+                try {
+                    const response = await fetch(dbUrl);
+                    if (!response.ok) throw new Error("Erro ao buscar banco de dados.");
+                    
+                    const data = await response.getJson ? await response.getJson() : await response.json();
+                    container.innerHTML = ""; // Limpa a área para reconstruir a lista oficial
+
+                    if (data) {
+                        // Converte o objeto do Firebase em uma lista ordenada por data
+                        const sortedPosts = Object.keys(data).map(key => data[key]);
+                        sortedPosts.forEach(post => {
+                            renderPost(post.text, post.date);
+                        });
+                    } else {
+                        // Fallback estético caso a nuvem esteja vazia no primeiro acesso
+                        renderPost("A reescrita do arco final de Walingardyn entrou na reta de revisão gramatical. O planejamento visual dos mapas também está avançando bem. O prazo estipulado de 7 anos se aproxima da sua conclusão com maestria.", "10 de Junho, 2026");
+                    }
+                } catch (error) {
+                    console.error("Falha na conexão global:", error);
                 }
             };
 
-            // Função ao clicar em Publicar
-            btn.addEventListener("click", () => {
+            // Envia uma nova mensagem para o Firebase na nuvem
+            btn.addEventListener("click", async () => {
                 const text = input.value.trim();
                 if (!text) return;
 
-                // Captura a data atual formatada
                 const options = { day: 'numeric', month: 'long', year: 'numeric' };
                 const formattedDate = new Date().toLocaleDateString('pt-BR', options);
 
-                // Mostra na tela
-                renderPost(text, formattedDate);
+                const newPost = { text, date: formattedDate, timestamp: Date.now() };
 
-                // Salva no banco local do navegador
-                const savedPosts = JSON.parse(localStorage.getItem("triohnte_posts")) || [];
-                savedPosts.unshift({ text, date: formattedDate });
-                localStorage.setItem("triohnte_posts", JSON.stringify(savedPosts));
+                try {
+                    btn.disabled = true;
+                    btn.innerText = "Enviando...";
 
-                // Limpa o campo de texto
-                input.value = "";
+                    const response = await fetch(dbUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(newPost)
+                    });
+
+                    if (!response.ok) throw new Error("Falha no envio.");
+
+                    input.value = "";
+                    // Recarrega o feed trazendo os dados oficiais atualizados da nuvem
+                    await loadGlobalPosts();
+                } catch (error) {
+                    alert("Não foi possível publicar globalmente. Verifique as regras de escrita do seu Firebase.");
+                    console.error(error);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = "Publicar";
+                }
             });
 
-            loadPosts();
+            loadGlobalPosts();
         });
     </script>
 
