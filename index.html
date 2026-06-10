@@ -221,7 +221,7 @@
         }
         .progress-bar {
             height: 24px;
-            width: 46%; 
+            width: 75%; 
             background: var(--gold-gradient);
             border-radius: 2px;
             box-shadow: 0 0 10px rgba(197, 157, 95, 0.4);
@@ -262,8 +262,16 @@
             gap: 15px;
             margin-bottom: 40px;
             padding-bottom: 30px;
-            border-bottom: 1px dashed #222;
+            /* Linha removida daqui por padrão; controlada dinamicamente via JS */
+            border-bottom: 1px dashed transparent; 
+            transition: border-color 0.3s;
         }
+
+        /* Classe ativa injetada via JavaScript caso existam posts */
+        .forum-form.has-posts {
+            border-bottom-color: #222;
+        }
+
         .forum-form textarea {
             background: #050505;
             border: 1px solid #222;
@@ -376,7 +384,7 @@
         <section class="intro-text">
             <h2>O Legado</h2>
             <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos devido a separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pode ser uma "pessoa normal", momentos de maior conexão com a realidade social eram abafados por batalhas judiciais. Nas palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
-            <p>Tal problema se estendeu por years, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
+            <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
             <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo. 
 
 Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto final no desgoverno da própria história e reescrever o destino. Isso é a arte, um baita chute no saco do universo.</p>
@@ -424,13 +432,13 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             <div class="progress-container">
                 <div class="progress-bar"></div>
             </div>
-            <div class="progress-text">46% Concluído</div>
+            <div class="progress-text">75% Concluído</div>
         </section>
 
         <section class="forum-section">
             <h2>Fórum</h2>
             
-            <div class="forum-form">
+            <div id="forumFormWrapper" class="forum-form">
                 <textarea id="forumInput" rows="3" placeholder="Escreva uma nova atualização global sobre o volume..."></textarea>
                 <button type="button" id="publishBtn" class="forum-btn">Publicar</button>
             </div>
@@ -452,6 +460,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             const input = document.getElementById("forumInput");
             const btn = document.getElementById("publishBtn");
             const container = document.getElementById("forumPosts");
+            const formWrapper = document.getElementById("forumFormWrapper");
 
             // URL da REST API para a rota de posts do seu Firebase Database
             const dbUrl = "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app/posts.json";
@@ -478,17 +487,22 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     const response = await fetch(dbUrl);
                     if (!response.ok) throw new Error("Erro ao buscar banco de dados.");
                     
-                    const data = await response.getJson ? await response.getJson() : await response.json();
-                    container.innerHTML = ""; // Garante que a área comece limpa
+                    const data = await response.json();
+                    container.innerHTML = ""; // Limpa a área de renderização
 
-                    if (data) {
+                    if (data && Object.keys(data).length > 0) {
+                        // Se houver posts, adiciona a linha divisória tracejada
+                        formWrapper.classList.add("has-posts");
+
                         // Converte o objeto do Firebase em uma lista ordenada por data
                         const sortedPosts = Object.keys(data).map(key => data[key]);
                         sortedPosts.forEach(post => {
                             renderPost(post.text, post.date);
                         });
+                    } else {
+                        // Se não houver posts, esconde a linha divisória e mantém o fundo limpo
+                        formWrapper.classList.remove("has-posts");
                     }
-                    // Removido o post padrão (fallback). Se não houver posts no Firebase, fica vazio.
                 } catch (error) {
                     console.error("Falha na conexão global:", error);
                 }
