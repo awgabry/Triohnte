@@ -33,6 +33,7 @@
         .intro-text h2, 
         .card h3, 
         .progress-section h2,
+        .forum-section h2,
         .footer-logo {
             display: inline-block;
             background: var(--gold-gradient);
@@ -195,13 +196,13 @@
         .card:hover::before { transform: scaleY(1); }
         .card h3 { font-family: 'Cinzel', serif; margin-bottom: 20px; font-size: 1.4rem; letter-spacing: 1px; }
 
-        /* --- NOVA SEÇÃO: BARRA DE PROGRESSO --- */
+        /* --- BARRA DE PROGRESSO --- */
         .progress-section {
             text-align: center;
             background: #0a0a0a;
             padding: 50px 40px;
             border: 1px solid #1a1a1a;
-            position: relative;
+            margin-bottom: 60px;
         }
         .progress-section h2 {
             font-family: 'Cinzel', serif;
@@ -220,7 +221,7 @@
         }
         .progress-bar {
             height: 24px;
-            width: 75%; /* Ajuste a porcentagem do progresso atual aqui */
+            width: 75%; 
             background: var(--gold-gradient);
             border-radius: 2px;
             box-shadow: 0 0 10px rgba(197, 157, 95, 0.4);
@@ -239,6 +240,101 @@
             100% { box-shadow: 0 0 20px rgba(243, 225, 181, 0.6); }
         }
 
+        /* --- NOVA SEÇÃO: MINI FÓRUM / ATUALIZAÇÕES --- */
+        .forum-section {
+            background: #0a0a0a;
+            padding: 50px 40px;
+            border: 1px solid #1a1a1a;
+        }
+        .forum-section h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            text-align: center;
+        }
+        
+        /* Formulário de Simulação (Para quando quiser atualizar direto no código) */
+        .forum-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px dashed #222;
+        }
+        .forum-form textarea {
+            background: #050505;
+            border: 1px solid #222;
+            color: #a39b8f;
+            padding: 15px;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.1rem;
+            resize: none;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+        .forum-form textarea:focus {
+            outline: none;
+            border-color: #c59d5f;
+        }
+        .forum-btn {
+            align-self: flex-end;
+            background: var(--gold-gradient);
+            color: #050505;
+            border: none;
+            padding: 10px 25px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            box-shadow: var(--gold-shadow);
+        }
+        .forum-btn:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 10px rgba(227, 195, 143, 0.5);
+        }
+
+        /* Lista de Posts/Tópicos */
+        .forum-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .post-card {
+            background: #050505;
+            border: 1px solid #151515;
+            padding: 25px;
+            border-left: 3px solid #7a542a;
+            position: relative;
+        }
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+        }
+        .post-author {
+            color: #e3c38f;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .post-date {
+            color: #555;
+            font-size: 0.8rem;
+        }
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #8c8579;
+        }
+
         footer {
             text-align: center;
             padding: 100px 20px;
@@ -251,7 +347,8 @@
             nav ul { flex-direction: column; align-items: center; gap: 20px; }
             .intro-text h2 { font-size: 1.8rem; }
             .borda-lateral { display: none; }
-            .progress-section h2 { font-size: 1.4rem; }
+            .progress-section h2, .forum-section h2 { font-size: 1.4rem; }
+            .forum-section { padding: 30px 20px; }
         }
     </style>
 </head>
@@ -284,7 +381,7 @@
             <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
             <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo. 
 
-Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto final no desgoverno da própria história e reescrever o destino. Isso é a arte, um baita chute no saco do universo.</p>
+Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto final no desgoverno da própria história e reescrever o destino. Isso é a arte, um baita chute no saco do universe.</p>
         </section>
 
         <section class="lore-grid">
@@ -330,6 +427,39 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 <div class="progress-bar"></div>
             </div>
             <div class="progress-text">75% Concluído</div>
+        </section>
+
+        <section class="forum-section">
+            <h2>Crônicas do Autor</h2>
+            
+            <div class="forum-form">
+                <textarea rows="3" placeholder="Escreva uma nova atualização sobre o volume..." disabled>Espaço reservado para comunicados oficiais do manuscrito.</textarea>
+                <button type="button" class="forum-btn" style="opacity: 0.5; cursor: not-allowed;">Publicar</button>
+            </div>
+
+            <div class="forum-posts">
+                
+                <div class="post-card">
+                    <div class="post-header">
+                        <span class="post-author">Gabriel Aquino</span>
+                        <span class="post-date">10 de Junho, 2026</span>
+                    </div>
+                    <div class="post-content">
+                        <p>A reescrita do arco final de Walingardyn entrou na reta de revisão gramatical. O planejamento visual dos mapas também está avançando bem. O prazo estipulado de 7 anos se aproxima da sua conclusão com maestria.</p>
+                    </div>
+                </div>
+
+                <div class="post-card">
+                    <div class="post-header">
+                        <span class="post-author">Gabriel Aquino</span>
+                        <span class="post-date">14 de Março, 2026</span>
+                    </div>
+                    <div class="post-content">
+                        <p>O Calendário Triohntino foi totalmente integrado à cronologia oficial do novo rascunho. O sistema de passagem de tempo agora faz sentido absoluto com as Eras de guerra.</p>
+                    </div>
+                </div>
+
+            </div>
         </section>
     </main>
 
