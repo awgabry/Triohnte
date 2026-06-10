@@ -240,7 +240,7 @@
             100% { box-shadow: 0 0 20px rgba(243, 225, 181, 0.6); }
         }
 
-        /* --- NOVA SEÇÃO: MINI FÓRUM / ATUALIZAÇÕES --- */
+        /* --- MINI FÓRUM / ATUALIZAÇÕES --- */
         .forum-section {
             background: #0a0a0a;
             padding: 50px 40px;
@@ -256,7 +256,6 @@
             text-align: center;
         }
         
-        /* Formulário de Simulação (Para quando quiser atualizar direto no código) */
         .forum-form {
             display: flex;
             flex-direction: column;
@@ -299,7 +298,6 @@
             box-shadow: 0 0 10px rgba(227, 195, 143, 0.5);
         }
 
-        /* Lista de Posts/Tópicos */
         .forum-posts {
             display: flex;
             flex-direction: column;
@@ -381,7 +379,7 @@
             <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
             <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo. 
 
-Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto final no desgoverno da própria história e reescrever o destino. Isso é a arte, um baita chute no saco do universe.</p>
+Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto final no desgoverno da própria história e reescrever o destino. Isso é a arte, um baita chute no saco do universo.</p>
         </section>
 
         <section class="lore-grid">
@@ -433,11 +431,11 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             <h2>Crônicas do Autor</h2>
             
             <div class="forum-form">
-                <textarea rows="3" placeholder="Escreva uma nova atualização sobre o volume..." disabled>Espaço reservado para comunicados oficiais do manuscrito.</textarea>
-                <button type="button" class="forum-btn" style="opacity: 0.5; cursor: not-allowed;">Publicar</button>
+                <textarea id="forumInput" rows="3" placeholder="Escreva uma nova atualização sobre o volume..."></textarea>
+                <button type="button" id="publishBtn" class="forum-btn">Publicar</button>
             </div>
 
-            <div class="forum-posts">
+            <div id="forumPosts" class="forum-posts">
                 
                 <div class="post-card">
                     <div class="post-header">
@@ -469,6 +467,68 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
         </div>
         <p style="margin-top: 15px; font-size: 0.8rem; color: #444;">Copyright Triohnte &copy; 2026</p>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const input = document.getElementById("forumInput");
+            const btn = document.getElementById("publishBtn");
+            const container = document.getElementById("forumPosts");
+
+            // Carrega os posts guardados no navegador do usuário
+            const loadPosts = () => {
+                const savedPosts = JSON.parse(localStorage.getItem("triohnte_posts")) || [];
+                savedPosts.forEach(post => {
+                    renderPost(post.text, post.date, true);
+                });
+            };
+
+            // Insere a caixinha do post no HTML
+            const renderPost = (text, date, isFromStorage = false) => {
+                const postDiv = document.createElement("div");
+                postDiv.className = "post-card";
+                postDiv.innerHTML = `
+                    <div class="post-header">
+                        <span class="post-author">Gabriel Aquino</span>
+                        <span class="post-date">${date}</span>
+                    </div>
+                    <div class="post-content">
+                        <p>${text.replace(/\n/g, '<br>')}</p>
+                    </div>
+                `;
+                
+                if (isFromStorage) {
+                    // Posts salvos de antes entram no topo, mas abaixo do campo de texto
+                    container.appendChild(postDiv);
+                } else {
+                    // Post novinho entra no topo imediato
+                    container.insertBefore(postDiv, container.firstChild);
+                }
+            };
+
+            // Função ao clicar em Publicar
+            btn.addEventListener("click", () => {
+                const text = input.value.trim();
+                if (!text) return;
+
+                // Captura a data atual formatada
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                const formattedDate = new Date().toLocaleDateString('pt-BR', options);
+
+                // Mostra na tela
+                renderPost(text, formattedDate);
+
+                // Salva no banco local do navegador
+                const savedPosts = JSON.parse(localStorage.getItem("triohnte_posts")) || [];
+                savedPosts.unshift({ text, date: formattedDate });
+                localStorage.setItem("triohnte_posts", JSON.stringify(savedPosts));
+
+                // Limpa o campo de texto
+                input.value = "";
+            });
+
+            loadPosts();
+        });
+    </script>
 
 </body>
 </html>
