@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="t.png">
 
     <style>
-        /* --- ESTILIZAÇÃO CSS --- */
+        /* --- ESTILIZAÇÃO CSS OTIMIZADA --- */
         * {
             margin: 0;
             padding: 0;
@@ -32,6 +32,7 @@
 
         .intro-text h2, 
         .card h3, 
+        .progress-section h2,
         .footer-logo {
             display: inline-block;
             background: var(--gold-gradient);
@@ -155,12 +156,13 @@
         }
         .intro-text p { font-size: 1.3rem; font-style: italic; margin-bottom: 20px; }
 
-        /* --- GRID E CARDS (CORREÇÃO DE ALINHAMENTO E LINKS) --- */
+        /* --- GRID E CARDS --- */
         .lore-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 40px;
             align-items: stretch;
+            margin-bottom: 120px;
         }
 
         .lore-grid a {
@@ -193,6 +195,50 @@
         .card:hover::before { transform: scaleY(1); }
         .card h3 { font-family: 'Cinzel', serif; margin-bottom: 20px; font-size: 1.4rem; letter-spacing: 1px; }
 
+        /* --- NOVA SEÇÃO: BARRA DE PROGRESSO --- */
+        .progress-section {
+            text-align: center;
+            background: #0a0a0a;
+            padding: 50px 40px;
+            border: 1px solid #1a1a1a;
+            position: relative;
+        }
+        .progress-section h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .progress-container {
+            background-color: #151515;
+            border-radius: 4px;
+            padding: 4px;
+            border: 1px solid #222;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 15px;
+        }
+        .progress-bar {
+            height: 24px;
+            width: 75%; /* Ajuste a porcentagem do progresso atual aqui */
+            background: var(--gold-gradient);
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(197, 157, 95, 0.4);
+            transition: width 1s ease-in-out;
+            position: relative;
+            animation: pulseGlow 3s infinite alternate;
+        }
+        .progress-text {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: #e3c38f;
+            letter-spacing: 1px;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 10px rgba(197, 157, 95, 0.3); }
+            100% { box-shadow: 0 0 20px rgba(243, 225, 181, 0.6); }
+        }
+
         footer {
             text-align: center;
             padding: 100px 20px;
@@ -205,6 +251,7 @@
             nav ul { flex-direction: column; align-items: center; gap: 20px; }
             .intro-text h2 { font-size: 1.8rem; }
             .borda-lateral { display: none; }
+            .progress-section h2 { font-size: 1.4rem; }
         }
     </style>
 </head>
@@ -275,6 +322,14 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     <p>Entenda o tempo em Triohnte e em Walingardyn.</p>
                 </div>
             </a>
+        </section>
+
+        <section class="progress-section">
+            <h2>Progresso de Triohnte até a publicação</h2>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="progress-text">75% Concluído</div>
         </section>
     </main>
 
