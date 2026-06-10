@@ -17,6 +17,12 @@
             margin: 0;
             padding: 40px 20px;
             box-sizing: border-box;
+            
+            /* Bloqueio de seleção de texto via CSS */
+            -webkit-user-select: none;  /* Safari */
+            -moz-user-select: none;     /* Firefox */
+            -ms-user-select: none;      /* IE10+/Edge */
+            user-select: none;          /* Padrão */
         }
 
         /* Título Principal da Página */
@@ -119,6 +125,10 @@
             border-radius: 8px;
             margin-bottom: 15px;
             border: 1px solid #333;
+            
+            /* Proteção extra para não permitir arrastar a imagem */
+            -webkit-user-drag: none;
+            user-drag: none;
         }
 
         /* Texto descritivo interno */
@@ -130,7 +140,7 @@
         }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;" ondragstart="return false;">
 
     <h1 class="main-title">Conflitos Primordiais</h1>
 
@@ -142,7 +152,7 @@
                 <h2 class="conflito-title">Arco dos deuses irmãos</h2>
             </div>
             <div class="content-card" id="card1">
-                <img src="detalhes/hn.png" alt="A Fratura do Vazio" class="card-image">
+                <img src="detalhes/hn.png" alt="A Fratura do Vazio" class="card-image" style="pointer-events: none;">
                 <p class="card-text">
                    Haragum e Nabulork
                 </p>
@@ -164,6 +174,35 @@
             // Alterna a rotação da seta correspondente
             headerElement.classList.toggle('active');
         }
+
+        // Bloqueio de atalhos de teclado (Ctrl+C, Ctrl+S, Ctrl+P, Ctrl+U e F12)
+        document.addEventListener('keydown', function(e) {
+            // Bloqueia Ctrl+C (Copiar)
+            if (e.ctrlKey && e.keyCode == 67) {
+                e.preventDefault();
+                return false;
+            }
+            // Bloqueia Ctrl+S (Salvar página)
+            if (e.ctrlKey && e.keyCode == 83) {
+                e.preventDefault();
+                return false;
+            }
+            // Bloqueia Ctrl+P (Imprimir/Gerar PDF)
+            if (e.ctrlKey && e.keyCode == 80) {
+                e.preventDefault();
+                return false;
+            }
+            // Bloqueia Ctrl+U (Ver código fonte)
+            if (e.ctrlKey && e.keyCode == 85) {
+                e.preventDefault();
+                return false;
+            }
+            // Bloqueia F12 (Inspecionar elemento)
+            if (e.keyCode == 123) {
+                e.preventDefault();
+                return false;
+            }
+        });
     </script>
 
 </body>
