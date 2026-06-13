@@ -2,13 +2,14 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Mapa de Seleção - Ativo</title>
+<title>Mapa Interativo - Painel de Territórios</title>
 
 <style>
 body {
     margin: 0;
     background: black;
-    overflow: hidden; /* Remove as barras de rolagem */
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #viewport {
@@ -20,7 +21,6 @@ body {
     align-items: center;
 }
 
-/* O canvas se adapta dinamicamente à tela mantendo a proporção original */
 canvas {
     display: block;
     max-width: 100vw;
@@ -29,15 +29,47 @@ canvas {
     z-index: 1;
 }
 
+/* Info-Card Repaginado e Explicativo */
 .info-card {
     position: fixed;
-    background: rgba(0,0,0,0.9);
-    color: white;
-    padding: 10px;
-    border: 1px solid gold;
+    background: rgba(10, 10, 15, 0.95);
+    color: #e0e0e0;
+    padding: 15px;
+    border: 1px solid #ffd700;
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.2);
     pointer-events: none;
     opacity: 0;
     z-index: 10;
+    min-width: 220px;
+    transition: opacity 0.15s ease;
+}
+
+.info-card h3 {
+    margin: 0 0 10px 0;
+    color: #ffd700;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    padding-bottom: 5px;
+    font-weight: 600;
+}
+
+.info-row {
+    margin: 6px 0;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.info-label {
+    color: #888;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.info-value {
+    color: #fff;
+    text-align: right;
 }
 </style>
 </head>
@@ -49,14 +81,38 @@ canvas {
 </div>
 
 <div class="info-card" id="infoCard">
-    <b id="cardTitle"></b><br>
-    <span id="cardDesc"></span>
+    <h3 id="cardTitle">Território</h3>
+    <div class="info-row"><span class="info-label">Soberania:</span><span class="info-value" id="cardSoberania">-</span></div>
+    <div class="info-row"><span class="info-label">Idade:</span><span class="info-value" id="cardIdade">-</span></div>
+    <div class="info-row"><span class="info-label">Poder Militar:</span><span class="info-value" id="cardMilitar">-</span></div>
 </div>
 
 <script>
-// DIMENSÕES ORIGINAIS DA SUA IMAGEM
 const MAP_WIDTH = 1441;
 const MAP_HEIGHT = 1311;
+
+// BANCO DE DADOS DOS TERRITÓRIOS
+// Adicione aqui as cores RGB exatas do seu mapa dertyh.png e preencha a história deles!
+const databaseTerritorios = {
+    "42,70,3": {
+        nome: "Território do Norte",
+        soberania: "Império de Veridia",
+        idade: "420 anos",
+        poderMilitar: "85.000 Soldados (Alta)"
+    },
+    "1,9,69": {
+        nome: "Costas de Valen",
+        soberania: "Dinastia Oculta",
+        idade: "1.200 anos",
+        poderMilitar: "12.000 Sentinelas (Média)"
+    },
+    "16,1,25": {
+        nome: "Terras Centrais",
+        soberania: "Soberania Desconhecida",
+        idade: "Desconhecida",
+        poderMilitar: "Incalculável"
+    }
+};
 
 // ELEMENTOS
 const canvas = document.getElementById('mapColorCanvas');
@@ -64,9 +120,11 @@ const ctx = canvas.getContext('2d');
 
 const infoCard = document.getElementById('infoCard');
 const cardTitle = document.getElementById('cardTitle');
-const cardDesc = document.getElementById('cardDesc');
+const cardSoberania = document.getElementById('cardSoberania');
+const cardIdade = document.getElementById('cardIdade');
+const cardMilitar = document.getElementById('cardMilitar');
 
-// IMAGEM (Usando apenas o mapa de seleção colorido agora)
+// IMAGEM
 const imgColorida = new Image();
 imgColorida.src = 'dertyh.png';
 
@@ -74,24 +132,17 @@ let colorData = null;
 let activeColor = null;
 
 imgColorida.onload = init;
-imgColorida.onerror = () => console.log("Erro ao carregar a imagem colorida dertyh.png");
 
 function init(){
-    // Define a resolução interna fixa do Canvas
     canvas.width = MAP_WIDTH;
     canvas.height = MAP_HEIGHT;
 
-    // Ajusta o tamanho visual do canvas na tela do navegador
     resizeCanvasDisplay();
-
-    // Desenha o mapa colorido como a base visível do projeto
     drawBase();
 
-    // Captura a matriz de pixels para sabermos onde o mouse está passando
     colorData = ctx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
 }
 
-// Faz o mapa caber perfeitamente na janela do usuário
 function resizeCanvasDisplay() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
@@ -101,26 +152,22 @@ function resizeCanvasDisplay() {
     canvas.style.height = Math.floor(MAP_HEIGHT * scale) + "px";
 }
 
-// Desenha o estado inicial com o mapa colorido limpo
 function drawBase(){
     ctx.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
     ctx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
 }
 
-// Comparação estrita de cor para evitar acender territórios errados
 function sameColor(r, g, b, tol = 0){
     return Math.abs(r - activeColor.r) <= tol &&
            Math.abs(g - activeColor.g) <= tol &&
            Math.abs(b - activeColor.b) <= tol;
 }
 
-// Aplica o realce dourado por cima do território ativo do mapa de cores
 function draw(){
     drawBase();
 
     if(!activeColor) return;
 
-    // Cria a máscara na memória apenas com o formato do território selecionado
     const tempCanvas = document.createElement('canvas');
     tempCanvas.width = MAP_WIDTH;
     tempCanvas.height = MAP_HEIGHT;
@@ -135,40 +182,30 @@ function draw(){
         const a = colorData[i+3];
 
         if(a > 10 && sameColor(r, g, b)){
-            // Uma camada dourada semi-transparente por cima da cor original do território
             mask.data[i] = 255;   
             mask.data[i+1] = 215; 
             mask.data[i+2] = 0;  
-            mask.data[i+3] = 90; // Opacidade do realce (ajuste se quiser mais claro/escuro)
+            mask.data[i+3] = 90; 
         }
     }
     tempCtx.putImageData(mask, 0, 0);
 
     ctx.save();
-    // Configuração do brilho neon dourado
     ctx.shadowColor = "rgba(255, 215, 0, 1)"; 
     ctx.shadowBlur = 25; 
-    
-    // Aplica a máscara brilhante exatamente no local correspondente
     ctx.drawImage(tempCanvas, 0, 0);
     ctx.restore();
 }
 
-// Escuta o movimento do mouse na mesma proporção do canvas
 canvas.addEventListener('mousemove', (e) => {
     const cw = canvas.clientWidth;
     const ch = canvas.clientHeight;
 
-    // Converte a posição do ponteiro na tela para a escala de 1441x1311
     const x = Math.floor((e.offsetX / cw) * MAP_WIDTH);
     const y = Math.floor((e.offsetY / ch) * MAP_HEIGHT);
 
     if(x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_HEIGHT){
-        if(activeColor){
-            activeColor = null;
-            drawBase();
-            infoCard.style.opacity = 0;
-        }
+        hideCard();
         return;
     }
 
@@ -179,43 +216,53 @@ canvas.addEventListener('mousemove', (e) => {
     const b = colorData[i+2];
     const a = colorData[i+3];
 
-    // Ignora fundos pretos da imagem externa
     if(a > 10 && (r + g + b) > 20){
         if(!activeColor || activeColor.r !== r || activeColor.g !== g || activeColor.b !== b){
             activeColor = {r, g, b};
             draw();
         }
 
+        // Chave de busca no formato "R,G,B"
+        const corChave = `${r},${g},${b}`;
+        const dadosDoTerritorio = databaseTerritorios[corChave];
+
+        // Se encontrar a cor cadastrada, exibe os detalhes customizados. 
+        // Caso contrário, mostra valores genéricos/RGB básicos.
+        if (dadosDoTerritorio) {
+            cardTitle.innerText = dadosDoTerritorio.nome;
+            cardSoberania.innerText = dadosDoTerritorio.soberania;
+            cardIdade.innerText = dadosDoTerritorio.idade;
+            cardMilitar.innerText = dadosDoTerritorio.poderMilitar;
+        } else {
+            cardTitle.innerText = "Território Desconhecido";
+            cardSoberania.innerText = "Nenhuma";
+            cardIdade.innerText = "???";
+            cardMilitar.innerText = `RGB(${corChave})`;
+        }
+
         infoCard.style.opacity = 1;
         infoCard.style.left = e.clientX + 15 + "px";
         infoCard.style.top = e.clientY + "px";
-
-        cardTitle.innerText = "Território";
-        cardDesc.innerText = `RGB(${r},${g},${b})`;
     } else {
-        if(activeColor){
-            activeColor = null;
-            drawBase();
-            infoCard.style.opacity = 0;
-        }
+        hideCard();
     }
 });
 
-// Limpa o efeito se o mouse sair da imagem do mapa
-canvas.addEventListener('mouseleave', () => {
+canvas.addEventListener('mouseleave', hideCard);
+
+function hideCard() {
     if(activeColor){
         activeColor = null;
         drawBase();
         infoCard.style.opacity = 0;
     }
-});
+}
 
 window.addEventListener('resize', () => {
     if(colorData) {
         resizeCanvasDisplay();
     }
 });
-
 </script>
 
 </body>
