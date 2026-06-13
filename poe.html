@@ -2,39 +2,46 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Mapa</title>
+<title>Mapa - Revelar Território</title>
 
 <style>
 body {
     margin: 0;
     background: black;
-    overflow: hidden;
 }
 
-/* O viewport centraliza os mapas usando Flexbox */
 #viewport {
     width: 100vw;
     height: 100vh;
     position: relative;
+    overflow: auto; 
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Os canvas ocupam exatamente o mesmo espaço físico no centro */
-canvas {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.map-wrapper {
+    width: 1441px;
+    height: 1311px;
+    position: relative;
+    flex-shrink: 0;
 }
 
-/* Mapa colorido estritamente atrás */
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1441px;
+    height: 1311px;
+    display: block;
+}
+
+/* O mapa colorido fica visível atrás */
 #mapColor {
     z-index: 1;
 }
 
-/* Mapa escuro/interativo estritamente na frente */
+/* O mapa escuro fica na frente, mas terá pedaços "apagados" pelo mouse */
 #mapCanvas {
     z-index: 2;
 }
@@ -55,8 +62,10 @@ canvas {
 <body>
 
 <div id="viewport">
-    <canvas id="mapColor"></canvas>
-    <canvas id="mapCanvas"></canvas>
+    <div class="map-wrapper">
+        <canvas id="mapColor"></canvas>
+        <canvas id="mapCanvas"></canvas>
+    </div>
 </div>
 
 <div class="info-card" id="infoCard">
@@ -65,6 +74,9 @@ canvas {
 </div>
 
 <script>
+const MAP_WIDTH = 1441;
+const MAP_HEIGHT = 1311;
+
 // ELEMENTOS
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
@@ -76,6 +88,8 @@ const infoCard = document.getElementById('infoCard');
 const cardTitle = document.getElementById('cardTitle');
 const cardDesc = document.getElementById('cardDesc');
 
+const wrapper = document.querySelector('.map-wrapper');
+
 // IMAGENS
 const imgEscura = new Image();
 const imgColorida = new Image();
@@ -83,21 +97,10 @@ const imgColorida = new Image();
 imgEscura.src = 'tryu.png';
 imgColorida.src = 'dertyh.png';
 
-// debug
-imgEscura.onerror = () => console.log("Erro imagem escura");
-imgColorida.onerror = () => console.log("Erro imagem colorida");
-
-// estado
 let loaded = 0;
 let colorData = null;
 let activeColor = null;
 
-// escala / posição (baseados na tela)
-let scale = 1;
-let offsetX = 0;
-let offsetY = 0;
-
-// load
 imgEscura.onload = checkLoad;
 imgColorida.onload = checkLoad;
 
@@ -106,72 +109,47 @@ function checkLoad(){
     if(loaded === 2) init();
 }
 
-// FIT NA TELA (Muda o tamanho real interno dos canvas de forma idêntica)
-function fitToScreen(w, h){
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-
-    // Calcula a escala ideal (contain)
-    const s = Math.min(vw / w, vh / h);
-    scale = s;
-
-    // Tamanho final calculado
-    const rw = Math.floor(w * s);
-    const rh = Math.floor(h * s);
-
-    // Salva o offset real em relação à janela para o cálculo do mouse de precisão
-    offsetX = (vw - rw) / 2;
-    offsetY = (vh - rh) / 2;
-
-    // Redimensiona o tamanho de renderização interna (resolução pixel por pixel)
-    canvas.width = rw;
-    canvas.height = rh;
-    colorCanvas.width = rw;
-    colorCanvas.height = rh;
-
-    // Garante que o tamanho de estilo CSS acompanhe exatamente o tamanho interno
-    canvas.style.width = rw + "px";
-    canvas.style.height = rh + "px";
-    colorCanvas.style.width = rw + "px";
-    colorCanvas.style.height = rh + "px";
-}
-
-// INIT
 function init(){
-    // Aplica o redimensionamento proporcional inicial
-    fitToScreen(imgEscura.width, imgEscura.height);
+    canvas.width = MAP_WIDTH;
+    canvas.height = MAP_HEIGHT;
 
-    // Prepara o canvas colorido de fundo (com o tamanho já corrigido na tela)
-    colorCtx.drawImage(imgColorida, 0, 0, colorCanvas.width, colorCanvas.height);
-    colorData = colorCtx.getImageData(0, 0, colorCanvas.width, colorCanvas.height).data;
+    colorCanvas.width = MAP_WIDTH;
+    colorCanvas.height = MAP_HEIGHT;
+
+    // Desenha o mapa colorido permanentemente no canvas de trás
+    colorCtx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
+    colorData = colorCtx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
 
     drawBase();
 }
 
-// desenha mapa base escuro
+// Redesenha o mapa escuro inteiro na frente
 function drawBase(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(imgEscura, 0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
+    ctx.drawImage(imgEscura, 0, 0, MAP_WIDTH, MAP_HEIGHT);
 }
 
-// comparação de cor (tolerância a variações suaves)
+// Comparação de cor
 function sameColor(r, g, b, tol = 8){
     return Math.abs(r - activeColor.r) <= tol &&
            Math.abs(g - activeColor.g) <= tol &&
            Math.abs(b - activeColor.b) <= tol;
 }
 
-// Desenha o realce perfeitamente alinhado
+// Transforma a região selecionada em um "buraco" transparente
 function draw(){
+    // 1. Recomeça com o mapa escuro inteiro
     drawBase();
 
     if(!activeColor) return;
 
-    const w = canvas.width;
-    const h = canvas.height;
-
-    // Cria a máscara no tamanho idêntico ao canvas visível atual
-    const mask = ctx.createImageData(w, h);
+    // 2. Cria uma máscara temporária na memória com a forma do território
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = MAP_WIDTH;
+    tempCanvas.height = MAP_HEIGHT;
+    const tempCtx = tempCanvas.getContext('2d');
+    
+    const mask = tempCtx.createImageData(MAP_WIDTH, MAP_HEIGHT);
 
     for(let i = 0; i < colorData.length; i += 4){
         const r = colorData[i];
@@ -180,29 +158,31 @@ function draw(){
         const a = colorData[i+3];
 
         if(a > 10 && sameColor(r, g, b)){
-            mask.data[i] = 255;
-            mask.data[i+1] = 255;
-            mask.data[i+2] = 255;
+            mask.data[i] = 255;     // Qualquer cor serve,
+            mask.data[i+1] = 255;   // pois usaremos apenas
+            mask.data[i+2] = 255;   // o formato da silhueta (alfa)
             mask.data[i+3] = 255;
         }
     }
+    tempCtx.putImageData(mask, 0, 0);
 
-    ctx.putImageData(mask, 0, 0);
-
-    // Mescla perfeitamente o recorte gerado com a imagem colorida escalada
-    ctx.globalCompositeOperation = 'source-in';
-    ctx.drawImage(imgColorida, 0, 0, w, h);
+    // 3. Usa o modo de "Borracha" no mapa da frente
+    ctx.globalCompositeOperation = 'destination-out';
+    
+    // 4. Apaga o formato do território do mapa escuro, revelando o fundo colorido
+    ctx.drawImage(tempCanvas, 0, 0);
+    
+    // Restaura o modo padrão de desenho do canvas
     ctx.globalCompositeOperation = 'source-over';
 }
 
-// Interação do mouse baseada na posição recalculada
+// Mouse
 window.addEventListener('mousemove', (e)=>{
-    // Calcula a posição x e y exata baseada nos pixels atuais do canvas
-    const x = Math.floor(e.clientX - offsetX);
-    const y = Math.floor(e.clientY - offsetY);
+    const rect = wrapper.getBoundingClientRect();
+    const x = Math.floor(e.clientX - rect.left);
+    const y = Math.floor(e.clientY - rect.top);
 
-    // Se o mouse estiver fora das bordas do mapa, desativa o realce
-    if(x < 0 || y < 0 || x >= canvas.width || y >= canvas.height){
+    if(x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_HEIGHT){
         if(activeColor){
             activeColor = null;
             drawBase();
@@ -211,14 +191,13 @@ window.addEventListener('mousemove', (e)=>{
         return;
     }
 
-    const i = (y * canvas.width + x) * 4;
+    const i = (y * MAP_WIDTH + x) * 4;
 
     const r = colorData[i];
     const g = colorData[i+1];
     const b = colorData[i+2];
     const a = colorData[i+3];
 
-    // Ignora fundos puramente transparentes ou tons extremamente escuros/pretos
     if(a > 10 && (r + g + b) > 30){
         if(!activeColor || activeColor.r !== r || activeColor.g !== g || activeColor.b !== b){
             activeColor = {r, g, b};
@@ -237,20 +216,6 @@ window.addEventListener('mousemove', (e)=>{
             drawBase();
             infoCard.style.opacity = 0;
         }
-    }
-});
-
-// Redimensionamento responsivo fluido
-window.addEventListener('resize', ()=>{
-    if(imgEscura.width) {
-        fitToScreen(imgEscura.width, imgEscura.height);
-        
-        // Recarrega os dados de pixel do canvas de cores na escala atualizada
-        colorCtx.clearRect(0, 0, colorCanvas.width, colorCanvas.height);
-        colorCtx.drawImage(imgColorida, 0, 0, colorCanvas.width, colorCanvas.height);
-        colorData = colorCtx.getImageData(0, 0, colorCanvas.width, colorCanvas.height).data;
-
-        if(activeColor) draw(); else drawBase();
     }
 });
 
