@@ -41,7 +41,8 @@ canvas {
     pointer-events: none;
     opacity: 0;
     z-index: 10;
-    min-width: 220px;
+    min-width: 240px;
+    max-width: 320px; /* Garante que textos longos quebrem linha elegantemente */
     transition: opacity 0.15s ease;
 }
 
@@ -65,11 +66,23 @@ canvas {
     color: #888;
     font-weight: bold;
     margin-right: 15px;
+    white-space: nowrap;
 }
 
 .info-value {
     color: #fff;
     text-align: right;
+}
+
+/* Novo estilo para o bloco explicativo de descrição */
+.info-desc {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(255, 215, 0, 0.2);
+    font-size: 12px;
+    color: #ccc;
+    line-height: 1.4;
+    text-align: justify;
 }
 </style>
 </head>
@@ -85,197 +98,46 @@ canvas {
     <div class="info-row"><span class="info-label">Soberania:</span><span class="info-value" id="cardSoberania">-</span></div>
     <div class="info-row"><span class="info-label">Idade:</span><span class="info-value" id="cardIdade">-</span></div>
     <div class="info-row"><span class="info-label">Poder Militar:</span><span class="info-value" id="cardMilitar">-</span></div>
+    <div class="info-desc" id="cardDescricao">-</div>
 </div>
 
 <script>
 const MAP_WIDTH = 1441;
 const MAP_HEIGHT = 1311;
 
-// BANCO DE DADOS DOS TERRITÓRIOS
-// Adicione aqui as cores RGB exatas do seu mapa dertyh.png e preencha a história deles!
+// BANCO DE DADOS DOS TERRITÓRIOS (Atualizado com explicações)
 const databaseTerritorios = {
     "42,70,3": {
         nome: "Kwazahdar",
         soberania: "Império de Veridia",
         idade: "420 anos",
-        poderMilitar: "85.000 Soldados (Alta)"
+        poderMilitar: "85.000 Soldados (Alta)",
+        descricao: "Uma fortaleza natural cercada por montanhas escarpadas. É o coração comercial do Império, rico em minérios raros e rotas comerciais fortificadas."
     },
     "1,9,69": {
         nome: "Agaroff",
         soberania: "Dinastia Oculta",
         idade: "1.200 anos",
-        poderMilitar: "12.000 Sentinelas (Média)"
+        poderMilitar: "12.000 Sentinelas (Média)",
+        descricao: "Terras gélidas e envoltas em névoa eterna. Rumores dizem que suas sentinelas guardam segredos arcanos de eras passadas que não devem ser despertados."
     },
     "16,1,25": {
         nome: "Terras livres",
         soberania: "Soberania Desconhecida",
         idade: "Desconhecida",
-        poderMilitar: "Incalculável"
+        poderMilitar: "Incalculável",
+        descricao: "Zonas neutras onde nenhuma lei imperial se aplica. Um refúgio perigoso para caçadores de recompensas, nômades e facções renegadas."
     },
-     "58,7,91": {
+    "58,7,91": {
         nome: "Dyllewalt",
         soberania: "Dinastia Oculta",
         idade: "1.200 anos",
-        poderMilitar: "12.000 Sentinelas (Média)"
-},
-          "237,94,8": {
+        poderMilitar: "12.000 Sentinelas (Média)",
+        descricao: "Uma densa floresta lúgubre que serve como a primeira linha de defesa da Dinastia Oculta. A própria vegetação parece reagir a invasores."
+    },
+    "237,94,8": {
         nome: "Castindell",
         soberania: "Soberania Desconhecida",
         idade: "Desconhecida",
-        poderMilitar: "Incalculável"
-}
-};
-
-// ELEMENTOS
-const canvas = document.getElementById('mapColorCanvas');
-const ctx = canvas.getContext('2d');
-
-const infoCard = document.getElementById('infoCard');
-const cardTitle = document.getElementById('cardTitle');
-const cardSoberania = document.getElementById('cardSoberania');
-const cardIdade = document.getElementById('cardIdade');
-const cardMilitar = document.getElementById('cardMilitar');
-
-// IMAGEM
-const imgColorida = new Image();
-imgColorida.src = 'dertyh.png';
-
-let colorData = null;
-let activeColor = null;
-
-imgColorida.onload = init;
-
-function init(){
-    canvas.width = MAP_WIDTH;
-    canvas.height = MAP_HEIGHT;
-
-    resizeCanvasDisplay();
-    drawBase();
-
-    colorData = ctx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
-}
-
-function resizeCanvasDisplay() {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    const scale = Math.min(windowWidth / MAP_WIDTH, windowHeight / MAP_HEIGHT);
-
-    canvas.style.width = Math.floor(MAP_WIDTH * scale) + "px";
-    canvas.style.height = Math.floor(MAP_HEIGHT * scale) + "px";
-}
-
-function drawBase(){
-    ctx.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
-    ctx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
-}
-
-function sameColor(r, g, b, tol = 0){
-    return Math.abs(r - activeColor.r) <= tol &&
-           Math.abs(g - activeColor.g) <= tol &&
-           Math.abs(b - activeColor.b) <= tol;
-}
-
-function draw(){
-    drawBase();
-
-    if(!activeColor) return;
-
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = MAP_WIDTH;
-    tempCanvas.height = MAP_HEIGHT;
-    const tempCtx = tempCanvas.getContext('2d');
-    
-    const mask = tempCtx.createImageData(MAP_WIDTH, MAP_HEIGHT);
-
-    for(let i = 0; i < colorData.length; i += 4){
-        const r = colorData[i];
-        const g = colorData[i+1];
-        const b = colorData[i+2];
-        const a = colorData[i+3];
-
-        if(a > 10 && sameColor(r, g, b)){
-            mask.data[i] = 255;   
-            mask.data[i+1] = 215; 
-            mask.data[i+2] = 0;  
-            mask.data[i+3] = 90; 
-        }
-    }
-    tempCtx.putImageData(mask, 0, 0);
-
-    ctx.save();
-    ctx.shadowColor = "rgba(255, 215, 0, 1)"; 
-    ctx.shadowBlur = 25; 
-    ctx.drawImage(tempCanvas, 0, 0);
-    ctx.restore();
-}
-
-canvas.addEventListener('mousemove', (e) => {
-    const cw = canvas.clientWidth;
-    const ch = canvas.clientHeight;
-
-    const x = Math.floor((e.offsetX / cw) * MAP_WIDTH);
-    const y = Math.floor((e.offsetY / ch) * MAP_HEIGHT);
-
-    if(x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_HEIGHT){
-        hideCard();
-        return;
-    }
-
-    const i = (y * MAP_WIDTH + x) * 4;
-
-    const r = colorData[i];
-    const g = colorData[i+1];
-    const b = colorData[i+2];
-    const a = colorData[i+3];
-
-    if(a > 10 && (r + g + b) > 20){
-        if(!activeColor || activeColor.r !== r || activeColor.g !== g || activeColor.b !== b){
-            activeColor = {r, g, b};
-            draw();
-        }
-
-        // Chave de busca no formato "R,G,B"
-        const corChave = `${r},${g},${b}`;
-        const dadosDoTerritorio = databaseTerritorios[corChave];
-
-        // Se encontrar a cor cadastrada, exibe os detalhes customizados. 
-        // Caso contrário, mostra valores genéricos/RGB básicos.
-        if (dadosDoTerritorio) {
-            cardTitle.innerText = dadosDoTerritorio.nome;
-            cardSoberania.innerText = dadosDoTerritorio.soberania;
-            cardIdade.innerText = dadosDoTerritorio.idade;
-            cardMilitar.innerText = dadosDoTerritorio.poderMilitar;
-        } else {
-            cardTitle.innerText = "Território Desconhecido";
-            cardSoberania.innerText = "Nenhuma";
-            cardIdade.innerText = "???";
-            cardMilitar.innerText = `RGB(${corChave})`;
-        }
-
-        infoCard.style.opacity = 1;
-        infoCard.style.left = e.clientX + 15 + "px";
-        infoCard.style.top = e.clientY + "px";
-    } else {
-        hideCard();
-    }
-});
-
-canvas.addEventListener('mouseleave', hideCard);
-
-function hideCard() {
-    if(activeColor){
-        activeColor = null;
-        drawBase();
-        infoCard.style.opacity = 0;
-    }
-}
-
-window.addEventListener('resize', () => {
-    if(colorData) {
-        resizeCanvasDisplay();
-    }
-});
-</script>
-
-</body>
-</html>
+        poderMilitar: "Incalculável",
+        descricao: "Território isolado repleto de ruínas antigas e fendas de energia inst
