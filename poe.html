@@ -20,8 +20,9 @@
             overflow: hidden;
         }
         
+        /* Área visível do mapa */
         .map-viewport {
-            width: 85vw;
+            width: 90vw;
             height: 85vh;
             border: 1px solid #333;
             border-radius: 10px;
@@ -29,17 +30,45 @@
             position: relative;
             cursor: grab;
             background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .map-viewport:active {
             cursor: grabbing;
         }
 
-        /* O Canvas conterá a renderização visual e responderá ao Zoom/Pan */
-        #mapCanvas {
-            position: absolute;
+        /* Grupo do mapa que sofre o Zoom e Pan */
+        .map-wrapper {
             transform-origin: center center;
             transition: transform 0.05s ease-out;
+            display: inline-block;
+        }
+
+        /* O SVG que organiza o mapa e as imagens */
+        svg {
+            display: block;
+            max-width: 100%;
+            max-height: 80vh;
+            height: auto;
+        }
+
+        /* Configuração de cada região/pedaço do mapa */
+        .region {
+            cursor: pointer;
+            fill: transparent;         /* Invisível por padrão (mostra o fundo preto) */
+            stroke: transparent;       /* Sem borda por padrão */
+            transition: fill 0.2s ease, stroke 0.2s ease, filter 0.2s ease;
+        }
+
+        /* EFEITO AO PASSAR O MOUSE: Revela a cor e adiciona a borda dourada luminosa */
+        .region:hover {
+            fill: url(#pattern-color);  /* Revela o pedaço da imagem colorida dertyh.png */
+            stroke: #d4af37;            /* Cor da borda: Dourado */
+            stroke-width: 3px;          /* Espessura da borda */
+            stroke-linejoin: round;
+            filter: drop-shadow(0px 0px 8px rgba(212, 175, 55, 0.8)); /* Brilho luminoso dourado */
         }
 
         /* Card flutuante lateral */
@@ -55,7 +84,7 @@
             pointer-events: none;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.2s, visibility 0.2s;
+            transition: opacity 0.15s ease, visibility 0.15s ease;
             z-index: 1000;
             min-width: 180px;
         }
@@ -76,227 +105,36 @@
 <body>
 
     <div class="map-viewport" id="viewport">
-        <canvas id="mapCanvas"></canvas>
+        <div class="map-wrapper" id="mapWrapper">
+            
+            <svg viewBox="0 0 1000 1000" width="1000" height="1000" id="mapSvg">
+                <defs>
+                    <pattern id="pattern-dark" width="1000" height="1000" patternUnits="userSpaceOnUse">
+                        <image href="tryu.png" width="1000" height="1000" />
+                    </pattern>
+                    <pattern id="pattern-color" width="1000" height="1000" patternUnits="userSpaceOnUse">
+                        <image href="dertyh.png" width="1000" height="1000" />
+                    </pattern>
+                </defs>
+
+                <rect width="1000" height="1000" fill="url(#pattern-dark)" pointer-events="none" />
+
+                <path class="region" data-name="Região Noroeste" data-desc="Território de relevo acidentado e fronteiras fortificadas." 
+                      d="M 50,150 L 300,150 L 250,400 L 50,300 Z" />
+                      
+                <path class="region" data-name="Região Central" data-desc="O coração geopolítico do ecossistema mapeado." 
+                      d="M 300,150 L 600,200 L 550,550 L 250,400 Z" />
+                      
+                <path class="region" data-name="Território Oriental" data-desc="Planícies dominadas pelas forças costeiras." 
+                      d="M 600,200 L 950,250 L 850,700 L 550,550 Z" />
+
+                <path class="region" data-name="Província do Sul" data-desc="Vastidão de terras áridas e caminhos sinuosos." 
+                      d="M 250,400 L 550,550 L 600,900 L 350,850 Z" />
+            </svg>
+
+        </div>
     </div>
 
     <div class="info-card" id="infoCard">
         <h4 id="cardTitle">Território</h4>
         <p id="cardDesc">Região selecionada.</p>
-    </div>
-
-    <script>
-        const viewport = document.getElementById('viewport');
-        const canvas = document.getElementById('mapCanvas');
-        const ctx = canvas.getContext('2d');
-        const infoCard = document.getElementById('infoCard');
-        const cardTitle = document.getElementById('cardTitle');
-        const cardDesc = document.getElementById('cardDesc');
-
-        // Carrega as duas versões do mapa
-        const imgEscura = new Image();
-        imgEscura.src = 'tryu.png';
-
-        const imgColorida = new Image();
-        imgColorida.src = 'dertyh.png';
-
-        let mapsLoaded = 0;
-        function mapLoaded() {
-            mapsLoaded++;
-            if (mapsLoaded === 2) {
-                initMap();
-            }
-        }
-        imgEscura.onload = mapLoaded;
-        imgColorida.onload = mapLoaded;
-
-        // Variáveis de controle de visualização (Zoom e Pan)
-        let scale = 1;
-        const minScale = 1;
-        const maxScale = 5;
-        let isDragging = false;
-        let startX, startY, posX = 0, posY = 0;
-        
-        // Dados de pixel das imagens para detecção de cor
-        let colorData = null;
-        let activeColor = null;
-
-        function initMap() {
-            // Ajusta o tamanho do canvas baseado nas dimensões da imagem original
-            canvas.width = imgEscura.width;
-            canvas.height = imgEscura.height;
-            
-            // Desenha o estado inicial (tudo escuro)
-            ctx.drawImage(imgEscura, 0, 0);
-
-            // Cria um canvas oculto para mapear os pixels coloridos da dertyh.png
-            const hiddenCanvas = document.createElement('canvas');
-            hiddenCanvas.width = canvas.width;
-            hiddenCanvas.height = canvas.height;
-            const hCtx = hiddenCanvas.getContext('2d');
-            hCtx.drawImage(imgColorida, 0, 0);
-            colorData = hCtx.getImageData(0, 0, canvas.width, canvas.height).data;
-
-            // Centraliza o canvas inicialmente dentro do viewport
-            resetPosition();
-        }
-
-        function resetPosition() {
-            const vRect = viewport.getBoundingClientRect();
-            // Escala para caber no viewport mantendo proporções
-            const scaleX = (vRect.width * 0.9) / canvas.width;
-            const scaleY = (vRect.height * 0.9) / canvas.height;
-            scale = Math.min(scaleX, scaleY, 1);
-            
-            posX = (vRect.width - canvas.width * scale) / 2;
-            posY = (vRect.height - canvas.height * scale) / 2;
-            updateTransform();
-            draw();
-        }
-
-        // --- RENDERIZAÇÃO DO MAPA (ESCURA + ACENDIMENTO + BORDA GLOW) ---
-        function draw() {
-            if (mapsLoaded < 2) return;
-
-            // Limpa o canvas principal
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // 1. Desenha a base escura completa
-            ctx.drawImage(imgEscura, 0, 0);
-
-            // 2. Se houver uma região selecionada pelo mouse, isola e acende ela
-            if (activeColor) {
-                ctx.save();
-                
-                // Cria uma máscara contendo apenas os pixels da cor ativa
-                const maskCanvas = document.createElement('canvas');
-                maskCanvas.width = canvas.width;
-                maskCanvas.height = canvas.height;
-                const mCtx = maskCanvas.getContext('2d');
-                
-                const maskImgData = mCtx.createImageData(canvas.width, canvas.height);
-                for (let i = 0; i < colorData.length; i += 4) {
-                    const r = colorData[i];
-                    const g = colorData[i+1];
-                    const b = colorData[i+2];
-                    const a = colorData[i+3];
-
-                    if (a > 10 && r === activeColor.r && g === activeColor.g && b === activeColor.b) {
-                        maskImgData.data[i] = 255;
-                        maskImgData.data[i+1] = 255;
-                        maskImgData.data[i+2] = 255;
-                        maskImgData.data[i+3] = 255;
-                    }
-                }
-                mCtx.putImageData(maskImgData, 0, 0);
-
-                // Recorta o canvas usando a máscara gerada
-                ctx.beginPath();
-                ctx.drawImage(maskCanvas, 0, 0);
-                ctx.globalCompositeOperation = 'source-in';
-                
-                // Desenha a imagem colorida apenas por cima da área mascarada
-                ctx.drawImage(imgColorida, 0, 0);
-                ctx.restore();
-
-                // 3. Desenha a borda dourada luminosa (Glow) ao redor do pedaço ativo
-                ctx.save();
-                ctx.shadowColor = "rgba(212, 175, 55, 1)"; // Dourado
-                ctx.shadowBlur = 15;                       // Intensidade do brilho
-                ctx.strokeStyle = "rgba(212, 175, 55, 0.9)";
-                ctx.lineWidth = 3;
-                
-                // Desenha o contorno baseado na silhueta da máscara
-                ctx.globalCompositeOperation = 'source-over';
-                ctx.drawImage(maskCanvas, 0, 0);
-                // Executa um stroke sutil no contorno do canvas de máscara
-                ctx.stroke(); 
-                ctx.restore();
-            }
-        }
-
-        // --- CONTROLE DE LUPA (ZOOM COM A RODA DO MOUSE) ---
-        viewport.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const zoomIntensity = 0.05;
-            if (e.deltaY < 0) {
-                scale = Math.min(maxScale, scale + zoomIntensity);
-            } else {
-                scale = Math.max(minScale, scale - zoomIntensity);
-            }
-            updateTransform();
-        });
-
-        // --- CONTROLE DE ARRASTAR (PAN) ---
-        viewport.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.clientX - posX;
-            startY = e.clientY - posY;
-        });
-
-        window.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-
-        // --- RASTREAMENTO DO CURSOR EM CIMA DO CANVAS ---
-        window.addEventListener('mousemove', (e) => {
-            const vRect = viewport.getBoundingClientRect();
-            
-            if (isDragging) {
-                posX = e.clientX - startX;
-                posY = e.clientY - startY;
-                updateTransform();
-            }
-
-            // Verifica se o mouse está na área do viewport
-            if (e.clientX >= vRect.left && e.clientX <= vRect.right && e.clientY >= vRect.top && e.clientY <= vRect.bottom && colorData) {
-                
-                // Converte a coordenada do mouse na tela para a coordenada interna do Canvas levando em conta Zoom e Pan
-                const canvasRect = canvas.getBoundingClientRect();
-                const xCanvas = Math.floor((e.clientX - canvasRect.left) * (canvas.width / canvasRect.width));
-                const yCanvas = Math.floor((e.clientY - canvasRect.top) * (canvas.height / canvasRect.height));
-
-                if (xCanvas >= 0 && xCanvas < canvas.width && yCanvas >= 0 && yCanvas < canvas.height) {
-                    const pixelIndex = (yCanvas * canvas.width + xCanvas) * 4;
-                    const r = colorData[pixelIndex];
-                    const g = colorData[pixelIndex+1];
-                    const b = colorData[pixelIndex+2];
-                    const a = colorData[pixelIndex+3];
-
-                    // Ignora pixels transparentes ou brancos de fundo puro
-                    if (a > 10 && !(r === 255 && g === 255 && b === 255) && !(r === 0 && g === 0 && b === 0)) {
-                        if (!activeColor || activeColor.r !== r || activeColor.g !== g || activeColor.b !== b) {
-                            activeColor = { r, g, b };
-                            draw(); // Redesenha aplicando cor e contorno
-                        }
-                        
-                        // Atualiza e posiciona o Card ao lado, nunca em cima
-                        infoCard.style.opacity = 1;
-                        infoCard.style.visibility = 'visible';
-                        infoCard.style.left = (e.clientX + 25) + 'px';
-                        infoCard.style.top = (e.clientY - 30) + 'px';
-                        
-                        // Define o título dinâmico com base na cor identificada (ID do Território)
-                        cardTitle.innerText = `Região #${r}${g}${b}`;
-                        cardDesc.innerText = "Território integrado ao ecossistema mapeado.";
-                        return;
-                    }
-                }
-            }
-
-            // Se sair de cima de uma região válida, limpa os efeitos
-            if (activeColor) {
-                activeColor = null;
-                draw();
-                infoCard.style.opacity = 0;
-                infoCard.style.visibility = 'hidden';
-            }
-        });
-
-        function updateTransform() {
-            // Aplica movimentação e aproximação mantendo o Canvas fluido
-            canvas.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
-        }
-    </script>
-
-</body>
-</html>
