@@ -2,16 +2,15 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Mapa - Responsivo com Brilho Dourado</title>
+<title>Mapa - Alinhamento Perfeito</title>
 
 <style>
 body {
     margin: 0;
     background: black;
-    overflow: hidden; /* Remove barras de rolagem sob qualquer circunstância */
+    overflow: hidden; /* Remove barras de rolagem */
 }
 
-/* O viewport garante que o mapa fique perfeitamente centralizado na janela */
 #viewport {
     width: 100vw;
     height: 100vh;
@@ -21,7 +20,7 @@ body {
     align-items: center;
 }
 
-/* O canvas agora se adapta dinamicamente mantendo a proporção original */
+/* O canvas se adapta perfeitamente mantendo a proporção */
 canvas {
     display: block;
     max-width: 100vw;
@@ -55,7 +54,6 @@ canvas {
 </div>
 
 <script>
-// TAMANHO DA MATRIZ ORIGINAL DO MAPA
 const MAP_WIDTH = 1441;
 const MAP_HEIGHT = 1311;
 
@@ -87,11 +85,9 @@ function checkLoad(){
 }
 
 function init(){
-    // A resolução interna do Canvas fica TRAVADA no tamanho real da imagem
     canvas.width = MAP_WIDTH;
     canvas.height = MAP_HEIGHT;
 
-    // Canvas auxiliar em memória para ler a matriz de cores original
     const emMemoriaCanvas = document.createElement('canvas');
     emMemoriaCanvas.width = MAP_WIDTH;
     emMemoriaCanvas.height = MAP_HEIGHT;
@@ -100,20 +96,15 @@ function init(){
     emMemoriaCtx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
     colorData = emMemoriaCtx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
 
-    // Ajusta o tamanho visual do canvas na tela
     resizeCanvasDisplay();
     drawBase();
 }
 
-// Controla o tamanho de exibição CSS para caber na tela mantendo a proporção
 function resizeCanvasDisplay() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-
-    // Calcula a proporção de escala ideal (contain)
     const scale = Math.min(windowWidth / MAP_WIDTH, windowHeight / MAP_HEIGHT);
 
-    // Define o tamanho físico que ele vai ocupar na tela do usuário
     canvas.style.width = Math.floor(MAP_WIDTH * scale) + "px";
     canvas.style.height = Math.floor(MAP_HEIGHT * scale) + "px";
 }
@@ -123,7 +114,6 @@ function drawBase(){
     ctx.drawImage(imgEscura, 0, 0, MAP_WIDTH, MAP_HEIGHT);
 }
 
-// Comparação estrita de cor (tol = 0 garante precisão máxima de região)
 function sameColor(r, g, b, tol = 0){
     return Math.abs(r - activeColor.r) <= tol &&
            Math.abs(g - activeColor.g) <= tol &&
@@ -152,26 +142,27 @@ function draw(){
             mask.data[i] = 218;   
             mask.data[i+1] = 165; 
             mask.data[i+2] = 32;  
-            mask.data[i+3] = 50; // Intensidade do preenchimento interno do brilho
+            mask.data[i+3] = 50; 
         }
     }
     tempCtx.putImageData(mask, 0, 0);
 
     ctx.save();
-    ctx.shadowColor = "rgba(255, 215, 0, 1)"; // Cor Dourada do neon
-    ctx.shadowBlur = 20; // Força do efeito de desfoque/brilho
+    ctx.shadowColor = "rgba(255, 215, 0, 1)"; 
+    ctx.shadowBlur = 20; 
     ctx.drawImage(tempCanvas, 0, 0);
     ctx.restore();
 }
 
-// Captura e correção de coordenadas com base na escala dinâmica
+// CORREÇÃO: Nova lógica de mapeamento milimétrico usando e.offsetX/Y e clientWidth/Height
 canvas.addEventListener('mousemove', (e) => {
-    // Pega as dimensões reais que o canvas está ocupando na tela naquele momento
-    const rect = canvas.getBoundingClientRect();
+    // Usamos clientWidth e clientHeight do próprio elemento para evitar distorções do boundingbox decimal
+    const cw = canvas.clientWidth;
+    const ch = canvas.clientHeight;
 
-    // Transforma a posição física do clique do mouse de volta para a escala matemática de 1441x1311
-    const x = Math.floor((e.clientX - rect.left) * (MAP_WIDTH / rect.width));
-    const y = Math.floor((e.clientY - rect.top) * (MAP_HEIGHT / rect.height));
+    // Converte a posição local do cursor diretamente para a proporção original de 1441x1311
+    const x = Math.floor((e.offsetX / cw) * MAP_WIDTH);
+    const y = Math.floor((e.offsetY / ch) * MAP_HEIGHT);
 
     if(x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_HEIGHT){
         if(activeColor){
@@ -218,7 +209,6 @@ canvas.addEventListener('mouseleave', () => {
     }
 });
 
-// Se o usuário mudar o tamanho da janela, reajusta as proporções instantaneamente
 window.addEventListener('resize', () => {
     if(loaded === 2) {
         resizeCanvasDisplay();
