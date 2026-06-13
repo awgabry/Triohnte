@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Mapa - Revelar Território</title>
+<title>Mapa - Brilho Dourado</title>
 
 <style>
 body {
@@ -27,6 +27,7 @@ body {
     flex-shrink: 0;
 }
 
+/* Agora temos apenas um único canvas visível na tela */
 canvas {
     position: absolute;
     top: 0;
@@ -34,15 +35,6 @@ canvas {
     width: 1441px;
     height: 1311px;
     display: block;
-}
-
-/* O mapa colorido fica visível atrás */
-#mapColor {
-    z-index: 1;
-}
-
-/* O mapa escuro fica na frente, mas terá pedaços "apagados" pelo mouse */
-#mapCanvas {
     z-index: 2;
 }
 
@@ -63,7 +55,6 @@ canvas {
 
 <div id="viewport">
     <div class="map-wrapper">
-        <canvas id="mapColor"></canvas>
         <canvas id="mapCanvas"></canvas>
     </div>
 </div>
@@ -81,9 +72,6 @@ const MAP_HEIGHT = 1311;
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
 
-const colorCanvas = document.getElementById('mapColor');
-const colorCtx = colorCanvas.getContext('2d');
-
 const infoCard = document.getElementById('infoCard');
 const cardTitle = document.getElementById('cardTitle');
 const cardDesc = document.getElementById('cardDesc');
@@ -92,7 +80,7 @@ const wrapper = document.querySelector('.map-wrapper');
 
 // IMAGENS
 const imgEscura = new Image();
-const imgColorida = new Image();
+const imgColorida = new Image(); // Mantida apenas na memória para ler os mapas de cores
 
 imgEscura.src = 'tryu.png';
 imgColorida.src = 'dertyh.png';
@@ -113,17 +101,19 @@ function init(){
     canvas.width = MAP_WIDTH;
     canvas.height = MAP_HEIGHT;
 
-    colorCanvas.width = MAP_WIDTH;
-    colorCanvas.height = MAP_HEIGHT;
-
-    // Desenha o mapa colorido permanentemente no canvas de trás
-    colorCtx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
-    colorData = colorCtx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
+    // Criamos um canvas invisível apenas na memória para extrair os dados RGB
+    const emMemoriaCanvas = document.createElement('canvas');
+    emMemoriaCanvas.width = MAP_WIDTH;
+    emMemoriaCanvas.height = MAP_HEIGHT;
+    const emMemoriaCtx = emMemoriaCanvas.getContext('2d');
+    
+    emMemoriaCtx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
+    colorData = emMemoriaCtx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
 
     drawBase();
 }
 
-// Redesenha o mapa escuro inteiro na frente
+// Desenha o mapa normal (escuro)
 function drawBase(){
     ctx.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
     ctx.drawImage(imgEscura, 0, 0, MAP_WIDTH, MAP_HEIGHT);
@@ -136,14 +126,13 @@ function sameColor(r, g, b, tol = 8){
            Math.abs(b - activeColor.b) <= tol;
 }
 
-// Transforma a região selecionada em um "buraco" transparente
+// Desenha a silhueta do território aplicando o efeito de brilho neon dourado
 function draw(){
-    // 1. Recomeça com o mapa escuro inteiro
     drawBase();
 
     if(!activeColor) return;
 
-    // 2. Cria uma máscara temporária na memória com a forma do território
+    // 1. Cria uma máscara na memória contendo apenas a forma daquele território
     const tempCanvas = document.createElement('canvas');
     tempCanvas.width = MAP_WIDTH;
     tempCanvas.height = MAP_HEIGHT;
@@ -158,22 +147,30 @@ function draw(){
         const a = colorData[i+3];
 
         if(a > 10 && sameColor(r, g, b)){
-            mask.data[i] = 255;     // Qualquer cor serve,
-            mask.data[i+1] = 255;   // pois usaremos apenas
-            mask.data[i+2] = 255;   // o formato da silhueta (alfa)
-            mask.data[i+3] = 255;
+            // Preenchemos com uma cor base sólida (dourado semi-transparente para o miolo)
+            mask.data[i] = 218;   
+            mask.data[i+1] = 165; 
+            mask.data[i+2] = 32;  
+            mask.data[i+3] = 40;  // Opacidade baixa no miolo para não cobrir totalmente os detalhes
         }
     }
     tempCtx.putImageData(mask, 0, 0);
 
-    // 3. Usa o modo de "Borracha" no mapa da frente
-    ctx.globalCompositeOperation = 'destination-out';
-    
-    // 4. Apaga o formato do território do mapa escuro, revelando o fundo colorido
+    // 2. Configura os filtros de sombra do canvas principal para simular o "glow" (brilho)
+    ctx.save(); // Salva o estado atual do canvas
+    ctx.shadowColor = "rgba(255, 215, 0, 1)"; // Cor do brilho: Ouro puro (Gold)
+    ctx.shadowBlur = 20;                      // Intensidade/tamanho da aura do brilho
+
+    // 3. Desenha a forma do território por cima. O Canvas criará a aura dourada nas bordas automaticamente.
     ctx.drawImage(tempCanvas, 0, 0);
     
-    // Restaura o modo padrão de desenho do canvas
+    // Desenha também uma linha fina de contorno dourado para dar acabamento ao contorno
     ctx.globalCompositeOperation = 'source-over';
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(255, 225, 100, 0.8)";
+    
+    // Restaura as configurações normais do canvas para que o brilho não afete as próximas renderizações
+    ctx.restore();
 }
 
 // Mouse
