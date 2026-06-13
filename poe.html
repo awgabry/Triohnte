@@ -5,65 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contorno de Triohnte</title>
 
-    <!-- Seu ícone existente -->
     <link rel="icon" type="image/png" href="mu.png">
     
     <style>
-        /* Reseta margens e define o fundo */
         body {
             background-color: black;
-            margin: 0;
-            padding: 0;
             color: white;
             font-family: Arial, sans-serif;
-            
-            /* Flexbox para centralizar tudo na página */
             display: flex;
-            justify-content: center; /* Centraliza horizontalmente */
-            align-items: center;     /* Centraliza verticalmente */
-            min-height: 100vh;       /* Ocupa toda a altura da janela */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Evita barras de rolagem desnecessárias */
         }
-
-        /* Contêiner para o mapa e legenda */
+        
         .container {
-            border: 1px solid #333; /* Uma borda sutil, como no seu código original */
+            text-align: center;
+            border: 1px solid #333;
             padding: 20px;
             border-radius: 10px;
-            text-align: center; /* Centraliza texto e elementos inline dentro */
-            max-width: 90%;       /* Garante que o contêiner não estoure em telas pequenas */
+            max-width: 90vw;  /* Garante que o contêiner caiba na largura da tela */
+            max-height: 90vh; /* Garante que o contêiner caiba na altura da tela */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Estilo para a imagem do mapa */
-        .centered-map {
-            width: 100%;           /* Preenche o contêiner */
-            max-width: 600px;      /* Define uma largura máxima para o mapa */
-            height: auto;          /* Mantém a proporção da imagem */
-            display: block;        /* Ajuda na centralização */
-            margin: 0 auto;        /* Centraliza a imagem horizontalmente */
-        }
-
-        /* Estilo para a legenda (o texto do código) */
-        .code-caption {
-            font-family: 'Courier New', Courier, monospace; /* Fonte estilo código */
-            font-size: 0.8em;                              /* Um pouco menor que o texto normal */
-            margin-top: 15px;                              /* Espaço entre o mapa e o texto */
-            word-break: break-all;                        /* Quebra o texto se ele for muito longo */
+        .map-image {
+            max-width: 100%;  /* Impede que a imagem fique maior que o contêiner */
+            max-height: 70vh; /* Limita a altura para que não corte no fundo da tela */
+            height: auto;     /* Mantém a proporção original do mapa */
+            width: auto;      /* Mantém a proporção original do mapa */
+            display: block;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Figura para o mapa e legenda -->
-        <figure style="margin: 0;">
-            <!-- Sua imagem do mapa (arquivo tryu.png) -->
-            <img src="tryu.png" alt="Mapa de Contorno de Triohnte" class="centered-map">
-            
-            <!-- A legenda estilizada -->
-            <figcaption class="code-caption">
-                &lt;img src="tryu.png" class="centered-map"&gt;
-            </figcaption>
-        </figure>
+        <img src="tryu.png" alt="Contorno de Triohnte" class="map-image">
     </div>
 
 </body>
