@@ -2,13 +2,13 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Mapa - Alinhamento Perfeito</title>
+<title>Mapa - Alinhamento Perfeito de Telas</title>
 
 <style>
 body {
     margin: 0;
     background: black;
-    overflow: hidden; /* Remove barras de rolagem */
+    overflow: hidden; /* Evita qualquer barra de rolagem */
 }
 
 #viewport {
@@ -20,12 +20,22 @@ body {
     align-items: center;
 }
 
-/* O canvas se adapta perfeitamente mantendo a proporção */
+/* Ambos os canvas vão compartilhar exatamente o mesmo comportamento e posição */
 canvas {
+    position: absolute;
     display: block;
     max-width: 100vw;
     max-height: 100vh;
     object-fit: contain; 
+}
+
+/* O mapa de seleção (colorido) fica embaixo */
+#mapColor {
+    z-index: 1;
+}
+
+/* O mapa normal (escuro) fica perfeitamente acima */
+#mapCanvas {
     z-index: 2;
 }
 
@@ -45,6 +55,7 @@ canvas {
 <body>
 
 <div id="viewport">
+    <canvas id="mapColor"></canvas>
     <canvas id="mapCanvas"></canvas>
 </div>
 
@@ -54,12 +65,17 @@ canvas {
 </div>
 
 <script>
+// DIMENSÕES BASE DA MATRIZ ORIGINAL (1441 x 1311)
 const MAP_WIDTH = 1441;
 const MAP_HEIGHT = 1311;
 
-// ELEMENTOS
+// ELEMENTOS DO MAPA NORMAL (CIMA)
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
+
+// ELEMENTOS DO MAPA DE SELEÇÃO (BAIXO)
+const colorCanvas = document.getElementById('mapColor');
+const colorCtx = colorCanvas.getContext('2d');
 
 const infoCard = document.getElementById('infoCard');
 const cardTitle = document.getElementById('cardTitle');
@@ -85,28 +101,43 @@ function checkLoad(){
 }
 
 function init(){
+    // Força a resolução interna de pixels a ser IDÊNTICA em ambos
     canvas.width = MAP_WIDTH;
     canvas.height = MAP_HEIGHT;
 
-    const emMemoriaCanvas = document.createElement('canvas');
-    emMemoriaCanvas.width = MAP_WIDTH;
-    emMemoriaCanvas.height = MAP_HEIGHT;
-    const emMemoriaCtx = emMemoriaCanvas.getContext('2d');
-    
-    emMemoriaCtx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
-    colorData = emMemoriaCtx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
+    colorCanvas.width = MAP_WIDTH;
+    colorCanvas.height = MAP_HEIGHT;
 
-    resizeCanvasDisplay();
+    // Ajusta o tamanho de exibição CSS na tela para ambos
+    resizeBothCanvas();
+
+    // Desenha o mapa de seleção no fundo
+    colorCtx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
+    // Extrai os dados para o mouse ler
+    colorData = colorCtx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
+
+    // Desenha o mapa normal na frente
     drawBase();
 }
 
-function resizeCanvasDisplay() {
+// Redimensiona e alinha milimetricamente os dois mapas com as mesmas dimensões
+function resizeBothCanvas() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
+    
+    // Calcula a escala "contain" ideal para a tela atual
     const scale = Math.min(windowWidth / MAP_WIDTH, windowHeight / MAP_HEIGHT);
 
-    canvas.style.width = Math.floor(MAP_WIDTH * scale) + "px";
-    canvas.style.height = Math.floor(MAP_HEIGHT * scale) + "px";
+    const finalWidth = Math.floor(MAP_WIDTH * scale) + "px";
+    const finalHeight = Math.floor(MAP_HEIGHT * scale) + "px";
+
+    // Aplica exatamente a mesma largura/altura CSS no mapa de cima
+    canvas.style.width = finalWidth;
+    canvas.style.height = finalHeight;
+
+    // Aplica exatamente a mesma largura/altura CSS no mapa de baixo
+    colorCanvas.style.width = finalWidth;
+    colorCanvas.style.height = finalHeight;
 }
 
 function drawBase(){
@@ -154,13 +185,11 @@ function draw(){
     ctx.restore();
 }
 
-// CORREÇÃO: Nova lógica de mapeamento milimétrico usando e.offsetX/Y e clientWidth/Height
+// O mouse escuta no mapa de cima, mapeando os pixels com precisão perfeita
 canvas.addEventListener('mousemove', (e) => {
-    // Usamos clientWidth e clientHeight do próprio elemento para evitar distorções do boundingbox decimal
     const cw = canvas.clientWidth;
     const ch = canvas.clientHeight;
 
-    // Converte a posição local do cursor diretamente para a proporção original de 1441x1311
     const x = Math.floor((e.offsetX / cw) * MAP_WIDTH);
     const y = Math.floor((e.offsetY / ch) * MAP_HEIGHT);
 
@@ -211,7 +240,7 @@ canvas.addEventListener('mouseleave', () => {
 
 window.addEventListener('resize', () => {
     if(loaded === 2) {
-        resizeCanvasDisplay();
+        resizeBothCanvas();
     }
 });
 
