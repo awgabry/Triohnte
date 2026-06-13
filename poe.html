@@ -1,196 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Mapa</title>
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+}
+
+#viewport {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+canvas {
+    position: absolute;
+}
+
+.info-card {
+    position: fixed;
+    background: rgba(0,0,0,0.9);
+    color: white;
+    padding: 10px;
+    border: 1px solid gold;
+    pointer-events: none;
+    opacity: 0;
+}
+</style>
+</head>
+
+<body>
+
+<div id="viewport">
+    <canvas id="mapCanvas"></canvas>
+</div>
+
+<div class="info-card" id="infoCard">
+    <b id="cardTitle"></b><br>
+    <span id="cardDesc"></span>
+</div>
+
 <script>
-const viewport = document.getElementById('viewport');
+// ELEMENTOS
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
+const viewport = document.getElementById('viewport');
+
 const infoCard = document.getElementById('infoCard');
 const cardTitle = document.getElementById('cardTitle');
 const cardDesc = document.getElementById('cardDesc');
 
+// IMAGENS
 const imgEscura = new Image();
-imgEscura.src = 'tryu.png';
-
 const imgColorida = new Image();
+
+imgEscura.src = 'tryu.png';
 imgColorida.src = 'dertyh.png';
 
-let mapsLoaded = 0;
+// DEBUG (se der tela branca, isso acusa)
+imgEscura.onerror = () => console.log("Erro na imagem escura");
+imgColorida.onerror = () => console.log("Erro na imagem colorida");
+
+// VARIÁVEIS
+let loaded = 0;
 let colorData = null;
 let activeColor = null;
 
-// 🔥 Canvas de máscara (NÃO recriar)
+// 🔥 máscara FIXA (corrige bug)
 const maskCanvas = document.createElement('canvas');
 const mCtx = maskCanvas.getContext('2d');
 
-// Controle de visualização
-let scale = 1;
-let posX = 0;
-let posY = 0;
-let isDragging = false;
-let startX, startY;
+// INIT
+imgEscura.onload = checkLoad;
+imgColorida.onload = checkLoad;
 
-function mapLoaded() {
-    mapsLoaded++;
-    if (mapsLoaded === 2) initMap();
+function checkLoad() {
+    loaded++;
+    if (loaded === 2) init();
 }
-imgEscura.onload = mapLoaded;
-imgColorida.onload = mapLoaded;
 
-function initMap() {
+function init() {
     canvas.width = imgEscura.width;
     canvas.height = imgEscura.height;
 
     maskCanvas.width = canvas.width;
     maskCanvas.height = canvas.height;
 
-    const hiddenCanvas = document.createElement('canvas');
-    hiddenCanvas.width = canvas.width;
-    hiddenCanvas.height = canvas.height;
-    const hCtx = hiddenCanvas.getContext('2d');
-    hCtx.drawImage(imgColorida, 0, 0);
-    colorData = hCtx.getImageData(0, 0, canvas.width, canvas.height).data;
+    // pega dados da imagem colorida
+    const temp = document.createElement('canvas');
+    temp.width = canvas.width;
+    temp.height = canvas.height;
+    const tctx = temp.getContext('2d');
+    tctx.drawImage(imgColorida, 0, 0);
 
-    const vRect = viewport.getBoundingClientRect();
-    const scaleX = (vRect.width * 0.9) / canvas.width;
-    const scaleY = (vRect.height * 0.9) / canvas.height;
-    scale = Math.min(scaleX, scaleY, 1);
+    colorData = tctx.getImageData(0,0,canvas.width,canvas.height).data;
 
-    posX = (vRect.width - canvas.width * scale) / 2;
-    posY = (vRect.height - canvas.height * scale) / 2;
-
-    updateCanvasPosition();
     draw();
 }
 
-function updateCanvasPosition() {
-    canvas.style.width = (canvas.width * scale) + 'px';
-    canvas.style.height = (canvas.height * scale) + 'px';
-    canvas.style.left = posX + 'px';
-    canvas.style.top = posY + 'px';
+// comparação com tolerância
+function sameColor(r,g,b,t, tol=8){
+    return Math.abs(r-t.r)<=tol &&
+           Math.abs(g-t.g)<=tol &&
+           Math.abs(b-t.b)<=tol;
 }
 
-// 🔥 comparação com tolerância
-function isSameColor(r, g, b, target, tolerance = 8) {
-    return (
-        Math.abs(r - target.r) <= tolerance &&
-        Math.abs(g - target.g) <= tolerance &&
-        Math.abs(b - target.b) <= tolerance
-    );
-}
+// RENDER
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(imgEscura,0,0);
 
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(imgEscura, 0, 0);
+    if(!activeColor) return;
 
-    if (!activeColor) return;
+    const imgData = mCtx.createImageData(canvas.width, canvas.height);
 
-    const maskImgData = mCtx.createImageData(canvas.width, canvas.height);
+    for(let i=0;i<colorData.length;i+=4){
+        const r=colorData[i];
+        const g=colorData[i+1];
+        const b=colorData[i+2];
+        const a=colorData[i+3];
 
-    for (let i = 0; i < colorData.length; i += 4) {
-        const r = colorData[i];
-        const g = colorData[i + 1];
-        const b = colorData[i + 2];
-        const a = colorData[i + 3];
-
-        if (a > 10 && isSameColor(r, g, b, activeColor)) {
-            maskImgData.data[i] = 255;
-            maskImgData.data[i + 1] = 255;
-            maskImgData.data[i + 2] = 255;
-            maskImgData.data[i + 3] = 255;
+        if(a>10 && sameColor(r,g,b,activeColor)){
+            imgData.data[i]=255;
+            imgData.data[i+1]=255;
+            imgData.data[i+2]=255;
+            imgData.data[i+3]=255;
         }
     }
 
-    mCtx.putImageData(maskImgData, 0, 0);
+    mCtx.putImageData(imgData,0,0);
 
-    // aplica máscara
     ctx.save();
-    ctx.drawImage(maskCanvas, 0, 0);
-    ctx.globalCompositeOperation = 'source-in';
-    ctx.drawImage(imgColorida, 0, 0);
+    ctx.drawImage(maskCanvas,0,0);
+    ctx.globalCompositeOperation='source-in';
+    ctx.drawImage(imgColorida,0,0);
     ctx.restore();
 }
 
-// ZOOM
-viewport.addEventListener('wheel', (e) => {
-    e.preventDefault();
-
-    const zoomIntensity = 0.1;
-    const rect = viewport.getBoundingClientRect();
-
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-
-    const oldScale = scale;
-
-    scale += (e.deltaY < 0 ? zoomIntensity : -zoomIntensity);
-    scale = Math.min(Math.max(scale, 0.2), 5);
-
-    posX = mouseX - (mouseX - posX) * (scale / oldScale);
-    posY = mouseY - (mouseY - posY) * (scale / oldScale);
-
-    updateCanvasPosition();
-}, { passive: false });
-
-// DRAG
-viewport.addEventListener('mousedown', (e) => {
-    if (e.button === 0) {
-        isDragging = true;
-        startX = e.clientX - posX;
-        startY = e.clientY - posY;
-    }
-});
-
-window.addEventListener('mouseup', () => {
-    isDragging = false;
-});
-
-window.addEventListener('mousemove', (e) => {
-    if (isDragging) {
-        posX = e.clientX - startX;
-        posY = e.clientY - startY;
-        updateCanvasPosition();
-        return;
-    }
-
+// MOUSE
+window.addEventListener('mousemove',(e)=>{
     const rect = canvas.getBoundingClientRect();
 
-    if (
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom &&
+    if(
+        e.clientX>=rect.left &&
+        e.clientX<=rect.right &&
+        e.clientY>=rect.top &&
+        e.clientY<=rect.bottom &&
         colorData
-    ) {
-        const x = Math.floor((e.clientX - rect.left) * (canvas.width / rect.width));
-        const y = Math.floor((e.clientY - rect.top) * (canvas.height / rect.height));
+    ){
+        const x = Math.floor((e.clientX-rect.left)*(canvas.width/rect.width));
+        const y = Math.floor((e.clientY-rect.top)*(canvas.height/rect.height));
 
-        const idx = (y * canvas.width + x) * 4;
-        const r = colorData[idx];
-        const g = colorData[idx + 1];
-        const b = colorData[idx + 2];
-        const a = colorData[idx + 3];
+        const i=(y*canvas.width+x)*4;
 
-        if (a > 10 && (r + g + b) > 30) {
-            if (!activeColor || !isSameColor(r, g, b, activeColor)) {
-                activeColor = { r, g, b };
+        const r=colorData[i];
+        const g=colorData[i+1];
+        const b=colorData[i+2];
+        const a=colorData[i+3];
+
+        if(a>10 && (r+g+b)>30){
+            if(!activeColor || !sameColor(r,g,b,activeColor)){
+                activeColor={r,g,b};
                 draw();
             }
 
-            infoCard.style.opacity = 1;
-            infoCard.style.visibility = 'visible';
-            infoCard.style.left = (e.clientX + 20) + 'px';
-            infoCard.style.top = (e.clientY - 20) + 'px';
+            infoCard.style.opacity=1;
+            infoCard.style.left=e.clientX+15+"px";
+            infoCard.style.top=e.clientY+"px";
 
-            cardTitle.innerText = "Território";
-            cardDesc.innerText = `RGB(${r}, ${g}, ${b})`;
+            cardTitle.innerText="Território";
+            cardDesc.innerText=`RGB(${r},${g},${b})`;
 
             return;
         }
     }
 
-    if (activeColor) {
-        activeColor = null;
+    if(activeColor){
+        activeColor=null;
         draw();
-        infoCard.style.opacity = 0;
-        infoCard.style.visibility = 'hidden';
+        infoCard.style.opacity=0;
     }
 });
 </script>
+
+</body>
+</html>
