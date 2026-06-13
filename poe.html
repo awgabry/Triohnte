@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Mapa - Brilho Dourado</title>
+<title>Mapa - Brilho Dourado Perfeito</title>
 
 <style>
 body {
@@ -10,6 +10,7 @@ body {
     background: black;
 }
 
+/* O contêiner permite rolagem se a tela for pequena, mantendo o alinhamento */
 #viewport {
     width: 100vw;
     height: 100vh;
@@ -27,7 +28,6 @@ body {
     flex-shrink: 0;
 }
 
-/* Agora temos apenas um único canvas visível na tela */
 canvas {
     position: absolute;
     top: 0;
@@ -76,11 +76,9 @@ const infoCard = document.getElementById('infoCard');
 const cardTitle = document.getElementById('cardTitle');
 const cardDesc = document.getElementById('cardDesc');
 
-const wrapper = document.querySelector('.map-wrapper');
-
 // IMAGENS
 const imgEscura = new Image();
-const imgColorida = new Image(); // Mantida apenas na memória para ler os mapas de cores
+const imgColorida = new Image();
 
 imgEscura.src = 'tryu.png';
 imgColorida.src = 'dertyh.png';
@@ -101,7 +99,7 @@ function init(){
     canvas.width = MAP_WIDTH;
     canvas.height = MAP_HEIGHT;
 
-    // Criamos um canvas invisível apenas na memória para extrair os dados RGB
+    // Canvas auxiliar na memória para extrair o array de cores puro
     const emMemoriaCanvas = document.createElement('canvas');
     emMemoriaCanvas.width = MAP_WIDTH;
     emMemoriaCanvas.height = MAP_HEIGHT;
@@ -113,26 +111,23 @@ function init(){
     drawBase();
 }
 
-// Desenha o mapa normal (escuro)
 function drawBase(){
     ctx.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
     ctx.drawImage(imgEscura, 0, 0, MAP_WIDTH, MAP_HEIGHT);
 }
 
-// Comparação de cor
-function sameColor(r, g, b, tol = 8){
+// Comparação estrita para não acender múltiplos territórios vizinhos por engano
+function sameColor(r, g, b, tol = 0){
     return Math.abs(r - activeColor.r) <= tol &&
            Math.abs(g - activeColor.g) <= tol &&
            Math.abs(b - activeColor.b) <= tol;
 }
 
-// Desenha a silhueta do território aplicando o efeito de brilho neon dourado
 function draw(){
     drawBase();
 
     if(!activeColor) return;
 
-    // 1. Cria uma máscara na memória contendo apenas a forma daquele território
     const tempCanvas = document.createElement('canvas');
     tempCanvas.width = MAP_WIDTH;
     tempCanvas.height = MAP_HEIGHT;
@@ -147,37 +142,30 @@ function draw(){
         const a = colorData[i+3];
 
         if(a > 10 && sameColor(r, g, b)){
-            // Preenchemos com uma cor base sólida (dourado semi-transparente para o miolo)
+            // Cor interna do preenchimento dourado do território ativo
             mask.data[i] = 218;   
             mask.data[i+1] = 165; 
             mask.data[i+2] = 32;  
-            mask.data[i+3] = 40;  // Opacidade baixa no miolo para não cobrir totalmente os detalhes
+            mask.data[i+3] = 45; // Opacidade interna controlada (máx 255)
         }
     }
     tempCtx.putImageData(mask, 0, 0);
 
-    // 2. Configura os filtros de sombra do canvas principal para simular o "glow" (brilho)
-    ctx.save(); // Salva o estado atual do canvas
-    ctx.shadowColor = "rgba(255, 215, 0, 1)"; // Cor do brilho: Ouro puro (Gold)
-    ctx.shadowBlur = 20;                      // Intensidade/tamanho da aura do brilho
+    ctx.save();
+    // Configuração do motor de desfoque/brilho neon dourado
+    ctx.shadowColor = "rgba(255, 215, 0, 1)";
+    ctx.shadowBlur = 18;
 
-    // 3. Desenha a forma do território por cima. O Canvas criará a aura dourada nas bordas automaticamente.
+    // Renderiza a máscara com o brilho ativado
     ctx.drawImage(tempCanvas, 0, 0);
-    
-    // Desenha também uma linha fina de contorno dourado para dar acabamento ao contorno
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "rgba(255, 225, 100, 0.8)";
-    
-    // Restaura as configurações normais do canvas para que o brilho não afete as próximas renderizações
     ctx.restore();
 }
 
-// Mouse
-window.addEventListener('mousemove', (e)=>{
-    const rect = wrapper.getBoundingClientRect();
-    const x = Math.floor(e.clientX - rect.left);
-    const y = Math.floor(e.clientY - rect.top);
+// Ouvinte de movimento aplicado diretamente no elemento Canvas interativo
+canvas.addEventListener('mousemove', (e)=>{
+    // e.offsetX e e.offsetY pegam a posição exata dentro do Canvas descartando qualquer scroll
+    const x = Math.floor(e.offsetX);
+    const y = Math.floor(e.offsetY);
 
     if(x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_HEIGHT){
         if(activeColor){
@@ -195,7 +183,8 @@ window.addEventListener('mousemove', (e)=>{
     const b = colorData[i+2];
     const a = colorData[i+3];
 
-    if(a > 10 && (r + g + b) > 30){
+    // Ignora fundos puramente escuros/transparentes da imagem
+    if(a > 10 && (r + g + b) > 20){
         if(!activeColor || activeColor.r !== r || activeColor.g !== g || activeColor.b !== b){
             activeColor = {r, g, b};
             draw();
@@ -213,6 +202,15 @@ window.addEventListener('mousemove', (e)=>{
             drawBase();
             infoCard.style.opacity = 0;
         }
+    }
+});
+
+// Remove o card se o mouse sair da área útil do mapa
+canvas.addEventListener('mouseleave', () => {
+    if(activeColor){
+        activeColor = null;
+        drawBase();
+        infoCard.style.opacity = 0;
     }
 });
 
