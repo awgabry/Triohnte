@@ -2,13 +2,13 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Mapa - Alinhamento Perfeito de Telas</title>
+<title>Mapa de Seleção - Ativo</title>
 
 <style>
 body {
     margin: 0;
     background: black;
-    overflow: hidden; /* Evita qualquer barra de rolagem */
+    overflow: hidden; /* Remove as barras de rolagem */
 }
 
 #viewport {
@@ -20,23 +20,13 @@ body {
     align-items: center;
 }
 
-/* Ambos os canvas vão compartilhar exatamente o mesmo comportamento e posição */
+/* O canvas se adapta dinamicamente à tela mantendo a proporção original */
 canvas {
-    position: absolute;
     display: block;
     max-width: 100vw;
     max-height: 100vh;
     object-fit: contain; 
-}
-
-/* O mapa de seleção (colorido) fica embaixo */
-#mapColor {
     z-index: 1;
-}
-
-/* O mapa normal (escuro) fica perfeitamente acima */
-#mapCanvas {
-    z-index: 2;
 }
 
 .info-card {
@@ -55,8 +45,7 @@ canvas {
 <body>
 
 <div id="viewport">
-    <canvas id="mapColor"></canvas>
-    <canvas id="mapCanvas"></canvas>
+    <canvas id="mapColorCanvas"></canvas>
 </div>
 
 <div class="info-card" id="infoCard">
@@ -65,97 +54,73 @@ canvas {
 </div>
 
 <script>
-// DIMENSÕES BASE DA MATRIZ ORIGINAL (1441 x 1311)
+// DIMENSÕES ORIGINAIS DA SUA IMAGEM
 const MAP_WIDTH = 1441;
 const MAP_HEIGHT = 1311;
 
-// ELEMENTOS DO MAPA NORMAL (CIMA)
-const canvas = document.getElementById('mapCanvas');
+// ELEMENTOS
+const canvas = document.getElementById('mapColorCanvas');
 const ctx = canvas.getContext('2d');
-
-// ELEMENTOS DO MAPA DE SELEÇÃO (BAIXO)
-const colorCanvas = document.getElementById('mapColor');
-const colorCtx = colorCanvas.getContext('2d');
 
 const infoCard = document.getElementById('infoCard');
 const cardTitle = document.getElementById('cardTitle');
 const cardDesc = document.getElementById('cardDesc');
 
-// IMAGENS
-
+// IMAGEM (Usando apenas o mapa de seleção colorido agora)
 const imgColorida = new Image();
-
-
 imgColorida.src = 'dertyh.png';
 
-let loaded = 0;
 let colorData = null;
 let activeColor = null;
 
-imgEscura.onload = checkLoad;
-imgColorida.onload = checkLoad;
-
-function checkLoad(){
-    loaded++;
-    if(loaded === 2) init();
-}
+imgColorida.onload = init;
+imgColorida.onerror = () => console.log("Erro ao carregar a imagem colorida dertyh.png");
 
 function init(){
-    // Força a resolução interna de pixels a ser IDÊNTICA em ambos
+    // Define a resolução interna fixa do Canvas
     canvas.width = MAP_WIDTH;
     canvas.height = MAP_HEIGHT;
 
-    colorCanvas.width = MAP_WIDTH;
-    colorCanvas.height = MAP_HEIGHT;
+    // Ajusta o tamanho visual do canvas na tela do navegador
+    resizeCanvasDisplay();
 
-    // Ajusta o tamanho de exibição CSS na tela para ambos
-    resizeBothCanvas();
-
-    // Desenha o mapa de seleção no fundo
-    colorCtx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
-    // Extrai os dados para o mouse ler
-    colorData = colorCtx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
-
-    // Desenha o mapa normal na frente
+    // Desenha o mapa colorido como a base visível do projeto
     drawBase();
+
+    // Captura a matriz de pixels para sabermos onde o mouse está passando
+    colorData = ctx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
 }
 
-// Redimensiona e alinha milimetricamente os dois mapas com as mesmas dimensões
-function resizeBothCanvas() {
+// Faz o mapa caber perfeitamente na janela do usuário
+function resizeCanvasDisplay() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-    
-    // Calcula a escala "contain" ideal para a tela atual
     const scale = Math.min(windowWidth / MAP_WIDTH, windowHeight / MAP_HEIGHT);
 
-    const finalWidth = Math.floor(MAP_WIDTH * scale) + "px";
-    const finalHeight = Math.floor(MAP_HEIGHT * scale) + "px";
-
-    // Aplica exatamente a mesma largura/altura CSS no mapa de cima
-    canvas.style.width = finalWidth;
-    canvas.style.height = finalHeight;
-
-    // Aplica exatamente a mesma largura/altura CSS no mapa de baixo
-    colorCanvas.style.width = finalWidth;
-    colorCanvas.style.height = finalHeight;
+    canvas.style.width = Math.floor(MAP_WIDTH * scale) + "px";
+    canvas.style.height = Math.floor(MAP_HEIGHT * scale) + "px";
 }
 
+// Desenha o estado inicial com o mapa colorido limpo
 function drawBase(){
     ctx.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
-    ctx.drawImage(imgEscura, 0, 0, MAP_WIDTH, MAP_HEIGHT);
+    ctx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
 }
 
+// Comparação estrita de cor para evitar acender territórios errados
 function sameColor(r, g, b, tol = 0){
     return Math.abs(r - activeColor.r) <= tol &&
            Math.abs(g - activeColor.g) <= tol &&
            Math.abs(b - activeColor.b) <= tol;
 }
 
+// Aplica o realce dourado por cima do território ativo do mapa de cores
 function draw(){
     drawBase();
 
     if(!activeColor) return;
 
+    // Cria a máscara na memória apenas com o formato do território selecionado
     const tempCanvas = document.createElement('canvas');
     tempCanvas.width = MAP_WIDTH;
     tempCanvas.height = MAP_HEIGHT;
@@ -170,26 +135,31 @@ function draw(){
         const a = colorData[i+3];
 
         if(a > 10 && sameColor(r, g, b)){
-            mask.data[i] = 218;   
-            mask.data[i+1] = 165; 
-            mask.data[i+2] = 32;  
-            mask.data[i+3] = 50; 
+            // Uma camada dourada semi-transparente por cima da cor original do território
+            mask.data[i] = 255;   
+            mask.data[i+1] = 215; 
+            mask.data[i+2] = 0;  
+            mask.data[i+3] = 90; // Opacidade do realce (ajuste se quiser mais claro/escuro)
         }
     }
     tempCtx.putImageData(mask, 0, 0);
 
     ctx.save();
+    // Configuração do brilho neon dourado
     ctx.shadowColor = "rgba(255, 215, 0, 1)"; 
-    ctx.shadowBlur = 20; 
+    ctx.shadowBlur = 25; 
+    
+    // Aplica a máscara brilhante exatamente no local correspondente
     ctx.drawImage(tempCanvas, 0, 0);
     ctx.restore();
 }
 
-// O mouse escuta no mapa de cima, mapeando os pixels com precisão perfeita
+// Escuta o movimento do mouse na mesma proporção do canvas
 canvas.addEventListener('mousemove', (e) => {
     const cw = canvas.clientWidth;
     const ch = canvas.clientHeight;
 
+    // Converte a posição do ponteiro na tela para a escala de 1441x1311
     const x = Math.floor((e.offsetX / cw) * MAP_WIDTH);
     const y = Math.floor((e.offsetY / ch) * MAP_HEIGHT);
 
@@ -209,6 +179,7 @@ canvas.addEventListener('mousemove', (e) => {
     const b = colorData[i+2];
     const a = colorData[i+3];
 
+    // Ignora fundos pretos da imagem externa
     if(a > 10 && (r + g + b) > 20){
         if(!activeColor || activeColor.r !== r || activeColor.g !== g || activeColor.b !== b){
             activeColor = {r, g, b};
@@ -230,6 +201,7 @@ canvas.addEventListener('mousemove', (e) => {
     }
 });
 
+// Limpa o efeito se o mouse sair da imagem do mapa
 canvas.addEventListener('mouseleave', () => {
     if(activeColor){
         activeColor = null;
@@ -239,8 +211,8 @@ canvas.addEventListener('mouseleave', () => {
 });
 
 window.addEventListener('resize', () => {
-    if(loaded === 2) {
-        resizeBothCanvas();
+    if(colorData) {
+        resizeCanvasDisplay();
     }
 });
 
