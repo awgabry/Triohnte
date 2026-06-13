@@ -11,6 +11,7 @@ body {
     overflow: hidden;
 }
 
+/* O viewport centraliza os mapas usando Flexbox */
 #viewport {
     width: 100vw;
     height: 100vh;
@@ -20,19 +21,20 @@ body {
     align-items: center;
 }
 
-/* canvas empilhados */
+/* Os canvas ocupam exatamente o mesmo espaço físico no centro */
 canvas {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-/* mapa colorido atrás */
+/* Mapa colorido estritamente atrás */
 #mapColor {
     z-index: 1;
 }
 
-/* mapa escuro em cima */
+/* Mapa escuro/interativo estritamente na frente */
 #mapCanvas {
     z-index: 2;
 }
@@ -45,6 +47,7 @@ canvas {
     border: 1px solid gold;
     pointer-events: none;
     opacity: 0;
+    z-index: 10;
 }
 </style>
 </head>
@@ -89,7 +92,7 @@ let loaded = 0;
 let colorData = null;
 let activeColor = null;
 
-// escala / posição
+// escala / posição (baseados na tela)
 let scale = 1;
 let offsetX = 0;
 let offsetY = 0;
@@ -103,64 +106,62 @@ function checkLoad(){
     if(loaded === 2) init();
 }
 
-// FIT NA TELA (contain)
+// FIT NA TELA (Muda o tamanho real interno dos canvas de forma idêntica)
 function fitToScreen(w, h){
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
+    // Calcula a escala ideal (contain)
     const s = Math.min(vw / w, vh / h);
     scale = s;
 
-    const rw = w * s;
-    const rh = h * s;
+    // Tamanho final calculado
+    const rw = Math.floor(w * s);
+    const rh = Math.floor(h * s);
 
+    // Salva o offset real em relação à janela para o cálculo do mouse de precisão
     offsetX = (vw - rw) / 2;
     offsetY = (vh - rh) / 2;
 
+    // Redimensiona o tamanho de renderização interna (resolução pixel por pixel)
+    canvas.width = rw;
+    canvas.height = rh;
+    colorCanvas.width = rw;
+    colorCanvas.height = rh;
+
+    // Garante que o tamanho de estilo CSS acompanhe exatamente o tamanho interno
     canvas.style.width = rw + "px";
     canvas.style.height = rh + "px";
-
     colorCanvas.style.width = rw + "px";
     colorCanvas.style.height = rh + "px";
-
-    canvas.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-    colorCanvas.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
 }
 
 // INIT
 function init(){
-    const w = imgEscura.width;
-    const h = imgEscura.height;
+    // Aplica o redimensionamento proporcional inicial
+    fitToScreen(imgEscura.width, imgEscura.height);
 
-    canvas.width = w;
-    canvas.height = h;
-
-    colorCanvas.width = w;
-    colorCanvas.height = h;
-
-    fitToScreen(w, h);
-
-    // desenha mapa colorido invisível para leitura
-    colorCtx.drawImage(imgColorida, 0, 0);
-    colorData = colorCtx.getImageData(0,0,w,h).data;
+    // Prepara o canvas colorido de fundo (com o tamanho já corrigido na tela)
+    colorCtx.drawImage(imgColorida, 0, 0, colorCanvas.width, colorCanvas.height);
+    colorData = colorCtx.getImageData(0, 0, colorCanvas.width, colorCanvas.height).data;
 
     drawBase();
 }
 
-// desenha mapa base
+// desenha mapa base escuro
 function drawBase(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(imgEscura,0,0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(imgEscura, 0, 0, canvas.width, canvas.height);
 }
 
-// comparação de cor
-function sameColor(r,g,b,tol=8){
+// comparação de cor (tolerância a variações suaves)
+function sameColor(r, g, b, tol = 8){
     return Math.abs(r - activeColor.r) <= tol &&
            Math.abs(g - activeColor.g) <= tol &&
            Math.abs(b - activeColor.b) <= tol;
 }
 
-// DRAW highlight
+// Desenha o realce perfeitamente alinhado
 function draw(){
     drawBase();
 
@@ -169,15 +170,16 @@ function draw(){
     const w = canvas.width;
     const h = canvas.height;
 
+    // Cria a máscara no tamanho idêntico ao canvas visível atual
     const mask = ctx.createImageData(w, h);
 
-    for(let i=0;i<colorData.length;i+=4){
+    for(let i = 0; i < colorData.length; i += 4){
         const r = colorData[i];
         const g = colorData[i+1];
         const b = colorData[i+2];
         const a = colorData[i+3];
 
-        if(a > 10 && sameColor(r,g,b)){
+        if(a > 10 && sameColor(r, g, b)){
             mask.data[i] = 255;
             mask.data[i+1] = 255;
             mask.data[i+2] = 255;
@@ -185,19 +187,21 @@ function draw(){
         }
     }
 
-    ctx.putImageData(mask,0,0);
+    ctx.putImageData(mask, 0, 0);
 
+    // Mescla perfeitamente o recorte gerado com a imagem colorida escalada
     ctx.globalCompositeOperation = 'source-in';
-    ctx.drawImage(imgColorida,0,0);
+    ctx.drawImage(imgColorida, 0, 0, w, h);
     ctx.globalCompositeOperation = 'source-over';
 }
 
-// mouse
+// Interação do mouse baseada na posição recalculada
 window.addEventListener('mousemove', (e)=>{
+    // Calcula a posição x e y exata baseada nos pixels atuais do canvas
+    const x = Math.floor(e.clientX - offsetX);
+    const y = Math.floor(e.clientY - offsetY);
 
-    const x = Math.floor((e.clientX - offsetX) / scale);
-    const y = Math.floor((e.clientY - offsetY) / scale);
-
+    // Se o mouse estiver fora das bordas do mapa, desativa o realce
     if(x < 0 || y < 0 || x >= canvas.width || y >= canvas.height){
         if(activeColor){
             activeColor = null;
@@ -214,10 +218,10 @@ window.addEventListener('mousemove', (e)=>{
     const b = colorData[i+2];
     const a = colorData[i+3];
 
-    if(a > 10 && (r+g+b) > 30){
-
+    // Ignora fundos puramente transparentes ou tons extremamente escuros/pretos
+    if(a > 10 && (r + g + b) > 30){
         if(!activeColor || activeColor.r !== r || activeColor.g !== g || activeColor.b !== b){
-            activeColor = {r,g,b};
+            activeColor = {r, g, b};
             draw();
         }
 
@@ -227,12 +231,27 @@ window.addEventListener('mousemove', (e)=>{
 
         cardTitle.innerText = "Território";
         cardDesc.innerText = `RGB(${r},${g},${b})`;
+    } else {
+        if(activeColor){
+            activeColor = null;
+            drawBase();
+            infoCard.style.opacity = 0;
+        }
     }
 });
 
-// resize
+// Redimensionamento responsivo fluido
 window.addEventListener('resize', ()=>{
-    if(imgEscura.width) fitToScreen(imgEscura.width, imgEscura.height);
+    if(imgEscura.width) {
+        fitToScreen(imgEscura.width, imgEscura.height);
+        
+        // Recarrega os dados de pixel do canvas de cores na escala atualizada
+        colorCtx.clearRect(0, 0, colorCanvas.width, colorCanvas.height);
+        colorCtx.drawImage(imgColorida, 0, 0, colorCanvas.width, colorCanvas.height);
+        colorData = colorCtx.getImageData(0, 0, colorCanvas.width, colorCanvas.height).data;
+
+        if(activeColor) draw(); else drawBase();
+    }
 });
 
 </script>
