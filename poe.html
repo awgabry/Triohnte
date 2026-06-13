@@ -110,7 +110,7 @@ const databaseTerritorios = {
     "42,70,3": {
         nome: "Kwazahdar",
         soberania: "Familia Widworf",
-        idade: "820 anos",
+        ididade: "820 anos",
         poderMilitar: "9.000 Soldados (Alta)",
         descricao: "Uma fortaleza natural cercada por montanhas escarpadas. É o coração comercial do Império, rico em minérios raros e rotas comerciais fortificadas."
     },
@@ -153,7 +153,13 @@ const cardTitle = document.getElementById('cardTitle');
 const cardSoberania = document.getElementById('cardSoberania');
 const cardIdade = document.getElementById('cardIdade');
 const cardMilitar = document.getElementById('cardMilitar');
-const cardDescricao = document.getElementById('cardDescricao'); // Captura da nova div
+const cardDescricao = document.getElementById('cardDescricao'); 
+
+// ÁUDIOS
+const bgMusic = new Audio('ae.mp3');
+bgMusic.loop = true;
+
+const selectSound = new Audio('lohy.mp3');
 
 // IMAGEM
 const imgColorida = new Image();
@@ -229,6 +235,11 @@ function draw(){
 }
 
 canvas.addEventListener('mousemove', (e) => {
+    // Inicia a música de fundo na primeira interação do usuário, caso ainda não tenha começado
+    if (bgMusic.paused) {
+        bgMusic.play().catch(err => console.log("Aguardando interação do usuário para iniciar áudio."));
+    }
+
     const cw = canvas.clientWidth;
     const ch = canvas.clientHeight;
 
@@ -251,6 +262,10 @@ canvas.addEventListener('mousemove', (e) => {
         if(!activeColor || activeColor.r !== r || activeColor.g !== g || activeColor.b !== b){
             activeColor = {r, g, b};
             draw();
+
+            // Toca o efeito sonoro ao detectar uma nova região iluminada
+            selectSound.currentTime = 0;
+            selectSound.play().catch(err => console.log("Áudio bloqueado pelo navegador temporariamente."));
         }
 
         // Chave de busca no formato "R,G,B"
@@ -263,7 +278,7 @@ canvas.addEventListener('mousemove', (e) => {
             cardSoberania.innerText = dadosDoTerritorio.soberania;
             cardIdade.innerText = dadosDoTerritorio.idade;
             cardMilitar.innerText = dadosDoTerritorio.poderMilitar;
-            cardDescricao.innerText = dadosDoTerritorio.descricao; // Injeta a explicação
+            cardDescricao.innerText = dadosDoTerritorio.descricao; 
         } else {
             cardTitle.innerText = "Território Desconhecido";
             cardSoberania.innerText = "Nenhuma";
