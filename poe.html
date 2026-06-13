@@ -2,39 +2,31 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Mapa - Brilho Dourado Perfeito</title>
+<title>Mapa - Responsivo com Brilho Dourado</title>
 
 <style>
 body {
     margin: 0;
     background: black;
+    overflow: hidden; /* Remove barras de rolagem sob qualquer circunstância */
 }
 
-/* O contêiner permite rolagem se a tela for pequena, mantendo o alinhamento */
+/* O viewport garante que o mapa fique perfeitamente centralizado na janela */
 #viewport {
     width: 100vw;
     height: 100vh;
     position: relative;
-    overflow: auto; 
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.map-wrapper {
-    width: 1441px;
-    height: 1311px;
-    position: relative;
-    flex-shrink: 0;
-}
-
+/* O canvas agora se adapta dinamicamente mantendo a proporção original */
 canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 1441px;
-    height: 1311px;
     display: block;
+    max-width: 100vw;
+    max-height: 100vh;
+    object-fit: contain; 
     z-index: 2;
 }
 
@@ -54,9 +46,7 @@ canvas {
 <body>
 
 <div id="viewport">
-    <div class="map-wrapper">
-        <canvas id="mapCanvas"></canvas>
-    </div>
+    <canvas id="mapCanvas"></canvas>
 </div>
 
 <div class="info-card" id="infoCard">
@@ -65,6 +55,7 @@ canvas {
 </div>
 
 <script>
+// TAMANHO DA MATRIZ ORIGINAL DO MAPA
 const MAP_WIDTH = 1441;
 const MAP_HEIGHT = 1311;
 
@@ -96,10 +87,11 @@ function checkLoad(){
 }
 
 function init(){
+    // A resolução interna do Canvas fica TRAVADA no tamanho real da imagem
     canvas.width = MAP_WIDTH;
     canvas.height = MAP_HEIGHT;
 
-    // Canvas auxiliar na memória para extrair o array de cores puro
+    // Canvas auxiliar em memória para ler a matriz de cores original
     const emMemoriaCanvas = document.createElement('canvas');
     emMemoriaCanvas.width = MAP_WIDTH;
     emMemoriaCanvas.height = MAP_HEIGHT;
@@ -108,7 +100,22 @@ function init(){
     emMemoriaCtx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
     colorData = emMemoriaCtx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
 
+    // Ajusta o tamanho visual do canvas na tela
+    resizeCanvasDisplay();
     drawBase();
+}
+
+// Controla o tamanho de exibição CSS para caber na tela mantendo a proporção
+function resizeCanvasDisplay() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    // Calcula a proporção de escala ideal (contain)
+    const scale = Math.min(windowWidth / MAP_WIDTH, windowHeight / MAP_HEIGHT);
+
+    // Define o tamanho físico que ele vai ocupar na tela do usuário
+    canvas.style.width = Math.floor(MAP_WIDTH * scale) + "px";
+    canvas.style.height = Math.floor(MAP_HEIGHT * scale) + "px";
 }
 
 function drawBase(){
@@ -116,7 +123,7 @@ function drawBase(){
     ctx.drawImage(imgEscura, 0, 0, MAP_WIDTH, MAP_HEIGHT);
 }
 
-// Comparação estrita para não acender múltiplos territórios vizinhos por engano
+// Comparação estrita de cor (tol = 0 garante precisão máxima de região)
 function sameColor(r, g, b, tol = 0){
     return Math.abs(r - activeColor.r) <= tol &&
            Math.abs(g - activeColor.g) <= tol &&
@@ -142,30 +149,29 @@ function draw(){
         const a = colorData[i+3];
 
         if(a > 10 && sameColor(r, g, b)){
-            // Cor interna do preenchimento dourado do território ativo
             mask.data[i] = 218;   
             mask.data[i+1] = 165; 
             mask.data[i+2] = 32;  
-            mask.data[i+3] = 45; // Opacidade interna controlada (máx 255)
+            mask.data[i+3] = 50; // Intensidade do preenchimento interno do brilho
         }
     }
     tempCtx.putImageData(mask, 0, 0);
 
     ctx.save();
-    // Configuração do motor de desfoque/brilho neon dourado
-    ctx.shadowColor = "rgba(255, 215, 0, 1)";
-    ctx.shadowBlur = 18;
-
-    // Renderiza a máscara com o brilho ativado
+    ctx.shadowColor = "rgba(255, 215, 0, 1)"; // Cor Dourada do neon
+    ctx.shadowBlur = 20; // Força do efeito de desfoque/brilho
     ctx.drawImage(tempCanvas, 0, 0);
     ctx.restore();
 }
 
-// Ouvinte de movimento aplicado diretamente no elemento Canvas interativo
-canvas.addEventListener('mousemove', (e)=>{
-    // e.offsetX e e.offsetY pegam a posição exata dentro do Canvas descartando qualquer scroll
-    const x = Math.floor(e.offsetX);
-    const y = Math.floor(e.offsetY);
+// Captura e correção de coordenadas com base na escala dinâmica
+canvas.addEventListener('mousemove', (e) => {
+    // Pega as dimensões reais que o canvas está ocupando na tela naquele momento
+    const rect = canvas.getBoundingClientRect();
+
+    // Transforma a posição física do clique do mouse de volta para a escala matemática de 1441x1311
+    const x = Math.floor((e.clientX - rect.left) * (MAP_WIDTH / rect.width));
+    const y = Math.floor((e.clientY - rect.top) * (MAP_HEIGHT / rect.height));
 
     if(x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_HEIGHT){
         if(activeColor){
@@ -183,7 +189,6 @@ canvas.addEventListener('mousemove', (e)=>{
     const b = colorData[i+2];
     const a = colorData[i+3];
 
-    // Ignora fundos puramente escuros/transparentes da imagem
     if(a > 10 && (r + g + b) > 20){
         if(!activeColor || activeColor.r !== r || activeColor.g !== g || activeColor.b !== b){
             activeColor = {r, g, b};
@@ -205,12 +210,18 @@ canvas.addEventListener('mousemove', (e)=>{
     }
 });
 
-// Remove o card se o mouse sair da área útil do mapa
 canvas.addEventListener('mouseleave', () => {
     if(activeColor){
         activeColor = null;
         drawBase();
         infoCard.style.opacity = 0;
+    }
+});
+
+// Se o usuário mudar o tamanho da janela, reajusta as proporções instantaneamente
+window.addEventListener('resize', () => {
+    if(loaded === 2) {
+        resizeCanvasDisplay();
     }
 });
 
