@@ -424,6 +424,14 @@
             align-items: center;
             gap: 12px;
         }
+        .profile-img-preview-mini {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #c59d5f;
+            background-color: #000;
+        }
         .account-link {
             color: #c59d5f;
             text-decoration: none;
@@ -464,6 +472,8 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             position: relative;
             text-align: left;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .modal-content h3 {
             font-family: 'Cinzel', serif;
@@ -497,6 +507,48 @@
             transition: border-color 0.3s;
         }
         .form-group input:focus { border-color: #c59d5f; }
+
+        /* Estilização da área de upload de foto */
+        .photo-upload-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #050505;
+            border: 1px dashed #333;
+            padding: 12px;
+            border-radius: 4px;
+        }
+        .photo-preview {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #c59d5f;
+            background: #111;
+        }
+        .file-input-custom {
+            font-family: 'Crimson Pro', serif;
+            color: #888;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .file-input-custom::-webkit-file-upload-button {
+            background: var(--gold-gradient);
+            border: none;
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 3px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: 0.3s;
+        }
+        .file-input-custom::-webkit-file-upload-button:hover {
+            filter: brightness(1.2);
+        }
+
         .modal-actions {
             display: flex;
             justify-content: flex-end;
@@ -545,6 +597,8 @@
     <div class="top-bar-container">
         <div id="user-info" class="auth-box hidden">
             <div class="user-logged">
+                <!-- Mini foto adicionada dinamicamente ao lado do texto de boas-vindas -->
+                <img id="user-mini-avatar" class="profile-img-preview-mini hidden" src="" alt="Avatar">
                 <span id="user-greeting">Olá, ...</span>
                 <span id="account-btn" class="account-link">[Conta]</span>
                 <span id="logout-btn" class="logout-link">[Sair]</span>
@@ -556,10 +610,16 @@
     <div id="accountModal" class="modal-overlay">
         <div class="modal-content">
             <h3>Configurações da Conta</h3>
+            
+            <!-- Campo de Foto Atualizado para Upload Real da Galeria -->
             <div class="form-group">
-                <label for="acc-foto">URL da Foto de Perfil</label>
-                <input id="acc-foto" type="text" placeholder="https://linkdaimagem.com/foto.png">
+                <label>Foto de Perfil</label>
+                <div class="photo-upload-wrapper">
+                    <img id="avatar-preview" class="photo-preview" src="mu.png" alt="Prévia">
+                    <input id="acc-foto-file" type="open_gallery" class="file-input-custom" accept="image/*">
+                </div>
             </div>
+
             <div class="form-group">
                 <label for="acc-nome">Nome completo *</label>
                 <input id="acc-nome" type="text" placeholder="Seu nome oficial">
@@ -673,7 +733,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             </div>
         </section>
 
-        <!-- Nova Seção de Login no Final da Página -->
+        <!-- Seção de Login no Final da Página -->
         <section id="auth-section" class="auth-section">
             <h2>Torne-se um aliado</h2>
             <div id="auth-container" class="auth-container-block">
@@ -699,7 +759,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <script>
-        // Configuração idêntica do Banco de Dados
         const firebaseConfig = {
             apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
             authDomain: "triohnte-database.firebaseapp.com",
@@ -713,6 +772,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
         const database = firebase.database();
 
         let usuarioAtual = null;
+        let base64ImagemSelecionada = ""; // Guarda temporariamente a string da imagem carregada
 
         document.addEventListener("DOMContentLoaded", () => {
             
@@ -720,20 +780,49 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             const accountBtn = document.getElementById('account-btn');
             const closeModalBtn = document.getElementById('closeModalBtn');
             const saveAccountBtn = document.getElementById('saveAccountBtn');
+            const fotoFileInput = document.getElementById('acc-foto-file');
+            const avatarPreview = document.getElementById('avatar-preview');
+            const userMiniAvatar = document.getElementById('user-mini-avatar');
 
-            // Abrir e Fechar Modal da Conta
+            // Ouvinte para detectar quando o usuário escolhe um arquivo da galeria
+            if (fotoFileInput) {
+                fotoFileInput.onchange = (e) => {
+                    const arquivo = e.target.files[0];
+                    if (arquivo) {
+                        // Validação simples de tamanho para não estourar o limite do nó da Realtime Database (~10MB por string)
+                        if (arquivo.size > 2 * 1024 * 1024) { 
+                            alert("Por favor, selecione uma imagem menor que 2MB.");
+                            fotoFileInput.value = "";
+                            return;
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            base64ImagemSelecionada = event.target.result;
+                            if (avatarPreview) avatarPreview.src = base64ImagemSelecionada; // Mostra a prévia no modal
+                        };
+                        reader.readAsDataURL(arquivo);
+                    }
+                };
+            }
+
+            // Abrir e fechar painel da conta
             if (accountBtn) {
                 accountBtn.onclick = () => {
                     if (usuarioAtual) {
-                        // Carrega os dados salvos do usuário para os inputs antes de abrir
                         database.ref('usuarios/' + usuarioAtual.uid).once('value').then((snap) => {
                             const d = snap.val() || {};
-                            document.getElementById('acc-foto').value = d.foto || "";
                             document.getElementById('acc-nome').value = d.nome || "";
                             document.getElementById('acc-endereco').value = d.endereco || "";
                             document.getElementById('acc-cep').value = d.cep || "";
                             document.getElementById('acc-telefone').value = d.telefone || "";
                             document.getElementById('acc-cpf').value = d.cpf || "";
+                            
+                            // Carrega a foto existente na prévia, se houver
+                            base64ImagemSelecionada = d.foto || "";
+                            if (avatarPreview) {
+                                avatarPreview.src = d.foto || "mu.png";
+                            }
                         });
                     }
                     modal.classList.add('active');
@@ -744,7 +833,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 closeModalBtn.onclick = () => modal.classList.remove('active');
             }
 
-            // Salvar configurações de conta no Realtime Database
+            // Salvar configurações
             if (saveAccountBtn) {
                 saveAccountBtn.onclick = () => {
                     const nome = document.getElementById('acc-nome').value.trim();
@@ -755,7 +844,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     }
 
                     const dadosAtualizados = {
-                        foto: document.getElementById('acc-foto').value.trim(),
+                        foto: base64ImagemSelecionada, // Salva o texto codificado da imagem da galeria
                         nome: nome,
                         endereco: document.getElementById('acc-endereco').value.trim(),
                         cep: document.getElementById('acc-cep').value.trim(),
@@ -773,7 +862,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 };
             }
             
-            // Monitoramento de Autenticação
+            // Controle de estado da Autenticação
             auth.onAuthStateChanged((user) => {
                 const authContainer = document.getElementById('auth-container');
                 const authSection = document.getElementById('auth-section');
@@ -785,6 +874,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     if (authContainer) authContainer.classList.remove('hidden');
                     if (authSection) authSection.classList.remove('hidden');
                     if (userInfo) userInfo.classList.add('hidden');
+                    if (userMiniAvatar) userMiniAvatar.classList.add('hidden');
                     modal.classList.remove('active');
                     return;
                 }
@@ -795,16 +885,24 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 if (userInfo) userInfo.classList.remove('hidden');
                 if (userGreeting) userGreeting.textContent = `Olá, ${user.email.split('@')[0]}`;
 
-                // Verifica em tempo real o nome modificado pelo painel da conta
+                // Sincroniza informações de nome e foto de perfil no topo em tempo real
                 database.ref('usuarios/' + user.uid).on('value', (snap) => {
                     const d = snap.val();
-                    if (d && d.nome && userGreeting) {
-                        userGreeting.textContent = `Olá, ${d.nome.split(' ')[0]}`;
+                    if (d) {
+                        if (d.nome && userGreeting) {
+                            userGreeting.textContent = `Olá, ${d.nome.split(' ')[0]}`;
+                        }
+                        if (d.foto && userMiniAvatar) {
+                            userMiniAvatar.src = d.foto;
+                            userMiniAvatar.classList.remove('hidden');
+                        } else if (userMiniAvatar) {
+                            userMiniAvatar.classList.add('hidden');
+                        }
                     }
                 });
             });
 
-            // Eventos estruturais de login e registro
+            // Login e Registro estrutural
             const loginBtn = document.getElementById('login-btn');
             if (loginBtn) {
                 loginBtn.onclick = () => {
@@ -821,7 +919,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     const p = document.getElementById('pass-field').value;
                     if (e && p) {
                         auth.createUserWithEmailAndPassword(e, p).then(u => {
-                            database.ref('usuarios/' + u.user.uid).set({ email: e, nome: e.split('@')[0] });
+                            database.ref('usuarios/' + u.user.uid).set({ email: e, nome: e.split('@')[0], foto: "" });
                         }).catch(err => alert("Erro: " + err.message));
                     }
                 };
