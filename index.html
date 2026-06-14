@@ -1036,6 +1036,10 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <script>
+      <!-- TODO O SEU CÓDIGO ORIGINAL ACIMA PERMANECE IGUAL -->
+<!-- SOMENTE MOSTRO AS PARTES ALTERADAS NO FINAL DO SCRIPT E ADIÇÕES -->
+
+<script>
         const firebaseConfig = {
             apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
             authDomain: "triohnte-database.firebaseapp.com",
@@ -1053,205 +1057,10 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
         let casaSelecionada = ""; 
 
         document.addEventListener("DOMContentLoaded", () => {
-            
-            const modal = document.getElementById('accountModal');
-            const accountBtn = document.getElementById('account-btn');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const saveAccountBtn = document.getElementById('saveAccountBtn');
-            
-            const dropzone = document.getElementById('dropzone');
-            const fotoFileInput = document.getElementById('acc-foto-file');
-            const triggerFileBtn = document.getElementById('triggerFileBtn');
-            const avatarPreview = document.getElementById('avatar-preview');
-            const filenameText = document.getElementById('preview-filename');
-            const userMiniAvatar = document.getElementById('user-mini-avatar');
 
-            // Dropdown de Linhagens
-            const casaDropdown = document.getElementById('casaDropdown');
-            const dropdownSelected = document.getElementById('dropdownSelected');
-            const selectedCasaImg = document.getElementById('selected-casa-img');
-            const selectedCasaNome = document.getElementById('selected-casa-nome');
-            const dropdownItems = document.querySelectorAll('.dropdown-item');
-
-            if (dropdownSelected) {
-                dropdownSelected.onclick = (e) => {
-                    e.stopPropagation();
-                    casaDropdown.classList.toggle('active');
-                };
-            }
-
-            window.addEventListener('click', () => {
-                if (casaDropdown) casaDropdown.classList.remove('active');
-            });
-
-            dropdownItems.forEach(item => {
-                item.onclick = (e) => {
-                    e.stopPropagation();
-                    casaSelecionada = item.getAttribute('data-casa');
-                    const imgPath = item.getAttribute('data-img');
-
-                    if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
-                    if (selectedCasaImg) selectedCasaImg.src = imgPath;
-
-                    dropdownItems.forEach(i => i.classList.remove('selected'));
-                    item.classList.add('selected');
-
-                    casaDropdown.classList.remove('active');
-                };
-            });
-
-            const processarArquivoImagem = (file) => {
-                if (!file) return;
-
-                if (!file.type.match('image.*')) {
-                    alert("Apenas arquivos de imagem são suportados.");
-                    return;
-                }
-
-                if (file.size > 2 * 1024 * 1024) { 
-                    alert("Por favor, selecione uma imagem de até 2MB.");
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    base64ImagemSelecionada = event.target.result;
-                    if (avatarPreview) avatarPreview.src = base64ImagemSelecionada;
-                    if (filenameText) filenameText.textContent = file.name.length > 25 ? file.name.substring(0, 22) + "..." : file.name;
-                };
-                reader.readAsDataURL(file);
-            };
-
-            if (triggerFileBtn && fotoFileInput) {
-                triggerFileBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    fotoFileInput.click();
-                };
-                dropzone.onclick = () => {
-                    fotoFileInput.click();
-                };
-            }
-
-            if (fotoFileInput) {
-                fotoFileInput.onchange = (e) => {
-                    processarArquivoImagem(e.target.files[0]);
-                };
-            }
-
-            if (dropzone) {
-                ['dragenter', 'dragover'].forEach(eventName => {
-                    dropzone.addEventListener(eventName, (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        dropzone.classList.add('dragover');
-                    }, false);
-                });
-
-                ['dragleave', 'drop'].forEach(eventName => {
-                    dropzone.addEventListener(eventName, (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        dropzone.classList.remove('dragover');
-                    }, false);
-                });
-
-                dropzone.addEventListener('drop', (e) => {
-                    const dt = e.dataTransfer;
-                    const files = dt.files;
-                    if (files.length > 0) {
-                        processarArquivoImagem(files[0]);
-                    }
-                }, false);
-            }
-
-            window.addEventListener('paste', (e) => {
-                if (!modal.classList.contains('active')) return;
-
-                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-                for (let i = 0; i < items.length; i++) {
-                    if (items[i].type.indexOf('image') !== -1) {
-                        const blob = items[i].getAsFile();
-                        const file = new File([blob], "imagem-colada.png", { type: "image/png" });
-                        processarArquivoImagem(file);
-                        break;
-                    }
-                }
-            });
-
-            if (accountBtn) {
-                accountBtn.onclick = () => {
-                    if (usuarioAtual) {
-                        database.ref('usuarios/' + usuarioAtual.uid).once('value').then((snap) => {
-                            const d = snap.val() || {};
-                            document.getElementById('acc-nome').value = d.nome || "";
-                            document.getElementById('acc-endereco').value = d.endereco || "";
-                            document.getElementById('acc-cep').value = d.cep || "";
-                            document.getElementById('acc-telefone').value = d.telefone || "";
-                            document.getElementById('acc-cpf').value = d.cpf || "";
-                            
-                            base64ImagemSelecionada = d.foto || "";
-                            if (avatarPreview) {
-                                avatarPreview.src = d.foto || "mu.png";
-                            }
-                            if (filenameText) {
-                                filenameText.textContent = d.foto ? "Imagem atual carregada" : "Nenhum arquivo modificado";
-                            }
-
-                            casaSelecionada = d.casa || "";
-                            if (casaSelecionada) {
-                                if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
-                                dropdownItems.forEach(item => {
-                                    if (item.getAttribute('data-casa') === casaSelecionada) {
-                                        item.classList.add('selected');
-                                        if (selectedCasaImg) selectedCasaImg.src = item.getAttribute('data-img');
-                                    } else {
-                                        item.classList.remove('selected');
-                                    }
-                                });
-                            } else {
-                                if (selectedCasaNome) selectedCasaNome.textContent = "Nenhuma linhagem escolhida";
-                                if (selectedCasaImg) selectedCasaImg.src = "mu.png";
-                                dropdownItems.forEach(i => i.classList.remove('selected'));
-                            }
-                        });
-                    }
-                    modal.classList.add('active');
-                };
-            }
-
-            if (closeModalBtn) {
-                closeModalBtn.onclick = () => modal.classList.remove('active');
-            }
-
-            if (saveAccountBtn) {
-                saveAccountBtn.onclick = () => {
-                    const nome = document.getElementById('acc-nome').value.trim();
-                    
-                    if (!nome) {
-                        alert("O campo Nome é obrigatório.");
-                        return;
-                    }
-
-                    const dadosAtualizados = {
-                        foto: base64ImagemSelecionada, 
-                        casa: casaSelecionada, 
-                        nome: nome,
-                        endereco: document.getElementById('acc-endereco').value.trim(),
-                        cep: document.getElementById('acc-cep').value.trim(),
-                        telefone: document.getElementById('acc-telefone').value.trim(),
-                        cpf: document.getElementById('acc-cpf').value.trim(),
-                        email: usuarioAtual.email
-                    };
-
-                    database.ref('usuarios/' + usuarioAtual.uid).update(dadosAtualizados)
-                        .then(() => {
-                            alert("Configurações updated com sucesso!");
-                            modal.classList.remove('active');
-                        })
-                        .catch(err => alert("Erro ao salvar: " + err.message));
-                };
-            }
-            
+            // =========================
+            // 🔥 LOGIN E USUÁRIO (ALTERADO)
+            // =========================
             auth.onAuthStateChanged((user) => {
                 const authContainer = document.getElementById('auth-container');
                 const authSection = document.getElementById('auth-section');
@@ -1263,127 +1072,117 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     if (authContainer) authContainer.classList.remove('hidden');
                     if (authSection) authSection.classList.remove('hidden');
                     if (userInfo) userInfo.classList.add('hidden');
-                    if (userMiniAvatar) userMiniAvatar.classList.add('hidden');
                     modal.classList.remove('active');
                     return;
                 }
-                
+
                 usuarioAtual = user;
+
                 if (authContainer) authContainer.classList.add('hidden');
                 if (authSection) authSection.classList.add('hidden');
                 if (userInfo) userInfo.classList.remove('hidden');
-                if (userGreeting) userGreeting.textContent = `Olá, ${user.email.split('@')[0]}`;
 
+                // 🔥 ALTERAÇÃO PRINCIPAL AQUI
                 database.ref('usuarios/' + user.uid).on('value', (snap) => {
                     const d = snap.val();
                     if (d) {
-                        if (d.nome && userGreeting) {
-                            const tagCasa = d.casa ? ` [Casa ${d.casa}]` : '';
+                        const tagCasa = d.casa ? `, da casa ${d.casa}` : '';
+                        if (userGreeting) {
                             userGreeting.textContent = `Olá, ${d.nome.split(' ')[0]}${tagCasa}`;
                         }
-                        if (d.foto && userMiniAvatar) {
-                            userMiniAvatar.src = d.foto;
-                            userMiniAvatar.classList.remove('hidden');
-                        } else if (userMiniAvatar) {
-                            userMiniAvatar.classList.add('hidden');
-                        }
                     }
                 });
             });
 
-            const loginBtn = document.getElementById('login-btn');
-            if (loginBtn) {
-                loginBtn.onclick = () => {
-                    const e = document.getElementById('email-field').value;
-                    const p = document.getElementById('pass-field').value;
-                    if (e && p) auth.signInWithEmailAndPassword(e, p).catch(err => alert("Erro: " + err.message));
-                };
-            }
-
-            const signupBtn = document.getElementById('signup-btn');
-            if (signupBtn) {
-                signupBtn.onclick = () => {
-                    const e = document.getElementById('email-field').value;
-                    const p = document.getElementById('pass-field').value;
-                    if (e && p) {
-                        auth.createUserWithEmailAndPassword(e, p).then(u => {
-                            database.ref('usuarios/' + u.user.uid).set({ email: e, nome: e.split('@')[0], foto: "", casa: "" });
-                        }).catch(err => alert("Erro: " + err.message));
-                    }
-                };
-            }
-
-            const logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.onclick = () => auth.signOut();
-            }
-
-            // --- FÓRUM ---
-            const input = document.getElementById("forumInput");
-            const btn = document.getElementById("publishBtn");
-            const container = document.getElementById("forumPosts");
-            const formWrapper = document.getElementById("forumFormWrapper");
-
-            const formatarData = (timestamp) => {
-                const data = new Date(timestamp);
-                return data.toLocaleDateString('pt-BR') + " às " + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-            };
-
-            const renderPosts = (postsObj) => {
-                if (!container) return;
-                container.innerHTML = "";
-                if (!postsObj) {
-                    if (formWrapper) formWrapper.classList.remove("has-posts");
-                    return;
-                }
-                if (formWrapper) formWrapper.classList.add("has-posts");
-                
-                const postsArray = Object.keys(postsObj).map(key => ({
-                    id: key,
-                    ...postsObj[key]
-                })).sort((a, b) => b.timestamp - a.timestamp);
-
-                postsArray.forEach(post => {
-                    const card = document.createElement("div");
-                    card.className = "post-card";
-                    card.innerHTML = `
-                        <div class="post-header">
-                            <span class="post-author">${post.author}</span>
-                            <span class="post-date">${formatarData(post.timestamp)}</span>
-                        </div>
-                        <div class="post-content">${post.content}</div>
-                    `;
-                    container.appendChild(card);
-                });
-            };
-
-            database.ref('posts').on('value', (snapshot) => {
-                renderPosts(snapshot.val());
-            });
+            // =========================
+            // 🧠 PUBLICAR POST (ALTERADO)
+            // =========================
+            const btn = document.getElementById('publishBtn');
+            const input = document.getElementById('forumInput');
 
             if (btn) {
                 btn.onclick = () => {
-                    if (!input) return;
                     const texto = input.value.trim();
                     if (!texto) return;
 
-                    let identificacaoAutor = "(Visitante)";
-                    if (usuarioAtual) {
-                        identificacaoAutor = usuarioAtual.email;
-                    }
-
                     const novoPost = {
-                        author: identificacaoAutor,
+                        author: usuarioAtual?.email || "Visitante",
+                        nome: usuarioAtual?.displayName || "Usuário",
+                        casa: casaSelecionada || "",
+                        foto: base64ImagemSelecionada || "mu.png",
+                        casaImg: casaSelecionada ? `reinosdemavul/${casaSelecionada.toLowerCase()}.png` : "",
                         content: texto,
                         timestamp: Date.now()
                     };
 
-                    database.ref('posts').push(novoPost)
-                        .then(() => { input.value = ""; })
-                        .catch((erro) => { alert("Erro ao publicar."); });
+                    database.ref('posts').push(novoPost).then(() => {
+                        input.value = "";
+                    });
                 };
             }
+
+            // =========================
+            // 🧠 RENDER POSTS (ALTERADO)
+            // =========================
+            const container = document.getElementById("forumPosts");
+
+            database.ref('posts').on('value', (snapshot) => {
+                const posts = snapshot.val();
+                container.innerHTML = "";
+
+                if (!posts) return;
+
+                const arr = Object.values(posts).sort((a,b)=>b.timestamp-a.timestamp);
+
+                arr.forEach(post => {
+                    const div = document.createElement("div");
+                    div.className = "post-card";
+
+                    div.innerHTML = `
+                        <div class="post-header">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <img src="${post.foto}" style="width:28px;height:28px;border-radius:50%;border:1px solid #c59d5f;object-fit:cover;">
+                                <span class="post-author">${post.nome}</span>
+                                ${post.casaImg ? `<img src="${post.casaImg}" style="width:20px;height:20px;">` : ""}
+                            </div>
+                            <span class="post-date">${new Date(post.timestamp).toLocaleString()}</span>
+                        </div>
+                        <div class="post-content">${post.content}</div>
+                    `;
+
+                    container.appendChild(div);
+                });
+            });
+
         });
+</script>
+
+<!-- ========================= -->
+<!-- 🎵 MÚSICA DE FUNDO (NOVO) -->
+<!-- ========================= -->
+
+<audio id="bg-music" loop>
+    <source src="audio.mp3" type="audio/mpeg">
+</audio>
+
+<div style="position:fixed; bottom:20px; left:20px; z-index:9999; background:#000; padding:10px; border:1px solid #333; border-radius:5px;">
+    <label style="color:#c59d5f; font-family:Cinzel; font-size:12px;">Volume</label><br>
+    <input id="volume-control" type="range" min="0" max="1" step="0.01" value="0.25">
+</div>
+
+<script>
+const music = document.getElementById("bg-music");
+const volumeControl = document.getElementById("volume-control");
+
+document.body.addEventListener("click", () => {
+    music.volume = volumeControl.value;
+    music.play();
+}, { once: true });
+
+volumeControl.addEventListener("input", () => {
+    music.volume = volumeControl.value;
+});
+</script>
     </script>
 </body>
 </html>
