@@ -559,10 +559,6 @@
             color: #555;
             margin-top: 2px;
         }
-        .dropzone-subtext span {
-            text-decoration: underline;
-            color: #888;
-        }
         .formats-box {
             display: flex;
             gap: 6px;
@@ -596,7 +592,117 @@
         }
         .preview-info {
             font-size: 0.9rem;
-            color: #666;
+            color: #c59d5f;
+            font-family: 'Crimson Pro', serif;
+        }
+
+        /* --- NOVO: MENU SUSPENSO INTERATIVO DE CASAS (GRADE) --- */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+        .dropdown-selected {
+            background: #050505;
+            border: 1px solid #222;
+            color: #fff;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: border-color 0.3s;
+        }
+        .dropdown-selected:hover, .custom-dropdown.active .dropdown-selected {
+            border-color: #c59d5f;
+        }
+        .dropdown-selected .selected-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dropdown-selected img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+        .dropdown-grid {
+            position: absolute;
+            top: 105%;
+            left: 0;
+            width: 100%;
+            background: #0a0a0a;
+            border: 1px solid #c59d5f;
+            border-radius: 4px;
+            padding: 12px;
+            z-index: 100;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.9);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+        .custom-dropdown.active .dropdown-grid {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .dropdown-item {
+            background: #050505;
+            border: 1px solid #1a1a1a;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .dropdown-item:hover {
+            border-color: #e3c38f;
+            background: #111;
+            transform: translateY(-1px);
+        }
+        .dropdown-item.selected {
+            border-color: #c59d5f;
+            background: rgba(197, 157, 95, 0.05);
+        }
+        .dropdown-item img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+        .dropdown-item span {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            color: #a39b8f;
+            letter-spacing: 1px;
+        }
+        .dropdown-item:hover span, .dropdown-item.selected span {
+            color: #f3e1b5;
+        }
+
+        /* Seta do Dropdown */
+        .dropdown-arrow {
+            border: solid #666;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 3px;
+            transform: rotate(45deg);
+            transition: transform 0.3s ease;
+        }
+        .custom-dropdown.active .dropdown-arrow {
+            transform: rotate(-135deg);
         }
 
         .modal-actions {
@@ -636,6 +742,7 @@
             .auth-container-block { flex-direction: column; width: 100%; }
             .auth-actions { width: 100%; }
             .auth-actions button { width: 100%; }
+            .dropdown-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -643,6 +750,7 @@
 
     <div class="vignette"></div>
 
+    <!-- Sistema de Perfil Próximo ao Login (Topo) -->
     <div class="top-bar-container">
         <div id="user-info" class="auth-box hidden">
             <div class="user-logged">
@@ -654,10 +762,12 @@
         </div>
     </div>
 
+    <!-- Interface Modal de Configurações da Conta -->
     <div id="accountModal" class="modal-overlay">
         <div class="modal-content">
             <h3>Configurações da Conta</h3>
             
+            <!-- Campo de Foto -->
             <div class="form-group">
                 <label>Foto de Perfil</label>
                 <div id="dropzone" class="dropzone-container">
@@ -675,9 +785,44 @@
                     </div>
                     <input id="acc-foto-file" type="file" accept="image/*" style="display: none;">
                 </div>
+                
+                <!-- Preview Alinhado Conforme Referência image_1b10c1.png -->
                 <div class="preview-wrapper">
                     <img id="avatar-preview" class="photo-preview" src="mu.png" alt="Prévia">
                     <span class="preview-info" id="preview-filename">Nenhum arquivo modificado</span>
+                </div>
+            </div>
+
+            <!-- NOVO: Escolha de Linhagem / Casa Nobre de Triohnte abaixo da Foto -->
+            <div class="form-group">
+                <label>Vincular Linhagem (Trono/Casa)</label>
+                <div class="custom-dropdown" id="casaDropdown">
+                    <div class="dropdown-selected" id="dropdownSelected">
+                        <div class="selected-info">
+                            <img src="mu.png" id="selected-casa-img" alt="Ícone">
+                            <span id="selected-casa-nome">Nenhuma linhagem escolhida</span>
+                        </div>
+                        <div class="dropdown-arrow"></div>
+                    </div>
+                    <div class="dropdown-grid" id="dropdownGrid">
+                        <!-- Casas Nobres de Triohnte -->
+                        <div class="dropdown-item" data-casa="Niwdem" data-img="mu.png">
+                            <img src="mu.png" alt="Niwdem">
+                            <span>Niwdem</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Agaroff" data-img="mu.png">
+                            <img src="mu.png" alt="Agaroff">
+                            <span>Agaroff</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Dyllewalt" data-img="mu.png">
+                            <img src="mu.png" alt="Dyllewalt">
+                            <span>Dyllewalt</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Mavul" data-img="mu.png">
+                            <img src="mu.png" alt="Mavul">
+                            <span>Mavul</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -794,6 +939,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             </div>
         </section>
 
+        <!-- Seção de Login no Final da Página -->
         <section id="auth-section" class="auth-section">
             <h2>Torne-se um aliado</h2>
             <div id="auth-container" class="auth-container-block">
@@ -833,6 +979,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
         let usuarioAtual = null;
         let base64ImagemSelecionada = ""; 
+        let casaSelecionada = ""; // Guarda o nome da casa escolhida
 
         document.addEventListener("DOMContentLoaded", () => {
             
@@ -847,6 +994,46 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             const avatarPreview = document.getElementById('avatar-preview');
             const filenameText = document.getElementById('preview-filename');
             const userMiniAvatar = document.getElementById('user-mini-avatar');
+
+            // Elementos do Menu Suspenso de Casas
+            const casaDropdown = document.getElementById('casaDropdown');
+            const dropdownSelected = document.getElementById('dropdownSelected');
+            const selectedCasaImg = document.getElementById('selected-casa-img');
+            const selectedCasaNome = document.getElementById('selected-casa-nome');
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+            // Alternar abertura do menu suspenso
+            if (dropdownSelected) {
+                dropdownSelected.onclick = (e) => {
+                    e.stopPropagation();
+                    casaDropdown.classList.toggle('active');
+                };
+            }
+
+            // Fechar menu clicando fora
+            window.addEventListener('click', () => {
+                if (casaDropdown) casaDropdown.classList.remove('active');
+            });
+
+            // Configurar escolha de item dentro da grade do menu suspenso
+            dropdownItems.forEach(item => {
+                item.onclick = (e) => {
+                    e.stopPropagation();
+                    casaSelecionada = item.getAttribute('data-casa');
+                    const imgPath = item.getAttribute('data-img');
+
+                    // Atualiza a visualização do cabeçalho do dropdown
+                    if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
+                    if (selectedCasaImg) selectedCasaImg.src = imgPath;
+
+                    // Destaca o item selecionado visualmente na grade
+                    dropdownItems.forEach(i => i.classList.remove('selected'));
+                    item.classList.add('selected');
+
+                    // Fecha o menu após a seleção
+                    casaDropdown.classList.remove('active');
+                };
+            });
 
             // Processar arquivo e converter em Base64
             const processarArquivoImagem = (file) => {
@@ -917,7 +1104,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
             // Capturar Imagem por Ctrl + V (Colar da Área de Transferência)
             window.addEventListener('paste', (e) => {
-                // Só processa se o modal de conta estiver aberto
                 if (!modal.classList.contains('active')) return;
 
                 const items = (e.clipboardData || e.originalEvent.clipboardData).items;
@@ -931,7 +1117,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 }
             });
 
-            // Abrir painel da conta
+            // Abrir painel da conta e preencher com dados do banco
             if (accountBtn) {
                 accountBtn.onclick = () => {
                     if (usuarioAtual) {
@@ -943,12 +1129,31 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                             document.getElementById('acc-telefone').value = d.telefone || "";
                             document.getElementById('acc-cpf').value = d.cpf || "";
                             
+                            // Carregar imagem
                             base64ImagemSelecionada = d.foto || "";
                             if (avatarPreview) {
                                 avatarPreview.src = d.foto || "mu.png";
                             }
                             if (filenameText) {
                                 filenameText.textContent = d.foto ? "Imagem atual carregada" : "Nenhum arquivo modificado";
+                            }
+
+                            // Carregar Linhagem/Casa prévia selecionada
+                            casaSelecionada = d.casa || "";
+                            if (casaSelecionada) {
+                                if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
+                                dropdownItems.forEach(item => {
+                                    if (item.getAttribute('data-casa') === casaSelecionada) {
+                                        item.classList.add('selected');
+                                        if (selectedCasaImg) selectedCasaImg.src = item.getAttribute('data-img');
+                                    } else {
+                                        item.classList.remove('selected');
+                                    }
+                                });
+                            } else {
+                                if (selectedCasaNome) selectedCasaNome.textContent = "Nenhuma linhagem escolhida";
+                                if (selectedCasaImg) selectedCasaImg.src = "mu.png";
+                                dropdownItems.forEach(i => i.classList.remove('selected'));
                             }
                         });
                     }
@@ -960,7 +1165,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 closeModalBtn.onclick = () => modal.classList.remove('active');
             }
 
-            // Salvar configurações
+            // Salvar configurações incluindo a Casa Nobre
             if (saveAccountBtn) {
                 saveAccountBtn.onclick = () => {
                     const nome = document.getElementById('acc-nome').value.trim();
@@ -972,6 +1177,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
                     const dadosAtualizados = {
                         foto: base64ImagemSelecionada, 
+                        casa: casaSelecionada, // Salvando a linhagem no banco de dados
                         nome: nome,
                         endereco: document.getElementById('acc-endereco').value.trim(),
                         cep: document.getElementById('acc-cep').value.trim(),
@@ -1017,7 +1223,9 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     const d = snap.val();
                     if (d) {
                         if (d.nome && userGreeting) {
-                            userGreeting.textContent = `Olá, ${d.nome.split(' ')[0]}`;
+                            // Exibe o primeiro nome com a Casa do usuário se houver
+                            const tagCasa = d.casa ? ` [Casa ${d.casa}]` : '';
+                            userGreeting.textContent = `Olá, ${d.nome.split(' ')[0]}${tagCasa}`;
                         }
                         if (d.foto && userMiniAvatar) {
                             userMiniAvatar.src = d.foto;
@@ -1046,7 +1254,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     const p = document.getElementById('pass-field').value;
                     if (e && p) {
                         auth.createUserWithEmailAndPassword(e, p).then(u => {
-                            database.ref('usuarios/' + u.user.uid).set({ email: e, nome: e.split('@')[0], foto: "" });
+                            database.ref('usuarios/' + u.user.uid).set({ email: e, nome: e.split('@')[0], foto: "", casa: "" });
                         }).catch(err => alert("Erro: " + err.message));
                     }
                 };
