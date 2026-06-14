@@ -508,45 +508,95 @@
         }
         .form-group input:focus { border-color: #c59d5f; }
 
-        /* Estilização da área de upload de foto */
-        .photo-upload-wrapper {
+        /* --- ÁREA DE UPLOAD ESTILO "DRAG & DROP" PREMIUM --- */
+        .dropzone-container {
+            border: 2px dashed #333;
+            background: #050505;
+            border-radius: 6px;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .dropzone-container.dragover {
+            border-color: #e3c38f;
+            background: #0e0e0d;
+            box-shadow: inset 0 0 10px rgba(227, 195, 143, 0.1);
+        }
+        .dropzone-text {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.1rem;
+            color: #a39b8f;
+        }
+        .dropzone-btn {
+            background: var(--gold-gradient);
+            color: #000;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: var(--gold-shadow);
+            transition: 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dropzone-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+        .dropzone-subtext {
+            font-size: 0.85rem;
+            color: #555;
+            margin-top: 2px;
+        }
+        .dropzone-subtext span {
+            text-decoration: underline;
+            color: #888;
+        }
+        .formats-box {
+            display: flex;
+            gap: 6px;
+            margin-top: 5px;
+        }
+        .format-tag {
+            background: #111;
+            border: 1px solid #222;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            border-radius: 3px;
+            color: #666;
+            font-family: monospace;
+        }
+        .preview-wrapper {
             display: flex;
             align-items: center;
             gap: 15px;
-            background: #050505;
-            border: 1px dashed #333;
-            padding: 12px;
-            border-radius: 4px;
+            width: 100%;
+            margin-top: 5px;
+            padding-top: 15px;
+            border-top: 1px solid #151515;
         }
         .photo-preview {
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
             border: 1px solid #c59d5f;
             background: #111;
         }
-        .file-input-custom {
-            font-family: 'Crimson Pro', serif;
-            color: #888;
+        .preview-info {
             font-size: 0.9rem;
-            cursor: pointer;
-        }
-        .file-input-custom::-webkit-file-upload-button {
-            background: var(--gold-gradient);
-            border: none;
-            color: #000;
-            padding: 6px 12px;
-            border-radius: 3px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.75rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-right: 10px;
-            transition: 0.3s;
-        }
-        .file-input-custom::-webkit-file-upload-button:hover {
-            filter: brightness(1.2);
+            color: #666;
         }
 
         .modal-actions {
@@ -593,11 +643,9 @@
 
     <div class="vignette"></div>
 
-    <!-- Sistema de Perfil Próximo ao Login (Topo) -->
     <div class="top-bar-container">
         <div id="user-info" class="auth-box hidden">
             <div class="user-logged">
-                <!-- Mini foto adicionada dinamicamente ao lado do texto de boas-vindas -->
                 <img id="user-mini-avatar" class="profile-img-preview-mini hidden" src="" alt="Avatar">
                 <span id="user-greeting">Olá, ...</span>
                 <span id="account-btn" class="account-link">[Conta]</span>
@@ -606,17 +654,30 @@
         </div>
     </div>
 
-    <!-- Interface Modal de Configurações da Conta -->
     <div id="accountModal" class="modal-overlay">
         <div class="modal-content">
             <h3>Configurações da Conta</h3>
             
-            <!-- Campo de Foto Atualizado para Upload Real da Galeria -->
             <div class="form-group">
                 <label>Foto de Perfil</label>
-                <div class="photo-upload-wrapper">
+                <div id="dropzone" class="dropzone-container">
+                    <span class="dropzone-text">Arrastar e solte sua imagem aqui</span>
+                    <button type="button" id="triggerFileBtn" class="dropzone-btn">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-bottom:-2px;"><path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/><path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/></svg>
+                        Enviar Imagem
+                    </button>
+                    <span class="dropzone-subtext">Colar imagem (Ctrl V) ou clicar acima</span>
+                    <div class="formats-box">
+                        <span class="format-tag">JPG</span>
+                        <span class="format-tag">JPEG</span>
+                        <span class="format-tag">PNG</span>
+                        <span class="format-tag">WEBP</span>
+                    </div>
+                    <input id="acc-foto-file" type="file" accept="image/*" style="display: none;">
+                </div>
+                <div class="preview-wrapper">
                     <img id="avatar-preview" class="photo-preview" src="mu.png" alt="Prévia">
-                    <input id="acc-foto-file" type="open_gallery" class="file-input-custom" accept="image/*">
+                    <span class="preview-info" id="preview-filename">Nenhum arquivo modificado</span>
                 </div>
             </div>
 
@@ -733,7 +794,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             </div>
         </section>
 
-        <!-- Seção de Login no Final da Página -->
         <section id="auth-section" class="auth-section">
             <h2>Torne-se um aliado</h2>
             <div id="auth-container" class="auth-container-block">
@@ -772,7 +832,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
         const database = firebase.database();
 
         let usuarioAtual = null;
-        let base64ImagemSelecionada = ""; // Guarda temporariamente a string da imagem carregada
+        let base64ImagemSelecionada = ""; 
 
         document.addEventListener("DOMContentLoaded", () => {
             
@@ -780,33 +840,98 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             const accountBtn = document.getElementById('account-btn');
             const closeModalBtn = document.getElementById('closeModalBtn');
             const saveAccountBtn = document.getElementById('saveAccountBtn');
+            
+            const dropzone = document.getElementById('dropzone');
             const fotoFileInput = document.getElementById('acc-foto-file');
+            const triggerFileBtn = document.getElementById('triggerFileBtn');
             const avatarPreview = document.getElementById('avatar-preview');
+            const filenameText = document.getElementById('preview-filename');
             const userMiniAvatar = document.getElementById('user-mini-avatar');
 
-            // Ouvinte para detectar quando o usuário escolhe um arquivo da galeria
-            if (fotoFileInput) {
-                fotoFileInput.onchange = (e) => {
-                    const arquivo = e.target.files[0];
-                    if (arquivo) {
-                        // Validação simples de tamanho para não estourar o limite do nó da Realtime Database (~10MB por string)
-                        if (arquivo.size > 2 * 1024 * 1024) { 
-                            alert("Por favor, selecione uma imagem menor que 2MB.");
-                            fotoFileInput.value = "";
-                            return;
-                        }
+            // Processar arquivo e converter em Base64
+            const processarArquivoImagem = (file) => {
+                if (!file) return;
 
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                            base64ImagemSelecionada = event.target.result;
-                            if (avatarPreview) avatarPreview.src = base64ImagemSelecionada; // Mostra a prévia no modal
-                        };
-                        reader.readAsDataURL(arquivo);
-                    }
+                if (!file.type.match('image.*')) {
+                    alert("Apenas arquivos de imagem são suportados.");
+                    return;
+                }
+
+                if (file.size > 2 * 1024 * 1024) { 
+                    alert("Por favor, selecione uma imagem de até 2MB.");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    base64ImagemSelecionada = event.target.result;
+                    if (avatarPreview) avatarPreview.src = base64ImagemSelecionada;
+                    if (filenameText) filenameText.textContent = file.name.length > 25 ? file.name.substring(0, 22) + "..." : file.name;
+                };
+                reader.readAsDataURL(file);
+            };
+
+            // Eventos do clique no botão Customizado da Dropzone
+            if (triggerFileBtn && fotoFileInput) {
+                triggerFileBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    fotoFileInput.click();
+                };
+                dropzone.onclick = () => {
+                    fotoFileInput.click();
                 };
             }
 
-            // Abrir e fechar painel da conta
+            if (fotoFileInput) {
+                fotoFileInput.onchange = (e) => {
+                    processarArquivoImagem(e.target.files[0]);
+                };
+            }
+
+            // Drag e Drop (Arrastar e soltar) na Dropzone
+            if (dropzone) {
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropzone.classList.add('dragover');
+                    }, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropzone.classList.remove('dragover');
+                    }, false);
+                });
+
+                dropzone.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    if (files.length > 0) {
+                        processarArquivoImagem(files[0]);
+                    }
+                }, false);
+            }
+
+            // Capturar Imagem por Ctrl + V (Colar da Área de Transferência)
+            window.addEventListener('paste', (e) => {
+                // Só processa se o modal de conta estiver aberto
+                if (!modal.classList.contains('active')) return;
+
+                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        const blob = items[i].getAsFile();
+                        const file = new File([blob], "imagem-colada.png", { type: "image/png" });
+                        processarArquivoImagem(file);
+                        break;
+                    }
+                }
+            });
+
+            // Abrir painel da conta
             if (accountBtn) {
                 accountBtn.onclick = () => {
                     if (usuarioAtual) {
@@ -818,10 +943,12 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                             document.getElementById('acc-telefone').value = d.telefone || "";
                             document.getElementById('acc-cpf').value = d.cpf || "";
                             
-                            // Carrega a foto existente na prévia, se houver
                             base64ImagemSelecionada = d.foto || "";
                             if (avatarPreview) {
                                 avatarPreview.src = d.foto || "mu.png";
+                            }
+                            if (filenameText) {
+                                filenameText.textContent = d.foto ? "Imagem atual carregada" : "Nenhum arquivo modificado";
                             }
                         });
                     }
@@ -844,7 +971,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     }
 
                     const dadosAtualizados = {
-                        foto: base64ImagemSelecionada, // Salva o texto codificado da imagem da galeria
+                        foto: base64ImagemSelecionada, 
                         nome: nome,
                         endereco: document.getElementById('acc-endereco').value.trim(),
                         cep: document.getElementById('acc-cep').value.trim(),
@@ -885,7 +1012,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 if (userInfo) userInfo.classList.remove('hidden');
                 if (userGreeting) userGreeting.textContent = `Olá, ${user.email.split('@')[0]}`;
 
-                // Sincroniza informações de nome e foto de perfil no topo em tempo real
+                // Sincroniza dados do topo em tempo real
                 database.ref('usuarios/' + user.uid).on('value', (snap) => {
                     const d = snap.val();
                     if (d) {
@@ -902,7 +1029,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 });
             });
 
-            // Login e Registro estrutural
+            // Login e Registro
             const loginBtn = document.getElementById('login-btn');
             if (loginBtn) {
                 loginBtn.onclick = () => {
@@ -930,7 +1057,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 logoutBtn.onclick = () => auth.signOut();
             }
 
-            // --- SISTEMA INTERNO DO FÓRUM ---
+            // --- FÓRUM ---
             const input = document.getElementById("forumInput");
             const btn = document.getElementById("publishBtn");
             const container = document.getElementById("forumPosts");
@@ -944,12 +1071,10 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             const renderPosts = (postsObj) => {
                 if (!container) return;
                 container.innerHTML = "";
-                
                 if (!postsObj) {
                     if (formWrapper) formWrapper.classList.remove("has-posts");
                     return;
                 }
-                
                 if (formWrapper) formWrapper.classList.add("has-posts");
                 
                 const postsArray = Object.keys(postsObj).map(key => ({
@@ -993,13 +1118,8 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     };
 
                     database.ref('posts').push(novoPost)
-                        .then(() => {
-                            input.value = "";
-                        })
-                        .catch((erro) => {
-                            console.error("Erro ao publicar:", erro);
-                            alert("Erro ao publicar sua mensagem.");
-                        });
+                        .then(() => { input.value = ""; })
+                        .catch((erro) => { alert("Erro ao publicar."); });
                 };
             }
         });
