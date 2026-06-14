@@ -255,7 +255,7 @@
             display: block;
             text-align: center;
         }
-        
+         
         .forum-form {
             display: flex;
             flex-direction: column;
@@ -367,13 +367,13 @@
         <div class="logo-area">
             <img src="triwo.png" alt="Triohnte" class="img-titulo">
         </div>
-        
+         
         <nav>
             <ul>
                 <li><a href="rm.html">Ruínas de Mavul</a></li>
                 <li><a href="tw.html">Terras de Walingardyn</a></li>
                 <li><a href="cw.html">Compêndio Walingardyano</a></li>
-                <li><a href="ap.html">Estruturas de Power</a></li>
+                <li><a href="ap.html">Estruturas de Poder</a></li>
                 <li><a href="poe.html">Topografia de Walingardyn</a></li>
             </ul>
         </nav>
@@ -436,8 +436,9 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
         <section class="forum-section">
             <h2>Fórum</h2>
-            
+             
             <div id="forumFormWrapper" class="forum-form">
+                <input type="text" id="authorInput" placeholder="Seu nome..." style="background: #050505; border: 1px solid #222; color: #e3c38f; padding: 10px 15px; font-family: 'Cinzel', serif; font-size: 0.9rem; border-radius: 4px; transition: border-color 0.3s; margin-bottom: 5px;">
                 <textarea id="forumInput" rows="3" placeholder="Escreva uma nova atualização global sobre o volume..."></textarea>
                 <button type="button" id="publishBtn" class="forum-btn">Publicar</button>
             </div>
@@ -456,6 +457,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            const authorInput = document.getElementById("authorInput");
             const input = document.getElementById("forumInput");
             const btn = document.getElementById("publishBtn");
             const container = document.getElementById("forumPosts");
@@ -464,13 +466,13 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             // URL da REST API para a rota de posts do seu Firebase Database
             const dbUrl = "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app/posts.json";
 
-            // Renderiza os posts no HTML na ordem correta
-            const renderPost = (text, date) => {
+            // Renderiza os posts no HTML trazendo o autor dinâmico do banco de dados
+            const renderPost = (author, text, date) => {
                 const postDiv = document.createElement("div");
                 postDiv.className = "post-card";
                 postDiv.innerHTML = `
                     <div class="post-header">
-                        <span class="post-author">Gabriel Aquino</span>
+                        <span class="post-author">${author || "Anônimo"}</span>
                         <span class="post-date">${date}</span>
                     </div>
                     <div class="post-content">
@@ -485,7 +487,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 try {
                     const response = await fetch(dbUrl);
                     if (!response.ok) throw new Error("Erro ao buscar banco de dados.");
-                    
+                     
                     const data = await response.json();
                     container.innerHTML = ""; // Limpa a área de renderização
 
@@ -496,7 +498,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                         // Converte o objeto do Firebase em uma lista ordenada por data
                         const sortedPosts = Object.keys(data).map(key => data[key]);
                         sortedPosts.forEach(post => {
-                            renderPost(post.text, post.date);
+                            renderPost(post.author, post.text, post.date);
                         });
                     } else {
                         // Se não houver posts, esconde a linha divisória e mantém o fundo limpo
@@ -509,13 +511,21 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
             // Envia uma nova mensagem para o Firebase na nuvem
             btn.addEventListener("click", async () => {
+                const author = authorInput.value.trim();
                 const text = input.value.trim();
+                
                 if (!text) return;
+                if (!author) {
+                    alert("Por favor, insira o seu nome antes de publicar.");
+                    authorInput.focus();
+                    return;
+                }
 
                 const options = { day: 'numeric', month: 'long', year: 'numeric' };
                 const formattedDate = new Date().toLocaleDateString('pt-BR', options);
 
-                const newPost = { text, date: formattedDate, timestamp: Date.now() };
+                // Agora envia o autor preenchido dinamicamente no payload do Firebase
+                const newPost = { author, text, date: formattedDate, timestamp: Date.now() };
 
                 try {
                     btn.disabled = true;
@@ -530,6 +540,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     if (!response.ok) throw new Error("Falha no envio.");
 
                     input.value = "";
+                    authorInput.value = ""; // Limpa o campo de nome após envio bem-sucedido
                     // Recarrega o feed trazendo os dados oficiais atualizados da nuvem
                     await loadGlobalPosts();
                 } catch (error) {
