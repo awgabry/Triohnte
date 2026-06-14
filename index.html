@@ -1041,146 +1041,155 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
 <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
-            authDomain: "triohnte-database.firebaseapp.com",
-            databaseURL: "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app", 
-            projectId: "triohnte-database",
-            appId: "1:127473963183:web:c071072d846a8d7240045a"
-        };
+    apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
+    authDomain: "triohnte-database.firebaseapp.com",
+    databaseURL: "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app", 
+    projectId: "triohnte-database",
+    appId: "1:127473963183:web:c071072d846a8d7240045a"
+};
 
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const database = firebase.database();
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
-        let usuarioAtual = null;
-        let base64ImagemSelecionada = ""; 
-        let casaSelecionada = ""; 
+const auth = firebase.auth();
+const database = firebase.database();
 
-        document.addEventListener("DOMContentLoaded", () => {
+let usuarioAtual = null;
+let base64ImagemSelecionada = ""; 
+let casaSelecionada = ""; 
 
-            // =========================
-            // 🔥 LOGIN E USUÁRIO (ALTERADO)
-            // =========================
-            auth.onAuthStateChanged((user) => {
-                const authContainer = document.getElementById('auth-container');
-                const authSection = document.getElementById('auth-section');
-                const userInfo = document.getElementById('user-info');
-                const userGreeting = document.getElementById('user-greeting');
-                
-                if (!user) {
-                    usuarioAtual = null;
-                    if (authContainer) authContainer.classList.remove('hidden');
-                    if (authSection) authSection.classList.remove('hidden');
-                    if (userInfo) userInfo.classList.add('hidden');
-                    modal.classList.remove('active');
-                    return;
-                }
+document.addEventListener("DOMContentLoaded", () => {
 
-                usuarioAtual = user;
+    const userGreeting = document.getElementById("user-greeting");
+    const container = document.getElementById("forumPosts");
+    const btn = document.getElementById("publishBtn");
+    const input = document.getElementById("forumInput");
 
-                if (authContainer) authContainer.classList.add('hidden');
-                if (authSection) authSection.classList.add('hidden');
-                if (userInfo) userInfo.classList.remove('hidden');
+    // =========================
+    // 🔥 LOGIN SEGURO (FIX CRÍTICO)
+    // =========================
+    auth.onAuthStateChanged((user) => {
 
-                // 🔥 ALTERAÇÃO PRINCIPAL AQUI
-                database.ref('usuarios/' + user.uid).on('value', (snap) => {
-                    const d = snap.val();
-                    if (d) {
-                        const tagCasa = d.casa ? `, da casa ${d.casa}` : '';
-                        if (userGreeting) {
-                            userGreeting.textContent = `Olá, ${d.nome.split(' ')[0]}${tagCasa}`;
-                        }
-                    }
-                });
-            });
+        const authContainer = document.getElementById('auth-container');
+        const authSection = document.getElementById('auth-section');
+        const userInfo = document.getElementById('user-info');
+        const modal = document.getElementById("accountModal");
 
-            // =========================
-            // 🧠 PUBLICAR POST (ALTERADO)
-            // =========================
-            const btn = document.getElementById('publishBtn');
-            const input = document.getElementById('forumInput');
+        usuarioAtual = user;
 
-            if (btn) {
-                btn.onclick = () => {
-                    const texto = input.value.trim();
-                    if (!texto) return;
+        if (!user) {
+            usuarioAtual = null;
+            if (authContainer) authContainer.classList.remove('hidden');
+            if (authSection) authSection.classList.remove('hidden');
+            if (userInfo) userInfo.classList.add('hidden');
+            if (modal) modal.classList.remove('active');
+            return;
+        }
 
-                    const novoPost = {
-                        author: usuarioAtual?.email || "Visitante",
-                        nome: usuarioAtual?.displayName || "Usuário",
-                        casa: casaSelecionada || "",
-                        foto: base64ImagemSelecionada || "mu.png",
-                        casaImg: casaSelecionada ? `reinosdemavul/${casaSelecionada.toLowerCase()}.png` : "",
-                        content: texto,
-                        timestamp: Date.now()
-                    };
+        if (authContainer) authContainer.classList.add('hidden');
+        if (authSection) authSection.classList.add('hidden');
+        if (userInfo) userInfo.classList.remove('hidden');
 
-                    database.ref('posts').push(novoPost).then(() => {
-                        input.value = "";
-                    });
-                };
+        database.ref('usuarios/' + user.uid).on('value', (snap) => {
+
+            const d = snap.val();
+
+            if (!d) return;
+
+            const primeiroNome = (d.nome ? d.nome.split(" ")[0] : "Usuário");
+            const casaTexto = d.casa ? `, da casa ${d.casa}` : "";
+
+            if (userGreeting) {
+                userGreeting.textContent = `Olá, ${primeiroNome}${casaTexto}`;
             }
-
-            // =========================
-            // 🧠 RENDER POSTS (ALTERADO)
-            // =========================
-            const container = document.getElementById("forumPosts");
-
-            database.ref('posts').on('value', (snapshot) => {
-                const posts = snapshot.val();
-                container.innerHTML = "";
-
-                if (!posts) return;
-
-                const arr = Object.values(posts).sort((a,b)=>b.timestamp-a.timestamp);
-
-                arr.forEach(post => {
-                    const div = document.createElement("div");
-                    div.className = "post-card";
-
-                    div.innerHTML = `
-                        <div class="post-header">
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <img src="${post.foto}" style="width:28px;height:28px;border-radius:50%;border:1px solid #c59d5f;object-fit:cover;">
-                                <span class="post-author">${post.nome}</span>
-                                ${post.casaImg ? `<img src="${post.casaImg}" style="width:20px;height:20px;">` : ""}
-                            </div>
-                            <span class="post-date">${new Date(post.timestamp).toLocaleString()}</span>
-                        </div>
-                        <div class="post-content">${post.content}</div>
-                    `;
-
-                    container.appendChild(div);
-                });
-            });
-
         });
-</script>
+    });
 
-<!-- ========================= -->
-<!-- 🎵 MÚSICA DE FUNDO (NOVO) -->
-<!-- ========================= -->
+    // =========================
+    // 🧠 POST (SEM MEXER NA ESTRUTURA)
+    // =========================
+    if (btn) {
+        btn.onclick = () => {
 
-<audio id="bg-music" loop>
-    <source src="audio.mp3" type="audio/mpeg">
-</audio>
+            const texto = input?.value?.trim();
+            if (!texto || !usuarioAtual) return;
 
-<div style="position:fixed; bottom:20px; left:20px; z-index:9999; background:#000; padding:10px; border:1px solid #333; border-radius:5px;">
-    <label style="color:#c59d5f; font-family:Cinzel; font-size:12px;">Volume</label><br>
-    <input id="volume-control" type="range" min="0" max="1" step="0.01" value="0.25">
-</div>
+            const novoPost = {
+                author: usuarioAtual.email || "Visitante",
+                nome: usuarioAtual.displayName || "Usuário",
+                casa: casaSelecionada || "",
+                foto: base64ImagemSelecionada || "mu.png",
+                casaImg: casaSelecionada ? `reinosdemavul/${casaSelecionada.toLowerCase()}.png` : "",
+                content: texto,
+                timestamp: Date.now()
+            };
 
-<script>
-const music = document.getElementById("bg-music");
-const volumeControl = document.getElementById("volume-control");
+            database.ref('posts').push(novoPost);
+            input.value = "";
+        };
+    }
 
-document.body.addEventListener("click", () => {
-    music.volume = volumeControl.value;
-    music.play();
-}, { once: true });
+    // =========================
+    // 🧠 RENDER POSTS (ROBUSTO)
+    // =========================
+    database.ref('posts').on('value', (snapshot) => {
 
-volumeControl.addEventListener("input", () => {
-    music.volume = volumeControl.value;
+        if (!container) return;
+
+        const posts = snapshot.val();
+        container.innerHTML = "";
+
+        if (!posts) return;
+
+        const arr = Object.values(posts).sort((a,b)=>b.timestamp-a.timestamp);
+
+        arr.forEach(post => {
+
+            const div = document.createElement("div");
+            div.className = "post-card";
+
+            div.innerHTML = `
+                <div class="post-header">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="${post.foto || 'mu.png'}" 
+                             style="width:28px;height:28px;border-radius:50%;border:1px solid #c59d5f;object-fit:cover;">
+
+                        <span class="post-author">${post.nome || "Usuário"}</span>
+
+                        ${post.casaImg ? `
+                            <img src="${post.casaImg}" style="width:20px;height:20px;">
+                        ` : ""}
+                    </div>
+
+                    <span class="post-date">
+                        ${post.timestamp ? new Date(post.timestamp).toLocaleString() : ""}
+                    </span>
+                </div>
+
+                <div class="post-content">${post.content || ""}</div>
+            `;
+
+            container.appendChild(div);
+        });
+    });
+
+    // =========================
+    // 🎵 MÚSICA (NÃO QUEBRA MAIS NADA)
+    // =========================
+    const music = document.getElementById("bg-music");
+    const volumeControl = document.getElementById("volume-control");
+
+    if (music && volumeControl) {
+
+        document.body.addEventListener("click", () => {
+            music.volume = volumeControl.value || 0.2;
+            music.play().catch(() => {});
+        }, { once: true });
+
+        volumeControl.addEventListener("input", () => {
+            music.volume = volumeControl.value;
+        });
+    }
+
 });
 </script>
     </script>
