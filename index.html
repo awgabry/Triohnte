@@ -1059,10 +1059,49 @@ let casaSelecionada = "";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    const userGreeting = document.getElementById("user-greeting");
-    const container = document.getElementById("forumPosts");
-    const btn = document.getElementById("publishBtn");
-    const input = document.getElementById("forumInput");
+    const loginBtn = document.getElementById("login-btn");
+    const signupBtn = document.getElementById("signup-btn");
+    const emailField = document.getElementById("email-field");
+    const passField = document.getElementById("pass-field");
+
+    if (!loginBtn || !signupBtn || !emailField || !passField) {
+        console.warn("Campos de auth não encontrados");
+        return;
+    }
+
+    // 🔐 LOGIN
+    loginBtn.addEventListener("click", () => {
+        const email = emailField.value.trim();
+        const password = passField.value.trim();
+
+        if (!email || !password) return;
+
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(() => {
+                console.log("Login realizado");
+            })
+            .catch((err) => {
+                alert("Erro ao entrar: " + err.message);
+            });
+    });
+
+    // 🧾 REGISTRO
+    signupBtn.addEventListener("click", () => {
+        const email = emailField.value.trim();
+        const password = passField.value.trim();
+
+        if (!email || !password) return;
+
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(() => {
+                console.log("Usuário criado");
+            })
+            .catch((err) => {
+                alert("Erro ao registrar: " + err.message);
+            });
+    });
+
+});
 
     // =========================
     // 🔥 LOGIN SEGURO (FIX CRÍTICO)
