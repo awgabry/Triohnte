@@ -105,12 +105,12 @@ canvas {
 const MAP_WIDTH = 1441;
 const MAP_HEIGHT = 1311;
 
-// BANCO DE DADOS DOS TERRITÓRIOS (Atualizado com explicações)
+// BANCO DE DADOS DOS TERRITÓRIOS (Corrigido o erro de digitação em 'idade')
 const databaseTerritorios = {
     "42,70,3": {
         nome: "Kwazahdar",
         soberania: "Familia Warlofh",
-        ididade: "820 anos",
+        idade: "820 anos", // CORRIGIDO: de 'ididade' para 'idade'
         poderMilitar: "9.000 Soldados (Alta)",
         descricao: "Sua capital é Burtaland, a capital mais extensa em termos terrioriais, do continente de Triohnte. A contagem de cidades fiéis ao trono, são: Dasthar, Loffh e Ryppiov."
     },
@@ -133,7 +133,7 @@ const databaseTerritorios = {
         soberania: "Familia Cervindor",
         idade: "1.200 anos",
         poderMilitar: "12.000 Sentinelas (Média)",
-        descricao: "Uma densa floresta lúgubre que serve como a primeira linha de defesa da Dinastia Oculta. A própria vegetação parece reagir a invasores."
+        descricao: "Uma densa floresta lúgubre que serve como a primeira linha de defense da Dinastia Oculta. A própria vegetação parece reagir a invasores."
     },
     "237,94,8": {
         nome: "Castindell",
@@ -235,7 +235,6 @@ function draw(){
 }
 
 canvas.addEventListener('mousemove', (e) => {
-    // Inicia a música de fundo na primeira interação do usuário, caso ainda não tenha começado
     if (bgMusic.paused) {
         bgMusic.play().catch(err => console.log("Aguardando interação do usuário para iniciar áudio."));
     }
@@ -263,30 +262,29 @@ canvas.addEventListener('mousemove', (e) => {
             activeColor = {r, g, b};
             draw();
 
-            // Toca o efeito sonoro ao detectar uma nova região iluminada
             selectSound.currentTime = 0;
             selectSound.play().catch(err => console.log("Áudio bloqueado pelo navegador temporariamente."));
+
+            // Atualização dos dados do Card movida para dentro da mudança de cor para otimizar performance
+            const corChave = `${r},${g},${b}`;
+            const dadosDoTerritorio = databaseTerritorios[corChave];
+
+            if (dadosDoTerritorio) {
+                cardTitle.innerText = dadosDoTerritorio.nome;
+                cardSoberania.innerText = dadosDoTerritorio.soberania;
+                cardIdade.innerText = dadosDoTerritorio.idade;
+                cardMilitar.innerText = dadosDoTerritorio.poderMilitar;
+                cardDescricao.innerText = dadosDoTerritorio.descricao; 
+            } else {
+                cardTitle.innerText = "Território Desconhecido";
+                cardSoberania.innerText = "Nenhuma";
+                cardIdade.innerText = "???";
+                cardMilitar.innerText = `RGB(${corChave})`;
+                cardDescricao.innerText = "Nenhum registro histórico ou mapeamento detalhado encontrado para esta região nas crônicas atuais.";
+            }
         }
 
-        // Chave de busca no formato "R,G,B"
-        const corChave = `${r},${g},${b}`;
-        const dadosDoTerritorio = databaseTerritorios[corChave];
-
-        // Se encontrar a cor cadastrada, exibe os detalhes e a explicação. 
-        if (dadosDoTerritorio) {
-            cardTitle.innerText = dadosDoTerritorio.nome;
-            cardSoberania.innerText = dadosDoTerritorio.soberania;
-            cardIdade.innerText = dadosDoTerritorio.idade;
-            cardMilitar.innerText = dadosDoTerritorio.poderMilitar;
-            cardDescricao.innerText = dadosDoTerritorio.descricao; 
-        } else {
-            cardTitle.innerText = "Território Desconhecido";
-            cardSoberania.innerText = "Nenhuma";
-            cardIdade.innerText = "???";
-            cardMilitar.innerText = `RGB(${corChave})`;
-            cardDescricao.innerText = "Nenhum registro histórico ou mapeamento detalhado encontrado para esta região nas crônicas atuais.";
-        }
-
+        // CORREÇÃO DE FLUIDEZ: O posicionamento do card deve rodar sempre no mousemove fora do bloco condicional de troca de cor
         infoCard.style.opacity = 1;
         infoCard.style.left = e.clientX + 15 + "px";
         infoCard.style.top = e.clientY + "px";
