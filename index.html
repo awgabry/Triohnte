@@ -596,7 +596,7 @@
             font-family: 'Crimson Pro', serif;
         }
 
-        /* --- NOVO: MENU SUSPENSO INTERATIVO DE CASAS (GRADE) --- */
+        /* --- MENU SUSPENSO INTERATIVO DE CASAS (GRADE) --- */
         .custom-dropdown {
             position: relative;
             width: 100%;
@@ -692,7 +692,6 @@
             color: #f3e1b5;
         }
 
-        /* Seta do Dropdown */
         .dropdown-arrow {
             border: solid #666;
             border-width: 0 2px 2px 0;
@@ -750,7 +749,6 @@
 
     <div class="vignette"></div>
 
-    <!-- Sistema de Perfil Próximo ao Login (Topo) -->
     <div class="top-bar-container">
         <div id="user-info" class="auth-box hidden">
             <div class="user-logged">
@@ -762,12 +760,10 @@
         </div>
     </div>
 
-    <!-- Interface Modal de Configurações da Conta -->
     <div id="accountModal" class="modal-overlay">
         <div class="modal-content">
             <h3>Configurações da Conta</h3>
             
-            <!-- Campo de Foto -->
             <div class="form-group">
                 <label>Foto de Perfil</label>
                 <div id="dropzone" class="dropzone-container">
@@ -786,14 +782,12 @@
                     <input id="acc-foto-file" type="file" accept="image/*" style="display: none;">
                 </div>
                 
-                <!-- Preview Alinhado Conforme Referência image_1b10c1.png -->
                 <div class="preview-wrapper">
                     <img id="avatar-preview" class="photo-preview" src="mu.png" alt="Prévia">
                     <span class="preview-info" id="preview-filename">Nenhum arquivo modificado</span>
                 </div>
             </div>
 
-            <!-- NOVO: Escolha de Linhagem / Casa Nobre de Triohnte abaixo da Foto -->
             <div class="form-group">
                 <label>Vincular Linhagem (Trono/Casa)</label>
                 <div class="custom-dropdown" id="casaDropdown">
@@ -805,21 +799,20 @@
                         <div class="dropdown-arrow"></div>
                     </div>
                     <div class="dropdown-grid" id="dropdownGrid">
-                        <!-- Casas Nobres de Triohnte -->
-                        <div class="dropdown-item" data-casa="Niwdem" data-img="mu.png">
-                            <img src="mu.png" alt="Niwdem">
+                        <div class="dropdown-item" data-casa="Niwdem" data-img="reinosdemavul/Niwdem.png">
+                            <img src="reinosdemavul/Niwdem.png" alt="Niwdem">
                             <span>Niwdem</span>
                         </div>
-                        <div class="dropdown-item" data-casa="Agaroff" data-img="mu.png">
-                            <img src="mu.png" alt="Agaroff">
+                        <div class="dropdown-item" data-casa="Agaroff" data-img="reinosdemavul/Agaroff.png">
+                            <img src="reinosdemavul/Agaroff.png" alt="Agaroff">
                             <span>Agaroff</span>
                         </div>
-                        <div class="dropdown-item" data-casa="Dyllewalt" data-img="mu.png">
-                            <img src="mu.png" alt="Dyllewalt">
+                        <div class="dropdown-item" data-casa="Dyllewalt" data-img="reinosdemavul/Dyllewalt.png">
+                            <img src="reinosdemavul/Dyllewalt.png" alt="Dyllewalt">
                             <span>Dyllewalt</span>
                         </div>
-                        <div class="dropdown-item" data-casa="Mavul" data-img="mu.png">
-                            <img src="mu.png" alt="Mavul">
+                        <div class="dropdown-item" data-casa="Mavul" data-img="reinosdemavul/Mavul.png">
+                            <img src="reinosdemavul/Mavul.png" alt="Mavul">
                             <span>Mavul</span>
                         </div>
                     </div>
@@ -939,7 +932,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             </div>
         </section>
 
-        <!-- Seção de Login no Final da Página -->
         <section id="auth-section" class="auth-section">
             <h2>Torne-se um aliado</h2>
             <div id="auth-container" class="auth-container-block">
@@ -979,7 +971,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
         let usuarioAtual = null;
         let base64ImagemSelecionada = ""; 
-        let casaSelecionada = ""; // Guarda o nome da casa escolhida
+        let casaSelecionada = ""; 
 
         document.addEventListener("DOMContentLoaded", () => {
             
@@ -995,14 +987,13 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             const filenameText = document.getElementById('preview-filename');
             const userMiniAvatar = document.getElementById('user-mini-avatar');
 
-            // Elementos do Menu Suspenso de Casas
+            // Dropdown de Linhagens
             const casaDropdown = document.getElementById('casaDropdown');
             const dropdownSelected = document.getElementById('dropdownSelected');
             const selectedCasaImg = document.getElementById('selected-casa-img');
             const selectedCasaNome = document.getElementById('selected-casa-nome');
             const dropdownItems = document.querySelectorAll('.dropdown-item');
 
-            // Alternar abertura do menu suspenso
             if (dropdownSelected) {
                 dropdownSelected.onclick = (e) => {
                     e.stopPropagation();
@@ -1010,32 +1001,26 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 };
             }
 
-            // Fechar menu clicando fora
             window.addEventListener('click', () => {
                 if (casaDropdown) casaDropdown.classList.remove('active');
             });
 
-            // Configurar escolha de item dentro da grade do menu suspenso
             dropdownItems.forEach(item => {
                 item.onclick = (e) => {
                     e.stopPropagation();
                     casaSelecionada = item.getAttribute('data-casa');
                     const imgPath = item.getAttribute('data-img');
 
-                    // Atualiza a visualização do cabeçalho do dropdown
                     if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
                     if (selectedCasaImg) selectedCasaImg.src = imgPath;
 
-                    // Destaca o item selecionado visualmente na grade
                     dropdownItems.forEach(i => i.classList.remove('selected'));
                     item.classList.add('selected');
 
-                    // Fecha o menu após a seleção
                     casaDropdown.classList.remove('active');
                 };
             });
 
-            // Processar arquivo e converter em Base64
             const processarArquivoImagem = (file) => {
                 if (!file) return;
 
@@ -1058,7 +1043,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 reader.readAsDataURL(file);
             };
 
-            // Eventos do clique no botão Customizado da Dropzone
             if (triggerFileBtn && fotoFileInput) {
                 triggerFileBtn.onclick = (e) => {
                     e.stopPropagation();
@@ -1075,7 +1059,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 };
             }
 
-            // Drag e Drop (Arrastar e soltar) na Dropzone
             if (dropzone) {
                 ['dragenter', 'dragover'].forEach(eventName => {
                     dropzone.addEventListener(eventName, (e) => {
@@ -1102,7 +1085,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 }, false);
             }
 
-            // Capturar Imagem por Ctrl + V (Colar da Área de Transferência)
             window.addEventListener('paste', (e) => {
                 if (!modal.classList.contains('active')) return;
 
@@ -1117,7 +1099,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 }
             });
 
-            // Abrir painel da conta e preencher com dados do banco
             if (accountBtn) {
                 accountBtn.onclick = () => {
                     if (usuarioAtual) {
@@ -1129,7 +1110,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                             document.getElementById('acc-telefone').value = d.telefone || "";
                             document.getElementById('acc-cpf').value = d.cpf || "";
                             
-                            // Carregar imagem
                             base64ImagemSelecionada = d.foto || "";
                             if (avatarPreview) {
                                 avatarPreview.src = d.foto || "mu.png";
@@ -1138,7 +1118,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                                 filenameText.textContent = d.foto ? "Imagem atual carregada" : "Nenhum arquivo modificado";
                             }
 
-                            // Carregar Linhagem/Casa prévia selecionada
                             casaSelecionada = d.casa || "";
                             if (casaSelecionada) {
                                 if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
@@ -1165,7 +1144,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 closeModalBtn.onclick = () => modal.classList.remove('active');
             }
 
-            // Salvar configurações incluindo a Casa Nobre
             if (saveAccountBtn) {
                 saveAccountBtn.onclick = () => {
                     const nome = document.getElementById('acc-nome').value.trim();
@@ -1177,7 +1155,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
                     const dadosAtualizados = {
                         foto: base64ImagemSelecionada, 
-                        casa: casaSelecionada, // Salvando a linhagem no banco de dados
+                        casa: casaSelecionada, 
                         nome: nome,
                         endereco: document.getElementById('acc-endereco').value.trim(),
                         cep: document.getElementById('acc-cep').value.trim(),
@@ -1188,14 +1166,13 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
                     database.ref('usuarios/' + usuarioAtual.uid).update(dadosAtualizados)
                         .then(() => {
-                            alert("Configurações atualizadas com sucesso!");
+                            alert("Configurações updated com sucesso!");
                             modal.classList.remove('active');
                         })
                         .catch(err => alert("Erro ao salvar: " + err.message));
                 };
             }
             
-            // Controle de estado da Autenticação
             auth.onAuthStateChanged((user) => {
                 const authContainer = document.getElementById('auth-container');
                 const authSection = document.getElementById('auth-section');
@@ -1218,12 +1195,10 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 if (userInfo) userInfo.classList.remove('hidden');
                 if (userGreeting) userGreeting.textContent = `Olá, ${user.email.split('@')[0]}`;
 
-                // Sincroniza dados do topo em tempo real
                 database.ref('usuarios/' + user.uid).on('value', (snap) => {
                     const d = snap.val();
                     if (d) {
                         if (d.nome && userGreeting) {
-                            // Exibe o primeiro nome com a Casa do usuário se houver
                             const tagCasa = d.casa ? ` [Casa ${d.casa}]` : '';
                             userGreeting.textContent = `Olá, ${d.nome.split(' ')[0]}${tagCasa}`;
                         }
@@ -1237,7 +1212,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 });
             });
 
-            // Login e Registro
             const loginBtn = document.getElementById('login-btn');
             if (loginBtn) {
                 loginBtn.onclick = () => {
