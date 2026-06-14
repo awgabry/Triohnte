@@ -373,8 +373,8 @@
                 <li><a href="rm.html">Ruínas de Mavul</a></li>
                 <li><a href="tw.html">Terras de Walingardyn</a></li>
                 <li><a href="cw.html">Compêndio Walingardyano</a></li>
-                <li><a href="ap.html">Estruturas de Poder</a></li>
-                <li><a href="poe.html">Topografia de Triohnte</a></li>
+                <li><a href="ap.html">Estruturas de Power</a></li>
+                <li><a href="poe.html">Topografia de Walingardyn</a></li>
             </ul>
         </nav>
     </header>
@@ -399,4 +399,191 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
             <a href="contorno.html">
                 <div class="card">
-                    <h3>Contorno de Triohnte
+                    <h3>Contorno de Triohnte</h3>
+                    <p>Uma exploração pelas regiões de Triohnte, onde a própria geografia e clima parecem conspirar contra a sanidade dos viajantes.</p>
+                </div>
+            </a>
+
+            <a href="conflito.html">
+                <div class="card">
+                    <h3>Conflitos Primordiais</h3>
+                    <p>O que sabemos sobre a profecia do herdeiro? Como ela interfere diretamente na história de Triohnte e de Walingardyn, mas não só a profecia é a mascara das guerras.</p>
+                </div>
+            </a>
+
+            <a href="motivos.html">
+                <div class="card">
+                    <h3>Motivos de Guerra</h3>
+                    <p>As casas nobres e facções que ainda lutam por power entre as ruínas do que um dia foi um grande império através das Eras.</p>
+                </div>
+            </a>
+
+            <a href="calen.html">
+                <div class="card">
+                    <h3>Calendário Triohntino</h3>
+                    <p>Entenda o tempo em Triohnte e em Walingardyn.</p>
+                </div>
+            </a>
+        </section>
+
+        <section class="progress-section">
+            <h2>Progresso de Triohnte até a publicação</h2>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="progress-text">46% Concluído</div>
+        </section>
+
+        <section class="forum-section">
+            <h2>Fórum</h2>
+             
+            <div id="forumFormWrapper" class="forum-form">
+                <textarea id="forumInput" rows="3" placeholder="Escreva uma nova atualização global sobre o volume..."></textarea>
+                <button type="button" id="publishBtn" class="forum-btn">Publicar</button>
+            </div>
+
+            <div id="forumPosts" class="forum-posts">
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-logo">
+            <img src="triwo.png" alt="TRIOHNTE" class="footer-logo-img">
+        </div>
+        <p style="margin-top: 15px; font-size: 0.8rem; color: #444;">Copyright Triohnte &copy; 2026</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const input = document.getElementById("forumInput");
+            const btn = document.getElementById("publishBtn");
+            const container = document.getElementById("forumPosts");
+            const formWrapper = document.getElementById("forumFormWrapper");
+
+            const dbUrl = "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app/posts.json";
+            
+            // 1. INSIRA O TEU IP ATUAL AQUI SE QUISERES QUE ELE DETETE SOZINHO:
+            const meuIpPessoal = "ALTERE_AQUI_PELO_TEU_IP";
+            
+            // Variável padrão caso não caia em nenhuma validação
+            let visitorIdentity = "Explorador de Walingardyn";
+
+            // Deteta o IP em background
+            const captureVisitorIp = async () => {
+                try {
+                    const response = await fetch("https://ipapi.co/json/");
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        if (data.ip && data.ip === meuIpPessoal) {
+                            visitorIdentity = "Autor";
+                        } else if (data.city && data.country_code) {
+                            visitorIdentity = `Visitante de ${data.city} - ${data.country_code}`;
+                        } else if (data.ip) {
+                            visitorIdentity = `Membro (IP: ${data.ip})`;
+                        }
+                    }
+                } catch (e) {
+                    console.log("Erro na API de IPs, usando o nome padrão.");
+                }
+            };
+
+            const renderPost = (author, text, date) => {
+                const postDiv = document.createElement("div");
+                postDiv.className = "post-card";
+                
+                // Remove qualquer resquício de "Anônimo" ou vazio de posts antigos
+                const displayAuthor = author && author !== "Anônimo" ? author : "Autor";
+                
+                postDiv.innerHTML = `
+                    <div class="post-header">
+                        <span class="post-author">${displayAuthor}</span>
+                        <span class="post-date">${date}</span>
+                    </div>
+                    <div class="post-content">
+                        <p>${text.replace(/\n/g, '<br>')}</p>
+                    </div>
+                `;
+                container.insertBefore(postDiv, container.firstChild);
+            };
+
+            const loadGlobalPosts = async () => {
+                try {
+                    const response = await fetch(dbUrl);
+                    if (!response.ok) throw new Error("Erro ao buscar banco de dados.");
+                     
+                    const data = await response.json();
+                    container.innerHTML = ""; 
+
+                    if (data && Object.keys(data).length > 0) {
+                        formWrapper.classList.add("has-posts");
+
+                        const sortedPosts = Object.keys(data).map(key => data[key]);
+                        sortedPosts.forEach(post => {
+                            renderPost(post.author, post.text, post.date);
+                        });
+                    } else {
+                        formWrapper.classList.remove("has-posts");
+                    }
+                } catch (error) {
+                    console.error("Falha na conexão global:", error);
+                }
+            };
+
+            btn.addEventListener("click", async () => {
+                let text = input.value.trim();
+                if (!text) return;
+
+                let finalAuthor = visitorIdentity;
+
+                // 2. SISTEMA SEGURO REFORÇADO (CHAVE SECRETA):
+                // Se escreveres /autor em qualquer parte do texto, assume "Autor" instantaneamente
+                if (text.toLowerCase().includes("/autor")) {
+                    finalAuthor = "Autor";
+                    // Apaga o comando secreto do texto para que os leitores não o vejam publicado
+                    text = text.replace(/\/autor/gi, "").trim();
+                }
+
+                if (!text) return; // Proteção se o post tiver apenas o comando secreto
+
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                const formattedDate = new Date().toLocaleDateString('pt-BR', options);
+
+                const newPost = { 
+                    author: finalAuthor, 
+                    text: text, 
+                    date: formattedDate, 
+                    timestamp: Date.now() 
+                };
+
+                try {
+                    btn.disabled = true;
+                    btn.innerText = "Enviando...";
+
+                    const response = await fetch(dbUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(newPost)
+                    });
+
+                    if (!response.ok) throw new Error("Falha no envio.");
+
+                    input.value = "";
+                    await loadGlobalPosts();
+                } catch (error) {
+                    alert("Não foi possível publicar globalmente. Verifique as regras do Firebase.");
+                    console.error(error);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = "Publicar";
+                }
+            });
+
+            captureVisitorIp();
+            loadGlobalPosts();
+        });
+    </script>
+
+</body>
+</html>
