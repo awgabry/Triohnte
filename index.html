@@ -1,985 +1,489 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Triohnte</title>
+    <title>Triohnte - Mapa Interativo</title>
+    <!-- Fonte Cinzel para a estética de fantasia -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
     
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
-    
-    <link class="image-file" rel="icon" type="image/png" href="mu.png">
-
     <style>
-        /* --- ESTILIZAÇÃO CSS OTIMIZADA --- */
-        * {
+        /* ==========================================================================
+           1. ESTILOS GERAIS E INTERFACE DO SITE
+           ========================================================================== */
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            background-color: #0d0d0d;
+            font-family: 'Cinzel', Georgia, serif;
+            color: #f5f5f5;
+            overflow: hidden; /* Impede barras de rolagem na tela principal */
+            height: 100vh;
         }
 
-        :root {
-            --gold-gradient: linear-gradient(
-                to bottom, 
-                #c59d5f 0%,   
-                #e3c38f 40%,  
-                #f3e1b5 48%, 
-                #7a542a 52%, 
-                #b88640 60%,  
-                #8a5d2e 100%  
-            );
-            --gold-shadow: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
-        }
-
-        .intro-text h2, 
-        .card h3, 
-        .progress-section h2,
-        .forum-section h2,
-        .auth-section h2,
-        .footer-logo,
-        .modal-content h3 {
-            display: inline-block;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            color: transparent;
-            font-weight: 700;
-            filter: var(--gold-shadow);
-        }
-
-        .img-titulo, .footer-logo-img {
-            background: var(--gold-gradient);
-            -webkit-mask-image: url('triwo.png');
-            mask-image: url('triwo.png');
-            -webkit-mask-size: contain;
-            mask-size: contain;
-            -webkit-mask-repeat: no-repeat;
-            -webkit-mask-position: center;
-            background-clip: border-box;
-            object-position: -9999px; 
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.9)) drop-shadow(0 0 5px rgba(212, 163, 86, 0.3));
-        }
-
-        .img-titulo {
-            width: 1000px; 
-            height: 300px; 
-            max-width: 100%;
-            display: block;
-            margin: 0 auto;
-            animation: flicker 4s infinite alternate;
-        }
-
-        body {
-            background-color: #050505;
-            color: #a39b8f;
-            font-family: 'Crimson Pro', serif;
-            line-height: 1.8;
-            overflow-x: hidden;
-        }
-
-        .vignette {
-            position: fixed;
+        /* Container do Mapa Canvas (Com suporte a Zoom e Arrastar) */
+        #mapContainer {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            box-shadow: inset 0 0 15vw rgba(0,0,0,1);
-            pointer-events: none;
-            z-index: 100;
+            cursor: grab;
         }
 
-        header {
-            height: 80vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: linear-gradient(to bottom, rgba(5,5,5,0.4), #050505),
-                        url('https://raw.githubusercontent.com/awgabry/Triohnte/main/map%203.png'); 
-            background-size: cover;
-            background-position: center;
-            border-bottom: 1px solid #1a0000;
-            position: relative;
+        #mapContainer:active {
+            cursor: grabbing;
         }
 
-        .borda-lateral {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 40px; 
-            z-index: 10;
-            background: var(--gold-gradient);
-            -webkit-mask-image: url('serd.png');
-            mask-image: url('serd.png');
-            -webkit-mask-size: contain;
-            mask-repeat: repeat-y;
-            filter: var(--gold-shadow);
-        }
-
-        .borda-esquerda { left: 10px; }
-        .borda-direita { right: 10px; transform: scaleX(-1); }
-
-        @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-            20%, 24%, 55% { opacity: 0.8; }
-        }
-
-        nav { margin-top: 50px; }
-        nav ul { list-style: none; display: flex; gap: 40px; }
-        nav a {
-            text-decoration: none;
-            color: #888;
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            letter-spacing: 2px;
-        }
-        nav a:hover { color: #fff; text-shadow: 0 0 8px #fff; letter-spacing: 4px; }
-
-        main {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 100px 30px;
-            animation: fadeIn 2s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .intro-text { text-align: center; margin-bottom: 120px; }
-        .intro-text h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 2.5rem; 
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-        }
-        .intro-text p { font-size: 1.3rem; font-style: italic; margin-bottom: 20px; }
-
-        /* --- GRID E CARDS --- */
-        .lore-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            align-items: stretch;
-            margin-bottom: 120px;
-        }
-
-        .lore-grid a {
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-        }
-
-        .card {
-            background: #0a0a0a;
-            padding: 40px;
-            border: 1px solid #1a1a1a;
-            position: relative;
-            transition: 0.5s;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0; height: 100%; width: 2px;
-            background: #ffc88a; 
-            transform: scaleY(0);
-            transition: 0.5s;
-        }
-        .card:hover { background: #0f0f0f; border-color: #333; }
-        .card:hover::before { transform: scaleY(1); }
-        .card h3 { font-family: 'Cinzel', serif; margin-bottom: 20px; font-size: 1.4rem; letter-spacing: 1px; }
-
-        /* --- BARRA DE PROGRESSO --- */
-        .progress-section {
-            text-align: center;
-            background: #0a0a0a;
-            padding: 50px 40px;
-            border: 1px solid #1a1a1a;
-            margin-bottom: 60px;
-        }
-        .progress-section h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .progress-container {
-            background-color: #151515;
-            border-radius: 4px;
-            padding: 4px;
-            border: 1px solid #222;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-            margin-bottom: 15px;
-        }
-        .progress-bar {
-            height: 24px;
-            width: 46%; 
-            background: var(--gold-gradient);
-            border-radius: 2px;
-            box-shadow: 0 0 10px rgba(197, 157, 95, 0.4);
-            transition: width 1s ease-in-out;
-            position: relative;
-            animation: pulseGlow 3s infinite alternate;
-        }
-        .progress-text {
-            font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
-            color: #e3c38f;
-            letter-spacing: 1px;
-        }
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 10px rgba(197, 157, 95, 0.3); }
-            100% { box-shadow: 0 0 20px rgba(243, 225, 181, 0.6); }
-        }
-
-        /* --- MINI FÓRUM / ATUALIZAÇÕES --- */
-        .forum-section {
-            background: #0a0a0a;
-            padding: 50px 40px;
-            border: 1px solid #1a1a1a;
-            margin-bottom: 60px;
-        }
-        .forum-section h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        canvas {
             display: block;
-            text-align: center;
-        }
-         
-        .forum-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 1px dashed transparent; 
-            transition: border-color 0.3s;
         }
 
-        .forum-form.has-posts {
-            border-bottom-color: #222;
-        }
-
-        .forum-form.textarea {
-            background: #050505;
-            border: 1px solid #222;
-            color: #a39b8f;
-            padding: 15px;
-            font-family: 'Crimson Pro', serif;
-            font-size: 1.1rem;
-            resize: none;
-            border-radius: 4px;
-            transition: border-color 0.3s;
-        }
-        .forum-form textarea:focus {
-            outline: none;
-            border-color: #c59d5f;
-        }
-        .forum-btn {
-            align-self: flex-end;
-            background: var(--gold-gradient);
-            color: #050505;
-            border: none;
-            padding: 10px 25px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            letter-spacing: 1px;
-            transition: 0.3s;
-            box-shadow: var(--gold-shadow);
-        }
-        .forum-btn:hover {
-            filter: brightness(1.2);
-            box-shadow: 0 0 10px rgba(227, 195, 143, 0.5);
-        }
-
-        .forum-posts {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .post-card {
-            background: #050505;
-            border: 1px solid #151515;
-            padding: 25px;
-            border-left: 3px solid #7a542a;
-            position: relative;
-        }
-        .post-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
-        }
-        .post-author {
-            color: #e3c38f;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-        .post-date {
-            color: #555;
-            font-size: 0.8rem;
-        }
-        .post-content {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: #8c8579;
-        }
-
-        /* --- SEÇÃO DE AUTENTICAÇÃO "TORNE-SE UM ALIADO" --- */
-        .auth-section {
-            background: #0a0a0a;
-            padding: 50px 40px;
-            border: 1px solid #1a1a1a;
-            text-align: center;
-        }
-        .auth-section h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .auth-container-block {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .auth-container-block input {
-            background: #000;
-            border: 1px solid #333;
-            color: #fff;
-            padding: 10px 15px;
-            font-size: 0.95rem;
-            border-radius: 4px;
-            outline: none;
-            width: 100%;
-            font-family: 'Crimson Pro', serif;
-        }
-        .auth-container-block input:focus { border-color: #c59d5f; }
-        
-        .auth-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* --- EXIBIÇÃO DE PERFIL / TOPO RIGHT --- */
-        .top-bar-container {
+        /* ==========================================================================
+           2. NOVO DROPDOWN REESTILIZADO (Idêntico ao das imagens)
+           ========================================================================== */
+        .custom-dropdown {
             position: absolute;
             top: 20px;
-            right: 40px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            left: 20px;
+            width: 420px;
+            background-color: #000000;
+            border: 1px solid #d4af37;
+            border-radius: 6px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            user-select: none;
             z-index: 1000;
         }
-        .auth-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(10, 10, 10, 0.8);
-            padding: 6px 12px;
-            border-radius: 4px;
-            border: 1px solid #222;
-        }
-        .auth-btn {
-            background: var(--gold-gradient);
-            color: #000;
-            border: none;
-            padding: 8px 16px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            border-radius: 3px;
-            cursor: pointer;
-            font-family: 'Cinzel', serif;
-            transition: 0.3s;
-            white-space: nowrap;
-        }
-        .auth-btn:hover { filter: brightness(1.2); }
-        .user-logged {
-            color: #e3c38f;
-            font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .profile-img-preview-mini {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid #c59d5f;
-            background-color: #000;
-        }
-        .account-link {
-            color: #c59d5f;
-            text-decoration: none;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .account-link:hover { color: #f3e1b5; text-shadow: 0 0 5px rgba(243, 225, 181, 0.5); }
-        .logout-link {
-            color: #ff4a4a;
-            text-decoration: none;
-            font-size: 0.85rem;
-            cursor: pointer;
-        }
-        .logout-link:hover { text-shadow: 0 0 5px #ff4a4a; }
-        .hidden { display: none !important; }
 
-        /* --- JANELA MODAL DE CONFIGURAÇÃO DE CONTA --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-content {
-            background: #0a0a0a;
-            border: 1px solid #222;
-            padding: 40px;
-            width: 90%;
-            max-width: 500px;
-            border-radius: 4px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            position: relative;
-            text-align: left;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal-content h3 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
-            display: block;
-            text-align: center;
-        }
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 16px;
-        }
-        .form-group label {
-            font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
-            color: #888;
-            letter-spacing: 1px;
-        }
-        .form-group input {
-            background: #050505;
-            border: 1px solid #222;
-            color: #fff;
-            padding: 10px 12px;
-            border-radius: 4px;
-            font-family: 'Crimson Pro', serif;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        .form-group input:focus { border-color: #c59d5f; }
-
-        /* --- ÁREA DE UPLOAD ESTILO "DRAG & DROP" PREMIUM --- */
-        .dropzone-container {
-            border: 2px dashed #333;
-            background: #050505;
-            border-radius: 6px;
-            padding: 30px 20px;
-            text-align: center;
-            position: relative;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            cursor: pointer;
-        }
-        .dropzone-container.dragover {
-            border-color: #e3c38f;
-            background: #0e0e0d;
-            box-shadow: inset 0 0 10px rgba(227, 195, 143, 0.1);
-        }
-        .dropzone-text {
-            font-family: 'Crimson Pro', serif;
-            font-size: 1.1rem;
-            color: #a39b8f;
-        }
-        .dropzone-btn {
-            background: var(--gold-gradient);
-            color: #000;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: var(--gold-shadow);
-            transition: 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .dropzone-btn:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-        }
-        .dropzone-subtext {
-            font-size: 0.85rem;
-            color: #555;
-            margin-top: 2px;
-        }
-        .formats-box {
-            display: flex;
-            gap: 6px;
-            margin-top: 5px;
-        }
-        .format-tag {
-            background: #111;
-            border: 1px solid #222;
-            padding: 2px 6px;
-            font-size: 0.75rem;
-            border-radius: 3px;
-            color: #666;
-            font-family: monospace;
-        }
-        .preview-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-            margin-top: 5px;
-            padding-top: 15px;
-            border-top: 1px solid #151515;
-        }
-        .photo-preview {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid #c59d5f;
-            background: #111;
-        }
-        .preview-info {
-            font-size: 0.9rem;
-            color: #c59d5f;
-            font-family: 'Crimson Pro', serif;
-        }
-
-        /* --- MENU SUSPENSO INTERATIVO DE CASAS (GRADE) --- */
-        .custom-dropdown {
-            position: relative;
-            width: 100%;
-            user-select: none;
-        }
-        .dropdown-selected {
-            background: #050505;
-            border: 1px solid #222;
-            color: #fff;
-            padding: 12px;
-            border-radius: 4px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
-            cursor: pointer;
+        .dropdown-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: border-color 0.3s;
+            padding: 12px 16px;
+            cursor: pointer;
+            background: linear-gradient(180deg, #121212 0%, #080808 100%);
+            border-bottom: 1px solid #222;
         }
-        .dropdown-selected:hover, .custom-dropdown.active .dropdown-selected {
-            border-color: #c59d5f;
+
+        .dropdown-header:hover {
+            background: #151515;
         }
-        .dropdown-selected .selected-info {
+
+        .dropdown-header-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
-        .dropdown-selected img {
+
+        .dropdown-header img {
             width: 24px;
             height: 24px;
             object-fit: contain;
         }
-        .dropdown-grid {
-            position: absolute;
-            top: 105%;
-            left: 0;
-            width: 100%;
-            background: #0a0a0a;
-            border: 1px solid #c59d5f;
-            border-radius: 4px;
-            padding: 12px;
-            z-index: 100;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.9);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            max-height: 260px;
-            overflow-y: auto;
-        }
-        .custom-dropdown.active .dropdown-grid {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        .dropdown-item {
-            background: #050505;
-            border: 1px solid #1a1a1a;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-        }
-        .dropdown-item:hover {
-            border-color: #e3c38f;
-            background: #111;
-            transform: translateY(-1px);
-        }
-        .dropdown-item.selected {
-            border-color: #c59d5f;
-            background: rgba(197, 157, 95, 0.05);
-        }
-        .dropdown-item img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-        .dropdown-item span {
-            font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
-            color: #a39b8f;
-            letter-spacing: 1px;
-        }
-        .dropdown-item:hover span, .dropdown-item.selected span {
-            color: #f3e1b5;
+
+        .dropdown-header span {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #d4af37;
+            font-weight: bold;
         }
 
         .dropdown-arrow {
-            border: solid #666;
-            border-width: 0 2px 2px 0;
-            display: inline-block;
-            padding: 3px;
-            transform: rotate(45deg);
+            font-size: 10px;
+            color: #666;
             transition: transform 0.3s ease;
         }
-        .custom-dropdown.active .dropdown-arrow {
-            transform: rotate(-135deg);
+
+        .custom-dropdown.open .dropdown-arrow {
+            transform: rotate(180deg);
         }
 
-        .modal-actions {
+        .dropdown-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #050505;
+        }
+
+        .custom-dropdown.open .dropdown-body {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .dropdown-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 12px;
+        }
+
+        .dropdown-item {
+            background-color: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 4px;
+            padding: 14px 8px;
             display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            margin-top: 25px;
-        }
-        .btn-cancel {
-            background: transparent;
-            border: 1px solid #333;
-            color: #888;
-            padding: 10px 20px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             cursor: pointer;
-            border-radius: 3px;
-            transition: 0.3s;
+            transition: all 0.2s ease;
         }
-        .btn-cancel:hover { border-color: #ff4a4a; color: #ff4a4a; }
 
-        footer {
-            text-align: center;
-            padding: 100px 20px;
-            border-top: 1px solid #111;
-            margin-top: 50px;
+        .dropdown-item:hover {
+            background-color: #121212;
+            border-color: #555;
         }
-        .footer-logo-img { height: 40px; width: 150px; display: inline-block; }
 
-        @media (max-width: 768px) {
-            nav ul { flex-direction: column; align-items: center; gap: 20px; }
-            .intro-text h2 { font-size: 1.8rem; }
-            .borda-lateral { display: none; }
-            .progress-section h2, .forum-section h2, .auth-section h2 { font-size: 1.4rem; }
-            .forum-section, .auth-section { padding: 30px 20px; }
-            .top-bar-container { position: relative; top: 0; right: 0; justify-content: center; padding: 20px 0; }
-            .auth-container-block { flex-direction: column; width: 100%; }
-            .auth-actions { width: 100%; }
-            .auth-actions button { width: 100%; }
-            .dropdown-grid { grid-template-columns: 1fr; }
+        .dropdown-item.selected {
+            background-color: #11110b;
+            border-color: #d4af37;
+        }
+
+        .dropdown-item img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .dropdown-item .display-name {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #bfa15f;
+        }
+
+        /* ==========================================================================
+           3. PAINEL DE INFORMAÇÕES DO TERRITÓRIO
+           ========================================================================== */
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 1px solid #d4af37;
+            border-radius: 6px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none; /* Aparece ao clicar num território */
+        }
+
+        .info-panel h2 {
+            margin-top: 0;
+            color: #d4af37;
+            text-transform: uppercase;
+            border-bottom: 1px solid #333;
+            padding-bottom: 8px;
+        }
+
+        .info-field {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .info-label {
+            color: #888;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <div class="vignette"></div>
+    <!-- MAPA CANVAS -->
+    <div id="mapContainer">
+        <canvas id="mapCanvas"></canvas>
+    </div>
 
-    <div class="top-bar-container">
-        <div id="user-info" class="auth-box hidden">
-            <div class="user-logged">
-                <img id="user-mini-avatar" class="profile-img-preview-mini hidden" src="" alt="Avatar">
-                <span id="user-greeting">Olá, ...</span>
-                <span id="account-btn" class="account-link">[Conta]</span>
-                <span id="logout-btn" class="logout-link">[Sair]</span>
+    <!-- DROPDOWN INTEGRADO (Nomes e caminhos corrigidos com base em image_104278.png) -->
+    <div class="custom-dropdown" id="reinoDropdown">
+        <div class="dropdown-header" id="dropdownHeader">
+            <div class="dropdown-header-left">
+                <img id="selectedCasaImg" src="reinosdemavul/ashen.png" alt="Brasão">
+                <span id="selectedCasaNome">Ashen</span>
+            </div>
+            <div class="dropdown-arrow">▲</div>
+        </div>
+
+        <div class="dropdown-body">
+            <div class="dropdown-grid" id="dropdownGrid">
+                <!-- Itens da sua pasta reinosdemavul/ -->
+                <div class="dropdown-item" data-casa="Ashen">
+                    <img src="reinosdemavul/ashen.png" alt="Ashen">
+                    <span class="display-name">Ashen</span>
+                </div>
+                <div class="dropdown-item" data-casa="Barchyro">
+                    <img src="reinosdemavul/barchyro.png" alt="Barchyro">
+                    <span class="display-name">Barchyro</span>
+                </div>
+                <div class="dropdown-item" data-casa="Blakah">
+                    <img src="reinosdemavul/blakah.png" alt="Blakah">
+                    <span class="display-name">Blakah</span>
+                </div>
+                <div class="dropdown-item" data-casa="Bolynas">
+                    <img src="reinosdemavul/bolynas.png" alt="Bolynas">
+                    <span class="display-name">Bolynas</span>
+                </div>
+                <div class="dropdown-item" data-casa="Brakemir">
+                    <img src="reinosdemavul/brakemir.png" alt="Brakemir">
+                    <span class="display-name">Brakemir</span>
+                </div>
+                <div class="dropdown-item" data-casa="Cervindor">
+                    <img src="reinosdemavul/cervindor.png" alt="Cervindor">
+                    <span class="display-name">Cervindor</span>
+                </div>
+                <div class="dropdown-item" data-casa="Cosnalia">
+                    <img src="reinosdemavul/cosnalia.png" alt="Cosnalia">
+                    <span class="display-name">Cosnalia</span>
+                </div>
+                <div class="dropdown-item" data-casa="Drakorvy">
+                    <img src="reinosdemavul/drakorvy.png" alt="Drakorvy">
+                    <span class="display-name">Drakorvy</span>
+                </div>
+                <div class="dropdown-item" data-casa="Fartally">
+                    <img src="reinosdemavul/fartally.png" alt="Fartally">
+                    <span class="display-name">Fartally</span>
+                </div>
+                <div class="dropdown-item" data-casa="Flamaryn">
+                    <img src="reinosdemavul/flamaryn.png" alt="Flamaryn">
+                    <span class="display-name">Flamaryn</span>
+                </div>
+                <div class="dropdown-item" data-casa="Kaldarion">
+                    <img src="reinosdemavul/kaldarion.png" alt="Kaldarion">
+                    <span class="display-name">Kaldarion</span>
+                </div>
+                <div class="dropdown-item" data-casa="Klavar">
+                    <img src="reinosdemavul/klavar.png" alt="Klavar">
+                    <span class="display-name">Klavar</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="accountModal" class="modal-overlay">
-        <div class="modal-content">
-            <h3>Configurações da Conta</h3>
-            
-            <div class="form-group">
-                <label>Foto de Perfil</label>
-                <div id="dropzone" class="dropzone-container">
-                    <span class="dropzone-text">Arrastar e solte sua imagem aqui</span>
-                    <button type="button" id="triggerFileBtn" class="dropzone-btn">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-bottom:-2px;"><path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/><path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/></svg>
-                        Enviar Imagem
-                    </button>
-                    <span class="dropzone-subtext">Colar imagem (Ctrl V) ou clicar acima</span>
-                    <div class="formats-box">
-                        <span class="format-tag">JPG</span>
-                        <span class="format-tag">JPEG</span>
-                        <span class="format-tag">PNG</span>
-                        <span class="format-tag">WEBP</span>
-                    </div>
-                    <input id="acc-foto-file" type="file" accept="image/*" style="display: none;">
-                </div>
-                
-                <div class="preview-wrapper">
-                    <img id="avatar-preview" class="photo-preview" src="mu.png" alt="Prévia">
-                    <span class="preview-info" id="preview-filename">Nenhum arquivo modificado</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Vincular Linhagem (Trono/Casa)</label>
-                <div class="custom-dropdown" id="casaDropdown">
-                    <div class="dropdown-selected" id="dropdownSelected">
-                        <div class="selected-info">
-                            <img id="currentCasaImg" src="reinosdemavul/ashen.png" alt="Brasão">
-                            <span id="currentCasaNome">Ashen</span>
-                        </div>
-                        <div class="dropdown-arrow"></div>
-                    </div>
-                    
-                    <div class="dropdown-grid" id="dropdownGrid">
-                        <div class="dropdown-item selected" data-casa="Ashen" data-img="reinosdemavul/ashen.png">
-                            <img src="reinosdemavul/ashen.png" alt="Ashen">
-                            <span>Ashen</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Barchyro" data-img="reinosdemavul/barchyro.png">
-                            <img src="reinosdemavul/barchyro.png" alt="Barchyro">
-                            <span>Barchyro</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Blakah" data-img="reinosdemavul/blakah.png">
-                            <img src="reinosdemavul/blakah.png" alt="Blakah">
-                            <span>Blakah</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Bolynas" data-img="reinosdemavul/bolynas.png">
-                            <img src="reinosdemavul/bolynas.png" alt="Bolynas">
-                            <span>Bolynas</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Brakemir" data-img="reinosdemavul/brakemir.png">
-                            <img src="reinosdemavul/brakemir.png" alt="Brakemir">
-                            <span>Brakemir</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Cervindor" data-img="reinosdemavul/cervindor.png">
-                            <img src="reinosdemavul/cervindor.png" alt="Cervindor">
-                            <span>Cervindor</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Cosnalia" data-img="reinosdemavul/cosnalia.png">
-                            <img src="reinosdemavul/cosnalia.png" alt="Cosnalia">
-                            <span>Cosnalia</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Drakorvy" data-img="reinosdemavul/drakorvy.png">
-                            <img src="reinosdemavul/drakorvy.png" alt="Drakorvy">
-                            <span>Drakorvy</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Fartally" data-img="reinosdemavul/fartally.png">
-                            <img src="reinosdemavul/fartally.png" alt="Fartally">
-                            <span>Fartally</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Flamaryn" data-img="reinosdemavul/flamaryn.png">
-                            <img src="reinosdemavul/flamaryn.png" alt="Flamaryn">
-                            <span>Flamaryn</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Kaldarion" data-img="reinosdemavul/kaldarion.png">
-                            <img src="reinosdemavul/kaldarion.png" alt="Kaldarion">
-                            <span>Kaldarion</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Klavar" data-img="reinosdemavul/klavar.png">
-                            <img src="reinosdemavul/klavar.png" alt="Klavar">
-                            <span>Klavar</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="acc-nome">Nome completo *</label>
-                <input id="acc-nome" type="text" placeholder="Seu nome oficial">
-            </div>
-            <div class="form-group">
-                <label for="acc-endereco">Endereço</label>
-                <input id="acc-endereco" type="text" placeholder="Rua, Número, Bairro">
-            </div>
-            <div class="form-group">
-                <label for="acc-cep">CEP</label>
-                <input id="acc-cep" type="text" placeholder="00000-000">
-            </div>
-            <div class="form-group">
-                <label for="acc-telefone">Número de Telefone</label>
-                <input id="acc-telefone" type="text" placeholder="(00) 00000-0000">
-            </div>
-            <div class="form-group">
-                <label for="acc-cpf">CPF</label>
-                <input id="acc-cpf" type="text" placeholder="000.000.000-00">
-            </div>
-            <div class="modal-actions">
-                <button id="closeModalBtn" class="btn-cancel">Cancelar</button>
-                <button id="saveAccountBtn" class="forum-btn">Salvar</button>
-            </div>
-        </div>
+    <!-- PAINEL DE INFORMAÇÕES (Com as chaves corrigidas: 'idade' e 'Trono') -->
+    <div class="info-panel" id="infoPanel">
+        <h2 id="panelTerritorioNome">Território</h2>
+        <div class="info-field"><span class="info-label">Trono:</span> <span id="panelTrono">-</span></div>
+        <div class="info-field"><span class="info-label">Idade:</span> <span id="panelIdade">-</span></div>
+        <div class="info-field"><span class="info-label">Cultura:</span> <span id="panelCultura">-</span></div>
     </div>
 
-    <header>
-        <div class="borda-lateral borda-esquerda"></div>
-        <div class="borda-lateral borda-direita"></div>
+    <!-- ELEMENTOS DE ÁUDIO INTEGRADOS -->
+    <audio id="bgMusic" src="ae.mp3" loop></audio>
+    <audio id="clickSound" src="lohy.mp3"></audio>
 
-        <div class="logo-area">
-            <img src="triwo.png" alt="Triohnte" class="img-titulo">
-        </div>
-         
-        <nav>
-            <ul>
-                <li><a href="rm.html">Ruínas de Mavul</a></li>
-                <li><a href="tw.html">Terras de Walingardyn</a></li>
-                <li><a href="cw.html">Compêndio Walingardyano</a></li>
-                <li><a href="ap.html">Estruturas de Poder</a></li>
-                <li><a href="poe.html">Topografia de Walingardyn</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <section class="intro-text">
-            <h2>O Legado</h2>
-            <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos devido a separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pode ser uma "pessoa normal", momentos de maior conexão com a realidade social eram abafados por batalhas judiciais. Nas palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
-            <p>Tal problem se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
-            <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo. 
-
-Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto final no desgoverno da própria história e reescrever o destino. Isso é a arte, um baita chute no saco do universo.</p>
-        </section>
-
-        <section class="lore-grid">
-            <a href="panteao.html">
-                <div class="card">
-                    <h3>O Panteão dos Deuses</h3>
-                    <p>Onde estão os deuses quando as cidades queimam? Conheça os mitos sobre as divindades que ajudaram a moldar civilizações pelo mundo de Walingardyn.</p>
-                </div>
-            </a>
-
-            <a href="contorno.html">
-                <div class="card">
-                    <h3>Contorno de Triohnte</h3>
-                    <p>Uma exploração pelas regiões de Triohnte, onde a própria geografia e clima parecem conspirar contra a sanidade dos viajantes.</p>
-                </div>
-            </a>
-
-            <a href="conflito.html">
-                <div class="card">
-                    <h3>Grandes Conflitos</h3>
-                    <p>Crônicas sobre as guerras devastadoras e revoltas dinásticas que dividiram as grandes casas de Triohnte ao longo dos séculos.</p>
-                </div>
-            </a>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-logo-img"></div>
-    </footer>
+    <!-- SCRIPTS DO FIREBASE (Substitua pelas suas chaves se necessário) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const dropdown = document.getElementById('casaDropdown');
-            const dropdownSelected = document.getElementById('dropdownSelected');
-            const dropdownItems = document.querySelectorAll('.dropdown-item');
-            const currentImg = document.getElementById('currentCasaImg');
-            const currentNome = document.getElementById('currentCasaNome');
+        // ==========================================================================
+        // 4. CONFIGURAÇÃO DO FIREBASE REALTIME DATABASE
+        // ==========================================================================
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "triohnte.firebaseapp.com",
+            databaseURL: "https://triohnte-default-rtdb.firebaseio.com",
+            projectId: "triohnte",
+            storageBucket: "triohnte.appspot.com",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+        
+        // Inicializa o Firebase apenas se as chaves forem preenchidas
+        if(firebaseConfig.apiKey !== "SUA_API_KEY") {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = typeof firebase !== 'undefined' ? firebase.database() : null;
 
-            // Abrir e fechar o menu ao clicar
-            dropdownSelected.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dropdown.classList.toggle('active');
-            });
+        // ==========================================================================
+        // 5. PROTEÇÃO DE CONTEÚDO (Anti-Cópia e Printscreen)
+        // ==========================================================================
+        document.addEventListener('contextmenu', e => e.preventDefault()); // Bloqueia clique direito
+        document.addEventListener('selectstart', e => e.preventDefault()); // Bloqueia seleção de texto
+        
+        document.addEventListener('keydown', e => {
+            // Bloqueia Ctrl+S, Ctrl+U, Ctrl+Shift+I e a tecla PrintScreen
+            if (e.ctrlKey && (e.key === 's' || e.key === 'u' || e.key === 'I')) e.preventDefault();
+            if (e.key === 'PrintScreen') {
+                navigator.clipboard.writeText(''); // Limpa a área de transferência
+                alert('Capturas de tela não são permitidas nesta página.');
+            }
+        });
 
-            // Seleção de cada item da grade
-            dropdownItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    
-                    const casaValue = item.getAttribute('data-casa');
-                    const imgPath = item.getAttribute('data-img');
+        // ==========================================================================
+        // 6. MOTOR DO MAPA (Canvas, Zoom Mouse-Wheel, Click e Arrastar)
+        // ==========================================================================
+        const canvas = document.getElementById('mapCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let scale = 1.0;
+        let offsetX = 0;
+        let offsetY = 0;
+        let isDragging = false;
+        let startX, startY;
 
-                    // Atualiza o cabeçalho selecionado
-                    currentNome.textContent = casaValue;
-                    currentImg.src = imgPath;
+        const mapImg = new Image();
+        mapImg.src = 'tryu.png'; // Sua imagem principal carregada no repositório
 
-                    // Altera a classe visual do selecionado
-                    dropdownItems.forEach(i => i.classList.remove('selected'));
-                    item.classList.add('selected');
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawMap();
+        }
 
-                    // Fecha o menu
-                    dropdown.classList.remove('active');
+        function drawMap() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(canvas.width / 2 + offsetX, canvas.height / 2 + offsetY);
+            ctx.scale(scale, scale);
+            if (mapImg.complete) {
+                ctx.drawImage(mapImg, -mapImg.width / 2, -mapImg.height / 2);
+            } else {
+                ctx.fillStyle = '#111';
+                ctx.fillRect(-200, -200, 400, 400);
+            }
+            ctx.restore();
+        }
 
-                    // Aqui você pode disparar qualquer evento do Firebase para salvar a alteração se desejar
-                    console.log(`Casa vinculada alterada para: ${casaValue}`);
+        mapImg.onload = drawMap;
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Arrastar o mapa com o mouse
+        canvas.addEventListener('mousedown', e => {
+            isDragging = true;
+            startX = e.clientX - offsetX;
+            startY = e.clientY - offsetY;
+        });
+
+        window.addEventListener('mousemove', e => {
+            if (!isDragging) return;
+            offsetX = e.clientX - startX;
+            offsetY = e.clientY - startY;
+            drawMap();
+        });
+
+        window.addEventListener('mouseup', () => isDragging = false);
+
+        // Zoom com a roda do mouse (Mouse Wheel Zoom)
+        canvas.addEventListener('wheel', e => {
+            e.preventDefault();
+            const zoomFactor = 1.1;
+            if (e.deltaY < 0) {
+                scale *= zoomFactor;
+            } else {
+                scale /= zoomFactor;
+            }
+            scale = Math.min(Math.max(scale, 0.5), 4.0); // Limita o zoom entre 0.5x e 4x
+            drawMap();
+        });
+
+        // Clique no Mapa e ativação de Áudio Localizado
+        canvas.addEventListener('click', e => {
+            // Toca a música ambiente no primeiro clique caso o navegador tenha bloqueado
+            const bgMusic = document.getElementById('bgMusic');
+            if(bgMusic.paused) bgMusic.play().catch(() => {});
+
+            // Toca o efeito sonoro de seleção de território
+            const clickSound = document.getElementById('clickSound');
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => {});
+
+            // Exemplo de exibição do painel (Em produção, você calculará os eixos do clique)
+            exibirPainelTerritorio("Reino de Mavul");
+        });
+
+        function exibirPainelTerritorio(nomeTerritorio) {
+            document.getElementById('panelTerritorioNome').textContent = nomeTerritorio;
+            
+            if (database) {
+                // Puxa as informações dinâmicas direto do Firebase Realtime Database
+                database.ref('territorios/' + nomeTerritorio).once('value').then(snapshot => {
+                    const data = snapshot.val() || {};
+                    document.getElementById('panelTrono').textContent = data.Trono || "Desconhecido";
+                    document.getElementById('panelIdade').textContent = data.idade || "-"; // Campo corrigido de ididade para idade
+                    document.getElementById('panelCultura').textContent = data.cultura || "-";
                 });
-            });
+            } else {
+                // Fallback de exibição sem banco configurado
+                document.getElementById('panelTrono').textContent = "Mavul";
+                document.getElementById('panelIdade').textContent = "1200 anos";
+                document.getElementById('panelCultura').textContent = "Triohnte Tradicional";
+            }
+            document.getElementById('infoPanel').style.display = 'block';
+        }
 
-            // Fechar o menu se clicar em qualquer outra parte do documento
-            document.addEventListener('click', () => {
-                dropdown.classList.remove('active');
+        // ==========================================================================
+        // 7. LÓGICA DE FUNCIONAMENTO DO DROPDOWN REESTILIZADO
+        // ==========================================================================
+        const dropdown = document.getElementById('reinoDropdown');
+        const header = document.getElementById('dropdownHeader');
+        const items = document.querySelectorAll('.dropdown-item');
+        const selectedNome = document.getElementById('selectedCasaNome');
+        const selectedImg = document.getElementById('selectedCasaImg');
+
+        // Alternar abertura do menu
+        header.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+        });
+
+        // Fechar se clicar no mapa
+        document.addEventListener('click', () => dropdown.classList.remove('open'));
+
+        // Seleção de itens integrada salvando com minúsculo no servidor
+        items.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const casa = item.getAttribute('data-casa');
+                const arquivoMinusculo = casa.toLowerCase();
+
+                // Atualiza a interface superior imediatamente
+                selectedNome.textContent = casa.toUpperCase();
+                selectedImg.src = `reinosdemavul/${arquivoMinusculo}.png`;
+
+                // Altera as classes de seleção
+                items.forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+
+                dropdown.classList.remove('open');
+
+                // Atualiza a escolha do Trono do usuário no Firebase
+                if (database) {
+                    database.ref('usuarios/atual/casa').set(casa);
+                }
+                console.log(`Casa atualizada no trono: ${casa}`);
             });
         });
+
+        // Função para recuperar a preferência salva do usuário ao carregar a página
+        function carregarConfiguracoesUsuario() {
+            if (database) {
+                database.ref('usuarios/atual/casa').once('value').then(snapshot => {
+                    const casaSalva = snapshot.val();
+                    if (casaSalva) {
+                        const arquivoMinusculo = casaSalva.toLowerCase();
+                        selectedNome.textContent = casaSalva.toUpperCase();
+                        selectedImg.src = `reinosdemavul/${arquivoMinusculo}.png`;
+                        
+                        items.forEach(item => {
+                            if(item.getAttribute('data-casa').toLowerCase() === arquivoMinusculo) {
+                                item.classList.add('selected');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+        
+        window.onload = () => {
+            carregarConfiguracoesUsuario();
+        };
     </script>
 </body>
 </html>
