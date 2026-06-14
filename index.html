@@ -1038,74 +1038,62 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
     <script>
 
 <script>
-        const firebaseConfig = {
-    apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
-    authDomain: "triohnte-database.firebaseapp.com",
-    databaseURL: "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app", 
-    projectId: "triohnte-database",
-    appId: "1:127473963183:web:c071072d846a8d7240045a"
-};
+    const firebaseConfig = {
+        apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
+        authDomain: "triohnte-database.firebaseapp.com",
+        databaseURL: "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app", 
+        projectId: "triohnte-database",
+        appId: "1:127473963183:web:c071072d846a8d7240045a"
+    };
 
-if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
-const database = firebase.database();
+    const auth = firebase.auth();
+    const database = firebase.database();
 
-let usuarioAtual = null;
-let base64ImagemSelecionada = ""; 
-let casaSelecionada = ""; 
+    // Definição das variáveis de interface
+    const userGreeting = document.getElementById("user-greeting");
+    const container = document.getElementById("forumPosts");
+    const input = document.getElementById("forumInput");
+    const btn = document.getElementById("publishBtn");
 
-document.addEventListener("DOMContentLoaded", () => {
+    let usuarioAtual = null;
+    let base64ImagemSelecionada = ""; 
+    let casaSelecionada = ""; 
 
-    const loginBtn = document.getElementById("login-btn");
-    const signupBtn = document.getElementById("signup-btn");
-    const emailField = document.getElementById("email-field");
-    const passField = document.getElementById("pass-field");
+    document.addEventListener("DOMContentLoaded", () => {
+        const loginBtn = document.getElementById("login-btn");
+        const signupBtn = document.getElementById("signup-btn");
+        const emailField = document.getElementById("email-field");
+        const passField = document.getElementById("pass-field");
 
-    if (!loginBtn || !signupBtn || !emailField || !passField) {
-        console.warn("Campos de auth não encontrados");
-        return;
-    }
+        // 🔐 LOGIN
+        if (loginBtn) {
+            loginBtn.addEventListener("click", () => {
+                const email = emailField.value.trim();
+                const password = passField.value.trim();
+                if (!email || !password) return;
 
-    // 🔐 LOGIN
-    loginBtn.addEventListener("click", () => {
-        const email = emailField.value.trim();
-        const password = passField.value.trim();
-
-        if (!email || !password) return;
-
-        firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(() => {
-                console.log("Login realizado");
-            })
-            .catch((err) => {
-                alert("Erro ao entrar: " + err.message);
+                auth.signInWithEmailAndPassword(email, password)
+                    .catch((err) => alert("Erro ao entrar: " + err.message));
             });
+        }
+
+        // 🧾 REGISTRO
+        if (signupBtn) {
+            signupBtn.addEventListener("click", () => {
+                const email = emailField.value.trim();
+                const password = passField.value.trim();
+                if (!email || !password) return;
+
+                auth.createUserWithEmailAndPassword(email, password)
+                    .catch((err) => alert("Erro ao registrar: " + err.message));
+            });
+        }
     });
 
-    // 🧾 REGISTRO
-    signupBtn.addEventListener("click", () => {
-        const email = emailField.value.trim();
-        const password = passField.value.trim();
-
-        if (!email || !password) return;
-
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then(() => {
-                console.log("Usuário criado");
-            })
-            .catch((err) => {
-                alert("Erro ao registrar: " + err.message);
-            });
-    });
-
-});
-
-    // =========================
-    // 🔥 LOGIN SEGURO (FIX CRÍTICO)
-    // =========================
+    // 🔥 MONITORAMENTO DE ESTADO
     auth.onAuthStateChanged((user) => {
-
         const authContainer = document.getElementById('auth-container');
         const authSection = document.getElementById('auth-section');
         const userInfo = document.getElementById('user-info');
@@ -1114,11 +1102,9 @@ document.addEventListener("DOMContentLoaded", () => {
         usuarioAtual = user;
 
         if (!user) {
-            usuarioAtual = null;
             if (authContainer) authContainer.classList.remove('hidden');
             if (authSection) authSection.classList.remove('hidden');
             if (userInfo) userInfo.classList.add('hidden');
-            if (modal) modal.classList.remove('active');
             return;
         }
 
@@ -1127,107 +1113,50 @@ document.addEventListener("DOMContentLoaded", () => {
         if (userInfo) userInfo.classList.remove('hidden');
 
         database.ref('usuarios/' + user.uid).on('value', (snap) => {
-
             const d = snap.val();
-
             if (!d) return;
 
             const primeiroNome = (d.nome ? d.nome.split(" ")[0] : "Usuário");
             const casaTexto = d.casa ? `, da casa ${d.casa}` : "";
 
-            if (userGreeting) {
-                userGreeting.textContent = `Olá, ${primeiroNome}${casaTexto}`;
-            }
+            if (userGreeting) userGreeting.textContent = `Olá, ${primeiroNome}${casaTexto}`;
         });
     });
 
-    // =========================
-    // 🧠 POST (SEM MEXER NA ESTRUTURA)
-    // =========================
+    // 🧠 POSTAGENS
     if (btn) {
         btn.onclick = () => {
-
             const texto = input?.value?.trim();
             if (!texto || !usuarioAtual) return;
 
-            const novoPost = {
+            database.ref('posts').push({
                 author: usuarioAtual.email || "Visitante",
                 nome: usuarioAtual.displayName || "Usuário",
-                casa: casaSelecionada || "",
-                foto: base64ImagemSelecionada || "mu.png",
-                casaImg: casaSelecionada ? `reinosdemavul/${casaSelecionada.toLowerCase()}.png` : "",
                 content: texto,
                 timestamp: Date.now()
-            };
-
-            database.ref('posts').push(novoPost);
+            });
             input.value = "";
         };
     }
 
-    // =========================
-    // 🧠 RENDER POSTS (ROBUSTO)
-    // =========================
+    // 📡 RENDERIZAR POSTS
     database.ref('posts').on('value', (snapshot) => {
-
         if (!container) return;
-
         const posts = snapshot.val();
         container.innerHTML = "";
-
         if (!posts) return;
 
-        const arr = Object.values(posts).sort((a,b)=>b.timestamp-a.timestamp);
-
-        arr.forEach(post => {
-
+        Object.values(posts).sort((a,b) => b.timestamp - a.timestamp).forEach(post => {
             const div = document.createElement("div");
             div.className = "post-card";
-
             div.innerHTML = `
                 <div class="post-header">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${post.foto || 'mu.png'}" 
-                             style="width:28px;height:28px;border-radius:50%;border:1px solid #c59d5f;object-fit:cover;">
-
-                        <span class="post-author">${post.nome || "Usuário"}</span>
-
-                        ${post.casaImg ? `
-                            <img src="${post.casaImg}" style="width:20px;height:20px;">
-                        ` : ""}
-                    </div>
-
-                    <span class="post-date">
-                        ${post.timestamp ? new Date(post.timestamp).toLocaleString() : ""}
-                    </span>
+                    <span class="post-author">${post.nome || "Usuário"}</span>
+                    <span class="post-date">${new Date(post.timestamp).toLocaleString()}</span>
                 </div>
-
                 <div class="post-content">${post.content || ""}</div>
             `;
-
             container.appendChild(div);
         });
     });
-
-    // =========================
-    // 🎵 MÚSICA (NÃO QUEBRA MAIS NADA)
-    // =========================
-    const music = document.getElementById("bg-music");
-    const volumeControl = document.getElementById("volume-control");
-
-    if (music && volumeControl) {
-
-        document.body.addEventListener("click", () => {
-            music.volume = volumeControl.value || 0.2;
-            music.play().catch(() => {});
-        }, { once: true });
-
-        volumeControl.addEventListener("input", () => {
-            music.volume = volumeControl.value;
-        });
-    }
-
-});
-    </script>
-</body>
-</html>
+</script>
