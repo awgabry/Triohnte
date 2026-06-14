@@ -791,31 +791,56 @@
             <div class="form-group">
                 <label>Vincular Linhagem (Trono/Casa)</label>
                 <div class="custom-dropdown" id="casaDropdown">
-                    <div class="dropdown-selected" id="dropdownSelected">
-                        <div class="selected-info">
-                            <img src="mu.png" id="selected-casa-img" alt="Ícone">
-                            <span id="selected-casa-nome">Nenhuma linhagem escolhida</span>
-                        </div>
-                        <div class="dropdown-arrow"></div>
-                    </div>
                     <div class="dropdown-grid" id="dropdownGrid">
-                        <div class="dropdown-item" data-casa="Niwdem" data-img="reinosdemavul/Niwdem.png">
-                            <img src="reinosdemavul/Niwdem.png" alt="Niwdem">
-                            <span>Niwdem</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Agaroff" data-img="reinosdemavul/Agaroff.png">
-                            <img src="reinosdemavul/Agaroff.png" alt="Agaroff">
-                            <span>Agaroff</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Dyllewalt" data-img="reinosdemavul/Dyllewalt.png">
-                            <img src="reinosdemavul/Dyllewalt.png" alt="Dyllewalt">
-                            <span>Dyllewalt</span>
-                        </div>
-                        <div class="dropdown-item" data-casa="Mavul" data-img="reinosdemavul/Mavul.png">
-                            <img src="reinosdemavul/Mavul.png" alt="Mavul">
-                            <span>Mavul</span>
-                        </div>
-                    </div>
+    <div class="dropdown-item" data-casa="Ashen" data-img="reinosdemavul/ashen.png">
+        <img src="reinosdemavul/ashen.png" alt="Ashen">
+        <span>Ashen</span>
+    </div>
+    <div class="dropdown-item" data-casa="Barchyro" data-img="reinosdemavul/barchyro.png">
+        <img src="reinosdemavul/barchyro.png" alt="Barchyro">
+        <span>Barchyro</span>
+    </div>
+    <div class="dropdown-item" data-casa="Blakah" data-img="reinosdemavul/blakah.png">
+        <img src="reinosdemavul/blakah.png" alt="Blakah">
+        <span>Blakah</span>
+    </div>
+    <div class="dropdown-item" data-casa="Bolynas" data-img="reinosdemavul/bolynas.png">
+        <img src="reinosdemavul/bolynas.png" alt="Bolynas">
+        <span>Bolynas</span>
+    </div>
+    <div class="dropdown-item" data-casa="Brakemir" data-img="reinosdemavul/brakemir.png">
+        <img src="reinosdemavul/brakemir.png" alt="Brakemir">
+        <span>Brakemir</span>
+    </div>
+    <div class="dropdown-item" data-casa="Cervindor" data-img="reinosdemavul/cervindor.png">
+        <img src="reinosdemavul/cervindor.png" alt="Cervindor">
+        <span>Cervindor</span>
+    </div>
+    <div class="dropdown-item" data-casa="Cosnalia" data-img="reinosdemavul/cosnalia.png">
+        <img src="reinosdemavul/cosnalia.png" alt="Cosnalia">
+        <span>Cosnalia</span>
+    </div>
+    <div class="dropdown-item" data-casa="Drakorvy" data-img="reinosdemavul/drakorvy.png">
+        <img src="reinosdemavul/drakorvy.png" alt="Drakorvy">
+        <span>Drakorvy</span>
+    </div>
+    <div class="dropdown-item" data-casa="Fartally" data-img="reinosdemavul/fartally.png">
+        <img src="reinosdemavul/fartally.png" alt="Fartally">
+        <span>Fartally</span>
+    </div>
+    <div class="dropdown-item" data-casa="Flamaryn" data-img="reinosdemavul/flamaryn.png">
+        <img src="reinosdemavul/flamaryn.png" alt="Flamaryn">
+        <span>Flamaryn</span>
+    </div>
+    <div class="dropdown-item" data-casa="Kaldarion" data-img="reinosdemavul/kaldarion.png">
+        <img src="reinosdemavul/kaldarion.png" alt="Kaldarion">
+        <span>Kaldarion</span>
+    </div>
+    <div class="dropdown-item" data-casa="Klavar" data-img="reinosdemavul/klavar.png">
+        <img src="reinosdemavul/klavar.png" alt="Klavar">
+        <span>Klavar</span>
+    </div>
+</div>
                 </div>
             </div>
 
@@ -1119,23 +1144,22 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                             }
 
                             casaSelecionada = d.casa || "";
-                            if (casaSelecionada) {
-                                if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
-                                dropdownItems.forEach(item => {
-                                    if (item.getAttribute('data-casa') === casaSelecionada) {
-                                        item.classList.add('selected');
-                                        if (selectedCasaImg) selectedCasaImg.src = item.getAttribute('data-img');
-                                    } else {
-                                        item.classList.remove('selected');
-                                    }
-                                });
-                            } else {
-                                if (selectedCasaNome) selectedCasaNome.textContent = "Nenhuma linhagem escolhida";
-                                if (selectedCasaImg) selectedCasaImg.src = "mu.png";
-                                dropdownItems.forEach(i => i.classList.remove('selected'));
-                            }
-                        });
-                    }
+if (casaSelecionada) {
+    if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
+    
+    // Força o caminho correto baseado no nome da casa salvo em minúsculo
+    if (selectedCasaImg) {
+        selectedCasaImg.src = `reinosdemavul/${casaSelecionada.toLowerCase()}.png`;
+    }
+    
+    dropdownItems.forEach(item => {
+        if (item.getAttribute('data-casa').toLowerCase() === casaSelecionada.toLowerCase()) {
+            item.classList.add('selected');
+        } else {
+            item.classList.remove('selected');
+        }
+    });
+}
                     modal.classList.add('active');
                 };
             }
