@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" href="mu.png">
 
     <style>
+        /* --- ESTILIZAÇÃO CSS OTIMIZADA --- */
         * {
             margin: 0;
             padding: 0;
@@ -156,6 +157,7 @@
         }
         .intro-text p { font-size: 1.3rem; font-style: italic; margin-bottom: 20px; }
 
+        /* --- GRID E CARDS --- */
         .lore-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -194,6 +196,7 @@
         .card:hover::before { transform: scaleY(1); }
         .card h3 { font-family: 'Cinzel', serif; margin-bottom: 20px; font-size: 1.4rem; letter-spacing: 1px; }
 
+        /* --- BARRA DE PROGRESSO --- */
         .progress-section {
             text-align: center;
             background: #0a0a0a;
@@ -237,6 +240,7 @@
             100% { box-shadow: 0 0 20px rgba(243, 225, 181, 0.6); }
         }
 
+        /* --- MINI FÓRUM / ATUALIZAÇÕES --- */
         .forum-section {
             background: #0a0a0a;
             padding: 50px 40px;
@@ -258,7 +262,12 @@
             gap: 15px;
             margin-bottom: 40px;
             padding-bottom: 30px;
-            border-bottom: 1px dashed #222; 
+            border-bottom: 1px dashed transparent; 
+            transition: border-color 0.3s;
+        }
+
+        .forum-form.has-posts {
+            border-bottom-color: #222;
         }
 
         .forum-form textarea {
@@ -350,26 +359,34 @@
 <body>
 
     <div class="vignette"></div>
-    <div class="borda-lateral borda-esquerda"></div>
-    <div class="borda-lateral borda-direita"></div>
 
     <header>
-        <div class="img-titulo">Triohnte</div>
+        <div class="borda-lateral borda-esquerda"></div>
+        <div class="borda-lateral borda-direita"></div>
+
+        <div class="logo-area">
+            <img src="triwo.png" alt="Triohnte" class="img-titulo">
+        </div>
+         
         <nav>
             <ul>
-                <li><a href="#inicio">Início</a></li>
-                <li><a href="topografia.html">Topografia de Walingardyn</a></li>
-                <li><a href="#forum">Mural</a></li>
+                <li><a href="rm.html">Ruínas de Mavul</a></li>
+                <li><a href="tw.html">Terras de Walingardyn</a></li>
+                <li><a href="cw.html">Compêndio Walingardyano</a></li>
+                <li><a href="ap.html">Estruturas de Poder</a></li>
+                <li><a href="poe.html">Topografia de Triohnte</a></li>
             </ul>
         </nav>
     </header>
 
-    <main id="inicio">
+    <main>
         <section class="intro-text">
             <h2>O Legado</h2>
-            <p>Triohnte teve um início humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos devido à separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pôde ser uma "pessoa normal", momentos de maior conexão com a realidade social eram abafados por batalhas judiciais. Nas palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
-            <p>Tal problema se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
-            <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das eras se provou um prazo impossível. Assim o autor estendeu a caução por até 7 anos, prazo que terá seu fim logo. Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto final no desgoverno da própria história e reescrever o destino. Isso é a arte, um baita chute no saco do universo.</p>
+            <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos devido a separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pode ser uma "pessoa normal", momentos de maior conexão com a realidade social eram abafados por batalhas judiciais. Nas palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
+            <p>Tal problem se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
+            <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo. 
+
+Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto final no desgoverno da própria história e reescrever o destino. Isso é a arte, um baita chute no saco do universo.</p>
         </section>
 
         <section class="lore-grid">
@@ -382,119 +399,4 @@
 
             <a href="contorno.html">
                 <div class="card">
-                    <h3>Contorno de Triohnte</h3>
-                    <p>Uma exploração pelas regiões de Triohnte, onde a própria geografia e clima parecem conspirar contra a sanidade dos viajantes.</p>
-                </div>
-            </a>
-
-            <a href="conflito.html">
-                <div class="card">
-                    <h3>Conflitos Primordiais</h3>
-                    <p>O que sabemos sobre a profecia do herdeiro? Como ela interfere diretamente na história de Triohnte e de Walingardyn, mas não só a profecia é a máscara das guerras.</p>
-                </div>
-            </a>
-
-            <a href="motivos.html">
-                <div class="card">
-                    <h3>Motivos de Guerra</h3>
-                    <p>As casas nobres e facções que ainda lutam por poder entre as ruínas do que um dia foi um grande império através das Eras.</p>
-                </div>
-            </a>
-
-            <a href="calen.html">
-                <div class="card">
-                    <h3>Calendário Triohntino</h3>
-                    <p>Entenda o tempo em Triohnte e em Walingardyn.</p>
-                </div>
-            </a>
-        </section>
-
-        <section class="progress-section">
-            <h2>Progresso do Volume II</h2>
-            <div class="progress-container">
-                <div class="progress-bar"></div>
-            </div>
-            <div class="progress-text">46% Concluído</div>
-        </section>
-
-        <section class="forum-section" id="forum">
-            <h2>Mural de Atualizações</h2>
-            <form class="forum-form" id="forumForm">
-                <textarea id="postInput" placeholder="Escreva algo para o mural de Triohnte..." rows="4" required></textarea>
-                <button type="submit" class="forum-btn">Publicar</button>
-            </form>
-
-            <div class="forum-posts" id="forumPosts">
-                </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-logo-img">Triohnte</div>
-    </footer>
-
-    <script>
-        // Sistema Base do Fórum
-        const forumPosts = document.getElementById('forumPosts');
-        const forumForm = document.getElementById('forumForm');
-        const postInput = document.getElementById('postInput');
-
-        // Posts iniciais baseados no histórico
-        const initialPosts = [
-            {
-                author: "Explorador de Walingardyn",
-                date: "14 de Junho de 2026",
-                content: "oi"
-            },
-            {
-                author: "Autor",
-                date: "14 de Junho de 2026",
-                content: "Primeiro autor que eu acompanho e tive o prazer de conhecer um pouco."
-            },
-            {
-                author: "Autor",
-                date: "10 de Junho de 2026",
-                content: "Como está Triohnte atualmente? Exitante, mas grande, inóspito. Finalmente consegui atingir o que eu queria no volume um. Mas ai veio o medo de abusar demais da vontade de meus leitores. Tolice! Nem os tenho ainda, mas é quando tiver? Não. Triohnte não pode se perder de novo num lapso de publicação, interesse e findar no hype. Não passei tanto tempo desenvolvendo para hypar. Tenho que buscar leitores críticos, especialistas interessados em estudar este livro, a fim de fazer sucesso mesmo. Triohnte é grande. Triohnte merece isso."
-            }
-        ];
-
-        function renderPosts() {
-            forumPosts.innerHTML = '';
-            initialPosts.forEach(post => {
-                const postCard = document.createElement('div');
-                postCard.className = 'post-card';
-                postCard.innerHTML = `
-                    <div class="post-header">
-                        <span class="post-author">${post.author}</span>
-                        <span class="post-date">${post.date}</span>
-                    </div>
-                    <div class="post-content">${post.content}</div>
-                `;
-                forumPosts.appendChild(postCard);
-            });
-        }
-
-        forumForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const text = postInput.value.trim();
-            if(text) {
-                const now = new Date();
-                const options = { day: 'numeric', month: 'long', year: 'numeric' };
-                const formattedDate = now.toLocaleDateString('pt-BR', options);
-                
-                initialPosts.unshift({
-                    author: "Autor",
-                    date: formattedDate,
-                    content: text
-                });
-                
-                renderPosts();
-                postInput.value = '';
-            }
-        });
-
-        // Inicializa o mural
-        renderPosts();
-    </script>
-</body>
-</html>
+                    <h3>Contorno de Triohnte
