@@ -1,2081 +1,1044 @@
 <!DOCTYPE html>
-
 <html lang="pt-br">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Triohnte</title>
-
     
-
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
-
     
-
     <link class="image-file" rel="icon" type="image/png" href="mu.png">
 
-
-
     <style>
-
         /* --- ESTILIZAÇÃO CSS OTIMIZADA --- */
-
         * {
-
             margin: 0;
-
             padding: 0;
-
             box-sizing: border-box;
-
         }
-
-
 
         :root {
-
             --gold-gradient: linear-gradient(
-
                 to bottom, 
-
                 #c59d5f 0%,   
-
                 #e3c38f 40%,  
-
                 #f3e1b5 48%, 
-
                 #7a542a 52%, 
-
                 #b88640 60%,  
-
                 #8a5d2e 100%  
-
             );
-
             --gold-shadow: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
-
         }
-
-
 
         .intro-text h2, 
-
         .card h3, 
-
         .progress-section h2,
-
         .forum-section h2,
-
         .auth-section h2,
-
         .footer-logo,
-
         .modal-content h3 {
-
             display: inline-block;
-
             background: var(--gold-gradient);
-
             -webkit-background-clip: text;
-
             -webkit-text-fill-color: transparent;
-
             background-clip: text;
-
             color: transparent;
-
             font-weight: 700;
-
             filter: var(--gold-shadow);
-
         }
-
-
 
         .img-titulo, .footer-logo-img {
-
             background: var(--gold-gradient);
-
             -webkit-mask-image: url('triwo.png');
-
             mask-image: url('triwo.png');
-
             -webkit-mask-size: contain;
-
             mask-size: contain;
-
             -webkit-mask-repeat: no-repeat;
-
             -webkit-mask-position: center;
-
             background-clip: border-box;
-
             object-position: -9999px; 
-
             filter: drop-shadow(0 2px 2px rgba(0,0,0,0.9)) drop-shadow(0 0 5px rgba(212, 163, 86, 0.3));
-
         }
-
-
 
         .img-titulo {
-
             width: 1000px; 
-
             height: 300px; 
-
             max-width: 100%;
-
             display: block;
-
             margin: 0 auto;
-
             animation: flicker 4s infinite alternate;
-
         }
-
-
 
         body {
-
             background-color: #050505;
-
             color: #a39b8f;
-
             font-family: 'Crimson Pro', serif;
-
             line-height: 1.8;
-
             overflow-x: hidden;
-
         }
-
-
 
         .vignette {
-
             position: fixed;
-
             top: 0;
-
             left: 0;
-
             width: 100%;
-
             height: 100%;
-
             box-shadow: inset 0 0 15vw rgba(0,0,0,1);
-
             pointer-events: none;
-
             z-index: 100;
-
         }
-
-
 
         header {
-
             height: 80vh;
-
             display: flex;
-
             flex-direction: column;
-
             justify-content: center;
-
             align-items: center;
-
             text-align: center;
-
             background: linear-gradient(to bottom, rgba(5,5,5,0.4), #050505),
-
                         url('https://raw.githubusercontent.com/awgabry/Triohnte/main/map%203.png'); 
-
             background-size: cover;
-
             background-position: center;
-
             border-bottom: 1px solid #1a0000;
-
             position: relative;
-
         }
-
-
 
         .borda-lateral {
-
             position: absolute;
-
             top: 0;
-
             height: 100%;
-
             width: 40px; 
-
             z-index: 10;
-
             background: var(--gold-gradient);
-
             -webkit-mask-image: url('serd.png');
-
             mask-image: url('serd.png');
-
             -webkit-mask-size: contain;
-
             mask-repeat: repeat-y;
-
             filter: var(--gold-shadow);
-
         }
-
-
 
         .borda-esquerda { left: 10px; }
-
         .borda-direita { right: 10px; transform: scaleX(-1); }
 
-
-
         @keyframes flicker {
-
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-
             20%, 24%, 55% { opacity: 0.8; }
-
         }
-
-
 
         nav { margin-top: 50px; }
-
         nav ul { list-style: none; display: flex; gap: 40px; }
-
         nav a {
-
             text-decoration: none;
-
             color: #888;
-
             font-family: 'Cinzel', serif;
-
             font-size: 0.85rem;
-
             transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-
             letter-spacing: 2px;
-
         }
-
         nav a:hover { color: #fff; text-shadow: 0 0 8px #fff; letter-spacing: 4px; }
 
-
-
         main {
-
             max-width: 900px;
-
             margin: 0 auto;
-
             padding: 100px 30px;
-
             animation: fadeIn 2s ease-out;
-
         }
-
-
 
         @keyframes fadeIn {
-
             from { opacity: 0; transform: translateY(20px); }
-
             to { opacity: 1; transform: translateY(0); }
-
         }
-
-
 
         .intro-text { text-align: center; margin-bottom: 120px; }
-
         .intro-text h2 {
-
             font-family: 'Cinzel', serif;
-
             font-size: 2.5rem; 
-
             margin-bottom: 25px;
-
             text-transform: uppercase;
-
             letter-spacing: 4px;
-
         }
-
         .intro-text p { font-size: 1.3rem; font-style: italic; margin-bottom: 20px; }
 
-
-
         /* --- GRID E CARDS --- */
-
         .lore-grid {
-
             display: grid;
-
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-
             gap: 40px;
-
             align-items: stretch;
-
             margin-bottom: 120px;
-
         }
-
-
 
         .lore-grid a {
-
             text-decoration: none;
-
             color: inherit;
-
             display: flex;
-
         }
-
-
 
         .card {
-
             background: #0a0a0a;
-
             padding: 40px;
-
             border: 1px solid #1a1a1a;
-
             position: relative;
-
             transition: 0.5s;
-
             width: 100%;
-
             display: flex;
-
             flex-direction: column;
-
             flex: 1;
-
         }
-
-
 
         .card::before {
-
             content: '';
-
             position: absolute;
-
             left: 0; top: 0; height: 100%; width: 2px;
-
             background: #ffc88a; 
-
             transform: scaleY(0);
-
             transition: 0.5s;
-
         }
-
         .card:hover { background: #0f0f0f; border-color: #333; }
-
         .card:hover::before { transform: scaleY(1); }
-
         .card h3 { font-family: 'Cinzel', serif; margin-bottom: 20px; font-size: 1.4rem; letter-spacing: 1px; }
 
-
-
         /* --- BARRA DE PROGRESSO --- */
-
         .progress-section {
-
             text-align: center;
-
             background: #0a0a0a;
-
             padding: 50px 40px;
-
             border: 1px solid #1a1a1a;
-
             margin-bottom: 60px;
-
         }
-
         .progress-section h2 {
-
             font-family: 'Cinzel', serif;
-
             font-size: 1.8rem;
-
             margin-bottom: 30px;
-
             text-transform: uppercase;
-
             letter-spacing: 2px;
-
         }
-
         .progress-container {
-
             background-color: #151515;
-
             border-radius: 4px;
-
             padding: 4px;
-
             border: 1px solid #222;
-
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-
             margin-bottom: 15px;
-
         }
-
         .progress-bar {
-
             height: 24px;
-
             width: 46%; 
-
             background: var(--gold-gradient);
-
             border-radius: 2px;
-
             box-shadow: 0 0 10px rgba(197, 157, 95, 0.4);
-
             transition: width 1s ease-in-out;
-
             position: relative;
-
             animation: pulseGlow 3s infinite alternate;
-
         }
-
         .progress-text {
-
             font-family: 'Cinzel', serif;
-
             font-size: 1.1rem;
-
             color: #e3c38f;
-
             letter-spacing: 1px;
-
         }
-
         @keyframes pulseGlow {
-
             0% { box-shadow: 0 0 10px rgba(197, 157, 95, 0.3); }
-
             100% { box-shadow: 0 0 20px rgba(243, 225, 181, 0.6); }
-
         }
-
-
 
         /* --- MINI FÓRUM / ATUALIZAÇÕES --- */
-
         .forum-section {
-
             background: #0a0a0a;
-
             padding: 50px 40px;
-
             border: 1px solid #1a1a1a;
-
             margin-bottom: 60px;
-
         }
-
         .forum-section h2 {
-
             font-family: 'Cinzel', serif;
-
             font-size: 1.8rem;
-
             margin-bottom: 30px;
-
             text-transform: uppercase;
-
             letter-spacing: 2px;
-
             display: block;
-
             text-align: center;
-
         }
-
          
-
         .forum-form {
-
             display: flex;
-
             flex-direction: column;
-
             gap: 15px;
-
             margin-bottom: 40px;
-
             padding-bottom: 30px;
-
             border-bottom: 1px dashed transparent; 
-
             transition: border-color 0.3s;
-
         }
-
-
 
         .forum-form.has-posts {
-
             border-bottom-color: #222;
-
         }
-
-
 
         .forum-form textarea {
-
             background: #050505;
-
             border: 1px solid #222;
-
             color: #a39b8f;
-
             padding: 15px;
-
             font-family: 'Crimson Pro', serif;
-
             font-size: 1.1rem;
-
             resize: none;
-
             border-radius: 4px;
-
             transition: border-color 0.3s;
-
         }
-
         .forum-form textarea:focus {
-
             outline: none;
-
             border-color: #c59d5f;
-
         }
-
         .forum-btn {
-
             align-self: flex-end;
-
             background: var(--gold-gradient);
-
             color: #050505;
-
             border: none;
-
             padding: 10px 25px;
-
             font-family: 'Cinzel', serif;
-
             font-size: 0.9rem;
-
             font-weight: bold;
-
             cursor: pointer;
-
             letter-spacing: 1px;
-
             transition: 0.3s;
-
             box-shadow: var(--gold-shadow);
-
         }
-
         .forum-btn:hover {
-
             filter: brightness(1.2);
-
             box-shadow: 0 0 10px rgba(227, 195, 143, 0.5);
-
         }
-
-
 
         .forum-posts {
-
             display: flex;
-
             flex-direction: column;
-
             gap: 20px;
-
         }
-
         .post-card {
-
             background: #050505;
-
             border: 1px solid #151515;
-
             padding: 25px;
-
             border-left: 3px solid #7a542a;
-
             position: relative;
-
         }
-
         .post-header {
-
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
             margin-bottom: 15px;
-
             font-family: 'Cinzel', serif;
-
             font-size: 0.9rem;
-
         }
-
         .post-author {
-
             color: #e3c38f;
-
             font-weight: bold;
-
             letter-spacing: 1px;
-
         }
-
         .post-date {
-
             color: #555;
-
             font-size: 0.8rem;
-
         }
-
         .post-content {
-
             font-size: 1.1rem;
-
             line-height: 1.6;
-
             color: #8c8579;
-
         }
-
-
 
         /* --- SEÇÃO DE AUTENTICAÇÃO "TORNE-SE UM ALIADO" --- */
-
         .auth-section {
-
             background: #0a0a0a;
-
             padding: 50px 40px;
-
             border: 1px solid #1a1a1a;
-
             text-align: center;
-
         }
-
         .auth-section h2 {
-
             font-family: 'Cinzel', serif;
-
             font-size: 1.8rem;
-
             margin-bottom: 30px;
-
             text-transform: uppercase;
-
             letter-spacing: 2px;
-
         }
-
         .auth-container-block {
-
             display: flex;
-
             justify-content: center;
-
             align-items: center;
-
             gap: 15px;
-
             max-width: 500px;
-
             margin: 0 auto;
-
         }
-
         .auth-container-block input {
-
             background: #000;
-
             border: 1px solid #333;
-
             color: #fff;
-
             padding: 10px 15px;
-
             font-size: 0.95rem;
-
             border-radius: 4px;
-
             outline: none;
-
             width: 100%;
-
             font-family: 'Crimson Pro', serif;
-
         }
-
         .auth-container-block input:focus { border-color: #c59d5f; }
-
         
-
         .auth-actions {
-
             display: flex;
-
             gap: 10px;
-
         }
-
-
 
         /* --- EXIBIÇÃO DE PERFIL / TOPO RIGHT --- */
-
         .top-bar-container {
-
             position: absolute;
-
             top: 20px;
-
             right: 40px;
-
             display: flex;
-
             align-items: center;
-
             gap: 10px;
-
             z-index: 1000;
-
         }
-
         .auth-box {
-
             display: flex;
-
             align-items: center;
-
             gap: 8px;
-
             background: rgba(10, 10, 10, 0.8);
-
             padding: 6px 12px;
-
             border-radius: 4px;
-
             border: 1px solid #222;
-
         }
-
         .auth-btn {
-
             background: var(--gold-gradient);
-
             color: #000;
-
             border: none;
-
             padding: 8px 16px;
-
             font-size: 0.8rem;
-
             font-weight: bold;
-
             border-radius: 3px;
-
             cursor: pointer;
-
             font-family: 'Cinzel', serif;
-
             transition: 0.3s;
-
             white-space: nowrap;
-
         }
-
         .auth-btn:hover { filter: brightness(1.2); }
-
         .user-logged {
-
             color: #e3c38f;
-
             font-family: 'Cinzel', serif;
-
             font-size: 0.9rem;
-
             letter-spacing: 1px;
-
             display: flex;
-
             align-items: center;
-
             gap: 12px;
-
         }
-
         .profile-img-preview-mini {
-
             width: 24px;
-
             height: 24px;
-
             border-radius: 50%;
-
             object-fit: cover;
-
             border: 1px solid #c59d5f;
-
             background-color: #000;
-
         }
-
         .account-link {
-
             color: #c59d5f;
-
             text-decoration: none;
-
             font-size: 0.85rem;
-
             cursor: pointer;
-
             transition: 0.3s;
-
         }
-
         .account-link:hover { color: #f3e1b5; text-shadow: 0 0 5px rgba(243, 225, 181, 0.5); }
-
         .logout-link {
-
             color: #ff4a4a;
-
             text-decoration: none;
-
             font-size: 0.85rem;
-
             cursor: pointer;
-
         }
-
         .logout-link:hover { text-shadow: 0 0 5px #ff4a4a; }
-
         .hidden { display: none !important; }
 
-
-
         /* --- JANELA MODAL DE CONFIGURAÇÃO DE CONTA --- */
-
         .modal-overlay {
-
             position: fixed;
-
             top: 0; left: 0; width: 100%; height: 100%;
-
             background: rgba(0, 0, 0, 0.85);
-
             display: flex;
-
             justify-content: center;
-
             align-items: center;
-
             z-index: 2000;
-
             opacity: 0; pointer-events: none;
-
             transition: opacity 0.4s ease;
-
         }
-
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-
         .modal-content {
-
             background: #0a0a0a;
-
             border: 1px solid #222;
-
             padding: 40px;
-
             width: 90%;
-
             max-width: 500px;
-
             border-radius: 4px;
-
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-
             position: relative;
-
             text-align: left;
-
             max-height: 90vh;
-
             overflow-y: auto;
-
         }
-
         .modal-content h3 {
-
             font-family: 'Cinzel', serif;
-
             font-size: 1.5rem;
-
             margin-bottom: 25px;
-
             letter-spacing: 1px;
-
             display: block;
-
             text-align: center;
-
         }
-
         .form-group {
-
             display: flex;
-
             flex-direction: column;
-
             gap: 6px;
-
             margin-bottom: 16px;
-
         }
-
         .form-group label {
-
             font-family: 'Cinzel', serif;
-
             font-size: 0.8rem;
-
             color: #888;
-
             letter-spacing: 1px;
-
         }
-
         .form-group input {
-
             background: #050505;
-
             border: 1px solid #222;
-
             color: #fff;
-
             padding: 10px 12px;
-
             border-radius: 4px;
-
             font-family: 'Crimson Pro', serif;
-
             font-size: 1rem;
-
             outline: none;
-
             transition: border-color 0.3s;
-
         }
-
         .form-group input:focus { border-color: #c59d5f; }
 
-
-
         /* --- ÁREA DE UPLOAD ESTILO "DRAG & DROP" PREMIUM --- */
-
         .dropzone-container {
-
             border: 2px dashed #333;
-
             background: #050505;
-
             border-radius: 6px;
-
             padding: 30px 20px;
-
             text-align: center;
-
             position: relative;
-
             transition: all 0.3s ease;
-
             display: flex;
-
             flex-direction: column;
-
             align-items: center;
-
             justify-content: center;
-
             gap: 12px;
-
             cursor: pointer;
-
         }
-
         .dropzone-container.dragover {
-
             border-color: #e3c38f;
-
             background: #0e0e0d;
-
             box-shadow: inset 0 0 10px rgba(227, 195, 143, 0.1);
-
         }
-
         .dropzone-text {
-
             font-family: 'Crimson Pro', serif;
-
             font-size: 1.1rem;
-
             color: #a39b8f;
-
         }
-
         .dropzone-btn {
-
             background: var(--gold-gradient);
-
             color: #000;
-
             border: none;
-
             padding: 10px 24px;
-
             border-radius: 30px;
-
             font-family: 'Cinzel', serif;
-
             font-size: 0.85rem;
-
             font-weight: bold;
-
             cursor: pointer;
-
             box-shadow: var(--gold-shadow);
-
             transition: 0.3s ease;
-
             display: flex;
-
             align-items: center;
-
             gap: 8px;
-
         }
-
         .dropzone-btn:hover {
-
             filter: brightness(1.1);
-
             transform: translateY(-1px);
-
         }
-
         .dropzone-subtext {
-
             font-size: 0.85rem;
-
             color: #555;
-
             margin-top: 2px;
-
         }
-
         .formats-box {
-
             display: flex;
-
             gap: 6px;
-
             margin-top: 5px;
-
         }
-
         .format-tag {
-
             background: #111;
-
             border: 1px solid #222;
-
             padding: 2px 6px;
-
             font-size: 0.75rem;
-
             border-radius: 3px;
-
             color: #666;
-
             font-family: monospace;
-
         }
-
         .preview-wrapper {
-
             display: flex;
-
             align-items: center;
-
             gap: 15px;
-
             width: 100%;
-
             margin-top: 5px;
-
             padding-top: 15px;
-
             border-top: 1px solid #151515;
-
         }
-
         .photo-preview {
-
             width: 50px;
-
             height: 50px;
-
             border-radius: 50%;
-
             object-fit: cover;
-
             border: 1px solid #c59d5f;
-
             background: #111;
-
         }
-
         .preview-info {
-
             font-size: 0.9rem;
-
             color: #c59d5f;
-
             font-family: 'Crimson Pro', serif;
-
         }
-
-
 
         /* --- MENU SUSPENSO INTERATIVO DE CASAS (GRADE) --- */
-
         .custom-dropdown {
-
             position: relative;
-
             width: 100%;
-
         }
-
         .dropdown-selected {
-
             background: #050505;
-
             border: 1px solid #222;
-
             color: #fff;
-
             padding: 12px;
-
             border-radius: 4px;
-
             font-family: 'Cinzel', serif;
-
             font-size: 0.9rem;
-
             cursor: pointer;
-
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
-
             transition: border-color 0.3s;
-
         }
-
         .dropdown-selected:hover, .custom-dropdown.active .dropdown-selected {
-
             border-color: #c59d5f;
-
         }
-
         .dropdown-selected .selected-info {
-
             display: flex;
-
             align-items: center;
-
             gap: 10px;
-
         }
-
         .dropdown-selected img {
-
             width: 24px;
-
             height: 24px;
-
             object-fit: contain;
-
         }
-
         .dropdown-grid {
-
             position: absolute;
-
             top: 105%;
-
             left: 0;
-
             width: 100%;
-
             background: #0a0a0a;
-
             border: 1px solid #c59d5f;
-
             border-radius: 4px;
-
             padding: 12px;
-
             z-index: 100;
-
             display: grid;
-
             grid-template-columns: repeat(2, 1fr);
-
             gap: 10px;
-
             box-shadow: 0 8px 25px rgba(0,0,0,0.9);
-
             opacity: 0;
-
             visibility: hidden;
-
             transform: translateY(-10px);
-
             transition: all 0.3s ease;
-
             max-height: 260px;
-
             overflow-y: auto;
-
         }
-
         .custom-dropdown.active .dropdown-grid {
-
             opacity: 1;
-
             visibility: visible;
-
             transform: translateY(0);
-
         }
-
         .dropdown-item {
-
             background: #050505;
-
             border: 1px solid #1a1a1a;
-
             padding: 10px;
-
             border-radius: 4px;
-
             cursor: pointer;
-
             display: flex;
-
             flex-direction: column;
-
             align-items: center;
-
             text-align: center;
-
             gap: 6px;
-
             transition: all 0.2s ease;
-
         }
-
         .dropdown-item:hover {
-
             border-color: #e3c38f;
-
             background: #111;
-
             transform: translateY(-1px);
-
         }
-
         .dropdown-item.selected {
-
             border-color: #c59d5f;
-
             background: rgba(197, 157, 95, 0.05);
-
         }
-
         .dropdown-item img {
-
             width: 40px;
-
             height: 40px;
-
             object-fit: contain;
-
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-
         }
-
         .dropdown-item span {
-
             font-family: 'Cinzel', serif;
-
             font-size: 0.8rem;
-
             color: #a39b8f;
-
             letter-spacing: 1px;
-
         }
-
         .dropdown-item:hover span, .dropdown-item.selected span {
-
             color: #f3e1b5;
-
         }
-
-
 
         .dropdown-arrow {
-
             border: solid #666;
-
             border-width: 0 2px 2px 0;
-
             display: inline-block;
-
             padding: 3px;
-
             transform: rotate(45deg);
-
             transition: transform 0.3s ease;
-
         }
-
         .custom-dropdown.active .dropdown-arrow {
-
             transform: rotate(-135deg);
-
         }
-
-
 
         .modal-actions {
-
             display: flex;
-
             justify-content: flex-end;
-
             gap: 12px;
-
             margin-top: 25px;
-
         }
-
         .btn-cancel {
-
             background: transparent;
-
             border: 1px solid #333;
-
             color: #888;
-
             padding: 10px 20px;
-
             font-family: 'Cinzel', serif;
-
             font-size: 0.85rem;
-
             cursor: pointer;
-
             border-radius: 3px;
-
             transition: 0.3s;
-
         }
-
         .btn-cancel:hover { border-color: #ff4a4a; color: #ff4a4a; }
 
-
-
         footer {
-
             text-align: center;
-
             padding: 100px 20px;
-
             border-top: 1px solid #111;
-
             margin-top: 50px;
-
         }
-
         .footer-logo-img { height: 40px; width: 150px; display: inline-block; }
 
-
-
         @media (max-width: 768px) {
-
             nav ul { flex-direction: column; align-items: center; gap: 20px; }
-
             .intro-text h2 { font-size: 1.8rem; }
-
             .borda-lateral { display: none; }
-
             .progress-section h2, .forum-section h2, .auth-section h2 { font-size: 1.4rem; }
-
             .forum-section, .auth-section { padding: 30px 20px; }
-
             .top-bar-container { position: relative; top: 0; right: 0; justify-content: center; padding: 20px 0; }
-
             .auth-container-block { flex-direction: column; width: 100%; }
-
             .auth-actions { width: 100%; }
-
             .auth-actions button { width: 100%; }
-
             .dropdown-grid { grid-template-columns: 1fr; }
-
         }
-
     </style>
-
 </head>
-
 <body>
-
-
 
     <div class="vignette"></div>
 
-
-
     <div class="top-bar-container">
-
         <div id="user-info" class="auth-box hidden">
-
             <div class="user-logged">
-
                 <img id="user-mini-avatar" class="profile-img-preview-mini hidden" src="" alt="Avatar">
-
                 <span id="user-greeting">Olá, ...</span>
-
                 <span id="account-btn" class="account-link">[Conta]</span>
-
                 <span id="logout-btn" class="logout-link">[Sair]</span>
-
             </div>
-
         </div>
-
     </div>
-
-
 
     <div id="accountModal" class="modal-overlay">
-
         <div class="modal-content">
-
             <h3>Configurações da Conta</h3>
-
             
-
             <div class="form-group">
-
                 <label>Foto de Perfil</label>
-
                 <div id="dropzone" class="dropzone-container">
-
                     <span class="dropzone-text">Arrastar e solte sua imagem aqui</span>
-
                     <button type="button" id="triggerFileBtn" class="dropzone-btn">
-
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-bottom:-2px;"><path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/><path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/></svg>
-
                         Enviar Imagem
-
                     </button>
-
                     <span class="dropzone-subtext">Colar imagem (Ctrl V) ou clicar acima</span>
-
                     <div class="formats-box">
-
                         <span class="format-tag">JPG</span>
-
                         <span class="format-tag">JPEG</span>
-
                         <span class="format-tag">PNG</span>
-
                         <span class="format-tag">WEBP</span>
-
                     </div>
-
                     <input id="acc-foto-file" type="file" accept="image/*" style="display: none;">
-
                 </div>
-
                 
-
                 <div class="preview-wrapper">
-
                     <img id="avatar-preview" class="photo-preview" src="mu.png" alt="Prévia">
-
                     <span class="preview-info" id="preview-filename">Nenhum arquivo modificado</span>
-
                 </div>
-
             </div>
 
-
-
             <div class="form-group">
-
                 <label>Vincular Linhagem</label>
-
                 <div class="custom-dropdown" id="casaDropdown">
-
                     <div class="dropdown-selected" id="dropdownSelected">
-
                         <div class="selected-info">
-
                             <img src="mu.png" id="selected-casa-img" alt="Ícone">
-
                             <span id="selected-casa-nome">Nenhuma linhagem escolhida</span>
-
                         </div>
-
                         <div class="dropdown-arrow"></div>
-
                     </div>
-
                     <div class="dropdown-grid" id="dropdownGrid">
-
                         <div class="dropdown-item" data-casa="Ashen" data-img="reinosdemavul/ashen.png">
-
                             <img src="reinosdemavul/ashen.png" alt="Ashen">
-
                             <span>Ashen</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Barchyro" data-img="reinosdemavul/barchyro.png">
-
                             <img src="reinosdemavul/barchyro.png" alt="Barchyro">
-
                             <span>Barchyro</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Blakah" data-img="reinosdemavul/blakah.png">
-
                             <img src="reinosdemavul/blakah.png" alt="Blakah">
-
                             <span>Blakah</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Bolynas" data-img="reinosdemavul/bolynas.png">
-
                             <img src="reinosdemavul/bolynas.png" alt="Bolynas">
-
                             <span>Bolynas</span>
-
                          </div>
-
                         <div class="dropdown-item" data-casa="Brakemir" data-img="reinosdemavul/brakemir.png">
-
                             <img src="reinosdemavul/brakemir.png" alt="Brakemir">
-
                             <span>Brakemir</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Cervindor" data-img="reinosdemavul/cervindor.png">
-
                             <img src="reinosdemavul/cervindor.png" alt="Cervindor">
-
                             <span>Cervindor</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Cosnalia" data-img="reinosdemavul/cosnalia.png">
-
                             <img src="reinosdemavul/cosnalia.png" alt="Cosnalia">
-
                             <span>Cosnalia</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Fartally" data-img="reinosdemavul/fartally.png">
-
                             <img src="reinosdemavul/fartally.png" alt="Fartally">
-
                             <span>Fartally</span>
-
   </div>
-
                         <div class="dropdown-item" data-casa="Flamaryn" data-img="reinosdemavul/flamaryn.png">
-
                             <img src="reinosdemavul/flamaryn.png" alt="Flamaryn">
-
                             <span>Flamaryn</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Kaldarion" data-img="reinosdemavul/kaldarion.png">
-
                             <img src="reinosdemavul/kaldarion.png" alt="Kaldarion">
-
                             <span>Kaldarion</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Klavar" data-img="reinosdemavul/klavar.png">
-
                             <img src="reinosdemavul/klavar.png" alt="Klavar">
-
                             <span>Klavar</span>
-
 </div>
-
                         <div class="dropdown-item" data-casa="Korsorovyh" data-img="reinosdemavul/korsorovyh.png">
-
                             <img src="reinosdemavul/korsorovyh.png" alt="Korsorovyh">
-
                             <span>Korsorovyh</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Kwadrélya" data-img="reinosdemavul/kwadrélya.png">
-
                             <img src="reinosdemavul/kwadrélya.png" alt="Kwadrélya">
-
                             <span>Kwadrélya</span>
-
 </div>
-
                         <div class="dropdown-item" data-casa="Lemoseryon" data-img="reinosdemavul/lemoseryon.png">
-
                             <img src="reinosdemavul/lemoseryon.png" alt="Lemoseryon">
-
                             <span>Lemoseryon</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Lutraw" data-img="reinosdemavul/lutraw.png">
-
                             <img src="reinosdemavul/lutraw.png" alt="Lutraw">
-
                             <span>Lutraw</span>
-
 </div>
-
                         <div class="dropdown-item" data-casa="Mallavy" data-img="reinosdemavul/mallavy.png">
-
                             <img src="reinosdemavul/mallavy.png" alt="Mallavy">
-
                             <span>Mallavy</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Maravos" data-img="reinosdemavul/maravos.png">
-
                             <img src="reinosdemavul/maravos.png" alt="Maravos">
-
                             <span>Maravos</span>
-
 </div>
-
                         <div class="dropdown-item" data-casa="Maturoz" data-img="reinosdemavul/maturoz.png">
-
                             <img src="reinosdemavul/maturoz.png" alt="Maturoz">
-
                             <span>Maturoz</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Mitrelly" data-img="reinosdemavul/mitrelly.png">
-
                             <img src="reinosdemavul/mitrelly.png" alt="Mitrelly">
-
                             <span>Mitrelly</span>
 
-
-
 </div>
-
                         <div class="dropdown-item" data-casa="Serantha" data-img="reinosdemavul/serantha.png">
-
                             <img src="reinosdemavul/serantha.png" alt="Serantha">
-
                             <span>Serantha</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Suntyse" data-img="reinosdemavul/suntyse.png">
-
                             <img src="reinosdemavul/suntyse.png" alt="Suntyse">
-
                             <span>Suntyse</span>
 
-
-
 </div>
-
                         <div class="dropdown-item" data-casa="Vheynnaris" data-img="reinosdemavul/vheynnaris.png">
-
                             <img src="reinosdemavul/vheynnaris.png" alt="Vheynnaris">
-
                             <span>Vheynnaris</span>
-
                         </div>
-
                         <div class="dropdown-item" data-casa="Warlofh" data-img="reinosdemavul/warlofh.png">
-
                             <img src="reinosdemavul/warlofh.png" alt="Warlofh">
-
                             <span>Warlofh</span>
-
                             
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
 
-
-
             <div class="form-group">
-
-                <label for="acc-nome">Nome completo</label>
-
+                <label for="acc-nome">Nome completo *</label>
                 <input id="acc-nome" type="text" placeholder="Seu nome oficial">
-
             </div>
-
             <div class="form-group">
-
                 <label for="acc-endereco">Endereço</label>
-
                 <input id="acc-endereco" type="text" placeholder="Rua, Número, Bairro">
-
             </div>
-
             <div class="form-group">
-
                 <label for="acc-cep">CEP</label>
-
                 <input id="acc-cep" type="text" placeholder="00000-000">
-
             </div>
-
             <div class="form-group">
-
                 <label for="acc-telefone">Número de Telefone</label>
-
                 <input id="acc-telefone" type="text" placeholder="(00) 00000-0000">
-
             </div>
-
             <div class="form-group">
-
                 <label for="acc-cpf">CPF</label>
-
                 <input id="acc-cpf" type="text" placeholder="000.000.000-00">
-
             </div>
-
             <div class="modal-actions">
-
                 <button id="closeModalBtn" class="btn-cancel">Cancelar</button>
-
                 <button id="saveAccountBtn" class="forum-btn">Salvar</button>
-
             </div>
-
         </div>
-
     </div>
 
-
-
     <header>
-
         <div class="borda-lateral borda-esquerda"></div>
-
         <div class="borda-lateral borda-direita"></div>
 
-
-
         <div class="logo-area">
-
             <img src="triwo.png" alt="Triohnte" class="img-titulo">
-
         </div>
-
          
-
         <nav>
-
             <ul>
-
                 <li><a href="rm.html">Ruínas de Mavul</a></li>
-
                 <li><a href="tw.html">Terras de Walingardyn</a></li>
-
                 <li><a href="cw.html">Compêndio Walingardyano</a></li>
-
                 <li><a href="ap.html">Estruturas de Poder</a></li>
-
                 <li><a href="poe.html">Topografia de Walingardyn</a></li>
-
             </ul>
-
         </nav>
-
     </header>
 
-
-
     <main>
-
         <section class="intro-text">
-
             <h2>O Legado</h2>
-
             <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos devido a separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pode ser uma "pessoa normal", momentos de maior conexão com a realidade social eram abafados por batalhas judiciais. Nas palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
-
             <p>Tal problem se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
-
             <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo. 
 
-
-
 Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto final no desgoverno da própria história e reescrever o destino. Isso é a arte, um baita chute no saco do universo.</p>
-
         </section>
-
-
 
         <section class="lore-grid">
-
             <a href="panteao.html">
-
                 <div class="card">
-
                     <h3>O Panteão dos Deuses</h3>
-
                     <p>Onde estão os deuses quando as cidades queimam? Conheça os mitos sobre as divindades que ajudaram a moldar civilizações pelo mundo de Walingardyn.</p>
-
                 </div>
-
             </a>
-
-
 
             <a href="contorno.html">
-
                 <div class="card">
-
                     <h3>Contorno de Triohnte</h3>
-
                     <p>Uma exploração pelas regiões de Triohnte, onde a própria geografia e clima parecem conspirar contra a sanidade dos viajantes.</p>
-
                 </div>
-
             </a>
-
-
 
             <a href="conflito.html">
-
                 <div class="card">
-
                     <h3>Conflitos Primordiais</h3>
-
                     <p>O que sabemos sobre a profecia do herdeiro? Como ela interfere diretamente na história de Triohnte e de Walingardyn, mas não só a profecia é a mascara das guerras.</p>
-
                 </div>
-
             </a>
-
-
 
             <a href="motivos.html">
-
                 <div class="card">
-
                     <h3>Motivos de Guerra</h3>
-
                     <p>As casas nobres e facções que ainda lutam por power entre as ruínas do que um dia foi um grande império através das Eras.</p>
-
                 </div>
-
             </a>
-
-
 
             <a href="calen.html">
-
                 <div class="card">
-
                     <h3>Calendário Triohntino</h3>
-
                     <p>Entenda o tempo em Triohnte e em Walingardyn.</p>
-
                 </div>
-
             </a>
-
         </section>
-
-
 
         <section class="progress-section">
-
             <h2>Progresso de Triohnte até a publicação</h2>
-
             <div class="progress-container">
-
                 <div class="progress-bar"></div>
-
             </div>
-
             <div class="progress-text">46% Concluído</div>
-
         </section>
-
-
 
         <section class="forum-section">
-
             <h2>Fórum</h2>
-
              
-
             <div id="forumFormWrapper" class="forum-form">
-
                 <textarea id="forumInput" rows="3" placeholder="Escreva uma nova atualização global sobre o volume..."></textarea>
-
                 <button type="button" id="publishBtn" class="forum-btn">Publicar</button>
-
             </div>
-
-
 
             <div id="forumPosts" class="forum-posts">
-
             </div>
-
         </section>
-
-
 
         <section id="auth-section" class="auth-section">
-
             <h2>Torne-se um aliado</h2>
-
             <div id="auth-container" class="auth-container-block">
-
                 <input id="email-field" type="email" placeholder="E-mail">
-
                 <input id="pass-field" type="password" placeholder="Senha">
-
                 <div class="auth-actions">
-
                     <button id="login-btn" class="auth-btn">Entrar</button>
-
                     <button id="signup-btn" class="auth-btn">Registrar</button>
-
                 </div>
-
             </div>
-
         </section>
-
     </main>
 
-
-
     <footer>
-
         <div class="footer-logo">
-
             <img src="triwo.png" alt="TRIOHNTE" class="footer-logo-img">
-
         </div>
-
         <p style="margin-top: 15px; font-size: 0.8rem; color: #444;">Copyright Triohnte &copy; 2026</p>
-
     </footer>
 
-
-
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-
 
     <script>
 
-
-const firebaseConfig = {
+<script>
+        const firebaseConfig = {
     apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
     authDomain: "triohnte-database.firebaseapp.com",
     databaseURL: "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app", 
@@ -2092,85 +1055,179 @@ let usuarioAtual = null;
 let base64ImagemSelecionada = ""; 
 let casaSelecionada = ""; 
 
-// O DOMContentLoaded agora envelopa TUDO para garantir que nenhum elemento falhe por antecipação.
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Definição de elementos
+
     const loginBtn = document.getElementById("login-btn");
     const signupBtn = document.getElementById("signup-btn");
     const emailField = document.getElementById("email-field");
     const passField = document.getElementById("pass-field");
-    const publishBtn = document.getElementById("publishBtn");
-    const forumInput = document.getElementById("forumInput");
-    const forumPosts = document.getElementById("forumPosts");
 
-    // 2. Lógica de Autenticação
-    if (loginBtn && signupBtn) {
-        loginBtn.addEventListener("click", () => {
-            const email = emailField.value.trim();
-            const password = passField.value.trim();
-            if (!email || !password) return alert("Preencha e-mail e senha");
-            
-            firebase.auth().signInWithEmailAndPassword(email, password)
-                .catch(err => alert("Erro ao entrar: " + err.message));
-        });
-
-        signupBtn.addEventListener("click", () => {
-            const email = emailField.value.trim();
-            const password = passField.value.trim();
-            if (!email || !password) return alert("Preencha e-mail e senha");
-
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .catch(err => alert("Erro ao registrar: " + err.message));
-        });
+    if (!loginBtn || !signupBtn || !emailField || !passField) {
+        console.warn("Campos de auth não encontrados");
+        return;
     }
 
-    // 3. Lógica do Fórum
-    if (publishBtn) {
-        publishBtn.addEventListener("click", () => {
-            const texto = forumInput.value.trim();
-            if (!texto || !usuarioAtual) return alert("Você precisa estar logado para publicar!");
+    // 🔐 LOGIN
+    loginBtn.addEventListener("click", () => {
+        const email = emailField.value.trim();
+        const password = passField.value.trim();
 
-            database.ref('posts').push({
-                author: usuarioAtual.email,
+        if (!email || !password) return;
+
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(() => {
+                console.log("Login realizado");
+            })
+            .catch((err) => {
+                alert("Erro ao entrar: " + err.message);
+            });
+    });
+
+    // 🧾 REGISTRO
+    signupBtn.addEventListener("click", () => {
+        const email = emailField.value.trim();
+        const password = passField.value.trim();
+
+        if (!email || !password) return;
+
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(() => {
+                console.log("Usuário criado");
+            })
+            .catch((err) => {
+                alert("Erro ao registrar: " + err.message);
+            });
+    });
+
+});
+
+    // =========================
+    // 🔥 LOGIN SEGURO (FIX CRÍTICO)
+    // =========================
+    auth.onAuthStateChanged((user) => {
+
+        const authContainer = document.getElementById('auth-container');
+        const authSection = document.getElementById('auth-section');
+        const userInfo = document.getElementById('user-info');
+        const modal = document.getElementById("accountModal");
+
+        usuarioAtual = user;
+
+        if (!user) {
+            usuarioAtual = null;
+            if (authContainer) authContainer.classList.remove('hidden');
+            if (authSection) authSection.classList.remove('hidden');
+            if (userInfo) userInfo.classList.add('hidden');
+            if (modal) modal.classList.remove('active');
+            return;
+        }
+
+        if (authContainer) authContainer.classList.add('hidden');
+        if (authSection) authSection.classList.add('hidden');
+        if (userInfo) userInfo.classList.remove('hidden');
+
+        database.ref('usuarios/' + user.uid).on('value', (snap) => {
+
+            const d = snap.val();
+
+            if (!d) return;
+
+            const primeiroNome = (d.nome ? d.nome.split(" ")[0] : "Usuário");
+            const casaTexto = d.casa ? `, da casa ${d.casa}` : "";
+
+            if (userGreeting) {
+                userGreeting.textContent = `Olá, ${primeiroNome}${casaTexto}`;
+            }
+        });
+    });
+
+    // =========================
+    // 🧠 POST (SEM MEXER NA ESTRUTURA)
+    // =========================
+    if (btn) {
+        btn.onclick = () => {
+
+            const texto = input?.value?.trim();
+            if (!texto || !usuarioAtual) return;
+
+            const novoPost = {
+                author: usuarioAtual.email || "Visitante",
+                nome: usuarioAtual.displayName || "Usuário",
+                casa: casaSelecionada || "",
+                foto: base64ImagemSelecionada || "mu.png",
+                casaImg: casaSelecionada ? `reinosdemavul/${casaSelecionada.toLowerCase()}.png` : "",
                 content: texto,
                 timestamp: Date.now()
-            });
-            forumInput.value = "";
+            };
+
+            database.ref('posts').push(novoPost);
+            input.value = "";
+        };
+    }
+
+    // =========================
+    // 🧠 RENDER POSTS (ROBUSTO)
+    // =========================
+    database.ref('posts').on('value', (snapshot) => {
+
+        if (!container) return;
+
+        const posts = snapshot.val();
+        container.innerHTML = "";
+
+        if (!posts) return;
+
+        const arr = Object.values(posts).sort((a,b)=>b.timestamp-a.timestamp);
+
+        arr.forEach(post => {
+
+            const div = document.createElement("div");
+            div.className = "post-card";
+
+            div.innerHTML = `
+                <div class="post-header">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="${post.foto || 'mu.png'}" 
+                             style="width:28px;height:28px;border-radius:50%;border:1px solid #c59d5f;object-fit:cover;">
+
+                        <span class="post-author">${post.nome || "Usuário"}</span>
+
+                        ${post.casaImg ? `
+                            <img src="${post.casaImg}" style="width:20px;height:20px;">
+                        ` : ""}
+                    </div>
+
+                    <span class="post-date">
+                        ${post.timestamp ? new Date(post.timestamp).toLocaleString() : ""}
+                    </span>
+                </div>
+
+                <div class="post-content">${post.content || ""}</div>
+            `;
+
+            container.appendChild(div);
+        });
+    });
+
+    // =========================
+    // 🎵 MÚSICA (NÃO QUEBRA MAIS NADA)
+    // =========================
+    const music = document.getElementById("bg-music");
+    const volumeControl = document.getElementById("volume-control");
+
+    if (music && volumeControl) {
+
+        document.body.addEventListener("click", () => {
+            music.volume = volumeControl.value || 0.2;
+            music.play().catch(() => {});
+        }, { once: true });
+
+        volumeControl.addEventListener("input", () => {
+            music.volume = volumeControl.value;
         });
     }
 
-    // 4. Renderização de Posts
-    database.ref('posts').on('value', (snapshot) => {
-        if (!forumPosts) return;
-        const posts = snapshot.val();
-        forumPosts.innerHTML = "";
-        if (!posts) return;
-
-        Object.values(posts).sort((a,b) => b.timestamp - a.timestamp).forEach(post => {
-            const div = document.createElement("div");
-            div.className = "post-card";
-            div.innerHTML = `<div class="post-content">${post.content}</div>`;
-            forumPosts.appendChild(div);
-        });
-    });
-
-    // 5. Estado de Autenticação
-    auth.onAuthStateChanged((user) => {
-        usuarioAtual = user;
-        const authContainer = document.getElementById('auth-container');
-        const userInfo = document.getElementById('user-info');
-
-        if (user) {
-            if (authContainer) authContainer.classList.add('hidden');
-            if (userInfo) userInfo.classList.remove('hidden');
-        } else {
-            if (authContainer) authContainer.classList.remove('hidden');
-            if (userInfo) userInfo.classList.add('hidden');
-        }
-    });
 });
-</script>
-
+    </script>
 </body>
-
 </html>
