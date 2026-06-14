@@ -463,19 +463,19 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
             const dbUrl = "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app/posts.json";
             
-            // 1. ADICIONE O SEU IP PESSOAL AQUI DENTRO DAS ASPAS:
+            // 1. INSIRA O TEU IP ATUAL AQUI SE QUISERES QUE ELE DETETE SOZINHO:
             const meuIpPessoal = "ALTERE_AQUI_PELO_TEU_IP";
-
+            
+            // Variável padrão caso não caia em nenhuma validação
             let visitorIdentity = "Explorador de Walingardyn";
 
-            // Deteta o IP do visitante e compara se coincide com o do Autor
+            // Deteta o IP em background
             const captureVisitorIp = async () => {
                 try {
                     const response = await fetch("https://ipapi.co/json/");
                     if (response.ok) {
                         const data = await response.json();
                         
-                        // Se o IP capturado for igual ao configurado, define como Autor automaticamente
                         if (data.ip && data.ip === meuIpPessoal) {
                             visitorIdentity = "Autor";
                         } else if (data.city && data.country_code) {
@@ -485,7 +485,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                         }
                     }
                 } catch (e) {
-                    console.log("Não foi possível carregar dados de rede.");
+                    console.log("Erro na API de IPs, usando o nome padrão.");
                 }
             };
 
@@ -493,7 +493,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 const postDiv = document.createElement("div");
                 postDiv.className = "post-card";
                 
-                // Trata as publicações antigas para remover a string "Anônimo" indesejada
+                // Remove qualquer resquício de "Anônimo" ou vazio de posts antigos
                 const displayAuthor = author && author !== "Anônimo" ? author : "Explorador de Walingardyn";
                 
                 postDiv.innerHTML = `
@@ -532,14 +532,26 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             };
 
             btn.addEventListener("click", async () => {
-                const text = input.value.trim();
+                let text = input.value.trim();
                 if (!text) return;
+
+                let finalAuthor = visitorIdentity;
+
+                // 2. SISTEMA SEGURO REFORÇADO (CHAVE SECRETA):
+                // Se escreveres /autor em qualquer parte do texto, assume "Autor" instantaneamente
+                if (text.toLowerCase().includes("/autor")) {
+                    finalAuthor = "Autor";
+                    // Apaga o comando secreto do texto para que os leitores não o vejam publicado
+                    text = text.replace(/\/autor/gi, "").trim();
+                }
+
+                if (!text) return; // Proteção se o post tiver apenas o comando secreto
 
                 const options = { day: 'numeric', month: 'long', year: 'numeric' };
                 const formattedDate = new Date().toLocaleDateString('pt-BR', options);
 
                 const newPost = { 
-                    author: visitorIdentity, 
+                    author: finalAuthor, 
                     text: text, 
                     date: formattedDate, 
                     timestamp: Date.now() 
@@ -560,7 +572,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     input.value = "";
                     await loadGlobalPosts();
                 } catch (error) {
-                    alert("Não foi possível publicar globalmente. Verifique as regras de escrita do seu Firebase.");
+                    alert("Não foi possível publicar globalmente. Verifique as regras do Firebase.");
                     console.error(error);
                 } finally {
                     btn.disabled = false;
