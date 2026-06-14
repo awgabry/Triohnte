@@ -96,10 +96,10 @@ canvas {
 <div class="info-card" id="infoCard">
     <h3 id="cardTitle">Território</h3>
     <div class="info-row"><span class="info-label">Trono:</span><span class="info-value" id="cardSoberania">-</span></div>
-     <div class="info-row"><span class="info-label">Capital:</span><span class="info-value" id="cardCapital">-</span></div>
+    <div class="info-row"><span class="info-label">Capital:</span><span class="info-value" id="cardCapital">-</span></div>
     <div class="info-row"><span class="info-label">Idade da terra:</span><span class="info-value" id="cardIdade">-</span></div>
     <div class="info-row"><span class="info-label">Poder Militar:</span><span class="info-value" id="cardMilitar">-</span></div>
-     <div class="info-row"><span class="info-label">Cidades Territoriais:</span><span class="info-value" id="cardcidadesterritoriais">-</span></div>
+    <div class="info-row"><span class="info-label">Cidades Territoriais:</span><span class="info-value" id="cardcidadesterritoriais">-</span></div>
     <div class="info-desc" id="cardDescricao">-</div>
 </div>
 
@@ -127,7 +127,6 @@ const databaseTerritorios = {
         cidadesTerritoriais: "Suwell'lor, Terra funda, Purgasso e Barujh",
         descricao: "A acrescentar"
     },
-
     "12,78,188": {
         nome: "Dyllewalt",
         capital: "Fubamtosh", 
@@ -148,47 +147,40 @@ const databaseTerritorios = {
     },
     "11,17,41": {
         nome: "Kraloff",
+        capital: "Nukhe",
         soberania: "Irmandade da mão livre",
         idade: "40 anos",
         poderMilitar: "160 soldados",
-        idadesTerritoriais:  "Nukhe",
+        cidadesTerritoriais: "Nukhe", // Corrigido de idadesTerritoriais para cidadesTerritoriais
         descricao: "Antigo território de Agaroff. Capital: Nukhe"
     },
     "26,138,180": {
         nome: "Salyniam",
+        capital: "-",
         soberania: "Irmandade da mão livre",
         idade: "40 anos",
         poderMilitar: "160 soldados",
-        descricao: "Antigo território de Agaroff. Capital: Nukhe"
-        },
-    "4,17,75": {
-        nome: "Galamorn",
-        soberania: "Irmandade da mão livre",
-        idade: "40 anos",
-        poderMilitar: "160 soldados",
-        descricao: "Antigo território de Agaroff. Capital: Nukhe"
-        },
-    "12,10,110": {
-        nome: "Linowland",
-        soberania: "Irmandade da mão livre",
-        idade: "40 anos",
-        poderMilitar: "160 soldados",
+        cidadesTerritoriais: "-",
         descricao: "Antigo território de Agaroff. Capital: Nukhe"
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
+    "4,17,75": {
+        nome: "Galamorn",
+        capital: "-",
+        soberania: "Irmandade da mão livre",
+        idade: "40 anos",
+        poderMilitar: "160 soldados",
+        cidadesTerritoriais: "-",
+        descricao: "Antigo território de Agaroff. Capital: Nukhe"
+    },
+    "12,10,110": {
+        nome: "Linowland",
+        capital: "-",
+        soberania: "Irmandade da mão livre",
+        idade: "40 anos",
+        poderMilitar: "160 soldados",
+        cidadesTerritoriais: "-",
+        descricao: "Antigo território de Agaroff. Capital: Nukhe"
+    }
 };
 
 // ELEMENTOS
@@ -198,8 +190,10 @@ const ctx = canvas.getContext('2d');
 const infoCard = document.getElementById('infoCard');
 const cardTitle = document.getElementById('cardTitle');
 const cardSoberania = document.getElementById('cardSoberania');
+const cardCapital = document.getElementById('cardCapital'); // Adicionado elemento Capital
 const cardIdade = document.getElementById('cardIdade');
 const cardMilitar = document.getElementById('cardMilitar');
+const cardCidadesTerritoriais = document.getElementById('cardcidadesterritoriais'); // Adicionado elemento Cidades
 const cardDescricao = document.getElementById('cardDescricao'); 
 
 // ÁUDIOS
@@ -317,22 +311,26 @@ function handlePointerMove(clientX, clientY, offsetX, offsetY) {
 
             if (dadosDoTerritorio) {
                 cardTitle.innerText = dadosDoTerritorio.nome;
-                cardSoberania.innerText = dadosDoTerritorio.soberania;
-                cardIdade.innerText = dadosDoTerritorio.idade;
-                cardMilitar.innerText = dadosDoTerritorio.poderMilitar;
-                cardDescricao.innerText = dadosDoTerritorio.descricao; 
+                cardSoberania.innerText = dadosDoTerritorio.soberania || "-";
+                cardCapital.innerText = dadosDoTerritorio.capital || "-"; // Atualização da Capital corrigida
+                cardIdade.innerText = dadosDoTerritorio.idade || "-";
+                cardMilitar.innerText = dadosDoTerritorio.poderMilitar || "-";
+                cardCidadesTerritoriais.innerText = dadosDoTerritorio.cidadesTerritoriais || "-"; // Atualização das Cidades corrigida
+                cardDescricao.innerText = dadosDoTerritorio.descricao || "-"; 
             } else {
                 cardTitle.innerText = "Território Desconhecido";
                 cardSoberania.innerText = "Nenhuma";
+                cardCapital.innerText = "-";
                 cardIdade.innerText = "???";
                 cardMilitar.innerText = `RGB(${corChave})`;
+                cardCidadesTerritoriais.innerText = "-";
                 cardDescricao.innerText = "Nenhum registro histórico ou mapeamento detalhado encontrado para esta região nas crônicas atuais.";
             }
         }
 
         infoCard.style.opacity = 1;
 
-        // CÁLCULO DINÂMICO DE CONTENÇÃO (Garante que o card não saia da tela)
+        // CÁLCULO DINÂMICO DE CONTENÇÃO
         const cardWidth = infoCard.offsetWidth || 280; 
         const cardHeight = infoCard.offsetHeight || 200;
         const windowWidth = window.innerWidth;
@@ -341,15 +339,12 @@ function handlePointerMove(clientX, clientY, offsetX, offsetY) {
         let posX = clientX + 15;
         let posY = clientY;
 
-        // Se passar da borda direita, joga para a esquerda do cursor
         if (posX + cardWidth > windowWidth) {
             posX = clientX - cardWidth - 15;
         }
-        // Se passar da borda inferior, ajusta para não sumir para baixo
         if (posY + cardHeight > windowHeight) {
             posY = windowHeight - cardHeight - 15;
         }
-        // Garante margem mínima no topo
         if (posY < 10) {
             posY = 10;
         }
@@ -366,7 +361,7 @@ canvas.addEventListener('mousemove', (e) => {
     handlePointerMove(e.clientX, e.clientY, e.offsetX, e.offsetY);
 });
 
-// Ouvinte de toque para Android/Mobile (Garante responsividade total sem quebrar o layout)
+// Ouvinte de toque para Mobile
 canvas.addEventListener('touchmove', (e) => {
     if(e.touches.length > 0) {
         const touch = e.touches[0];
