@@ -1278,7 +1278,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     const d = snap.val();
                     if (d) {
                         if (d.nome && userGreeting) {
-                            const tagCasa = d.casa ? ` [Casa ${d.casa}]` : '';
+                            const tagCasa = d.casa ? ` ,da casa ${d.casa}` : '';
                             userGreeting.textContent = `Olá, ${d.nome.split(' ')[0]}${tagCasa}`;
                         }
                         if (d.foto && userMiniAvatar) {
