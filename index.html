@@ -2094,179 +2094,81 @@ let casaSelecionada = "";
 
 // O DOMContentLoaded agora envelopa TUDO para garantir que nenhum elemento falhe por antecipação.
 document.addEventListener("DOMContentLoaded", () => {
-
+    // 1. Definição de elementos
     const loginBtn = document.getElementById("login-btn");
     const signupBtn = document.getElementById("signup-btn");
     const emailField = document.getElementById("email-field");
     const passField = document.getElementById("pass-field");
+    const publishBtn = document.getElementById("publishBtn");
+    const forumInput = document.getElementById("forumInput");
+    const forumPosts = document.getElementById("forumPosts");
 
-    // Elementos do Fórum & Display (Adicionados para corrigir os ReferenceErrors do código original)
-    const btn = document.getElementById("publishBtn");
-    const input = document.getElementById("forumInput");
-    const container = document.getElementById("forumPosts");
-    const userGreeting = document.getElementById("user-greeting");
+    // 2. Lógica de Autenticação
+    if (loginBtn && signupBtn) {
+        loginBtn.addEventListener("click", () => {
+            const email = emailField.value.trim();
+            const password = passField.value.trim();
+            if (!email || !password) return alert("Preencha e-mail e senha");
+            
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .catch(err => alert("Erro ao entrar: " + err.message));
+        });
 
-    if (!loginBtn || !signupBtn || !emailField || !passField) {
-        console.warn("Campos de auth não encontrados");
-        return;
+        signupBtn.addEventListener("click", () => {
+            const email = emailField.value.trim();
+            const password = passField.value.trim();
+            if (!email || !password) return alert("Preencha e-mail e senha");
+
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .catch(err => alert("Erro ao registrar: " + err.message));
+        });
     }
 
-    // 🔐 LOGIN
-    loginBtn.addEventListener("click", () => {
-        const email = emailField.value.trim();
-        const password = passField.value.trim();
+    // 3. Lógica do Fórum
+    if (publishBtn) {
+        publishBtn.addEventListener("click", () => {
+            const texto = forumInput.value.trim();
+            if (!texto || !usuarioAtual) return alert("Você precisa estar logado para publicar!");
 
-        if (!email || !password) {
-            alert("Por favor, preencha o e-mail e a senha antes de acessar o Trono.");
-            return;
-        }
-
-        firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(() => {
-                alert("Bem-vindo de volta a Triohnte!");
-            })
-            .catch((err) => {
-                alert("Erro ao entrar: " + err.message);
-            });
-    });
-
-    // 🧾 REGISTRO
-    signupBtn.addEventListener("click", () => {
-        const email = emailField.value.trim();
-        const password = passField.value.trim();
-
-        if (!email || !password) {
-            alert("Por favor, preencha o e-mail e a senha para se aliar.");
-            return;
-        }
-
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then(() => {
-                alert("Aliado registrado com sucesso! Bem-vindo a Walingardyn.");
-            })
-            .catch((err) => {
-                alert("Erro ao registrar: " + err.message);
-            });
-    });
-
-    // =========================
-    // 🔥 LOGIN SEGURO E UI 
-    // =========================
-    auth.onAuthStateChanged((user) => {
-        const authContainer = document.getElementById('auth-container');
-        const authSection = document.getElementById('auth-section');
-        const userInfo = document.getElementById('user-info');
-        const modal = document.getElementById("accountModal");
-
-        usuarioAtual = user;
-
-        if (!user) {
-            if (authContainer) authContainer.classList.remove('hidden');
-            if (authSection) authSection.classList.remove('hidden');
-            if (userInfo) userInfo.classList.add('hidden');
-            if (modal) modal.classList.remove('active');
-            return;
-        }
-
-        if (authContainer) authContainer.classList.add('hidden');
-        if (authSection) authSection.classList.add('hidden');
-        if (userInfo) userInfo.classList.remove('hidden');
-
-        database.ref('usuarios/' + user.uid).on('value', (snap) => {
-            const d = snap.val();
-            if (!d) return;
-
-            const primeiroNome = (d.nome ? d.nome.split(" ")[0] : "Usuário");
-            const casaTexto = d.casa ? `, da casa ${d.casa}` : "";
-
-            if (userGreeting) {
-                userGreeting.textContent = `Olá, ${primeiroNome}${casaTexto}`;
-            }
-        });
-    });
-
-    // =========================
-    // 🧠 POST
-    // =========================
-    if (btn) {
-        btn.onclick = () => {
-            const texto = input?.value?.trim();
-            if (!texto || !usuarioAtual) return;
-
-            const novoPost = {
-                author: usuarioAtual.email || "Visitante",
-                nome: usuarioAtual.displayName || "Usuário",
-                casa: casaSelecionada || "",
-                foto: base64ImagemSelecionada || "mu.png",
-                casaImg: casaSelecionada ? `reinosdemavul/${casaSelecionada.toLowerCase()}.png` : "",
+            database.ref('posts').push({
+                author: usuarioAtual.email,
                 content: texto,
                 timestamp: Date.now()
-            };
-
-            database.ref('posts').push(novoPost);
-            input.value = "";
-        };
+            });
+            forumInput.value = "";
+        });
     }
 
-    // =========================
-    // 🧠 RENDER POSTS
-    // =========================
+    // 4. Renderização de Posts
     database.ref('posts').on('value', (snapshot) => {
-        if (!container) return;
-
+        if (!forumPosts) return;
         const posts = snapshot.val();
-        container.innerHTML = "";
-
+        forumPosts.innerHTML = "";
         if (!posts) return;
 
-        const arr = Object.values(posts).sort((a,b)=>b.timestamp-a.timestamp);
-
-        arr.forEach(post => {
+        Object.values(posts).sort((a,b) => b.timestamp - a.timestamp).forEach(post => {
             const div = document.createElement("div");
             div.className = "post-card";
-            div.innerHTML = `
-                <div class="post-header">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${post.foto || 'mu.png'}" 
-                             style="width:28px;height:28px;border-radius:50%;border:1px solid #c59d5f;object-fit:cover;">
-                        <span class="post-author">${post.nome || "Usuário"}</span>
-                        ${post.casaImg ? `<img src="${post.casaImg}" style="width:20px;height:20px;">` : ""}
-                    </div>
-                    <span class="post-date">
-                        ${post.timestamp ? new Date(post.timestamp).toLocaleString() : ""}
-                    </span>
-                </div>
-                <div class="post-content">${post.content || ""}</div>
-            `;
-            container.appendChild(div);
+            div.innerHTML = `<div class="post-content">${post.content}</div>`;
+            forumPosts.appendChild(div);
         });
     });
 
-    // =========================
-    // 🎵 MÚSICA DE FUNDO
-    // =========================
-    const music = document.getElementById("bg-music");
-    const volumeControl = document.getElementById("volume-control");
+    // 5. Estado de Autenticação
+    auth.onAuthStateChanged((user) => {
+        usuarioAtual = user;
+        const authContainer = document.getElementById('auth-container');
+        const userInfo = document.getElementById('user-info');
 
-    if (music && volumeControl) {
-        document.body.addEventListener("click", () => {
-            music.volume = volumeControl.value || 0.2;
-            music.play().catch(() => {});
-        }, { once: true });
-
-        volumeControl.addEventListener("input", () => {
-            music.volume = volumeControl.value;
-        });
-    }
-
+        if (user) {
+            if (authContainer) authContainer.classList.add('hidden');
+            if (userInfo) userInfo.classList.remove('hidden');
+        } else {
+            if (authContainer) authContainer.classList.remove('hidden');
+            if (userInfo) userInfo.classList.add('hidden');
+        }
+    });
 });
-
-
-
-
-
-        
-
 </script>
 
 </body>
