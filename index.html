@@ -35,7 +35,8 @@
         .progress-section h2,
         .forum-section h2,
         .auth-section h2,
-        .footer-logo {
+        .footer-logo,
+        .modal-content h3 {
             display: inline-block;
             background: var(--gold-gradient);
             -webkit-background-clip: text;
@@ -421,16 +422,99 @@
             letter-spacing: 1px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
+        .account-link {
+            color: #c59d5f;
+            text-decoration: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .account-link:hover { color: #f3e1b5; text-shadow: 0 0 5px rgba(243, 225, 181, 0.5); }
         .logout-link {
             color: #ff4a4a;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             cursor: pointer;
         }
         .logout-link:hover { text-shadow: 0 0 5px #ff4a4a; }
         .hidden { display: none !important; }
+
+        /* --- JANELA MODAL DE CONFIGURAÇÃO DE CONTA --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            position: relative;
+            text-align: left;
+        }
+        .modal-content h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            display: block;
+            text-align: center;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            color: #888;
+            letter-spacing: 1px;
+        }
+        .form-group input {
+            background: #050505;
+            border: 1px solid #222;
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus { border-color: #c59d5f; }
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid #333;
+            color: #888;
+            padding: 10px 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+        .btn-cancel:hover { border-color: #ff4a4a; color: #ff4a4a; }
 
         footer {
             text-align: center;
@@ -462,7 +546,43 @@
         <div id="user-info" class="auth-box hidden">
             <div class="user-logged">
                 <span id="user-greeting">Olá, ...</span>
+                <span id="account-btn" class="account-link">[Conta]</span>
                 <span id="logout-btn" class="logout-link">[Sair]</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interface Modal de Configurações da Conta -->
+    <div id="accountModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Configurações da Conta</h3>
+            <div class="form-group">
+                <label for="acc-foto">URL da Foto de Perfil</label>
+                <input id="acc-foto" type="text" placeholder="https://linkdaimagem.com/foto.png">
+            </div>
+            <div class="form-group">
+                <label for="acc-nome">Nome completo *</label>
+                <input id="acc-nome" type="text" placeholder="Seu nome oficial">
+            </div>
+            <div class="form-group">
+                <label for="acc-endereco">Endereço</label>
+                <input id="acc-endereco" type="text" placeholder="Rua, Número, Bairro">
+            </div>
+            <div class="form-group">
+                <label for="acc-cep">CEP</label>
+                <input id="acc-cep" type="text" placeholder="00000-000">
+            </div>
+            <div class="form-group">
+                <label for="acc-telefone">Número de Telefone</label>
+                <input id="acc-telefone" type="text" placeholder="(00) 00000-0000">
+            </div>
+            <div class="form-group">
+                <label for="acc-cpf">CPF</label>
+                <input id="acc-cpf" type="text" placeholder="000.000.000-00">
+            </div>
+            <div class="modal-actions">
+                <button id="closeModalBtn" class="btn-cancel">Cancelar</button>
+                <button id="saveAccountBtn" class="forum-btn">Salvar</button>
             </div>
         </div>
     </div>
@@ -594,8 +714,64 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
         let usuarioAtual = null;
 
-        // Todo o código de manipulação de elementos HTML agora aguarda o DOM carregar completamente
         document.addEventListener("DOMContentLoaded", () => {
+            
+            const modal = document.getElementById('accountModal');
+            const accountBtn = document.getElementById('account-btn');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const saveAccountBtn = document.getElementById('saveAccountBtn');
+
+            // Abrir e Fechar Modal da Conta
+            if (accountBtn) {
+                accountBtn.onclick = () => {
+                    if (usuarioAtual) {
+                        // Carrega os dados salvos do usuário para os inputs antes de abrir
+                        database.ref('usuarios/' + usuarioAtual.uid).once('value').then((snap) => {
+                            const d = snap.val() || {};
+                            document.getElementById('acc-foto').value = d.foto || "";
+                            document.getElementById('acc-nome').value = d.nome || "";
+                            document.getElementById('acc-endereco').value = d.endereco || "";
+                            document.getElementById('acc-cep').value = d.cep || "";
+                            document.getElementById('acc-telefone').value = d.telefone || "";
+                            document.getElementById('acc-cpf').value = d.cpf || "";
+                        });
+                    }
+                    modal.classList.add('active');
+                };
+            }
+
+            if (closeModalBtn) {
+                closeModalBtn.onclick = () => modal.classList.remove('active');
+            }
+
+            // Salvar configurações de conta no Realtime Database
+            if (saveAccountBtn) {
+                saveAccountBtn.onclick = () => {
+                    const nome = document.getElementById('acc-nome').value.trim();
+                    
+                    if (!nome) {
+                        alert("O campo Nome é obrigatório.");
+                        return;
+                    }
+
+                    const dadosAtualizados = {
+                        foto: document.getElementById('acc-foto').value.trim(),
+                        nome: nome,
+                        endereco: document.getElementById('acc-endereco').value.trim(),
+                        cep: document.getElementById('acc-cep').value.trim(),
+                        telefone: document.getElementById('acc-telefone').value.trim(),
+                        cpf: document.getElementById('acc-cpf').value.trim(),
+                        email: usuarioAtual.email
+                    };
+
+                    database.ref('usuarios/' + usuarioAtual.uid).update(dadosAtualizados)
+                        .then(() => {
+                            alert("Configurações atualizadas com sucesso!");
+                            modal.classList.remove('active');
+                        })
+                        .catch(err => alert("Erro ao salvar: " + err.message));
+                };
+            }
             
             // Monitoramento de Autenticação
             auth.onAuthStateChanged((user) => {
@@ -609,6 +785,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     if (authContainer) authContainer.classList.remove('hidden');
                     if (authSection) authSection.classList.remove('hidden');
                     if (userInfo) userInfo.classList.add('hidden');
+                    modal.classList.remove('active');
                     return;
                 }
                 
@@ -618,7 +795,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 if (userInfo) userInfo.classList.remove('hidden');
                 if (userGreeting) userGreeting.textContent = `Olá, ${user.email.split('@')[0]}`;
 
-                // Verifica se o usuário tem nome salvo na Realtime Database
+                // Verifica em tempo real o nome modificado pelo painel da conta
                 database.ref('usuarios/' + user.uid).on('value', (snap) => {
                     const d = snap.val();
                     if (d && d.nome && userGreeting) {
@@ -627,7 +804,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 });
             });
 
-            // Eventos de Autenticação com verificações de segurança para evitar quebras
+            // Eventos estruturais de login e registro
             const loginBtn = document.getElementById('login-btn');
             if (loginBtn) {
                 loginBtn.onclick = () => {
@@ -644,7 +821,7 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     const p = document.getElementById('pass-field').value;
                     if (e && p) {
                         auth.createUserWithEmailAndPassword(e, p).then(u => {
-                            database.ref('usuarios/' + u.user.uid).set({ email: e, nome: "" });
+                            database.ref('usuarios/' + u.user.uid).set({ email: e, nome: e.split('@')[0] });
                         }).catch(err => alert("Erro: " + err.message));
                     }
                 };
@@ -655,19 +832,17 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 logoutBtn.onclick = () => auth.signOut();
             }
 
-            // --- SISTEMA INTERNO DO FÓRUM INTEGRADO AO BANCO DE DADOS ---
+            // --- SISTEMA INTERNO DO FÓRUM ---
             const input = document.getElementById("forumInput");
             const btn = document.getElementById("publishBtn");
             const container = document.getElementById("forumPosts");
             const formWrapper = document.getElementById("forumFormWrapper");
 
-            // Função para formatar a data do Post
             const formatarData = (timestamp) => {
                 const data = new Date(timestamp);
                 return data.toLocaleDateString('pt-BR') + " às " + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             };
 
-            // Renderizar Posts na tela
             const renderPosts = (postsObj) => {
                 if (!container) return;
                 container.innerHTML = "";
@@ -679,7 +854,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 
                 if (formWrapper) formWrapper.classList.add("has-posts");
                 
-                // Converte o objeto em array e ordena cronologicamente (do mais recente ao mais antigo)
                 const postsArray = Object.keys(postsObj).map(key => ({
                     id: key,
                     ...postsObj[key]
@@ -699,12 +873,10 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 });
             };
 
-            // Escuta em Realtime a ramificação 'posts' no Banco de Dados
             database.ref('posts').on('value', (snapshot) => {
                 renderPosts(snapshot.val());
             });
 
-            // Ação de Publicar
             if (btn) {
                 btn.onclick = () => {
                     if (!input) return;
