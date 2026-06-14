@@ -373,7 +373,7 @@
                 <li><a href="rm.html">Ruínas de Mavul</a></li>
                 <li><a href="tw.html">Terras de Walingardyn</a></li>
                 <li><a href="cw.html">Compêndio Walingardyano</a></li>
-                <li><a href="ap.html">Estruturas de Poder</a></li>
+                <li><a href="ap.html">Estruturas de Power</a></li>
                 <li><a href="poe.html">Topografia de Walingardyn</a></li>
             </ul>
         </nav>
@@ -463,33 +463,37 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
             const dbUrl = "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app/posts.json";
             
-            // Variável global para armazenar os metadados capturados do IP do visitante
-            let visitorIdentity = "Visitante Desconhecido";
+            // 1. ADICIONE O SEU IP PESSOAL AQUI DENTRO DAS ASPAS:
+            const meuIpPessoal = "ALTERE_AQUI_PELO_TEU_IP";
 
-            // Função assíncrona que roda em background para capturar a geolocalização do IP de forma invisível
+            let visitorIdentity = "Explorador de Walingardyn";
+
+            // Deteta o IP do visitante e compara se coincide com o do Autor
             const captureVisitorIp = async () => {
                 try {
                     const response = await fetch("https://ipapi.co/json/");
                     if (response.ok) {
                         const data = await response.json();
-                        if (data.city && data.country_code) {
-                            // Define o formato do nome com base na localização real (Ex: Visitante de São Paulo - BR)
+                        
+                        // Se o IP capturado for igual ao configurado, define como Autor automaticamente
+                        if (data.ip && data.ip === meuIpPessoal) {
+                            visitorIdentity = "Autor";
+                        } else if (data.city && data.country_code) {
                             visitorIdentity = `Visitante de ${data.city} - ${data.country_code}`;
                         } else if (data.ip) {
                             visitorIdentity = `Membro (IP: ${data.ip})`;
                         }
                     }
                 } catch (e) {
-                    console.log("Não foi possível carregar dados de rede do visitante, usando padrão.");
+                    console.log("Não foi possível carregar dados de rede.");
                 }
             };
 
-            // Renderiza os posts tratando registros antigos que não possuem o campo "author" gravado
             const renderPost = (author, text, date) => {
                 const postDiv = document.createElement("div");
                 postDiv.className = "post-card";
                 
-                // Evita exibir "Anônimo" caso o post antigo venha vazio no Firebase
+                // Trata as publicações antigas para remover a string "Anônimo" indesejada
                 const displayAuthor = author && author !== "Anônimo" ? author : "Explorador de Walingardyn";
                 
                 postDiv.innerHTML = `
@@ -534,7 +538,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 const options = { day: 'numeric', month: 'long', year: 'numeric' };
                 const formattedDate = new Date().toLocaleDateString('pt-BR', options);
 
-                // Usa a identidade resolvida via IP para gravar no banco
                 const newPost = { 
                     author: visitorIdentity, 
                     text: text, 
@@ -565,7 +568,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 }
             });
 
-            // Inicializa as duas chamadas em paralelo
             captureVisitorIp();
             loadGlobalPosts();
         });
