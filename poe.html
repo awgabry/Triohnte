@@ -105,12 +105,12 @@ canvas {
 const MAP_WIDTH = 1441;
 const MAP_HEIGHT = 1311;
 
-// BANCO DE DADOS DOS TERRITÓRIOS (Corrigido o erro de digitação em 'idade')
+// BANCO DE DADOS DOS TERRITÓRIOS
 const databaseTerritorios = {
     "7,34,47": {
         nome: "Kwazahdar",
         soberania: "Familia Warlofh",
-        idade: "820 anos", // CORRIGIDO: de 'ididade' para 'idade'
+        idade: "820 anos",
         poderMilitar: "9.000 Soldados (Alta)",
         descricao: "Sua capital é Burtaland, a capital mais extensa em termos terrioriais, do continente de Triohnte. A contagem de cidades fiéis ao trono, são: Dasthar, Loffh e Ryppiov."
     },
@@ -234,7 +234,7 @@ function draw(){
     ctx.restore();
 }
 
-canvas.addEventListener('mousemove', (e) => {
+function handlePointerMove(clientX, clientY, offsetX, offsetY) {
     if (bgMusic.paused) {
         bgMusic.play().catch(err => console.log("Aguardando interação do usuário para iniciar áudio."));
     }
@@ -242,8 +242,8 @@ canvas.addEventListener('mousemove', (e) => {
     const cw = canvas.clientWidth;
     const ch = canvas.clientHeight;
 
-    const x = Math.floor((e.offsetX / cw) * MAP_WIDTH);
-    const y = Math.floor((e.offsetY / ch) * MAP_HEIGHT);
+    const x = Math.floor((offsetX / cw) * MAP_WIDTH);
+    const y = Math.floor((offsetY / ch) * MAP_HEIGHT);
 
     if(x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_HEIGHT){
         hideCard();
@@ -265,7 +265,6 @@ canvas.addEventListener('mousemove', (e) => {
             selectSound.currentTime = 0;
             selectSound.play().catch(err => console.log("Áudio bloqueado pelo navegador temporariamente."));
 
-            // Atualização dos dados do Card movida para dentro da mudança de cor para otimizar performance
             const corChave = `${r},${g},${b}`;
             const dadosDoTerritorio = databaseTerritorios[corChave];
 
@@ -284,16 +283,55 @@ canvas.addEventListener('mousemove', (e) => {
             }
         }
 
-        // CORREÇÃO DE FLUIDEZ: O posicionamento do card deve rodar sempre no mousemove fora do bloco condicional de troca de cor
         infoCard.style.opacity = 1;
-        infoCard.style.left = e.clientX + 15 + "px";
-        infoCard.style.top = e.clientY + "px";
+
+        // CÁLCULO DINÂMICO DE CONTENÇÃO (Garante que o card não saia da tela)
+        const cardWidth = infoCard.offsetWidth || 280; 
+        const cardHeight = infoCard.offsetHeight || 200;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        let posX = clientX + 15;
+        let posY = clientY;
+
+        // Se passar da borda direita, joga para a esquerda do cursor
+        if (posX + cardWidth > windowWidth) {
+            posX = clientX - cardWidth - 15;
+        }
+        // Se passar da borda inferior, ajusta para não sumir para baixo
+        if (posY + cardHeight > windowHeight) {
+            posY = windowHeight - cardHeight - 15;
+        }
+        // Garante margem mínima no topo
+        if (posY < 10) {
+            posY = 10;
+        }
+
+        infoCard.style.left = posX + "px";
+        infoCard.style.top = posY + "px";
     } else {
         hideCard();
     }
+}
+
+// Ouvinte de mouse para Desktop
+canvas.addEventListener('mousemove', (e) => {
+    handlePointerMove(e.clientX, e.clientY, e.offsetX, e.offsetY);
 });
 
+// Ouvinte de toque para Android/Mobile (Garante responsividade total sem quebrar o layout)
+canvas.addEventListener('touchmove', (e) => {
+    if(e.touches.length > 0) {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const offsetX = touch.clientX - rect.left;
+        const offsetY = touch.clientY - rect.top;
+        handlePointerMove(touch.clientX, touch.clientY, offsetX, offsetY);
+    }
+}, { passive: true });
+
 canvas.addEventListener('mouseleave', hideCard);
+canvas.addEventListener('touchend', hideCard);
 
 function hideCard() {
     if(activeColor){
