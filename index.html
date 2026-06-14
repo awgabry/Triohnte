@@ -289,7 +289,6 @@
             border-color: #c59d5f;
         }
         .forum-btn {
-            align-self: flex-end;
             background: var(--gold-gradient);
             color: #050505;
             border: none;
@@ -342,7 +341,7 @@
             color: #8c8579;
         }
 
-        /* --- SEÇÃO DE AUTENTICAÇÃO "TORNE-SE UM ALIADO" --- */
+        /* --- SEÇÃO DE AUTENTICAÇÃO --- */
         .auth-section {
             background: #0a0a0a;
             padding: 50px 40px;
@@ -457,7 +456,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 2000;
+            z-index: 2000; /* Garante que fique acima de tudo */
             opacity: 0; pointer-events: none;
             transition: opacity 0.4s ease;
         }
@@ -508,7 +507,7 @@
         }
         .form-group input:focus { border-color: #c59d5f; }
 
-        /* --- ÁREA DE UPLOAD ESTILO "DRAG & DROP" PREMIUM --- */
+        /* --- ÁREA DE UPLOAD --- */
         .dropzone-container {
             border: 2px dashed #333;
             background: #050505;
@@ -596,7 +595,7 @@
             font-family: 'Crimson Pro', serif;
         }
 
-        /* --- MENU SUSPENSO INTERATIVO DE CASAS (GRADE) --- */
+        /* --- MENU SUSPENSO INTERATIVO DE CASAS --- */
         .custom-dropdown {
             position: relative;
             width: 100%;
@@ -750,132 +749,12 @@
     <div class="vignette"></div>
 
     <div class="top-bar-container">
-        <div id="user-info" class="auth-box hidden">
+        <div id="user-info" class="auth-box">
             <div class="user-logged">
-                <img id="user-mini-avatar" class="profile-img-preview-mini hidden" src="" alt="Avatar">
-                <span id="user-greeting">Olá, ...</span>
+                <img id="user-mini-avatar" class="profile-img-preview-mini" src="mu.png" alt="Avatar">
+                <span id="user-greeting">Olá, Gabriel [Casa Agaroff]</span>
                 <span id="account-btn" class="account-link">[Conta]</span>
                 <span id="logout-btn" class="logout-link">[Sair]</span>
-            </div>
-        </div>
-    </div>
-
-    <div id="accountModal" class="modal-overlay">
-        <div class="modal-content">
-            <h3>Configurações da Conta</h3>
-            
-            <div class="form-group">
-                <label>Foto de Perfil</label>
-                <div id="dropzone" class="dropzone-container">
-                    <span class="dropzone-text">Arrastar e solte sua imagem aqui</span>
-                    <button type="button" id="triggerFileBtn" class="dropzone-btn">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-bottom:-2px;"><path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/><path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/></svg>
-                        Enviar Imagem
-                    </button>
-                    <span class="dropzone-subtext">Colar imagem (Ctrl V) ou clicar acima</span>
-                    <div class="formats-box">
-                        <span class="format-tag">JPG</span>
-                        <span class="format-tag">JPEG</span>
-                        <span class="format-tag">PNG</span>
-                        <span class="format-tag">WEBP</span>
-                    </div>
-                    <input id="acc-foto-file" type="file" accept="image/*" style="display: none;">
-                </div>
-                
-                <div class="preview-wrapper">
-                    <img id="avatar-preview" class="photo-preview" src="mu.png" alt="Prévia">
-                    <span class="preview-info" id="preview-filename">Nenhum arquivo modificado</span>
-                </div>
-            </div>
-
-           <div class="form-group">
-    <label>Vincular Linhagem (Trono/Casa)</label>
-    <div class="custom-dropdown" id="casaDropdown">
-        <div class="dropdown-selected">
-            <div class="selected-info">
-                <span>Selecione sua Casa...</span>
-            </div>
-            <i class="dropdown-arrow"></i>
-        </div>
-
-        <div class="dropdown-grid" id="dropdownGrid">
-            <div class="dropdown-item" data-casa="Ashen" data-img="reinosdemavul/ashen.png">
-                <img src="reinosdemavul/ashen.png" alt="Ashen">
-                <span>Ashen</span>
-            </div>
-            <div class="dropdown-item" data-casa="Barchyro" data-img="reinosdemavul/barchyro.png">
-                <img src="reinosdemavul/barchyro.png" alt="Barchyro">
-                <span>Barchyro</span>
-            </div>
-            <div class="dropdown-item" data-casa="Blakah" data-img="reinosdemavul/blakah.png">
-                <img src="reinosdemavul/blakah.png" alt="Blakah">
-                <span>Blakah</span>
-            </div>
-            <div class="dropdown-item" data-casa="Bolynas" data-img="reinosdemavul/bolynas.png">
-                <img src="reinosdemavul/bolynas.png" alt="Bolynas">
-                <span>Bolynas</span>
-            </div>
-            <div class="dropdown-item" data-casa="Brakemir" data-img="reinosdemavul/brakemir.png">
-                <img src="reinosdemavul/brakemir.png" alt="Brakemir">
-                <span>Brakemir</span>
-            </div>
-            <div class="dropdown-item" data-casa="Cervindor" data-img="reinosdemavul/cervindor.png">
-                <img src="reinosdemavul/cervindor.png" alt="Cervindor">
-                <span>Cervindor</span>
-            </div>
-            <div class="dropdown-item" data-casa="Cosnalia" data-img="reinosdemavul/cosnalia.png">
-                <img src="reinosdemavul/cosnalia.png" alt="Cosnalia">
-                <span>Cosnalia</span>
-            </div>
-            <div class="dropdown-item" data-casa="Drakorvy" data-img="reinosdemavul/drakorvy.png">
-                <img src="reinosdemavul/drakorvy.png" alt="Drakorvy">
-                <span>Drakorvy</span>
-            </div>
-            <div class="dropdown-item" data-casa="Fartally" data-img="reinosdemavul/fartally.png">
-                <img src="reinosdemavul/fartally.png" alt="Fartally">
-                <span>Fartally</span>
-            </div>
-            <div class="dropdown-item" data-casa="Flamaryn" data-img="reinosdemavul/flamaryn.png">
-                <img src="reinosdemavul/flamaryn.png" alt="Flamaryn">
-                <span>Flamaryn</span>
-            </div>
-            <div class="dropdown-item" data-casa="Kaldarion" data-img="reinosdemavul/kaldarion.png">
-                <img src="reinosdemavul/kaldarion.png" alt="Kaldarion">
-                <span>Kaldarion</span>
-            </div>
-            <div class="dropdown-item" data-casa="Klavar" data-img="reinosdemavul/klavar.png">
-                <img src="reinosdemavul/klavar.png" alt="Klavar">
-                <span>Klavar</span>
-            </div>
-        </div>
-    </div>
-</div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="acc-nome">Nome completo *</label>
-                <input id="acc-nome" type="text" placeholder="Seu nome oficial">
-            </div>
-            <div class="form-group">
-                <label for="acc-endereco">Endereço</label>
-                <input id="acc-endereco" type="text" placeholder="Rua, Número, Bairro">
-            </div>
-            <div class="form-group">
-                <label for="acc-cep">CEP</label>
-                <input id="acc-cep" type="text" placeholder="00000-000">
-            </div>
-            <div class="form-group">
-                <label for="acc-telefone">Número de Telefone</label>
-                <input id="acc-telefone" type="text" placeholder="(00) 00000-0000">
-            </div>
-            <div class="form-group">
-                <label for="acc-cpf">CPF</label>
-                <input id="acc-cpf" type="text" placeholder="000.000.000-00">
-            </div>
-            <div class="modal-actions">
-                <button id="closeModalBtn" class="btn-cancel">Cancelar</button>
-                <button id="saveAccountBtn" class="forum-btn">Salvar</button>
             </div>
         </div>
     </div>
@@ -926,424 +805,176 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
             <a href="conflito.html">
                 <div class="card">
-                    <h3>Conflitos Primordiais</h3>
-                    <p>O que sabemos sobre a profecia do herdeiro? Como ela interfere diretamente na história de Triohnte e de Walingardyn, mas não só a profecia é a mascara das guerras.</p>
+                    <h3>Conflitos Históricos</h3>
+                    <p>As cicatrizes deixadas no solo pelas grandes guerras do passado e as tensões geopolíticas que ainda ameaçam ruir tronos.</p>
                 </div>
             </a>
-
-            <a href="motivos.html">
-                <div class="card">
-                    <h3>Motivos de Guerra</h3>
-                    <p>As casas nobres e facções que ainda lutam por power entre as ruínas do que um dia foi um grande império através das Eras.</p>
-                </div>
-            </a>
-
-            <a href="calen.html">
-                <div class="card">
-                    <h3>Calendário Triohntino</h3>
-                    <p>Entenda o tempo em Triohnte e em Walingardyn.</p>
-                </div>
-            </a>
-        </section>
-
-        <section class="progress-section">
-            <h2>Progresso de Triohnte até a publicação</h2>
-            <div class="progress-container">
-                <div class="progress-bar"></div>
-            </div>
-            <div class="progress-text">46% Concluído</div>
-        </section>
-
-        <section class="forum-section">
-            <h2>Fórum</h2>
-             
-            <div id="forumFormWrapper" class="forum-form">
-                <textarea id="forumInput" rows="3" placeholder="Escreva uma nova atualização global sobre o volume..."></textarea>
-                <button type="button" id="publishBtn" class="forum-btn">Publicar</button>
-            </div>
-
-            <div id="forumPosts" class="forum-posts">
-            </div>
-        </section>
-
-        <section id="auth-section" class="auth-section">
-            <h2>Torne-se um aliado</h2>
-            <div id="auth-container" class="auth-container-block">
-                <input id="email-field" type="email" placeholder="E-mail">
-                <input id="pass-field" type="password" placeholder="Senha">
-                <div class="auth-actions">
-                    <button id="login-btn" class="auth-btn">Entrar</button>
-                    <button id="signup-btn" class="auth-btn">Registrar</button>
-                </div>
-            </div>
         </section>
     </main>
 
     <footer>
-        <div class="footer-logo">
-            <img src="triwo.png" alt="TRIOHNTE" class="footer-logo-img">
-        </div>
-        <p style="margin-top: 15px; font-size: 0.8rem; color: #444;">Copyright Triohnte &copy; 2026</p>
+        <div class="footer-logo-img"></div>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <div id="accountModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Configurações da Conta</h3>
+            
+            <div class="form-group">
+                <label>Foto de Perfil</label>
+                <div id="dropzone" class="dropzone-container">
+                    <span class="dropzone-text">Arraste e solte sua imagem aqui</span>
+                    <button type="button" id="triggerFileBtn" class="dropzone-btn">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-bottom:-2px;"><path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/><path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/></svg>
+                        Enviar Imagem
+                    </button>
+                    <span class="dropzone-subtext">Colar imagem (Ctrl V) ou clicar acima</span>
+                    <div class="formats-box">
+                        <span class="format-tag">JPG</span>
+                        <span class="format-tag">JPEG</span>
+                        <span class="format-tag">PNG</span>
+                        <span class="format-tag">WEBP</span>
+                    </div>
+                    <input id="acc-foto-file" type="file" accept="image/*" style="display: none;">
+                </div>
+                
+                <div class="preview-wrapper">
+                    <img id="avatar-preview" class="photo-preview" src="mu.png" alt="Prévia">
+                    <span class="preview-info" id="preview-filename">Nenhum arquivo modificado</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Vincular Linhagem (Trono/Casa)</label>
+                <div class="custom-dropdown" id="casaDropdown">
+                    <div class="dropdown-selected">
+                        <div class="selected-info">
+                            <span>Selecione sua Casa...</span>
+                        </div>
+                        <i class="dropdown-arrow"></i>
+                    </div>
+                    <div class="dropdown-grid" id="dropdownGrid">
+                        <div class="dropdown-item" data-casa="Ashen" data-img="reinosdemavul/ashen.png">
+                            <img src="reinosdemavul/ashen.png" alt="Ashen">
+                            <span>Ashen</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Barchyro" data-img="reinosdemavul/barchyro.png">
+                            <img src="reinosdemavul/barchyro.png" alt="Barchyro">
+                            <span>Barchyro</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Blakah" data-img="reinosdemavul/blakah.png">
+                            <img src="reinosdemavul/blakah.png" alt="Blakah">
+                            <span>Blakah</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Bolynas" data-img="reinosdemavul/bolynas.png">
+                            <img src="reinosdemavul/bolynas.png" alt="Bolynas">
+                            <span>Bolynas</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Brakemir" data-img="reinosdemavul/brakemir.png">
+                            <img src="reinosdemavul/brakemir.png" alt="Brakemir">
+                            <span>Brakemir</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Cervindor" data-img="reinosdemavul/cervindor.png">
+                            <img src="reinosdemavul/cervindor.png" alt="Cervindor">
+                            <span>Cervindor</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Cosnalia" data-img="reinosdemavul/cosnalia.png">
+                            <img src="reinosdemavul/cosnalia.png" alt="Cosnalia">
+                            <span>Cosnalia</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Drakorvy" data-img="reinosdemavul/drakorvy.png">
+                            <img src="reinosdemavul/drakorvy.png" alt="Drakorvy">
+                            <span>Drakorvy</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Fartally" data-img="reinosdemavul/fartally.png">
+                            <img src="reinosdemavul/fartally.png" alt="Fartally">
+                            <span>Fartally</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Flamaryn" data-img="reinosdemavul/flamaryn.png">
+                            <img src="reinosdemavul/flamaryn.png" alt="Flamaryn">
+                            <span>Flamaryn</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Kaldarion" data-img="reinosdemavul/kaldarion.png">
+                            <img src="reinosdemavul/kaldarion.png" alt="Kaldarion">
+                            <span>Kaldarion</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Klavar" data-img="reinosdemavul/klavar.png">
+                            <img src="reinosdemavul/klavar.png" alt="Klavar">
+                            <span>Klavar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="acc-nome">Nome completo *</label>
+                <input id="acc-nome" type="text" placeholder="Seu nome oficial">
+            </div>
+            <div class="form-group">
+                <label for="acc-endereco">Endereço</label>
+                <input id="acc-endereco" type="text" placeholder="Rua, Número, Bairro">
+            </div>
+            <div class="form-group">
+                <label for="acc-cep">CEP</label>
+                <input id="acc-cep" type="text" placeholder="00000-000">
+            </div>
+            <div class="form-group">
+                <label for="acc-telefone">Número de Telefone</label>
+                <input id="acc-telefone" type="text" placeholder="(00) 00000-0000">
+            </div>
+            <div class="form-group">
+                <label for="acc-cpf">CPF</label>
+                <input id="acc-cpf" type="text" placeholder="000.000.000-00">
+            </div>
+            <div class="modal-actions">
+                <button id="closeModalBtn" class="btn-cancel">Cancelar</button>
+                <button id="saveAccountBtn" class="forum-btn">Salvar</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
-            authDomain: "triohnte-database.firebaseapp.com",
-            databaseURL: "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app", 
-            projectId: "triohnte-database",
-            appId: "1:127473963183:web:c071072d846a8d7240045a"
-        };
+        // Lógica básica para controlar a abertura/fechamento do dropdown customizado
+        const casaDropdown = document.getElementById('casaDropdown');
+        const dropdownSelected = document.querySelector('.dropdown-selected');
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
 
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const database = firebase.database();
-
-        let usuarioAtual = null;
-        let base64ImagemSelecionada = ""; 
-        let casaSelecionada = ""; 
-
-        document.addEventListener("DOMContentLoaded", () => {
-            
-            const modal = document.getElementById('accountModal');
-            const accountBtn = document.getElementById('account-btn');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const saveAccountBtn = document.getElementById('saveAccountBtn');
-            
-            const dropzone = document.getElementById('dropzone');
-            const fotoFileInput = document.getElementById('acc-foto-file');
-            const triggerFileBtn = document.getElementById('triggerFileBtn');
-            const avatarPreview = document.getElementById('avatar-preview');
-            const filenameText = document.getElementById('preview-filename');
-            const userMiniAvatar = document.getElementById('user-mini-avatar');
-
-            // Dropdown de Linhagens
-            const casaDropdown = document.getElementById('casaDropdown');
-            const dropdownSelected = document.getElementById('dropdownSelected');
-            const selectedCasaImg = document.getElementById('selected-casa-img');
-            const selectedCasaNome = document.getElementById('selected-casa-nome');
-            const dropdownItems = document.querySelectorAll('.dropdown-item');
-
-            if (dropdownSelected) {
-                dropdownSelected.onclick = (e) => {
-                    e.stopPropagation();
-                    casaDropdown.classList.toggle('active');
-                };
-            }
-
-            window.addEventListener('click', () => {
-                if (casaDropdown) casaDropdown.classList.remove('active');
-            });
-
-            dropdownItems.forEach(item => {
-                item.onclick = (e) => {
-                    e.stopPropagation();
-                    casaSelecionada = item.getAttribute('data-casa');
-                    const imgPath = item.getAttribute('data-img');
-
-                    if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
-                    if (selectedCasaImg) selectedCasaImg.src = imgPath;
-
-                    dropdownItems.forEach(i => i.classList.remove('selected'));
-                    item.classList.add('selected');
-
-                    casaDropdown.classList.remove('active');
-                };
-            });
-
-            const processarArquivoImagem = (file) => {
-                if (!file) return;
-
-                if (!file.type.match('image.*')) {
-                    alert("Apenas arquivos de imagem são suportados.");
-                    return;
-                }
-
-                if (file.size > 2 * 1024 * 1024) { 
-                    alert("Por favor, selecione uma imagem de até 2MB.");
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    base64ImagemSelecionada = event.target.result;
-                    if (avatarPreview) avatarPreview.src = base64ImagemSelecionada;
-                    if (filenameText) filenameText.textContent = file.name.length > 25 ? file.name.substring(0, 22) + "..." : file.name;
-                };
-                reader.readAsDataURL(file);
-            };
-
-            if (triggerFileBtn && fotoFileInput) {
-                triggerFileBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    fotoFileInput.click();
-                };
-                dropzone.onclick = () => {
-                    fotoFileInput.click();
-                };
-            }
-
-            if (fotoFileInput) {
-                fotoFileInput.onchange = (e) => {
-                    processarArquivoImagem(e.target.files[0]);
-                };
-            }
-
-            if (dropzone) {
-                ['dragenter', 'dragover'].forEach(eventName => {
-                    dropzone.addEventListener(eventName, (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        dropzone.classList.add('dragover');
-                    }, false);
-                });
-
-                ['dragleave', 'drop'].forEach(eventName => {
-                    dropzone.addEventListener(eventName, (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        dropzone.classList.remove('dragover');
-                    }, false);
-                });
-
-                dropzone.addEventListener('drop', (e) => {
-                    const dt = e.dataTransfer;
-                    const files = dt.files;
-                    if (files.length > 0) {
-                        processarArquivoImagem(files[0]);
-                    }
-                }, false);
-            }
-
-            window.addEventListener('paste', (e) => {
-                if (!modal.classList.contains('active')) return;
-
-                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
-                for (let i = 0; i < items.length; i++) {
-                    if (items[i].type.indexOf('image') !== -1) {
-                        const blob = items[i].getAsFile();
-                        const file = new File([blob], "imagem-colada.png", { type: "image/png" });
-                        processarArquivoImagem(file);
-                        break;
-                    }
-                }
-            });
-
-            if (accountBtn) {
-                accountBtn.onclick = () => {
-                    if (usuarioAtual) {
-                        database.ref('usuarios/' + usuarioAtual.uid).once('value').then((snap) => {
-                            const d = snap.val() || {};
-                            document.getElementById('acc-nome').value = d.nome || "";
-                            document.getElementById('acc-endereco').value = d.endereco || "";
-                            document.getElementById('acc-cep').value = d.cep || "";
-                            document.getElementById('acc-telefone').value = d.telefone || "";
-                            document.getElementById('acc-cpf').value = d.cpf || "";
-                            
-                            base64ImagemSelecionada = d.foto || "";
-                            if (avatarPreview) {
-                                avatarPreview.src = d.foto || "mu.png";
-                            }
-                            if (filenameText) {
-                                filenameText.textContent = d.foto ? "Imagem atual carregada" : "Nenhum arquivo modificado";
-                            }
-
-                            casaSelecionada = d.casa || "";
-                            if (casaSelecionada) {
-                            if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
-    
-                            // Força o caminho correto baseado no nome da casa salvo em minúsculo
-                            if (selectedCasaImg) {
-                            selectedCasaImg.src = `reinosdemavul/${casaSelecionada.toLowerCase()}.png`;
-                            }
-    
-                            dropdownItems.forEach(item => {
-                            if (item.getAttribute('data-casa').toLowerCase() === casaSelecionada.toLowerCase()) {
-                            item.classList.add('selected');
-                            } else {
-                            item.classList.remove('selected');
-                             }
-                                });
-                            } else {
-                                if (selectedCasaNome) selectedCasaNome.textContent = "Nenhuma linhagem escolhida";
-                                if (selectedCasaImg) selectedCasaImg.src = "mu.png";
-                                dropdownItems.forEach(i => i.classList.remove('selected'));
-                            }
-                        });
-                    }
-                    modal.classList.add('active');
-                };
-            }
-
-            if (closeModalBtn) {
-                closeModalBtn.onclick = () => modal.classList.remove('active');
-            }
-
-            if (saveAccountBtn) {
-                saveAccountBtn.onclick = () => {
-                    const nome = document.getElementById('acc-nome').value.trim();
-                    
-                    if (!nome) {
-                        alert("O campo Nome é obrigatório.");
-                        return;
-                    }
-
-                    const dadosAtualizados = {
-                        foto: base64ImagemSelecionada, 
-                        casa: casaSelecionada, 
-                        nome: nome,
-                        endereco: document.getElementById('acc-endereco').value.trim(),
-                        cep: document.getElementById('acc-cep').value.trim(),
-                        telefone: document.getElementById('acc-telefone').value.trim(),
-                        cpf: document.getElementById('acc-cpf').value.trim(),
-                        email: usuarioAtual.email
-                    };
-
-                    database.ref('usuarios/' + usuarioAtual.uid).update(dadosAtualizados)
-                        .then(() => {
-                            alert("Configurações updated com sucesso!");
-                            modal.classList.remove('active');
-                        })
-                        .catch(err => alert("Erro ao salvar: " + err.message));
-                };
-            }
-            
-            auth.onAuthStateChanged((user) => {
-                const authContainer = document.getElementById('auth-container');
-                const authSection = document.getElementById('auth-section');
-                const userInfo = document.getElementById('user-info');
-                const userGreeting = document.getElementById('user-greeting');
-                
-                if (!user) {
-                    usuarioAtual = null;
-                    if (authContainer) authContainer.classList.remove('hidden');
-                    if (authSection) authSection.classList.remove('hidden');
-                    if (userInfo) userInfo.classList.add('hidden');
-                    if (userMiniAvatar) userMiniAvatar.classList.add('hidden');
-                    modal.classList.remove('active');
-                    return;
-                }
-                
-                usuarioAtual = user;
-                if (authContainer) authContainer.classList.add('hidden');
-                if (authSection) authSection.classList.add('hidden');
-                if (userInfo) userInfo.classList.remove('hidden');
-                if (userGreeting) userGreeting.textContent = `Olá, ${user.email.split('@')[0]}`;
-
-                database.ref('usuarios/' + user.uid).on('value', (snap) => {
-                    const d = snap.val();
-                    if (d) {
-                        if (d.nome && userGreeting) {
-                            const tagCasa = d.casa ? ` [Casa ${d.casa}]` : '';
-                            userGreeting.textContent = `Olá, ${d.nome.split(' ')[0]}${tagCasa}`;
-                        }
-                        if (d.foto && userMiniAvatar) {
-                            userMiniAvatar.src = d.foto;
-                            userMiniAvatar.classList.remove('hidden');
-                        } else if (userMiniAvatar) {
-                            userMiniAvatar.classList.add('hidden');
-                        }
-                    }
-                });
-            });
-
-            const loginBtn = document.getElementById('login-btn');
-            if (loginBtn) {
-                loginBtn.onclick = () => {
-                    const e = document.getElementById('email-field').value;
-                    const p = document.getElementById('pass-field').value;
-                    if (e && p) auth.signInWithEmailAndPassword(e, p).catch(err => alert("Erro: " + err.message));
-                };
-            }
-
-            const signupBtn = document.getElementById('signup-btn');
-            if (signupBtn) {
-                signupBtn.onclick = () => {
-                    const e = document.getElementById('email-field').value;
-                    const p = document.getElementById('pass-field').value;
-                    if (e && p) {
-                        auth.createUserWithEmailAndPassword(e, p).then(u => {
-                            database.ref('usuarios/' + u.user.uid).set({ email: e, nome: e.split('@')[0], foto: "", casa: "" });
-                        }).catch(err => alert("Erro: " + err.message));
-                    }
-                };
-            }
-
-            const logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.onclick = () => auth.signOut();
-            }
-
-            // --- FÓRUM ---
-            const input = document.getElementById("forumInput");
-            const btn = document.getElementById("publishBtn");
-            const container = document.getElementById("forumPosts");
-            const formWrapper = document.getElementById("forumFormWrapper");
-
-            const formatarData = (timestamp) => {
-                const data = new Date(timestamp);
-                return data.toLocaleDateString('pt-BR') + " às " + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-            };
-
-            const renderPosts = (postsObj) => {
-                if (!container) return;
-                container.innerHTML = "";
-                if (!postsObj) {
-                    if (formWrapper) formWrapper.classList.remove("has-posts");
-                    return;
-                }
-                if (formWrapper) formWrapper.classList.add("has-posts");
-                
-                const postsArray = Object.keys(postsObj).map(key => ({
-                    id: key,
-                    ...postsObj[key]
-                })).sort((a, b) => b.timestamp - a.timestamp);
-
-                postsArray.forEach(post => {
-                    const card = document.createElement("div");
-                    card.className = "post-card";
-                    card.innerHTML = `
-                        <div class="post-header">
-                            <span class="post-author">${post.author}</span>
-                            <span class="post-date">${formatarData(post.timestamp)}</span>
-                        </div>
-                        <div class="post-content">${post.content}</div>
-                    `;
-                    container.appendChild(card);
-                });
-            };
-
-            database.ref('posts').on('value', (snapshot) => {
-                renderPosts(snapshot.val());
-            });
-
-            if (btn) {
-                btn.onclick = () => {
-                    if (!input) return;
-                    const texto = input.value.trim();
-                    if (!texto) return;
-
-                    let identificacaoAutor = "(Visitante)";
-                    if (usuarioAtual) {
-                        identificacaoAutor = usuarioAtual.email;
-                    }
-
-                    const novoPost = {
-                        author: identificacaoAutor,
-                        content: texto,
-                        timestamp: Date.now()
-                    };
-
-                    database.ref('posts').push(novoPost)
-                        .then(() => { input.value = ""; })
-                        .catch((erro) => { alert("Erro ao publicar."); });
-                };
-            }
+        dropdownSelected.addEventListener('click', (e) => {
+            e.stopPropagation();
+            casaDropdown.classList.toggle('active');
         });
+
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const casaNome = item.getAttribute('data-casa');
+                const casaImg = item.getAttribute('data-img');
+                
+                document.querySelector('.selected-info').innerHTML = `
+                    <img src="${casaImg}" alt="${casaNome}" style="width:24px;height:24px;object-fit:contain;">
+                    <span>${casaNome}</span>
+                `;
+                
+                dropdownItems.forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                casaDropdown.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('click', () => {
+            casaDropdown.classList.remove('active');
+        });
+
+        // Controle básico de exibição do Modal para testes estruturais
+        const accountBtn = document.getElementById('account-btn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const accountModal = document.getElementById('accountModal');
+
+        if(accountBtn) {
+            accountBtn.addEventListener('click', () => accountModal.classList.add('active'));
+        }
+        if(closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => accountModal.classList.remove('active'));
+        }
     </script>
 </body>
 </html>
