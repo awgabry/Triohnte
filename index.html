@@ -1,9 +1,24 @@
+Essa tela branca com a lista de links azul desconfigurada no canto inferior esquerdo é um clássico sinal de que o navegador não conseguiu carregar o seu arquivo de estilização (CSS) ou que há uma tag aberta incorretamente bem no topo do seu documento, quebrando toda a renderização do HTML estruturado.
+
+Olhando para o código que você compartilhou anteriormente, o problema está exatamente no topo da sua estrutura. Você iniciou o arquivo diretamente em:
+
+HTML
+completo *</label>
+                <input id="acc-nome" type="text" placeholder="Seu nome oficial">
+            </div>
+Isso significa que as tags fundamentais de abertura (<!DOCTYPE html>, <html>, <head>, <body>) e, mais importante, o vínculo com o seu arquivo .css sumiram do topo do código. Sem isso, o navegador lê apenas texto puro e joga tudo para o canto da tela.
+
+Aqui está o seu código com a estrutura e arquitetura de tags corrigidas no topo. Certifique-se de que o nome do seu arquivo CSS (mudei para style.css abaixo como exemplo) esteja correto na linha correspondente:
+
+HTML
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Triohnte</title>
-    </head>
+    <link rel="stylesheet" href="style.css"> 
+</head>
 <body>
 
     <div id="accountModal" class="modal">
@@ -59,7 +74,7 @@
             <h2>O Legado</h2>
             <p>Triohnte teve um inicio humilde, num momento épico da história de seu autor. Tal livro esteve por muito tempo ligado aos problemas mentais, adquiridos devido a separação de seus pais. (Ansiedade, Crises de pânico recorrentes e TDAH auto diagnosticada). Aquino nunca pode ser uma "pessoa normal", momentos de maior conexão com a realidade social eram abafados por batalhas judiciais. Nas palavras do mesmo: "Muito para um garoto de apenas 8 anos".</p>
             <p>Tal problem se estendeu por anos, até que completasse seus 17 anos de idade, quando decidiu começar a escrever. Incentivado por um amigo, Pedro Raphael, Gabriel decidiu sentar-se em seu quarto escuro e escrever um breve conto que tomou com o passar do tempo, cerca de 100 linhas. Posteriormente o conto: Cyannon e a batalha das ilhas galápagos, algo inicialmente sem parentesco nenhum com a obra atual, tomou forma para o Triohnte que conhecemos.</p>
-            <p>"Trionte, O segredo do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo. 
+            <p>"Trionte, O secret do império", primeira versão do livro, foi publicada em 12 de Dezembro de 2020 pela Editora CRV. Somente depois de receber algumas críticas Gabriel decidiu reescrever o material. Inicialmente foi estipulado dois anos para a conclusão da nova versão, algo que com o passar das impressões de edição, mostrou-se um prazo impossível. Assim o autor estendeu a edição por até 7 anos, prazo que terá seu fim logo. 
 
 Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto final no desgoverno da própria história e reescrever o destino. Isso é a arte, um baita chute no saco do universo.</p>
         </section>
@@ -146,7 +161,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <script>
-        // Configuração Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
             authDomain: "triohnte-database.firebaseapp.com",
@@ -165,7 +179,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
         let casaSelecionada = ""; 
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Vinculação correta dos elementos do DOM para evitar erros de escopo
             const loginBtn = document.getElementById("login-btn");
             const signupBtn = document.getElementById("signup-btn");
             const emailField = document.getElementById("email-field");
@@ -175,9 +188,8 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
             const publishBtn = document.getElementById("publishBtn");
             const forumPostsContainer = document.getElementById("forumPosts");
             
-            const userGreeting = document.getElementById("userGreeting"); // Elemento de boas-vindas caso use no site
+            const userGreeting = document.getElementById("userGreeting");
 
-            // 🔐 SISTEMA DE LOGIN E CADASTRO
             if (loginBtn && signupBtn && emailField && passField) {
                 loginBtn.addEventListener("click", () => {
                     const email = emailField.value.trim();
@@ -186,9 +198,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     if (!email || !password) return;
 
                     auth.signInWithEmailAndPassword(email, password)
-                        .then(() => {
-                            console.log("Login realizado com sucesso");
-                        })
                         .catch((err) => {
                             alert("Erro ao entrar: " + err.message);
                         });
@@ -201,18 +210,12 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                     if (!email || !password) return;
 
                     auth.createUserWithEmailAndPassword(email, password)
-                        .then(() => {
-                            console.log("Usuário criado com sucesso");
-                        })
                         .catch((err) => {
                             alert("Erro ao registrar: " + err.message);
                         });
                 });
             }
 
-            // ==========================================
-            // 🔥 GERENCIAMENTO DE ESTADO DE AUTENTICAÇÃO
-            // ==========================================
             auth.onAuthStateChanged((user) => {
                 const authContainer = document.getElementById('auth-container');
                 const authSection = document.getElementById('auth-section');
@@ -234,7 +237,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 if (authSection) authSection.classList.add('hidden');
                 if (userInfo) userInfo.classList.remove('hidden');
 
-                // Monitoramento dos dados complementares do usuário logado
                 database.ref('usuarios/' + user.uid).on('value', (snap) => {
                     const d = snap.val();
                     if (!d) return;
@@ -248,16 +250,13 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 });
             });
 
-            // ==========================================
-            // 🧠 PUBLICAÇÃO DE POSTS (FÓRUM)
-            // ==========================================
             if (publishBtn && forumInput) {
                 publishBtn.onclick = () => {
                     const texto = forumInput.value.trim();
                     if (!texto) return;
                     
                     if (!usuarioAtual) {
-                        alert("Você precisa estar logado como aliado para publicar no fórum.");
+                        alert("Você precisa estar logado para publicar no fórum.");
                         return;
                     }
 
@@ -276,9 +275,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                 };
             }
 
-            // ==========================================
-            // 🧠 RENDERIZAÇÃO REALTIME DOS POSTS
-            // ==========================================
             if (forumPostsContainer) {
                 database.ref('posts').on('value', (snapshot) => {
                     const posts = snapshot.val();
@@ -286,7 +282,6 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
 
                     if (!posts) return;
 
-                    // Ordena do mais recente para o mais antigo
                     const arr = Object.values(posts).sort((a, b) => b.timestamp - a.timestamp);
 
                     arr.forEach(post => {
@@ -298,30 +293,20 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
                                 <div style="display:flex; align-items:center; gap:10px;">
                                     <img src="${post.foto || 'mu.png'}" 
                                          style="width:28px;height:28px;border-radius:50%;border:1px solid #c59d5f;object-fit:cover;">
-
                                     <span class="post-author">${post.nome || "Usuário"}</span>
-
-                                    ${post.casaImg ? `
-                                        <img src="${post.casaImg}" style="width:20px;height:20px;">
-                                    ` : ""}
+                                    ${post.casaImg ? `<img src="${post.casaImg}" style="width:20px;height:20px;">` : ""}
                                 </div>
-
                                 <span class="post-date">
                                     ${post.timestamp ? new Date(post.timestamp).toLocaleString() : ""}
                                 </span>
                             </div>
-
                             <div class="post-content" style="margin-top: 10px;">${post.content || ""}</div>
                         `;
-
                         forumPostsContainer.appendChild(div);
                     });
                 });
             }
 
-            // ==========================================
-            // 🎵 TRATAMENTO DE ÁUDIO / MÚSICA DE FUNDO
-            // ==========================================
             const music = document.getElementById("bg-music");
             const volumeControl = document.getElementById("volume-control");
 
