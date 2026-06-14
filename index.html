@@ -347,18 +347,96 @@
         }
         .footer-logo-img { height: 40px; width: 150px; display: inline-block; }
 
+        /* --- BARRA DE AUTENTICAÇÃO INTEGRADA (SISTEMA DE LOGIN COPIADO) --- */
+        .top-bar-container {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .auth-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(10, 10, 10, 0.8);
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid #222;
+        }
+        .auth-box input {
+            background: #000;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            border-radius: 3px;
+            outline: none;
+            width: 110px;
+            font-family: 'Crimson Pro', serif;
+        }
+        .auth-box input:focus { border-color: #c59d5f; }
+        .auth-btn {
+            background: var(--gold-gradient);
+            color: #000;
+            border: none;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            transition: 0.3s;
+        }
+        .auth-btn:hover { filter: brightness(1.2); }
+        .user-logged {
+            color: #e3c38f;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logout-link {
+            color: #ff4a4a;
+            text-decoration: none;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .logout-link:hover { text-shadow: 0 0 5px #ff4a4a; }
+        .hidden { display: none !important; }
+
         @media (max-width: 768px) {
             nav ul { flex-direction: column; align-items: center; gap: 20px; }
             .intro-text h2 { font-size: 1.8rem; }
             .borda-lateral { display: none; }
             .progress-section h2, .forum-section h2 { font-size: 1.4rem; }
             .forum-section { padding: 30px 20px; }
+            .top-bar-container { position: relative; top: 0; right: 0; justify-content: center; padding: 20px 0; }
         }
     </style>
 </head>
 <body>
 
     <div class="vignette"></div>
+
+    <div class="top-bar-container">
+        <div id="auth-container" class="auth-box">
+            <input id="email-field" type="email" placeholder="E-mail">
+            <input id="pass-field" type="password" placeholder="Senha">
+            <button id="login-btn" class="auth-btn">Entrar</button>
+            <button id="signup-btn" class="auth-btn">Registrar</button>
+        </div>
+        <div id="user-info" class="auth-box hidden">
+            <div class="user-logged">
+                <span id="user-greeting">Olá, ...</span>
+                <span id="logout-btn" class="logout-link">[Sair]</span>
+            </div>
+        </div>
+    </div>
 
     <header>
         <div class="borda-lateral borda-esquerda"></div>
@@ -454,136 +532,146 @@ Contudo mostrou ao mundo que, nada pode parar aquele que decide colocar um ponto
         <p style="margin-top: 15px; font-size: 0.8rem; color: #444;">Copyright Triohnte &copy; 2026</p>
     </footer>
 
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const input = document.getElementById("forumInput");
-            const btn = document.getElementById("publishBtn");
-            const container = document.getElementById("forumPosts");
-            const formWrapper = document.getElementById("forumFormWrapper");
+        // Configuração idêntica do Banco de Dados
+        const firebaseConfig = {
+            apiKey: "AIzaSyBPSH4g1rtk27n9wCCBJZ2GK1UKCMH-Yjs",
+            authDomain: "login-sw-14940.firebaseapp.com",
+            databaseURL: "https://login-sw-14940-default-rtdb.europe-west1.firebasedatabase.app/", 
+            projectId: "login-sw-14940",
+            appId: "1:252978150700:web:2c7d3997389f7675058089"
+        };
 
-            const dbUrl = "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app/posts.json";
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        let usuarioAtual = null;
+
+        // Monitoramento de Autenticação
+        auth.onAuthStateChanged((user) => {
+            const authContainer = document.getElementById('auth-container');
+            const userInfo = document.getElementById('user-info');
+            const userGreeting = document.getElementById('user-greeting');
             
-            // 1. INSIRA O TEU IP ATUAL AQUI SE QUISERES QUE ELE DETETE SOZINHO:
-            const meuIpPessoal = "ALTERE_AQUI_PELO_TEU_IP";
+            if (!user) {
+                usuarioAtual = null;
+                authContainer.classList.remove('hidden');
+                userInfo.classList.add('hidden');
+                return;
+            }
             
-            // Variável padrão caso não caia em nenhuma validação
-            let visitorIdentity = "Explorador de Walingardyn";
+            usuarioAtual = user;
+            authContainer.classList.add('hidden');
+            userInfo.classList.remove('hidden');
+            userGreeting.textContent = `Olá, ${user.email.split('@')[0]}`;
 
-            // Deteta o IP em background
-            const captureVisitorIp = async () => {
-                try {
-                    const response = await fetch("https://ipapi.co/json/");
-                    if (response.ok) {
-                        const data = await response.json();
-                        
-                        if (data.ip && data.ip === meuIpPessoal) {
-                            visitorIdentity = "Autor";
-                        } else if (data.city && data.country_code) {
-                            visitorIdentity = `Visitante de ${data.city} - ${data.country_code}`;
-                        } else if (data.ip) {
-                            visitorIdentity = `Membro (IP: ${data.ip})`;
-                        }
-                    }
-                } catch (e) {
-                    console.log("Erro na API de IPs, usando o nome padrão.");
-                }
-            };
-
-            const renderPost = (author, text, date) => {
-                const postDiv = document.createElement("div");
-                postDiv.className = "post-card";
-                
-                // Remove qualquer resquício de "Anônimo" ou vazio de posts antigos
-                const displayAuthor = author && author !== "Anônimo" ? author : "Autor";
-                
-                postDiv.innerHTML = `
-                    <div class="post-header">
-                        <span class="post-author">${displayAuthor}</span>
-                        <span class="post-date">${date}</span>
-                    </div>
-                    <div class="post-content">
-                        <p>${text.replace(/\n/g, '<br>')}</p>
-                    </div>
-                `;
-                container.insertBefore(postDiv, container.firstChild);
-            };
-
-            const loadGlobalPosts = async () => {
-                try {
-                    const response = await fetch(dbUrl);
-                    if (!response.ok) throw new Error("Erro ao buscar banco de dados.");
-                     
-                    const data = await response.json();
-                    container.innerHTML = ""; 
-
-                    if (data && Object.keys(data).length > 0) {
-                        formWrapper.classList.add("has-posts");
-
-                        const sortedPosts = Object.keys(data).map(key => data[key]);
-                        sortedPosts.forEach(post => {
-                            renderPost(post.author, post.text, post.date);
-                        });
-                    } else {
-                        formWrapper.classList.remove("has-posts");
-                    }
-                } catch (error) {
-                    console.error("Falha na conexão global:", error);
-                }
-            };
-
-            btn.addEventListener("click", async () => {
-                let text = input.value.trim();
-                if (!text) return;
-
-                let finalAuthor = visitorIdentity;
-
-                // 2. SISTEMA SEGURO REFORÇADO (CHAVE SECRETA):
-                // Se escreveres /autor em qualquer parte do texto, assume "Autor" instantaneamente
-                if (text.toLowerCase().includes("/autor")) {
-                    finalAuthor = "Autor";
-                    // Apaga o comando secreto do texto para que os leitores não o vejam publicado
-                    text = text.replace(/\/autor/gi, "").trim();
-                }
-
-                if (!text) return; // Proteção se o post tiver apenas o comando secreto
-
-                const options = { day: 'numeric', month: 'long', year: 'numeric' };
-                const formattedDate = new Date().toLocaleDateString('pt-BR', options);
-
-                const newPost = { 
-                    author: finalAuthor, 
-                    text: text, 
-                    date: formattedDate, 
-                    timestamp: Date.now() 
-                };
-
-                try {
-                    btn.disabled = true;
-                    btn.innerText = "Enviando...";
-
-                    const response = await fetch(dbUrl, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(newPost)
-                    });
-
-                    if (!response.ok) throw new Error("Falha no envio.");
-
-                    input.value = "";
-                    await loadGlobalPosts();
-                } catch (error) {
-                    alert("Não foi possível publicar globalmente. Verifique as regras do Firebase.");
-                    console.error(error);
-                } finally {
-                    btn.disabled = false;
-                    btn.innerText = "Publicar";
+            // Verifica se o usuário tem nome salvo na Realtime Database global do sistema
+            database.ref('usuarios/' + user.uid).on('value', (snap) => {
+                const d = snap.val();
+                if (d && d.nome) {
+                    userGreeting.textContent = `Olá, ${d.nome.split(' ')[0]}`;
                 }
             });
-
-            captureVisitorIp();
-            loadGlobalPosts();
         });
-    </script>
 
+        // Eventos de Autenticação (Copied from Script 1)
+        document.getElementById('login-btn').onclick = () => {
+            const e = document.getElementById('email-field').value;
+            const p = document.getElementById('pass-field').value;
+            if (e && p) auth.signInWithEmailAndPassword(e, p).catch(err => alert("Erro: " + err.message));
+        };
+
+        document.getElementById('signup-btn').onclick = () => {
+            const e = document.getElementById('email-field').value;
+            const p = document.getElementById('pass-field').value;
+            if (e && p) {
+                auth.createUserWithEmailAndPassword(e, p).then(u => {
+                    database.ref('usuarios/' + u.user.uid).set({ email: e, nome: "" });
+                }).catch(err => alert("Erro: " + err.message));
+            }
+        };
+
+        document.getElementById('logout-btn').onclick = () => auth.signOut();
+
+        // --- SISTEMA INTERNO DO FÓRUM INTEGRADO AO BANCO DE DADOS ---
+        const input = document.getElementById("forumInput");
+        const btn = document.getElementById("publishBtn");
+        const container = document.getElementById("forumPosts");
+        const formWrapper = document.getElementById("forumFormWrapper");
+
+        // Função para formatar a data do Post
+        const formatarData = (timestamp) => {
+            const data = new Date(timestamp);
+            return data.toLocaleDateString('pt-BR') + " às " + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        };
+
+        // Renderizar Posts na tela
+        const renderPosts = (postsObj) => {
+            container.innerHTML = "";
+            if (!postsObj) {
+                formWrapper.classList.remove("has-posts");
+                return;
+            }
+            
+            formWrapper.classList.add("has-posts");
+            
+            // Converte o objeto em array e ordena cronologicamente (do mais recente ao mais antigo)
+            const postsArray = Object.keys(postsObj).map(key => ({
+                id: key,
+                ...postsObj[key]
+            })).sort((a, b) => b.timestamp - a.timestamp);
+
+            postsArray.forEach(post => {
+                const card = document.createElement("div");
+                card.className = "post-card";
+                card.innerHTML = `
+                    <div class="post-header">
+                        <span class="post-author">${post.author}</span>
+                        <span class="post-date">${formatarData(post.timestamp)}</span>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        // Escuta em Realtime a ramificação 'posts' no Banco de Dados
+        database.ref('posts').on('value', (snapshot) => {
+            renderPosts(snapshot.val());
+        });
+
+        // Ação de Publicar
+        btn.onclick = () => {
+            const texto = input.value.trim();
+            if (!texto) return;
+
+            // Determina o nome do autor com base no estado da sessão do Firebase
+            let identificacaoAutor = "(Visitante)";
+            if (usuarioAtual) {
+                identificacaoAutor = usuarioAtual.email; // Apresenta o e-mail completo do usuário logado
+            }
+
+            const novoPost = {
+                author: identificacaoAutor,
+                content: texto,
+                timestamp: Date.now()
+            };
+
+            // Envia diretamente para a ramificação 'posts' no Realtime Database
+            database.ref('posts').push(novoPost)
+                .then(() => {
+                    input.value = "";
+                })
+                .catch((erro) => {
+                    console.error("Erro ao publicar:", erro);
+                    alert("Erro ao publicar sua mensagem.");
+                });
+        };
+    </script>
 </body>
 </html>
