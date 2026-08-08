@@ -57,23 +57,62 @@
         .payment-box strong {
             color: #fff;
         }
+        
+        /* Estilos dos Botões de Valor */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .value-btn {
+            background-color: #1a1a1a;
+            color: #25c974;
+            border: 1px solid #25c974;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        .value-btn:hover, .value-btn.active {
+            background-color: #25c974;
+            color: #0b0b0b;
+        }
+        .custom-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #444;
+            background-color: #1a1a1a;
+            color: #fff;
+            box-sizing: border-box;
+            text-align: center;
+        }
         .wise-tag {
             display: inline-block;
-            background-color: #2e004f;
-            color: #25c974;
-            padding: 8px 16px;
+            width: 100%;
+            background-color: #25c974;
+            color: #0b0b0b;
+            padding: 12px 16px;
             border-radius: 6px;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 15px;
             text-decoration: none;
-            border: 1px solid #25c974;
+            box-sizing: border-box;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+        }
+        .wise-tag:hover {
+            background-color: #1fbd6b;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Substitua 'capa.jpg' pelo caminho real da sua imagem -->
         <img src="capa.jpg" alt="Capa de Triohnte" class="header-img">
         
         <h1>Triohnte</h1>
@@ -86,11 +125,55 @@
 
         <div class="payment-box">
             <p><strong>Apoie a obra ou adquira seu exemplar</strong></p>
-            <p>Para envios diretamente via Wise, utilize os dados abaixo:</p>
-            <!-- Substitua com sua $WiseTag, e-mail ou link direto -->
-            <a href="https://wise.com/pay/me/SEU_USUARIO" target="_blank" class="wise-tag">Transferir via Wise</a>
+            <p>Selecione ou insira o valor desejado em Reais (BRL):</p>
+            
+            <div class="values-grid">
+                <button type="button" class="value-btn" onclick="selectValue(10, this)">R$ 10</button>
+                <button type="button" class="value-btn" onclick="selectValue(20, this)">R$ 20</button>
+                <button type="button" class="value-btn" onclick="selectValue(30, this)">R$ 30</button>
+                <button type="button" class="value-btn" onclick="selectValue(40, this)">R$ 40</button>
+                <button type="button" class="value-btn" onclick="selectValue(50, this)">R$ 50</button>
+            </div>
+
+            <input type="number" id="customAmount" class="custom-input" placeholder="Outro valor (R$)" min="1" oninput="clearSelection()">
+
+            <!-- Insira seu usuário do Wise na variável JS abaixo -->
+            <button onclick="payWithWise()" class="wise-tag">Transferir via Wise</button>
         </div>
     </div>
+
+    <script>
+        let selectedAmount = 0;
+        const wiseUsername = "SEU_USUARIO"; // Substitua pelo seu @tag ou usuário da Wise
+
+        function selectValue(amount, btn) {
+            selectedAmount = amount;
+            document.getElementById('customAmount').value = '';
+            
+            // Atualiza destaque dos botões
+            document.querySelectorAll('.value-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function clearSelection() {
+            selectedAmount = 0;
+            document.querySelectorAll('.value-btn').forEach(b => b.classList.remove('active'));
+        }
+
+        function payWithWise() {
+            const customVal = document.getElementById('customAmount').value;
+            const finalAmount = customVal ? customVal : selectedAmount;
+
+            if (!finalAmount || finalAmount <= 0) {
+                alert("Por favor, selecione ou digite um valor válido.");
+                return;
+            }
+
+            // Redireciona para o link de pagamento do Wise com valor e moeda BRL
+            const url = `https://wise.com/pay/me/${wiseUsername}?amount=${finalAmount}&currency=BRL`;
+            window.open(url, '_blank');
+        }
+    </script>
 
 </body>
 </html>
