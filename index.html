@@ -332,10 +332,23 @@
             font-weight: bold;
             letter-spacing: 1px;
         }
+        .post-date {
+            color: #555;
+            font-size: 0.8rem;
+        }
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #8c8579;
+        }
+
+
+        /* --- MARCAÇÕES NO FÓRUM --- */
         .post-author-info {
             display: flex;
             align-items: center;
             gap: 10px;
+            min-width: 0;
         }
         .post-author-avatar {
             width: 38px;
@@ -351,14 +364,60 @@
             font-weight: bold;
             letter-spacing: 1px;
         }
-        .post-date {
-            color: #555;
-            font-size: 0.8rem;
-        }
-        .post-content {
-            font-size: 1.1rem;
-            line-height: 1.6;
+        .post-author-house {
             color: #8c8579;
+            font-size: 0.78rem;
+            letter-spacing: 0.5px;
+            font-weight: normal;
+            margin-left: 2px;
+        }
+        .mention-box {
+            position: absolute;
+            z-index: 1000;
+            display: none;
+            max-height: 230px;
+            overflow-y: auto;
+            background: #090909;
+            border: 1px solid #3a2b18;
+            box-shadow: 0 8px 25px rgba(0,0,0,.55);
+            border-radius: 4px;
+        }
+        .mention-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            cursor: pointer;
+            color: #ddd;
+            border-bottom: 1px solid #171717;
+        }
+        .mention-item:hover,
+        .mention-item.active {
+            background: #17120c;
+        }
+        .mention-item img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #8b693c;
+        }
+        .mention-item-name {
+            color: #e3c38f;
+            font-weight: bold;
+        }
+        .mention-item-house {
+            display: block;
+            color: #777;
+            font-size: .75rem;
+            margin-top: 2px;
+        }
+        .forum-compose {
+            position: relative;
+        }
+        .post-mention {
+            color: #d8b574;
+            font-weight: bold;
         }
 
         /* --- SEÇÃO DE AUTENTICAÇÃO "TORNE-SE UM ALIADO" --- */
@@ -1104,6 +1163,19 @@
             appId: "1:127473963183:web:c071072d846a8d7240045a"
         };
 
+        // ============================================================
+        // CONFIGURAÇÃO DO E-MAIL DAS MARCAÇÕES
+        // Crie uma conta no EmailJS e substitua os 3 valores abaixo.
+        // O restante do sistema não precisa ser alterado.
+        // ============================================================
+        const EMAILJS_PUBLIC_KEY = "COLOQUE_SUA_PUBLIC_KEY_AQUI";
+        const EMAILJS_SERVICE_ID = "COLOQUE_SEU_SERVICE_ID_AQUI";
+        const EMAILJS_TEMPLATE_ID = "COLOQUE_SEU_TEMPLATE_ID_AQUI";
+
+        if (window.emailjs && !EMAILJS_PUBLIC_KEY.includes("COLOQUE_")) {
+            emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+        }
+
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
@@ -1384,187 +1456,431 @@
             const container = document.getElementById("forumPosts");
             const formWrapper = document.getElementById("forumFormWrapper");
 
+            // Lista dos usuários que já possuem publicações no Fórum.
+            let usuariosDoForum = {};
+            let sugestoesMarcacao = [];
+            let indiceSugestao = -1;
+
             const formatarData = (timestamp) => {
                 const data = new Date(timestamp);
                 return data.toLocaleDateString('pt-BR') + " às " + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             };
 
-
-
-                    
-
-            if (btn) {
-    btn.onclick = async () => {
-
-        if (!input) return;
-
-        const texto = input.value.trim();
-
-        if (!texto) return;
-
-        let novoPost;
-
-        // ===============================
-        // USUÁRIO LOGADO
-        // ===============================
-        if (usuarioAtual) {
-
-            try {
-
-                const snapshot = await database
-                    .ref('usuarios/' + usuarioAtual.uid)
-                    .once('value');
-
-                const dadosUsuario = snapshot.val() || {};
-
-                novoPost = {
-                    uid: usuarioAtual.uid,
-                    author: dadosUsuario.nome || usuarioAtual.email,
-                    content: texto,
-                    timestamp: Date.now()
-                };
-
-            } catch (erro) {
-
-                console.error("Erro ao carregar dados do usuário:", erro);
-
-                novoPost = {
-                    uid: usuarioAtual.uid,
-                    author: usuarioAtual.email,
-                    content: texto,
-                    timestamp: Date.now()
-                };
-            }
-
-        }
-
-        // ===============================
-        // VISITANTE
-        // ===============================
-        else {
-
-            novoPost = {
-                uid: null,
-                author: "(Visitante)",
-                content: texto,
-                timestamp: Date.now()
+            const escaparHTML = (texto) => {
+                const div = document.createElement('div');
+                div.textContent = texto == null ? '' : String(texto);
+                return div.innerHTML;
             };
 
-        }
+            const escaparRegExp = (texto) => texto.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-        database.ref('posts').push(novoPost)
-            .then(() => {
-                input.value = "";
-            })
-            .catch((erro) => {
-                console.error(erro);
-                alert("Erro ao publicar.");
-            });
-    };
-}
+            // Caixa de sugestões posicionada abaixo do campo de publicação.
+            const compose = document.createElement('div');
+            compose.className = 'forum-compose';
+            if (input && input.parentNode) {
+                input.parentNode.insertBefore(compose, input);
+                compose.appendChild(input);
+            }
 
+            const mentionBox = document.createElement('div');
+            mentionBox.className = 'mention-box';
+            compose.appendChild(mentionBox);
 
+            const posicionarMentionBox = () => {
+                if (!input) return;
+                mentionBox.style.left = input.offsetLeft + 'px';
+                mentionBox.style.top = (input.offsetTop + input.offsetHeight + 5) + 'px';
+                mentionBox.style.width = Math.min(input.offsetWidth, 420) + 'px';
+            };
 
+            const esconderSugestoes = () => {
+                mentionBox.style.display = 'none';
+                mentionBox.innerHTML = '';
+                sugestoesMarcacao = [];
+                indiceSugestao = -1;
+            };
 
+            const obterTokenMarcacao = () => {
+                if (!input) return null;
+                const pos = input.selectionStart;
+                const antes = input.value.slice(0, pos);
+                const match = antes.match(/(?:^|\s)@([^\s@]*)$/u);
+                if (!match) return null;
+                return {
+                    termo: match[1].toLowerCase(),
+                    inicio: pos - match[1].length - 1,
+                    fim: pos
+                };
+            };
 
+            const selecionarUsuarioMarcado = (usuario) => {
+                if (!input) return;
+                const token = obterTokenMarcacao();
+                if (!token) return;
 
-            
-const renderPosts = async (postsObj) => {
-    if (!container) return;
+                const nomeExibicao = usuario.nome || usuario.email || 'Usuário';
+                const antes = input.value.slice(0, token.inicio);
+                const depois = input.value.slice(token.fim);
+                input.value = antes + '@' + nomeExibicao + ' ' + depois;
 
-    container.innerHTML = "";
+                const novaPosicao = antes.length + nomeExibicao.length + 2;
+                input.focus();
+                input.setSelectionRange(novaPosicao, novaPosicao);
+                esconderSugestoes();
+            };
 
-    if (!postsObj) {
-        if (formWrapper) formWrapper.classList.remove("has-posts");
-        return;
-    }
-
-    if (formWrapper) formWrapper.classList.add("has-posts");
-
-    const postsArray = Object.keys(postsObj)
-        .map(key => ({
-            id: key,
-            ...postsObj[key]
-        }))
-        .sort((a, b) => b.timestamp - a.timestamp);
-
-    // Cache para evitar várias consultas ao mesmo usuário
-    const usuariosCache = {};
-
-    for (const post of postsArray) {
-
-        let nomeAutor = post.author || "(Visitante)";
-        let fotoAutor = "mu.png";
-
-        // Se a publicação pertence a um usuário registrado
-        if (post.uid) {
-
-            if (!usuariosCache[post.uid]) {
-                try {
-                    const snapshot = await database
-                        .ref('usuarios/' + post.uid)
-                        .once('value');
-
-                    usuariosCache[post.uid] = snapshot.val() || {};
-                } catch (erro) {
-                    console.error("Erro ao carregar usuário:", erro);
-                    usuariosCache[post.uid] = {};
+            const atualizarSugestoes = async () => {
+                const token = obterTokenMarcacao();
+                if (!token || !usuarioAtual) {
+                    esconderSugestoes();
+                    return;
                 }
+
+                const usuarios = Object.values(usuariosDoForum)
+                    .filter(u => u.uid && u.uid !== usuarioAtual.uid)
+                    .filter(u => {
+                        const nome = (u.nome || '').toLowerCase();
+                        const email = (u.email || '').toLowerCase();
+                        return !token.termo || nome.includes(token.termo) || email.includes(token.termo);
+                    })
+                    .sort((a, b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR'))
+                    .slice(0, 8);
+
+                sugestoesMarcacao = usuarios;
+                indiceSugestao = -1;
+                mentionBox.innerHTML = '';
+
+                if (!usuarios.length) {
+                    esconderSugestoes();
+                    return;
+                }
+
+                usuarios.forEach((usuario, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'mention-item';
+                    item.innerHTML = `
+                        <img src="${escaparHTML(usuario.foto || 'mu.png')}" alt="">
+                        <div>
+                            <div class="mention-item-name">${escaparHTML(usuario.nome || usuario.email || 'Usuário')}</div>
+                            ${usuario.casa ? `<span class="mention-item-house">${escaparHTML(usuario.casa)}</span>` : ''}
+                        </div>
+                    `;
+                    item.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        selecionarUsuarioMarcado(usuario);
+                    });
+                    mentionBox.appendChild(item);
+                });
+
+                posicionarMentionBox();
+                mentionBox.style.display = 'block';
+            };
+
+            if (input) {
+                input.addEventListener('input', atualizarSugestoes);
+                input.addEventListener('keyup', atualizarSugestoes);
+                input.addEventListener('click', atualizarSugestoes);
+                input.addEventListener('keydown', (e) => {
+                    if (mentionBox.style.display !== 'block' || !sugestoesMarcacao.length) return;
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        indiceSugestao = (indiceSugestao + 1) % sugestoesMarcacao.length;
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        indiceSugestao = (indiceSugestao - 1 + sugestoesMarcacao.length) % sugestoesMarcacao.length;
+                    } else if (e.key === 'Enter' && indiceSugestao >= 0) {
+                        e.preventDefault();
+                        selecionarUsuarioMarcado(sugestoesMarcacao[indiceSugestao]);
+                        return;
+                    } else if (e.key === 'Escape') {
+                        esconderSugestoes();
+                        return;
+                    } else {
+                        return;
+                    }
+
+                    Array.from(mentionBox.children).forEach((el, i) => {
+                        el.classList.toggle('active', i === indiceSugestao);
+                    });
+                });
             }
 
-            const dadosUsuario = usuariosCache[post.uid];
+            document.addEventListener('click', (e) => {
+                if (!compose.contains(e.target)) esconderSugestoes();
+            });
 
-            if (dadosUsuario.nome) {
-                nomeAutor = dadosUsuario.nome;
+            window.addEventListener('resize', posicionarMentionBox);
+
+            const carregarUsuariosDosPosts = async (postsObj) => {
+                usuariosDoForum = {};
+                if (!postsObj) return;
+
+                const uids = [...new Set(Object.values(postsObj).map(p => p.uid).filter(Boolean))];
+                await Promise.all(uids.map(async (uid) => {
+                    try {
+                        const snap = await database.ref('usuarios/' + uid).once('value');
+                        const d = snap.val() || {};
+                        usuariosDoForum[uid] = {
+                            uid,
+                            nome: d.nome || '',
+                            email: d.email || '',
+                            foto: d.foto || 'mu.png',
+                            casa: d.casa || ''
+                        };
+                    } catch (erro) {
+                        console.error('Erro ao carregar usuário do fórum:', erro);
+                    }
+                }));
+            };
+
+            const extrairMarcacoes = (texto, postsObj) => {
+                const encontradas = [];
+                const usuarios = Object.values(usuariosDoForum);
+
+                usuarios.forEach(usuario => {
+                    const nome = (usuario.nome || '').trim();
+                    if (!nome) return;
+
+                    const regex = new RegExp('(^|\\s)@' + escaparRegExp(nome) + '(?=\\s|$|[.,!?;:])', 'iu');
+                    if (regex.test(texto) && usuario.uid !== (usuarioAtual ? usuarioAtual.uid : null)) {
+                        encontradas.push(usuario);
+                    }
+                });
+
+                return [...new Map(encontradas.map(u => [u.uid, u])).values()];
+            };
+
+            const montarConteudoComMarcacoes = (texto) => {
+                let resultado = escaparHTML(texto);
+
+                Object.values(usuariosDoForum).forEach(usuario => {
+                    const nome = (usuario.nome || '').trim();
+                    if (!nome) return;
+                    const padrao = new RegExp('(^|\\s)@' + escaparRegExp(nome) + '(?=\\s|$|[.,!?;:])', 'giu');
+                    resultado = resultado.replace(padrao, '$1<span class="post-mention">@$&'.replace('$&', escaparHTML(nome)) + '</span>');
+                });
+
+                return resultado;
+            };
+
+            const enviarEmailMarcacao = async (usuarioMarcado, autor, conteudo) => {
+                if (!usuarioMarcado || !usuarioMarcado.email) return;
+
+                if (!window.emailjs || EMAILJS_PUBLIC_KEY.includes('COLOQUE_') || EMAILJS_SERVICE_ID.includes('COLOQUE_') || EMAILJS_TEMPLATE_ID.includes('COLOQUE_')) {
+                    console.warn('EmailJS ainda não foi configurado. A notificação foi salva no Firebase, mas o e-mail não foi enviado.');
+                    return;
+                }
+
+                try {
+                    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                        to_email: usuarioMarcado.email,
+                        to_name: usuarioMarcado.nome || 'Usuário',
+                        from_name: autor.nome || autor.email || 'Usuário do Fórum',
+                        from_house: autor.casa || '',
+                        message: conteudo,
+                        forum_url: window.location.href
+                    });
+                } catch (erro) {
+                    console.error('Erro ao enviar e-mail da marcação:', erro);
+                }
+            };
+
+            const notificarMarcacoes = async (marcacoes, postId, conteudo, autor) => {
+                if (!marcacoes.length) return;
+
+                await Promise.all(marcacoes.map(async (usuarioMarcado) => {
+                    const notificacao = {
+                        tipo: 'marcacao_forum',
+                        postId,
+                        deUid: usuarioAtual ? usuarioAtual.uid : null,
+                        deNome: autor.nome || autor.email || '(Usuário)',
+                        deCasa: autor.casa || '',
+                        mensagem: conteudo,
+                        lida: false,
+                        timestamp: Date.now()
+                    };
+
+                    try {
+                        await database.ref('notificacoes/' + usuarioMarcado.uid).push(notificacao);
+                        await enviarEmailMarcacao(usuarioMarcado, autor, conteudo);
+                    } catch (erro) {
+                        console.error('Erro ao criar notificação:', erro);
+                    }
+                }));
+            };
+
+            if (btn) {
+                btn.onclick = async () => {
+                    if (!input) return;
+                    const texto = input.value.trim();
+                    if (!texto) return;
+
+                    let novoPost;
+                    let autor = {
+                        uid: usuarioAtual ? usuarioAtual.uid : null,
+                        nome: usuarioAtual ? usuarioAtual.email : '(Visitante)',
+                        email: usuarioAtual ? usuarioAtual.email : '',
+                        foto: 'mu.png',
+                        casa: ''
+                    };
+
+                    if (usuarioAtual) {
+                        try {
+                            const snapshot = await database.ref('usuarios/' + usuarioAtual.uid).once('value');
+                            const dadosUsuario = snapshot.val() || {};
+                            autor = {
+                                uid: usuarioAtual.uid,
+                                nome: dadosUsuario.nome || usuarioAtual.email,
+                                email: dadosUsuario.email || usuarioAtual.email,
+                                foto: dadosUsuario.foto || 'mu.png',
+                                casa: dadosUsuario.casa || ''
+                            };
+                        } catch (erro) {
+                            console.error('Erro ao carregar dados do usuário:', erro);
+                        }
+
+                        const marcacoes = extrairMarcacoes(texto);
+
+                        novoPost = {
+                            uid: usuarioAtual.uid,
+                            author: autor.nome,
+                            content: texto,
+                            timestamp: Date.now(),
+                            mentions: marcacoes.map(u => u.uid)
+                        };
+
+                        try {
+                            const referenciaPost = database.ref('posts').push();
+                            await referenciaPost.set(novoPost);
+                            input.value = '';
+                            esconderSugestoes();
+                            await notificarMarcacoes(marcacoes, referenciaPost.key, texto, autor);
+                        } catch (erro) {
+                            console.error(erro);
+                            alert('Erro ao publicar.');
+                        }
+                        return;
+                    }
+
+                    // Visitantes continuam podendo publicar, mas não podem marcar usuários.
+                    novoPost = {
+                        uid: null,
+                        author: '(Visitante)',
+                        content: texto,
+                        timestamp: Date.now(),
+                        mentions: []
+                    };
+
+                    database.ref('posts').push(novoPost)
+                        .then(() => { input.value = ''; esconderSugestoes(); })
+                        .catch((erro) => {
+                            console.error(erro);
+                            alert('Erro ao publicar.');
+                        });
+                };
             }
 
-            if (dadosUsuario.foto) {
-                fotoAutor = dadosUsuario.foto;
-            }
-        }
+            const renderPosts = async (postsObj) => {
+                if (!container) return;
+                container.innerHTML = '';
 
-        const card = document.createElement("div");
-        card.className = "post-card";
+                if (!postsObj) {
+                    if (formWrapper) formWrapper.classList.remove('has-posts');
+                    usuariosDoForum = {};
+                    return;
+                }
 
-        card.innerHTML = `
-            <div class="post-header">
+                if (formWrapper) formWrapper.classList.add('has-posts');
+                await carregarUsuariosDosPosts(postsObj);
 
-                <div class="post-author-info">
+                const postsArray = Object.keys(postsObj)
+                    .map(key => ({ id: key, ...postsObj[key] }))
+                    .sort((a, b) => b.timestamp - a.timestamp);
 
-                    <img
-                        class="post-author-avatar"
-                        src="${fotoAutor}"
-                        alt="Foto de ${nomeAutor}"
-                    >
+                const usuariosCache = {};
 
-                    <span class="post-author-name">
-                        ${nomeAutor}
-                    </span>
+                for (const post of postsArray) {
+                    let nomeAutor = post.author || '(Visitante)';
+                    let fotoAutor = 'mu.png';
+                    let casaAutor = '';
 
-                </div>
+                    if (post.uid) {
+                        if (!usuariosCache[post.uid]) {
+                            try {
+                                const snapshot = await database.ref('usuarios/' + post.uid).once('value');
+                                usuariosCache[post.uid] = snapshot.val() || {};
+                            } catch (erro) {
+                                console.error('Erro ao carregar usuário:', erro);
+                                usuariosCache[post.uid] = {};
+                            }
+                        }
 
-                <span class="post-date">
-                    ${formatarData(post.timestamp)}
-                </span>
+                        const dadosUsuario = usuariosCache[post.uid];
+                        nomeAutor = dadosUsuario.nome || nomeAutor;
+                        fotoAutor = dadosUsuario.foto || fotoAutor;
+                        casaAutor = dadosUsuario.casa || '';
 
-            </div>
+                        if (!usuariosDoForum[post.uid]) {
+                            usuariosDoForum[post.uid] = {
+                                uid: post.uid,
+                                nome: nomeAutor,
+                                email: dadosUsuario.email || '',
+                                foto: fotoAutor,
+                                casa: casaAutor
+                            };
+                        }
+                    }
 
-            <div class="post-content">
-                ${post.content}
-            </div>
-        `;
+                    const card = document.createElement('div');
+                    card.className = 'post-card';
 
-        container.appendChild(card);
-    }
-};
+                    const header = document.createElement('div');
+                    header.className = 'post-header';
 
-        database.ref('posts').on('value', (snapshot) => {
-            renderPosts(snapshot.val());
-        });
+                    const authorInfo = document.createElement('div');
+                    authorInfo.className = 'post-author-info';
 
+                    const avatar = document.createElement('img');
+                    avatar.className = 'post-author-avatar';
+                    avatar.src = fotoAutor;
+                    avatar.alt = 'Foto de ' + nomeAutor;
 
+                    const authorName = document.createElement('span');
+                    authorName.className = 'post-author-name';
+                    authorName.textContent = nomeAutor;
 
-            
+                    authorInfo.appendChild(avatar);
+                    authorInfo.appendChild(authorName);
+
+                    if (casaAutor) {
+                        const house = document.createElement('span');
+                        house.className = 'post-author-house';
+                        house.textContent = '| ' + casaAutor;
+                        authorInfo.appendChild(house);
+                    }
+
+                    const date = document.createElement('span');
+                    date.className = 'post-date';
+                    date.textContent = formatarData(post.timestamp);
+
+                    header.appendChild(authorInfo);
+                    header.appendChild(date);
+
+                    const content = document.createElement('div');
+                    content.className = 'post-content';
+                    content.innerHTML = montarConteudoComMarcacoes(post.content || '');
+
+                    card.appendChild(header);
+                    card.appendChild(content);
+                    container.appendChild(card);
+                }
+            };
+
+            // Carrega e mantém o Fórum sincronizado com o Firebase.
+            database.ref('posts').on('value', (snapshot) => {
+                renderPosts(snapshot.val());
+            });
         });
     </script>
 </body>
