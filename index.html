@@ -1370,60 +1370,179 @@
                 return data.toLocaleDateString('pt-BR') + " às " + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             };
 
-            const renderPosts = (postsObj) => {
-                if (!container) return;
-                container.innerHTML = "";
-                if (!postsObj) {
-                    if (formWrapper) formWrapper.classList.remove("has-posts");
-                    return;
-                }
-                if (formWrapper) formWrapper.classList.add("has-posts");
-                
-                const postsArray = Object.keys(postsObj).map(key => ({
-                    id: key,
-                    ...postsObj[key]
-                })).sort((a, b) => b.timestamp - a.timestamp);
 
-                postsArray.forEach(post => {
-                    const card = document.createElement("div");
-                    card.className = "post-card";
-                    card.innerHTML = `
-                        <div class="post-header">
-                            <span class="post-author">${post.author}</span>
-                            <span class="post-date">${formatarData(post.timestamp)}</span>
-                        </div>
-                        <div class="post-content">${post.content}</div>
-                    `;
-                    container.appendChild(card);
-                });
-            };
 
-            database.ref('posts').on('value', (snapshot) => {
-                renderPosts(snapshot.val());
-            });
+                    
 
             if (btn) {
-                btn.onclick = () => {
-                    if (!input) return;
-                    const texto = input.value.trim();
-                    if (!texto) return;
+    btn.onclick = async () => {
 
-                    let identificacaoAutor = "(Visitante)";
-                    if (usuarioAtual) {
-                        identificacaoAutor = usuarioAtual.email;
-                    }
+        if (!input) return;
 
-                    const novoPost = {
-                        author: identificacaoAutor,
-                        content: texto,
-                        timestamp: Date.now()
-                    };
+        const texto = input.value.trim();
 
-                    database.ref('posts').push(novoPost)
-                        .then(() => { input.value = ""; })
-                        .catch((erro) => { alert("Erro ao publicar."); });
+        if (!texto) return;
+
+        let novoPost;
+
+        // ===============================
+        // USUÁRIO LOGADO
+        // ===============================
+        if (usuarioAtual) {
+
+            try {
+
+                const snapshot = await database
+                    .ref('usuarios/' + usuarioAtual.uid)
+                    .once('value');
+
+                const dadosUsuario = snapshot.val() || {};
+
+                novoPost = {
+                    uid: usuarioAtual.uid,
+                    author: dadosUsuario.nome || usuarioAtual.email,
+                    content: texto,
+                    timestamp: Date.now()
+                };
+
+            } catch (erro) {
+
+                console.error("Erro ao carregar dados do usuário:", erro);
+
+                novoPost = {
+                    uid: usuarioAtual.uid,
+                    author: usuarioAtual.email,
+                    content: texto,
+                    timestamp: Date.now()
                 };
             }
+
+        }
+
+        // ===============================
+        // VISITANTE
+        // ===============================
+        else {
+
+            novoPost = {
+                uid: null,
+                author: "(Visitante)",
+                content: texto,
+                timestamp: Date.now()
+            };
+
+        }
+
+        database.ref('posts').push(novoPost)
+            .then(() => {
+                input.value = "";
+            })
+            .catch((erro) => {
+                console.error(erro);
+                alert("Erro ao publicar.");
+            });
+    };
+}
+
+
+
+
+
+
+            
+const renderPosts = async (postsObj) => {
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (!postsObj) {
+        if (formWrapper) formWrapper.classList.remove("has-posts");
+        return;
+    }
+
+    if (formWrapper) formWrapper.classList.add("has-posts");
+
+    const postsArray = Object.keys(postsObj)
+        .map(key => ({
+            id: key,
+            ...postsObj[key]
+        }))
+        .sort((a, b) => b.timestamp - a.timestamp);
+
+    // Cache para evitar várias consultas ao mesmo usuário
+    const usuariosCache = {};
+
+    for (const post of postsArray) {
+
+        let nomeAutor = post.author || "(Visitante)";
+        let fotoAutor = "mu.png";
+
+        // Se a publicação pertence a um usuário registrado
+        if (post.uid) {
+
+            if (!usuariosCache[post.uid]) {
+                try {
+                    const snapshot = await database
+                        .ref('usuarios/' + post.uid)
+                        .once('value');
+
+                    usuariosCache[post.uid] = snapshot.val() || {};
+                } catch (erro) {
+                    console.error("Erro ao carregar usuário:", erro);
+                    usuariosCache[post.uid] = {};
+                }
+            }
+
+            const dadosUsuario = usuariosCache[post.uid];
+
+            if (dadosUsuario.nome) {
+                nomeAutor = dadosUsuario.nome;
+            }
+
+            if (dadosUsuario.foto) {
+                fotoAutor = dadosUsuario.foto;
+            }
+        }
+
+        const card = document.createElement("div");
+        card.className = "post-card";
+
+        card.innerHTML = `
+            <div class="post-header">
+
+                <div class="post-author-info">
+
+                    <img
+                        class="post-author-avatar"
+                        src="${fotoAutor}"
+                        alt="Foto de ${nomeAutor}"
+                    >
+
+                    <span class="post-author-name">
+                        ${nomeAutor}
+                    </span>
+
+                </div>
+
+                <span class="post-date">
+                    ${formatarData(post.timestamp)}
+                </span>
+
+            </div>
+
+            <div class="post-content">
+                ${post.content}
+            </div>
+        `;
+
+        container.appendChild(card);
+    }
+};
+
+
+
+
+            
         });
     </script>
 </body>
