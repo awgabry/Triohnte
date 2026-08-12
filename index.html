@@ -1419,6 +1419,12 @@
                         } else if (userMiniAvatar) {
                             userMiniAvatar.classList.add('hidden');
                         }
+
+                        // Sempre que o usuário alterar Nome Completo, foto ou casa na Conta,
+                        // o Fórum é redesenhado imediatamente com os dados atuais do Firebase.
+                        if (ultimoSnapshotPosts) {
+                            renderPosts(ultimoSnapshotPosts);
+                        }
                     }
                 });
             });
@@ -1879,7 +1885,8 @@
 
             // Carrega e mantém o Fórum sincronizado com o Firebase.
             database.ref('posts').on('value', (snapshot) => {
-                renderPosts(snapshot.val());
+                ultimoSnapshotPosts = snapshot.val();
+                renderPosts(ultimoSnapshotPosts);
             });
         });
     </script>
