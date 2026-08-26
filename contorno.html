@@ -1,35 +1,394 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contorno de Triohnte</title>
+<meta charset="UTF-8">
+<title>Contorno de Triohnte</title>
 
-<link rel="icon" type="image/png" href="mu.png">
-    
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            text-align: center;
-            border: 1px solid #333;
-            padding: 20px;
-            border-radius: 10px;
-        }
-    </style>
+<style>
+body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#viewport {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    display: block;
+    max-width: 100vw;
+    max-height: 100vh;
+    object-fit: contain; 
+    z-index: 1;
+}
+
+/* Info-Card Repaginado e Explicativo */
+.info-card {
+    position: fixed;
+    background: rgba(10, 10, 15, 0.95);
+    color: #e0e0e0;
+    padding: 15px;
+    border: 1px solid #ffd700;
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.2);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 10;
+    min-width: 240px;
+    max-width: 320px; /* Garante que textos longos quebrem linha elegantemente */
+    transition: opacity 0.15s ease;
+}
+
+.info-card h3 {
+    margin: 0 0 10px 0;
+    color: #ffd700;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    padding-bottom: 5px;
+    font-weight: 600;
+}
+
+.info-row {
+    margin: 6px 0;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.info-label {
+    color: #888;
+    font-weight: bold;
+    margin-right: 15px;
+    white-space: nowrap;
+}
+
+.info-value {
+    color: #fff;
+    text-align: right;
+}
+
+/* Novo estilo para o bloco explicativo de descrição */
+.info-desc {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(255, 215, 0, 0.2);
+    font-size: 12px;
+    color: #ccc;
+    line-height: 1.4;
+    text-align: justify;
+}
+</style>
 </head>
+
 <body>
 
-        <p>Estamos trabalhando nesta página.</p>
-    </div>
+<div id="viewport">
+    <canvas id="mapColorCanvas"></canvas>
+</div>
+
+<div class="info-card" id="infoCard">
+    <h3 id="cardTitle">Território</h3>
+    <div class="info-row"><span class="info-label">Trono:</span><span class="info-value" id="cardSoberania">-</span></div>
+    <div class="info-row"><span class="info-label">Capital:</span><span class="info-value" id="cardCapital">-</span></div>
+    <div class="info-row"><span class="info-label">Idade da terra:</span><span class="info-value" id="cardIdade">-</span></div>
+    <div class="info-row"><span class="info-label">Poder Militar:</span><span class="info-value" id="cardMilitar">-</span></div>
+    <div class="info-row"><span class="info-label">Cidades Territoriais:</span><span class="info-value" id="cardcidadesterritoriais">-</span></div>
+    <div class="info-desc" id="cardDescricao">-</div>
+</div>
+
+<script>
+const MAP_WIDTH = 1441;
+const MAP_HEIGHT = 1311;
+
+// BANCO DE DADOS DOS TERRITÓRIOS
+const databaseTerritorios = {
+    "7,34,47": {
+        nome: "Kwazahdar",
+        capital: "Burtaland", 
+        soberania: "Familia Warlofh",
+        idade: "Ano 50 da Era de Cristal",
+        poderMilitar: "9.000 Soldados",
+        cidadesTerritoriais: "Dasthar, Loffh e Ryppiov",
+        descricao: "A acrescentar"
+    },
+    "21,99,135": {
+        nome: "Agaroff",
+        capital: "Darmalyan", 
+        soberania: "Familia Vheynnaris",
+        idade: "1.000 anos",
+        poderMilitar: "2.000 Soldados",
+        cidadesTerritoriais: "Suwell'lor, Terra funda, Purgasso e Barujh",
+        descricao: "A acrescentar"
+    },
+    "12,78,188": {
+        nome: "Dyllewalt",
+        capital: "Fubamtosh", 
+        soberania: "Familia Cervindor",
+        idade: "Ano 50 da Era de Cristal",
+        poderMilitar: "570 Soldados",
+        cidadesTerritoriais: "Shyriin",
+        descricao: "A acrescentar"
+    },
+    "5,40,98": {
+        nome: "Castindell",
+        capital: "Bosque d'Ouro", 
+        soberania: "Familia Ashen",
+        idade: "Ano 50 da Era de Cristal",
+        poderMilitar: "6.000 Soldados",
+        cidadesTerritoriais:  "Copshallor, Kaskazyn, Cedro caído, Espadas infiéis, Centelha de ouro e Portal pactuado",
+        descricao: "Castidell é conhecido por suas vastas campinas, colinas altas e vegetação temperada. Também é considerado o núcleo da diplomacia triohntina, por seu histórico de mediações de guerras ao longo das Eras. "
+    },
+    "11,17,41": {
+        nome: "Kraloff",
+        capital: "Nukhe",
+        soberania: "Irmandade da mão livre",
+        idade: "40 anos",
+        poderMilitar: "160 soldados",
+        cidadesTerritoriais: "Nukhe", // Corrigido de idadesTerritoriais para cidadesTerritoriais
+        descricao: "Antigo território de Agaroff. Capital: Nukhe"
+    },
+    "26,138,180": {
+        nome: "Salyniam",
+        capital: "-",
+        soberania: "Irmandade da mão livre",
+        idade: "40 anos",
+        poderMilitar: "160 soldados",
+        cidadesTerritoriais: "-",
+        descricao: "Antigo território de Agaroff. Capital: Nukhe"
+    },
+    "4,17,75": {
+        nome: "Galamorn",
+        capital: "-",
+        soberania: "Irmandade da mão livre",
+        idade: "40 anos",
+        poderMilitar: "160 soldados",
+        cidadesTerritoriais: "-",
+        descricao: "Antigo território de Agaroff. Capital: Nukhe"
+    },
+    "12,10,110": {
+        nome: "Linowland",
+        capital: "-",
+        soberania: "Irmandade da mão livre",
+        idade: "40 anos",
+        poderMilitar: "160 soldados",
+        cidadesTerritoriais: "-",
+        descricao: "Antigo território de Agaroff. Capital: Nukhe"
+    }
+};
+
+// ELEMENTOS
+const canvas = document.getElementById('mapColorCanvas');
+const ctx = canvas.getContext('2d');
+
+const infoCard = document.getElementById('infoCard');
+const cardTitle = document.getElementById('cardTitle');
+const cardSoberania = document.getElementById('cardSoberania');
+const cardCapital = document.getElementById('cardCapital'); // Adicionado elemento Capital
+const cardIdade = document.getElementById('cardIdade');
+const cardMilitar = document.getElementById('cardMilitar');
+const cardCidadesTerritoriais = document.getElementById('cardcidadesterritoriais'); // Adicionado elemento Cidades
+const cardDescricao = document.getElementById('cardDescricao'); 
+
+// ÁUDIOS
+const bgMusic = new Audio('ae.mp3');
+bgMusic.loop = true;
+
+const selectSound = new Audio('lohy.mp3');
+
+// IMAGEM
+const imgColorida = new Image();
+imgColorida.src = 'dertyh.png';
+
+let colorData = null;
+let activeColor = null;
+
+imgColorida.onload = init;
+
+function init(){
+    canvas.width = MAP_WIDTH;
+    canvas.height = MAP_HEIGHT;
+
+    resizeCanvasDisplay();
+    drawBase();
+
+    colorData = ctx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
+}
+
+function resizeCanvasDisplay() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const scale = Math.min(windowWidth / MAP_WIDTH, windowHeight / MAP_HEIGHT);
+
+    canvas.style.width = Math.floor(MAP_WIDTH * scale) + "px";
+    canvas.style.height = Math.floor(MAP_HEIGHT * scale) + "px";
+}
+
+function drawBase(){
+    ctx.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
+    ctx.drawImage(imgColorida, 0, 0, MAP_WIDTH, MAP_HEIGHT);
+}
+
+function sameColor(r, g, b, tol = 0){
+    return Math.abs(r - activeColor.r) <= tol &&
+           Math.abs(g - activeColor.g) <= tol &&
+           Math.abs(b - activeColor.b) <= tol;
+}
+
+function draw(){
+    drawBase();
+
+    if(!activeColor) return;
+
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = MAP_WIDTH;
+    tempCanvas.height = MAP_HEIGHT;
+    const tempCtx = tempCanvas.getContext('2d');
+    
+    const mask = tempCtx.createImageData(MAP_WIDTH, MAP_HEIGHT);
+
+    for(let i = 0; i < colorData.length; i += 4){
+        const r = colorData[i];
+        const g = colorData[i+1];
+        const b = colorData[i+2];
+        const a = colorData[i+3];
+
+        if(a > 10 && sameColor(r, g, b)){
+            mask.data[i] = 255;   
+            mask.data[i+1] = 215; 
+            mask.data[i+2] = 0;  
+            mask.data[i+3] = 90; 
+        }
+    }
+    tempCtx.putImageData(mask, 0, 0);
+
+    ctx.save();
+    ctx.shadowColor = "rgba(255, 215, 0, 1)"; 
+    ctx.shadowBlur = 25; 
+    ctx.drawImage(tempCanvas, 0, 0);
+    ctx.restore();
+}
+
+function handlePointerMove(clientX, clientY, offsetX, offsetY) {
+    if (bgMusic.paused) {
+        bgMusic.play().catch(err => console.log("Aguardando interação do usuário para iniciar áudio."));
+    }
+
+    const cw = canvas.clientWidth;
+    const ch = canvas.clientHeight;
+
+    const x = Math.floor((offsetX / cw) * MAP_WIDTH);
+    const y = Math.floor((offsetY / ch) * MAP_HEIGHT);
+
+    if(x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_HEIGHT){
+        hideCard();
+        return;
+    }
+
+    const i = (y * MAP_WIDTH + x) * 4;
+
+    const r = colorData[i];
+    const g = colorData[i+1];
+    const b = colorData[i+2];
+    const a = colorData[i+3];
+
+    if(a > 10 && (r + g + b) > 20){
+        if(!activeColor || activeColor.r !== r || activeColor.g !== g || activeColor.b !== b){
+            activeColor = {r, g, b};
+            draw();
+
+            selectSound.currentTime = 0;
+            selectSound.play().catch(err => console.log("Áudio bloqueado pelo navegador temporariamente."));
+
+            const corChave = `${r},${g},${b}`;
+            const dadosDoTerritorio = databaseTerritorios[corChave];
+
+            if (dadosDoTerritorio) {
+                cardTitle.innerText = dadosDoTerritorio.nome;
+                cardSoberania.innerText = dadosDoTerritorio.soberania || "-";
+                cardCapital.innerText = dadosDoTerritorio.capital || "-"; // Atualização da Capital corrigida
+                cardIdade.innerText = dadosDoTerritorio.idade || "-";
+                cardMilitar.innerText = dadosDoTerritorio.poderMilitar || "-";
+                cardCidadesTerritoriais.innerText = dadosDoTerritorio.cidadesTerritoriais || "-"; // Atualização das Cidades corrigida
+                cardDescricao.innerText = dadosDoTerritorio.descricao || "-"; 
+            } else {
+                cardTitle.innerText = "Território Desconhecido";
+                cardSoberania.innerText = "Nenhuma";
+                cardCapital.innerText = "-";
+                cardIdade.innerText = "???";
+                cardMilitar.innerText = `RGB(${corChave})`;
+                cardCidadesTerritoriais.innerText = "-";
+                cardDescricao.innerText = "Nenhum registro histórico ou mapeamento detalhado encontrado para esta região nas crônicas atuais.";
+            }
+        }
+
+        infoCard.style.opacity = 1;
+
+        // CÁLCULO DINÂMICO DE CONTENÇÃO
+        const cardWidth = infoCard.offsetWidth || 280; 
+        const cardHeight = infoCard.offsetHeight || 200;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        let posX = clientX + 15;
+        let posY = clientY;
+
+        if (posX + cardWidth > windowWidth) {
+            posX = clientX - cardWidth - 15;
+        }
+        if (posY + cardHeight > windowHeight) {
+            posY = windowHeight - cardHeight - 15;
+        }
+        if (posY < 10) {
+            posY = 10;
+        }
+
+        infoCard.style.left = posX + "px";
+        infoCard.style.top = posY + "px";
+    } else {
+        hideCard();
+    }
+}
+
+// Ouvinte de mouse para Desktop
+canvas.addEventListener('mousemove', (e) => {
+    handlePointerMove(e.clientX, e.clientY, e.offsetX, e.offsetY);
+});
+
+// Ouvinte de toque para Mobile
+canvas.addEventListener('touchmove', (e) => {
+    if(e.touches.length > 0) {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const offsetX = touch.clientX - rect.left;
+        const offsetY = touch.clientY - rect.top;
+        handlePointerMove(touch.clientX, touch.clientY, offsetX, offsetY);
+    }
+}, { passive: true });
+
+canvas.addEventListener('mouseleave', hideCard);
+canvas.addEventListener('touchend', hideCard);
+
+function hideCard() {
+    if(activeColor){
+        activeColor = null;
+        drawBase();
+        infoCard.style.opacity = 0;
+    }
+}
+
+window.addEventListener('resize', () => {
+    if(colorData) {
+        resizeCanvasDisplay();
+    }
+});
+</script>
 
 </body>
 </html>
