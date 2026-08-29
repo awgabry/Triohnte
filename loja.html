@@ -7,7 +7,10 @@
 
   <title>Loja</title>
 
-  <!-- Fonte Cinzel -->
+  <!-- =====================================================
+       FONTE CINZEL
+       ===================================================== -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -16,88 +19,228 @@
     rel="stylesheet"
   >
 
+  <!-- =====================================================
+       TAILWIND
+       ===================================================== -->
+
   <link
     href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
     rel="stylesheet"
   >
 
+
+  <!-- =====================================================
+       ESTILOS
+       ===================================================== -->
+
   <style>
+
     * {
       box-sizing: border-box;
     }
+
 
     body {
       background: #000;
       color: #fff;
       min-height: 100vh;
+
       font-family: "Cinzel", serif;
     }
 
+
+    /* =====================================================
+       CARD DO PRODUTO
+       ===================================================== */
+
     .produto {
-      background: #281109;
-      border: 1px solid rgba(160, 110, 60, 0.25);
+
+      background:
+        linear-gradient(
+          145deg,
+          #3a2608,
+          #1c1204 55%,
+          #4a310b
+        );
+
+      border: 1px solid #b8862c;
+
+      box-shadow:
+        0 0 0 1px rgba(255, 215, 100, 0.08),
+        0 15px 40px rgba(0, 0, 0, 0.65),
+        inset 0 0 35px rgba(184, 134, 46, 0.08);
+
       transition: 0.25s ease;
     }
 
+
     .produto:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+
+      transform: translateY(-4px);
+
+      border-color: #d4af37;
+
+      box-shadow:
+        0 0 25px rgba(212, 175, 55, 0.18),
+        0 20px 45px rgba(0, 0, 0, 0.7),
+        inset 0 0 40px rgba(212, 175, 55, 0.08);
     }
 
+
+    /* =====================================================
+       BOTÃO COMPRAR
+       ===================================================== */
+
     .botao-comprar {
-      background: #000;
-      color: white;
-      border: 1px solid #55351f;
+
+      background: #0a0702;
+
+      color: #d4af37;
+
+      border: 1px solid #b8862c;
+
       transition: 0.2s ease;
+
       font-family: "Cinzel", serif;
     }
 
+
     .botao-comprar:hover {
-      background: #160a05;
-      border-color: #8a5b32;
+
+      background: #211604;
+
+      color: #f1d27a;
+
+      border-color: #d4af37;
+
+      box-shadow:
+        0 0 15px rgba(212, 175, 55, 0.2);
     }
 
+
     .botao-comprar:disabled {
+
       opacity: 0.5;
+
       cursor: not-allowed;
     }
 
+
+    /* =====================================================
+       MENSAGEM
+       ===================================================== */
+
     #mensagem {
+
       display: none;
+
       position: fixed;
+
       top: 20px;
+
       left: 50%;
+
       transform: translateX(-50%);
+
       z-index: 10000;
-      background: #181818;
-      border: 1px solid #694528;
+
+      background: #18130a;
+
+      color: #f1d27a;
+
+      border: 1px solid #b8862c;
+
       border-radius: 8px;
+
       padding: 14px 20px;
+
       min-width: 280px;
+
       max-width: 90%;
+
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, .5),
+        0 0 20px rgba(212, 175, 55, 0.1);
+
       font-family: "Cinzel", serif;
     }
+
+
+    /* =====================================================
+       TÍTULO
+       ===================================================== */
+
+    #titulo-principal {
+
+      color: #d4af37;
+
+      text-shadow:
+        0 0 15px rgba(212, 175, 55, 0.15);
+    }
+
+
+    /* =====================================================
+       PREÇO
+       ===================================================== */
+
+    #produto-preco {
+
+      color: #d4af37;
+
+      text-shadow:
+        0 0 10px rgba(212, 175, 55, 0.15);
+    }
+
+
+    /* =====================================================
+       AUTOR
+       ===================================================== */
+
+    #produto-autor {
+
+      color: #e1c36a;
+    }
+
+
+    /* =====================================================
+       IMAGEM
+       ===================================================== */
+
+    #imagem-produto {
+
+      border: 1px solid rgba(212, 175, 55, 0.35);
+
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
   </style>
+
 </head>
+
 
 <body class="bg-black text-white p-6 md:p-10">
 
-  <!-- ===================================================== -->
-  <!-- MENSAGEM -->
-  <!-- ===================================================== -->
+
+  <!-- =====================================================
+       MENSAGEM
+       ===================================================== -->
 
   <div id="mensagem"></div>
 
 
-  <!-- ===================================================== -->
-  <!-- CONTEÚDO -->
-  <!-- ===================================================== -->
+  <!-- =====================================================
+       CONTEÚDO PRINCIPAL
+       ===================================================== -->
 
   <main class="w-full max-w-5xl mx-auto">
 
-    <!-- TÍTULO -->
+
+    <!-- ===================================================
+         TÍTULO
+         =================================================== -->
 
     <header class="text-center mb-10">
 
@@ -107,6 +250,7 @@
       >
         Loja
       </h1>
+
 
       <p
         id="subtitulo"
@@ -118,17 +262,23 @@
     </header>
 
 
-    <!-- =================================================== -->
-    <!-- PRODUTO -->
-    <!-- =================================================== -->
+    <!-- ===================================================
+         PRODUTO
+         =================================================== -->
 
-    <section class="grid grid-cols-1 gap-8 max-w-4xl mx-auto">
+    <section
+      class="grid grid-cols-1 gap-8 max-w-4xl mx-auto"
+    >
+
 
       <article
         class="produto p-6 md:p-8 rounded-xl text-center"
       >
 
-        <!-- CAPA DO LIVRO -->
+
+        <!-- ===============================================
+             CAPA DO LIVRO
+             =============================================== -->
 
         <div
           class="flex justify-center items-center mb-6"
@@ -146,6 +296,10 @@
         </div>
 
 
+        <!-- ===============================================
+             NOME DO PRODUTO
+             =============================================== -->
+
         <h2
           id="produto-titulo"
           class="text-2xl font-bold mb-2"
@@ -153,6 +307,10 @@
           Triohnte
         </h2>
 
+
+        <!-- ===============================================
+             TIPO
+             =============================================== -->
 
         <p
           id="produto-tipo"
@@ -162,6 +320,10 @@
         </p>
 
 
+        <!-- ===============================================
+             DESCRIÇÃO
+             =============================================== -->
+
         <p
           id="produto-descricao"
           class="text-sm text-gray-300 mb-4"
@@ -169,6 +331,10 @@
           Download desabilitado pela proteção de dados.
         </p>
 
+
+        <!-- ===============================================
+             PREÇO
+             =============================================== -->
 
         <p
           id="produto-preco"
@@ -178,6 +344,10 @@
         </p>
 
 
+        <!-- ===============================================
+             AUTOR
+             =============================================== -->
+
         <p
           id="produto-autor"
           class="text-lg mb-6"
@@ -185,6 +355,10 @@
           Gabryell Aweryan.
         </p>
 
+
+        <!-- ===============================================
+             BOTÃO
+             =============================================== -->
 
         <button
           id="botao-comprar"
@@ -194,16 +368,19 @@
           Comprar
         </button>
 
+
       </article>
 
     </section>
 
+
   </main>
 
 
-  <!-- ===================================================== -->
-  <!-- FIREBASE -->
-  <!-- ===================================================== -->
+
+  <!-- =====================================================
+       FIREBASE
+       ===================================================== -->
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 
@@ -212,10 +389,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 
+
   <script>
 
     /* =====================================================
-       MESMO FIREBASE DO INDEX.HTML
+       CONFIGURAÇÃO FIREBASE
        ===================================================== */
 
     const firebaseConfig = {
@@ -249,11 +427,17 @@
     }
 
 
+    /* =====================================================
+       SERVIÇOS
+       ===================================================== */
+
     const auth =
       firebase.auth();
 
+
     const database =
       firebase.database();
+
 
 
     /* =====================================================
@@ -263,8 +447,10 @@
     const botaoComprar =
       document.getElementById("botao-comprar");
 
+
     const mensagem =
       document.getElementById("mensagem");
+
 
 
     /* =====================================================
@@ -274,14 +460,16 @@
     let usuarioAtual = null;
 
 
+
     /* =====================================================
-       MENSAGEM
+       EXIBIR MENSAGEM
        ===================================================== */
 
     function mostrarMensagem(texto) {
 
       mensagem.textContent =
         texto;
+
 
       mensagem.style.display =
         "block";
@@ -300,6 +488,7 @@
     }
 
 
+
     /* =====================================================
        FIREBASE AUTH
        ===================================================== */
@@ -308,6 +497,7 @@
       function(user) {
 
         usuarioAtual = user;
+
 
         console.log(
           "Estado de autenticação:",
@@ -324,6 +514,7 @@
             user.uid
           );
 
+
           console.log(
             "E-mail:",
             user.email
@@ -335,6 +526,7 @@
     );
 
 
+
     /* =====================================================
        COMPRAR
        ===================================================== */
@@ -343,10 +535,10 @@
       "click",
       function() {
 
-        /*
-          Verifica se existe um usuário
-          autenticado no Firebase.
-        */
+
+        /* -----------------------------------------------
+           VERIFICA LOGIN
+           ----------------------------------------------- */
 
         if (!usuarioAtual) {
 
@@ -359,10 +551,9 @@
         }
 
 
-        /*
-          Desabilita o botão enquanto
-          o usuário é encaminhado.
-        */
+        /* -----------------------------------------------
+           DESABILITA BOTÃO
+           ----------------------------------------------- */
 
         botaoComprar.disabled =
           true;
@@ -372,9 +563,9 @@
           "Encaminhando para compra...";
 
 
-        /*
-          Envia o produto para compras.html.
-        */
+        /* -----------------------------------------------
+           REDIRECIONAMENTO
+           ----------------------------------------------- */
 
         window.location.href =
           "compras.html?produto=segredarios";
@@ -384,5 +575,7 @@
 
   </script>
 
+
 </body>
+
 </html>
