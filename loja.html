@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
@@ -52,10 +53,6 @@
       cursor: not-allowed;
     }
 
-    #language-list li:hover {
-      background: #333;
-    }
-
     #mensagem {
       display: none;
       position: fixed;
@@ -78,243 +75,173 @@
       box-shadow: 0 10px 30px rgba(0,0,0,.5);
     }
   </style>
-</head>
 
+</head>
 
 <body class="bg-black text-white p-6 md:p-10">
 
-
   <!-- ===================================================== -->
+
   <!-- MENSAGEM -->
+
   <!-- ===================================================== -->
 
   <div id="mensagem"></div>
 
-
-  <!-- ===================================================== -->
-  <!-- SELETOR DE IDIOMA -->
   <!-- ===================================================== -->
 
-  <div
-    id="language-selector"
-    style="
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      width: 38px;
-      height: 38px;
-      background: #1a1a1a;
-      border: 1px solid #444;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    "
-  >
-    <span style="color:white;font-size:15px;">▼</span>
-  </div>
-
-
-  <ul
-    id="language-list"
-    style="
-      position: fixed;
-      top: 55px;
-      right: 10px;
-      width: 150px;
-      max-height: 180px;
-      overflow-y: auto;
-      background: #222;
-      border: 1px solid #555;
-      border-radius: 6px;
-      list-style: none;
-      padding: 5px 0;
-      margin: 0;
-      display: none;
-      z-index: 9999;
-    "
-  >
-
-    <li
-      data-lang="pt"
-      style="padding:10px 14px;color:white;cursor:pointer;"
-    >
-      Português
-    </li>
-
-    <li
-      data-lang="es"
-      style="padding:10px 14px;color:white;cursor:pointer;"
-    >
-      Español
-    </li>
-
-    <li
-      data-lang="en"
-      style="padding:10px 14px;color:white;cursor:pointer;"
-    >
-      English
-    </li>
-
-  </ul>
-
-
-  <!-- ===================================================== -->
   <!-- CONTEÚDO -->
+
   <!-- ===================================================== -->
 
   <main class="w-full max-w-5xl mx-auto">
 
+```
+<!-- TÍTULO -->
 
-    <!-- TÍTULO -->
+<header class="text-center mb-10">
 
-    <header class="text-center mb-10">
+  <h1
+    id="titulo-principal"
+    class="text-4xl md:text-5xl font-bold mb-3"
+  >
+    Loja
+  </h1>
 
-      <h1
-        id="titulo-principal"
-        class="text-4xl md:text-5xl font-bold mb-3"
-      >
-        Loja
-      </h1>
+  <p
+    id="subtitulo"
+    class="text-gray-400"
+  >
+    Obras e publicações da Sociedade Walingardyana
+  </p>
 
-      <p
-        id="subtitulo"
-        class="text-gray-400"
-      >
-        Vamos acessar Triohnte? Compre!
-      </p>
-
-    </header>
-
-
-    <!-- =================================================== -->
-    <!-- PRODUTO -->
-    <!-- =================================================== -->
-
-    <section class="grid grid-cols-1 gap-8 max-w-4xl mx-auto">
+</header>
 
 
-      <article
-        class="produto p-6 md:p-8 rounded-xl text-center"
-      >
+<!-- =================================================== -->
+<!-- PRODUTO -->
+<!-- =================================================== -->
+
+<section class="grid grid-cols-1 gap-8 max-w-4xl mx-auto">
 
 
-        <!--
-          CAPA DO LIVRO
-
-          Coloque o arquivo "segredarios.png"
-          na mesma pasta deste HTML.
-
-          Se o nome do arquivo for diferente,
-          altere somente o src abaixo.
-        -->
-
-        <div
-          class="flex justify-center items-center mb-6"
-          style="min-height:220px;"
-        >
-
-          <img
-            id="imagem-produto"
-            src="segredarios.png"
-            alt="Segredários"
-            class="max-w-xs w-full rounded-lg object-cover"
-            onerror="this.style.display='none';"
-          >
-
-        </div>
+  <article
+    class="produto p-6 md:p-8 rounded-xl text-center"
+  >
 
 
-        <h2
-          id="produto-titulo"
-          class="text-2xl font-bold mb-2"
-        >
-          Triohnte
-        </h2>
+    <!--
+      CAPA DO LIVRO
 
-
-        <p
-          id="produto-tipo"
-          class="text-sm text-gray-400 mb-4"
-        >
-         Primeiro Volume
-        </p>
-
-
-        <p
-          id="produto-descricao"
-          class="text-sm text-gray-300 mb-4"
-        >
-          Download desabilitado pela proteção de dados.
-        </p>
-
-
-        <p
-          id="produto-preco"
-          class="text-2xl font-bold mb-3"
-        >
-          Preço: R$ 6,99
-        </p>
-
-
-        <p
-          id="produto-autor"
-          class="text-lg mb-6"
-        >
-         Gabryell Aweryan.
-        </p>
-
-
-        <button
-          id="botao-comprar"
-          type="button"
-          class="botao-comprar px-10 py-3 rounded-full font-bold"
-        >
-          Comprar
-        </button>
-
-
-      </article>
-
-    </section>
-
-
-    <!-- =================================================== -->
-    <!-- STATUS -->
-    <!-- =================================================== -->
+      Coloque o arquivo "segredarios.png"
+      na mesma pasta deste HTML.
+    -->
 
     <div
-      id="status-usuario"
-      class="text-center mt-8 text-sm text-gray-500"
+      class="flex justify-center items-center mb-6"
+      style="min-height:220px;"
     >
-      Verificando sessão...
-    </div>
 
-
-    <!-- =================================================== -->
-    <!-- VOLTAR -->
-    <!-- =================================================== -->
-
-    <div class="text-center">
-
-      <a
-        href="index.html"
-        id="link-voltar"
-        class="inline-block mt-12 text-blue-400 hover:underline"
+      <img
+        id="imagem-produto"
+        src="segredarios.png"
+        alt="Segredários"
+        class="max-w-xs w-full rounded-lg object-cover"
+        onerror="this.style.display='none';"
       >
-        ← Voltar para a página inicial
-      </a>
 
     </div>
 
+
+    <h2
+      id="produto-titulo"
+      class="text-2xl font-bold mb-2"
+    >
+      Segredários
+    </h2>
+
+
+    <p
+      id="produto-tipo"
+      class="text-sm text-gray-400 mb-4"
+    >
+      Novel
+    </p>
+
+
+    <p
+      id="produto-descricao"
+      class="text-sm text-gray-300 mb-4"
+    >
+      Download desabilitado pela proteção de dados.
+    </p>
+
+
+    <p
+      id="produto-preco"
+      class="text-2xl font-bold mb-3"
+    >
+      Preço: R$ 1,99
+    </p>
+
+
+    <p
+      id="produto-autor"
+      class="text-lg mb-6"
+    >
+      De: Gabryell Aweryan.
+    </p>
+
+
+    <button
+      id="botao-comprar"
+      type="button"
+      class="botao-comprar px-10 py-3 rounded-full font-bold"
+    >
+      Comprar
+    </button>
+
+
+  </article>
+
+</section>
+
+
+<!-- =================================================== -->
+<!-- STATUS -->
+<!-- =================================================== -->
+
+<div
+  id="status-usuario"
+  class="text-center mt-8 text-sm text-gray-500"
+>
+  Verificando sessão...
+</div>
+
+
+<!-- =================================================== -->
+<!-- VOLTAR -->
+<!-- =================================================== -->
+
+<div class="text-center">
+
+  <a
+    href="index.html"
+    id="link-voltar"
+    class="inline-block mt-12 text-blue-400 hover:underline"
+  >
+    ← Voltar para a página inicial
+  </a>
+
+</div>
+```
 
   </main>
 
-
   <!-- ===================================================== -->
+
   <!-- FIREBASE -->
+
   <!-- ===================================================== -->
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -322,7 +249,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 
   <script>
 
@@ -381,334 +307,12 @@
     const mensagem =
       document.getElementById("mensagem");
 
-    const languageSelector =
-      document.getElementById("language-selector");
-
-    const languageList =
-      document.getElementById("language-list");
-
 
     /* =====================================================
        USUÁRIO ATUAL
        ===================================================== */
 
     let usuarioAtual = null;
-
-
-    /* =====================================================
-       IDIOMA
-       ===================================================== */
-
-    const traducoes = {
-
-      pt: {
-
-        titulo:
-          "Loja",
-
-        subtitulo:
-          "Obras e publicações da Sociedade Walingardyana",
-
-        produtoTitulo:
-          "Segredários",
-
-        produtoTipo:
-          "Novel",
-
-        descricao:
-          "Download desabilitado pela proteção de dados.",
-
-        preco:
-          "Preço: R$ 1,99",
-
-        autor:
-          "De: Gabryell Aweryan.",
-
-        comprar:
-          "Comprar",
-
-        verificando:
-          "Verificando sessão...",
-
-        logado:
-          "Você está conectado.",
-
-        deslogado:
-          "Você não está conectado.",
-
-        login:
-          "Faça login para comprar.",
-
-        encaminhando:
-          "Encaminhando para compra...",
-
-        voltar:
-          "← Voltar para a página inicial"
-
-      },
-
-
-      en: {
-
-        titulo:
-          "Store",
-
-        subtitulo:
-          "Works and publications of the Walingardyana Society",
-
-        produtoTitulo:
-          "Segredários",
-
-        produtoTipo:
-          "Novel",
-
-        descricao:
-          "Download disabled by data protection.",
-
-        preco:
-          "Price: R$ 1.99",
-
-        autor:
-          "By: Gabryell Aweryan.",
-
-        comprar:
-          "Buy Now",
-
-        verificando:
-          "Checking session...",
-
-        logado:
-          "You are signed in.",
-
-        deslogado:
-          "You are not signed in.",
-
-        login:
-          "Please sign in to purchase.",
-
-        encaminhando:
-          "Redirecting to purchase...",
-
-        voltar:
-          "← Back to the homepage"
-
-      },
-
-
-      es: {
-
-        titulo:
-          "Tienda",
-
-        subtitulo:
-          "Obras y publicaciones de la Sociedad Walingardyana",
-
-        produtoTitulo:
-          "Segredários",
-
-        produtoTipo:
-          "Novela",
-
-        descricao:
-          "Descarga deshabilitada por protección de datos.",
-
-        preco:
-          "Precio: R$ 1,99",
-
-        autor:
-          "De: Gabryell Aweryan.",
-
-        comprar:
-          "Comprar",
-
-        verificando:
-          "Verificando sesión...",
-
-        logado:
-          "Has iniciado sesión.",
-
-        deslogado:
-          "No has iniciado sesión.",
-
-        login:
-          "Inicia sesión para comprar.",
-
-        encaminhando:
-          "Redirigiendo a la compra...",
-
-        voltar:
-          "← Volver a la página principal"
-
-      }
-
-    };
-
-
-    let idiomaAtual =
-      localStorage.getItem("idioma") || "pt";
-
-
-    /* =====================================================
-       APLICAR IDIOMA
-       ===================================================== */
-
-    function aplicarIdioma(lang) {
-
-      if (!traducoes[lang]) {
-
-        lang = "pt";
-
-      }
-
-
-      idiomaAtual = lang;
-
-
-      const t =
-        traducoes[lang];
-
-
-      document.documentElement.lang =
-        lang === "pt"
-          ? "pt-BR"
-          : lang;
-
-
-      document.title =
-        t.titulo +
-        " - Sociedade Walingardyana";
-
-
-      document.getElementById(
-        "titulo-principal"
-      ).textContent =
-        t.titulo;
-
-
-      document.getElementById(
-        "subtitulo"
-      ).textContent =
-        t.subtitulo;
-
-
-      document.getElementById(
-        "produto-titulo"
-      ).textContent =
-        t.produtoTitulo;
-
-
-      document.getElementById(
-        "produto-tipo"
-      ).textContent =
-        t.produtoTipo;
-
-
-      document.getElementById(
-        "produto-descricao"
-      ).textContent =
-        t.descricao;
-
-
-      document.getElementById(
-        "produto-preco"
-      ).textContent =
-        t.preco;
-
-
-      document.getElementById(
-        "produto-autor"
-      ).textContent =
-        t.autor;
-
-
-      document.getElementById(
-        "botao-comprar"
-      ).textContent =
-        t.comprar;
-
-
-      document.getElementById(
-        "link-voltar"
-      ).textContent =
-        t.voltar;
-
-
-      localStorage.setItem(
-        "idioma",
-        lang
-      );
-
-
-      atualizarStatus();
-
-    }
-
-
-    /* =====================================================
-       MENU DE IDIOMAS
-       ===================================================== */
-
-    languageSelector.addEventListener(
-      "click",
-      function(event) {
-
-        event.stopPropagation();
-
-        if (
-          languageList.style.display === "block"
-        ) {
-
-          languageList.style.display =
-            "none";
-
-        } else {
-
-          languageList.style.display =
-            "block";
-
-        }
-
-      }
-    );
-
-
-    document.addEventListener(
-      "click",
-      function(event) {
-
-        if (
-          !languageSelector.contains(event.target) &&
-          !languageList.contains(event.target)
-        ) {
-
-          languageList.style.display =
-            "none";
-
-        }
-
-      }
-    );
-
-
-    document
-      .querySelectorAll("#language-list li")
-      .forEach(function(item) {
-
-        item.addEventListener(
-          "click",
-          function() {
-
-            aplicarIdioma(
-              this.dataset.lang
-            );
-
-            languageList.style.display =
-              "none";
-
-          }
-        );
-
-      });
 
 
     /* =====================================================
@@ -743,14 +347,10 @@
 
     function atualizarStatus() {
 
-      const t =
-        traducoes[idiomaAtual];
-
-
       if (usuarioAtual) {
 
         statusUsuario.textContent =
-          t.logado;
+          "Você está conectado.";
 
         statusUsuario.className =
           "text-center mt-8 text-sm text-green-500";
@@ -758,7 +358,7 @@
       } else {
 
         statusUsuario.textContent =
-          t.deslogado;
+          "Você não está conectado.";
 
         statusUsuario.className =
           "text-center mt-8 text-sm text-gray-500";
@@ -770,10 +370,6 @@
 
     /* =====================================================
        FIREBASE AUTH
-
-       É AQUI QUE A CORREÇÃO ACONTECE.
-
-       A loja espera o Firebase restaurar a sessão.
        ===================================================== */
 
     auth.onAuthStateChanged(
@@ -818,19 +414,15 @@
       "click",
       function() {
 
-        const t =
-          traducoes[idiomaAtual];
-
-
         /*
-          Agora utilizamos a variável
-          preenchida pelo onAuthStateChanged.
+          Verifica se existe um usuário
+          autenticado no Firebase.
         */
 
         if (!usuarioAtual) {
 
           mostrarMensagem(
-            t.login
+            "Faça login para comprar."
           );
 
           return;
@@ -839,11 +431,8 @@
 
 
         /*
-          Não marcamos o livro como comprado
-          neste momento.
-
-          Primeiro encaminhamos para a página
-          de compra.
+          Desabilita o botão enquanto
+          o usuário é encaminhado.
         */
 
         botaoComprar.disabled =
@@ -851,7 +440,7 @@
 
 
         botaoComprar.textContent =
-          t.encaminhando;
+          "Encaminhando para compra...";
 
 
         /*
@@ -864,14 +453,6 @@
       }
     );
 
-
-    /* =====================================================
-       INICIALIZAÇÃO
-       ===================================================== */
-
-    aplicarIdioma(
-      localStorage.getItem("idioma") || "pt"
-    );
 
   </script>
 
