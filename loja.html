@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loja</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-black text-white p-8 min-h-screen flex flex-col items-center">
+
+  <!-- Seletor de idioma -->
+  <div id="language-selector" style="position: fixed; top: 10px; right: 10px; width: 30px; height: 30px; background: #1a1a1a; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 9999;">
+    <span style="color: white; font-size: 16px; user-select: none;">▼</span>
+  </div>
+
+  <ul id="language-list" style="position: fixed; top: 45px; right: 10px; width: 140px; max-height: 150px; overflow-y: auto; background: #222; border: 1px solid #ccc; border-radius: 5px; list-style: none; padding: 5px 0; margin: 0; display: none; z-index: 9999;">
+    <li style="padding: 8px 12px; color: white; cursor: pointer; user-select: none;">Português</li>
+    <li style="padding: 8px 12px; color: white; cursor: pointer; user-select: none;">Español</li>
+    <li style="padding: 8px 12px; color: white; cursor: pointer; user-select: none;">English</li>
+  </ul>
+
+  <h1 id="titulo-principal" class="text-3xl font-bold mb-6">Loja</h1>
+
+  <!-- Produtos -->
+  <div class="grid grid-cols-1 gap-8 max-w-4xl w-full">
+
+    <!-- Triohnte -->
+    <div class="p-6 rounded-lg shadow-lg text-center" style="background-color: #281109;">
+      <img src="Coloque aqui seu png" alt="Compêndio" class="mx-auto mb-4 w-50 h-32" />
+      <h2 id="Capa.png" class="text-xl font-semibold mb-2">Triohnte e-book</h2>
+      <p id="produto-1-desc" class="text-sm mb-2">Download desabilitado pela proteção de dados.</p>
+      <p id="produto-1-preco" class="text-lg font-bold mb-4">Preço: R$ 32,90</p>
+      <p id="Sinópse" class="text-lg mb-2">Obra de Gabryell Aweryan.</p>
+    </div>
+
+    <!-- Mellissa -->
+    <div class="p-6 rounded-lg shadow-lg text-center" style="background-color: #281109;">
+      <img src="Coloque aqui seu png" alt="Compêndio" class="mx-auto mb-4 w-50 h-32" />
+      <h2 id="Mellissa.png" class="text-xl font-semibold mb-2">Mellissa e-book</h2>
+      <p id="produto-1-desc" class="text-sm mb-2">Download desabilitado pela proteção de dados.</p>
+      <p id="produto-1-preco" class="text-lg font-bold mb-4">Preço: R$ 32,90</p>
+      <p id="Sinópse" class="text-lg mb-2">Obra de Wellington Novaes.</p>
+    </div>
+
+    <!-- Segredários -->
+    <div class="p-6 rounded-lg shadow-lg text-center" style="background-color: #281109;">
+      <img src="Coloque aqui seu png" alt="Compêndio" class="mx-auto mb-4 w-50 h-32" />
+      <h2 class="text-xl font-semibold mb-2">Segredários (Novel)</h2>
+      <p class="text-sm mb-2">Download desabilitado pela proteção de dados.</p>
+      <p class="text-lg font-bold mb-4">Preço: R$ 1,99</p>
+      <p class="text-lg mb-2">De: Gabryell Aweryan.</p>
+      <button id="botao-pdf" style="background-color: #000000; color: white;" class="px-8 py-3 rounded-full font-bold transition-colors hover:opacity-90">
+        Comprar
+      </button>
+    </div>
+
+  </div>
+
+  <a href="index.html" id="link-voltar" class="mt-12 text-blue-400 hover:underline">← Voltar para a página inicial</a>
+
+  <!-- JS -->
+  <script>
+    // Seletor de idioma
+    const selector = document.getElementById('language-selector');
+    const list = document.getElementById('language-list');
+
+    selector.addEventListener('click', () => {
+      list.style.display = (list.style.display === 'none' || list.style.display === '') ? 'block' : 'none';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!selector.contains(e.target) && !list.contains(e.target)) {
+        list.style.display = 'none';
+      }
+    });
+
+    const traducoes = {
+      pt: {
+        "titulo-principal": "Loja",
+        "Capa.png": "Triohnte e-book",
+        "produto-1-desc": "Download desabilitado pela proteção de dados.",
+        "produto-1-preco": "Preço: R$ 32,90",
+        "botao-pdf": "Comprar",
+        "link-voltar": "← Voltar para a página inicial"
+      },
+      en: {
+        "titulo-principal": "Store",
+        "Capa.png": "Triohnte e-book",
+        "produto-1-desc": "Download disabled by data protection.",
+        "produto-1-preco": "Price: R$ 32.90",
+        "botao-pdf": "Buy Now",
+        "link-voltar": "← Back to the homepage"
+      },
+      es: {
+        "titulo-principal": "Tienda",
+        "Capa.png": "Triohnte e-book",
+        "produto-1-desc": "Descarga deshabilitada por protección de datos.",
+        "produto-1-preco": "Precio: R$ 32,90",
+        "botao-pdf": "Comprar",
+        "link-voltar": "← Volver a la página principal"
+      }
+    };
+
+    function setLanguage(lang) {
+      const t = traducoes[lang];
+      if (!t) return;
+      for (const id in t) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = t[id];
+      }
+      document.title = t["titulo-principal"] + " - Sociedade Walingardyana";
+      localStorage.setItem("idioma", lang);
+    }
+
+    window.onload = () => {
+      const lang = localStorage.getItem("idioma") || "pt";
+      setLanguage(lang);
+    };
+
+    list.querySelectorAll('li').forEach((li) => {
+      li.addEventListener('click', () => {
+        let langCode = li.textContent === 'Português' ? 'pt' : (li.textContent === 'Español' ? 'es' : 'en');
+        setLanguage(langCode);
+        list.style.display = 'none';
+      });
+    });
+  </script>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    // Inicializa Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBPSH4g1rtk27n9wCCBJZ2GK1UKCMH-Yjs",
+      authDomain: "login-sw-14940.firebaseapp.com",
+      databaseURL: "https://login-sw-14940-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "login-sw-14940",
+      appId: "1:252978150700:web:2c7d3997389f7675058089"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    // Função de registrar compra
+    function registrarCompraPDF(livroId) {
+      const user = auth.currentUser;
+
+      if (!user) {
+        alert("Faça login para comprar.");
+        return;
+      }
+
+      db.ref(`usuarios/${user.uid}/livros_comprados/${livroId}`)
+        .set(true)
+        .then(() => {
+          alert("Encaminhando usuário para compra.");
+          window.location.href = "compras.html";
+        })
+        .catch(err => {
+          alert("Erro ao registrar compra.");
+          console.error(err);
+        });
+    }
+
+    // Configura botão de compra do Segredários
+    const botaoSegredarios = document.getElementById('botao-pdf');
+    if (botaoSegredarios) {
+      botaoSegredarios.addEventListener('click', () => {
+        registrarCompraPDF('segredarios');
+      });
+    }
+  </script>
+
+</body>
+</html>
