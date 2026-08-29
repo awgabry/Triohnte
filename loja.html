@@ -1,40 +1,227 @@
-<!DOCTYPE html> <html lang="pt-BR"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Loja</title> <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" > <style> * { box-sizing: border-box; } body { background: #000; color: #fff; min-height: 100vh; font-family: Georgia, "Times New Roman", serif; } .produto { background: #281109; border: 1px solid rgba(160, 110, 60, 0.25); transition: 0.25s ease; } .produto:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); } .botao-comprar { background: #000; color: white; border: 1px solid #55351f; transition: 0.2s ease; } .botao-comprar:hover { background: #160a05; border-color: #8a5b32; } .botao-comprar:disabled { opacity: 0.5; cursor: not-allowed; } #language-list li:hover { background: #333; } #mensagem { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; background: #181818; border: 1px solid #694528; border-radius: 8px; padding: 14px 20px; min-width: 280px; max-width: 90%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.5); } </style> </head> <body class="bg-black text-white p-6 md:p-10"> <!-- ===================================================== --> <!-- MENSAGEM --> <!-- ===================================================== --> <div id="mensagem"></div> <!-- ===================================================== --> <!-- SELETOR DE IDIOMA --> <!-- ===================================================== --> <div id="language-selector" style=" position: fixed; top: 10px; right: 10px; width: 38px; height: 38px; background: #1a1a1a; border: 1px solid #444; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 9999; " > <span style="color:white;font-size:15px;">▼</span> </div> <ul id="language-list" style=" position: fixed; top: 55px; right: 10px; width: 150px; max-height: 180px; overflow-y: auto; background: #222; border: 1px solid #555; border-radius: 6px; list-style: none; padding: 5px 0; margin: 0; display: none; z-index: 9999; " > <li data-lang="pt" style="padding:10px 14px;color:white;cursor:pointer;" > Português </li> <li data-lang="es" style="padding:10px 14px;color:white;cursor:pointer;" > Español </li> <li data-lang="en" style="padding:10px 14px;color:white;cursor:pointer;" > English </li> </ul> <!-- ===================================================== --> <!-- CONTEÚDO --> <!-- ===================================================== --> <main class="w-full max-w-5xl mx-auto"> <!-- TÍTULO --> <header class="text-center mb-10"> <h1 id="titulo-principal" class="text-4xl md:text-5xl font-bold mb-3" > Loja </h1> <p id="subtitulo" class="text-gray-400" > Vamos acessar Triohnte? Compre! </p> </header> <!-- =================================================== --> <!-- PRODUTO --> <!-- =================================================== --> <section class="grid grid-cols-1 gap-8 max-w-4xl mx-auto"> <article class="produto p-6 md:p-8 rounded-xl text-center" > <!-- CAPA DO LIVRO Coloque o arquivo "segredarios.png" na mesma pasta deste HTML. Se o nome do arquivo for diferente, altere somente o src abaixo. --> <div class="flex justify-center items-center mb-6" style="min-height:220px;" > <img id="imagem-produto" src="segredarios.png" alt="Segredários" class="max-w-xs w-full rounded-lg object-cover" onerror="this.style.display='none';" > </div> <h2 id="produto-titulo" class="text-2xl font-bold mb-2" > Triohnte </h2> <p id="produto-tipo" class="text-sm text-gray-400 mb-4" > Primeiro Volume </p> <p id="produto-descricao" class="text-sm text-gray-300 mb-4" > Download desabilitado pela proteção de dados. </p> <p id="produto-preco" class="text-2xl font-bold mb-3" > Preço: R$ 6,99 </p> <p id="produto-autor" class="text-lg mb-6" > Gabryell Aweryan. </p> <button id="botao-comprar" type="button" class="botao-comprar px-10 py-3 rounded-full font-bold" > Comprar </button> </article> </section>
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
 
-<!-- =================================================== -->
-<!-- STATUS -->
-<!-- =================================================== -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<div
-  id="status-usuario"
-  class="text-center mt-8 text-sm text-gray-500"
->
-  Verificando sessão...
-</div>
+  <title>Loja</title>
 
-
-<!-- =================================================== -->
-<!-- VOLTAR -->
-<!-- =================================================== -->
-
-<div class="text-center">
-
-  <a
-    href="index.html"
-    id="link-voltar"
-    class="inline-block mt-12 text-blue-400 hover:underline"
+  <link
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    rel="stylesheet"
   >
-    ← Voltar para a página inicial
-  </a>
 
-</div>
-```
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .produto {
+      background: #281109;
+      border: 1px solid rgba(160, 110, 60, 0.25);
+      transition: 0.25s ease;
+    }
+
+    .produto:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    .botao-comprar {
+      background: #000;
+      color: white;
+      border: 1px solid #55351f;
+      transition: 0.2s ease;
+    }
+
+    .botao-comprar:hover {
+      background: #160a05;
+      border-color: #8a5b32;
+    }
+
+    .botao-comprar:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #mensagem {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10000;
+      background: #181818;
+      border: 1px solid #694528;
+      border-radius: 8px;
+      padding: 14px 20px;
+      min-width: 280px;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white p-6 md:p-10">
+
+  <!-- ===================================================== -->
+  <!-- MENSAGEM -->
+  <!-- ===================================================== -->
+
+  <div id="mensagem"></div>
+
+
+  <!-- ===================================================== -->
+  <!-- CONTEÚDO -->
+  <!-- ===================================================== -->
+
+  <main class="w-full max-w-5xl mx-auto">
+
+    <!-- TÍTULO -->
+
+    <header class="text-center mb-10">
+
+      <h1
+        id="titulo-principal"
+        class="text-4xl md:text-5xl font-bold mb-3"
+      >
+        Loja
+      </h1>
+
+      <p
+        id="subtitulo"
+        class="text-gray-400"
+      >
+        Vamos acessar Triohnte? Compre!
+      </p>
+
+    </header>
+
+
+    <!-- =================================================== -->
+    <!-- PRODUTO -->
+    <!-- =================================================== -->
+
+    <section class="grid grid-cols-1 gap-8 max-w-4xl mx-auto">
+
+      <article
+        class="produto p-6 md:p-8 rounded-xl text-center"
+      >
+
+        <!-- CAPA DO LIVRO -->
+
+        <div
+          class="flex justify-center items-center mb-6"
+          style="min-height:220px;"
+        >
+
+          <img
+            id="imagem-produto"
+            src="segredarios.png"
+            alt="Segredários"
+            class="max-w-xs w-full rounded-lg object-cover"
+            onerror="this.style.display='none';"
+          >
+
+        </div>
+
+
+        <h2
+          id="produto-titulo"
+          class="text-2xl font-bold mb-2"
+        >
+          Triohnte
+        </h2>
+
+
+        <p
+          id="produto-tipo"
+          class="text-sm text-gray-400 mb-4"
+        >
+          Primeiro Volume
+        </p>
+
+
+        <p
+          id="produto-descricao"
+          class="text-sm text-gray-300 mb-4"
+        >
+          Download desabilitado pela proteção de dados.
+        </p>
+
+
+        <p
+          id="produto-preco"
+          class="text-2xl font-bold mb-3"
+        >
+          Preço: R$ 6,99
+        </p>
+
+
+        <p
+          id="produto-autor"
+          class="text-lg mb-6"
+        >
+          Gabryell Aweryan.
+        </p>
+
+
+        <button
+          id="botao-comprar"
+          type="button"
+          class="botao-comprar px-10 py-3 rounded-full font-bold"
+        >
+          Comprar
+        </button>
+
+      </article>
+
+    </section>
+
+
+    <!-- =================================================== -->
+    <!-- STATUS -->
+    <!-- =================================================== -->
+
+    <div
+      id="status-usuario"
+      class="text-center mt-8 text-sm text-gray-500"
+    >
+      Verificando sessão...
+    </div>
+
+
+    <!-- =================================================== -->
+    <!-- VOLTAR -->
+    <!-- =================================================== -->
+
+    <div class="text-center">
+
+      <a
+        href="index.html"
+        id="link-voltar"
+        class="inline-block mt-12 text-blue-400 hover:underline"
+      >
+        ← Voltar para a página inicial
+      </a>
+
+    </div>
 
   </main>
 
+
   <!-- ===================================================== -->
-
   <!-- FIREBASE -->
-
   <!-- ===================================================== -->
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -42,6 +229,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 
   <script>
 
@@ -246,8 +434,8 @@
       }
     );
 
-
   </script>
 
 </body>
 </html>
+```
