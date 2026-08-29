@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -22,13 +23,12 @@
             box-sizing: border-box;
             
             /* Bloqueio de seleção de texto via CSS */
-            -webkit-user-select: none;  /* Safari */
-            -moz-user-select: none;     /* Firefox */
-            -ms-user-select: none;      /* IE10+/Edge */
-            user-select: none;          /* Padrão */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
-        /* Título Principal da Página */
         .main-title {
             font-size: 3rem;
             text-transform: uppercase;
@@ -43,42 +43,60 @@
             color: #bf953f;
         }
 
-        /* Container da lista de conflitos */
         .conflitos-lista {
             display: flex;
             flex-direction: column;
-            gap: 30px; /* Espaço entre cada bloco de linha/card */
+            gap: 30px;
             width: 100%;
             max-width: 700px;
         }
 
-        /* Estrutura da linha: Agrupa a Seta e o Título lado a lado */
         .conflito-header {
             display: flex;
             align-items: center;
-            gap: 20px; /* Espaço entre a seta e o texto */
+            gap: 20px;
             cursor: pointer;
             width: fit-content;
         }
 
-        /* Seta em CSS puro com o degradê dourado */
         .arrow-button {
             width: 35px;
             height: 35px;
             flex-shrink: 0;
             transition: transform 0.3s ease, filter 0.3s ease;
             
-            /* Formato geométrico idêntico ao enviado */
-            clip-path: polygon(0% 15%, 55% 50%, 0% 85%, 25% 50%, 0% 15%, 100% 50%);
-            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            clip-path: polygon(
+                0% 15%,
+                55% 50%,
+                0% 85%,
+                25% 50%,
+                0% 15%,
+                100% 50%
+            );
+
+            background: linear-gradient(
+                45deg,
+                #bf953f,
+                #fcf6ba,
+                #b38728,
+                #fbf5b7,
+                #aa771c
+            );
         }
 
-        /* Título que fica à frente de cada seta */
         .conflito-title {
             font-size: 1.6rem;
             font-weight: bold;
             margin: 0;
-            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            background: linear-gradient(
+                45deg,
+                #bf953f,
+                #fcf6ba,
+                #b38728,
+                #fbf5b7,
+                #aa771c
+            );
+
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -86,18 +104,17 @@
             transition: opacity 0.2s;
         }
 
-        /* Efeitos visuais ao passar o mouse na linha interativa */
         .conflito-header:hover .arrow-button {
             transform: scale(1.1);
-            filter: drop-shadow(0 0 5px rgba(191, 149, 63, 0.6));
+            filter: drop-shadow(
+                0 0 5px rgba(191, 149, 63, 0.6)
+            );
         }
 
-        /* Quando o menu está aberto, a seta gira para baixo */
         .conflito-header.active .arrow-button {
             transform: rotate(90deg);
         }
 
-        /* Card Suspenso Oculto (Abaixo de cada linha) */
         .content-card {
             background-color: #111;
             border: 1px solid #bf953f;
@@ -107,20 +124,21 @@
             max-height: 0;
             overflow: hidden;
             opacity: 0;
-            transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.3s ease;
+            transition:
+                max-height 0.4s ease,
+                padding 0.4s ease,
+                opacity 0.3s ease;
             box-sizing: border-box;
-            margin-top: -10px; /* Aproxima o card aberto do cabeçalho */
+            margin-top: -10px;
         }
 
-        /* Estado aberto do Card */
         .content-card.open {
-            max-height: 700px;
+            max-height: 3000px;
             padding: 25px;
             opacity: 1;
             margin-top: 10px;
         }
 
-        /* Imagem interna do Card */
         .card-image {
             width: 100%;
             max-height: 220px;
@@ -128,21 +146,21 @@
             border-radius: 8px;
             margin-bottom: 15px;
             border: 1px solid #333;
-            
-            /* Proteção extra para não permitir arrastar a imagem */
+
             -webkit-user-drag: none;
             user-drag: none;
         }
 
-        /* Texto descritivo interno */
         .card-text {
             color: #ddd;
             font-size: 1rem;
             line-height: 1.6;
             margin: 0;
+            white-space: pre-line;
         }
     </style>
 </head>
+
 <body oncontextmenu="return false;" ondragstart="return false;">
 
     <h1 class="main-title">Conflitos Primordiais</h1>
@@ -150,57 +168,98 @@
     <div class="conflitos-lista">
         
         <div class="conflito-item">
-            <div class="conflito-header" onclick="toggleConflito(this)" data-target="card1">
+
+            <div
+                class="conflito-header"
+                onclick="toggleConflito(this)"
+                data-target="card1"
+            >
                 <div class="arrow-button"></div>
-                <h2 class="conflito-title">Arco dos deuses irmãos</h2>
+
+                <h2 class="conflito-title">
+                    Arco dos deuses irmãos
+                </h2>
             </div>
+
             <div class="content-card" id="card1">
-                <img src="detalhes/hn.png" alt="A Fratura do Vazio" class="card-image" style="pointer-events: none;">
+
+                <img
+                    src="detalhes/hn.png"
+                    alt="A Fratura do Vazio"
+                    class="card-image"
+                    style="pointer-events: none;"
+                >
+
                 <p class="card-text">
-                   Haragum e Nabulork
+Abrimos conflitos primordiais contando a trágica história entre o deus Haragum e seu irmão Nabulork. 
+Um dia, os deuses criadores sentaram-se na mesa redonda dos céus. Hyobdor, (deus da vida e do poder ancestral), entediado da vida tanquila que levavam, decidiu apostar com um luminasso, (um dos seres de luz protetor dos céus), que conseguiria criar vida com base na lama. O luminasso,por nunca ter visto tal poder, apostou que seria mais fácil o deus desmaiar bebado e nu antes do anoitecer, do que fazer vida com uma matéria tão insignificante quanto o barro. Furioso, Hyobdor bateu as mãos na mesa, fazendo agua jorrar e seus dedos para dentro de uma cuba de pedra que servia para acender o oraculo maior, enchendo a cuba e apagando o fogo oracular. Depois, fez uma pequena porção de terra surgir ao meio da cuba, terra que sobressaia a agua. 
+
+Haragum (deus da luz e da cura) e Nabulork (deus dos espiritos e do finito) , sempre acompanhados um do outro, chegaram no templo do céus, onde os dois estavam e fascinaram-se com o poder gerado por Hyobdor. Apostaram que com os dois que seria mais interessante ver a vida gerada pelo deus da vida,de perto, caminhando entre os vales, os rios e mares, vendo a vegetação crescer, e talvez criando algo. Hyobdor consentiu e então os dois reduziram-se a caber no pequeno mundo e conviver nele. 
+
+Haragum decidiu que aquele jogo não seria apenas uma mera brincadeira, mas uma história viva que deveria permanecer, como um terrário em seu quarto, quando aquilo acabasse. Primeiro o sol,  a lua, as pedrase as arvores. Então vieram os animais, os que voam, os que nadam, e os que andam. 
+
+Dias depois, enquanto os dois irmãos estavam em um bosque, enquanto lá em cima, além das nuvens, Hyobdor e seu desafiador encaravam atentos a tudo, Haragum decidiu que faltava vida para os venerar. Vida para construir a história que ainda faltava pensar. Assim, criou um ser composto do mesmo barro, com um movimento de suas mãos deu-lhe luz e então o novo animal respirou. Chamou-lhes homens.
+
+Haragum mostrou entusiasmado seu invento para Nabulork que também experimentou para ver se saia o mesmo efeito. Uma mulher, pela qual o homem de Nabulork se apaixonou. E criaram filhos e sua linhagem cresceu e prosperou. 
+
+Quando o mundo já estava grande e os animais de luz inteligentes. Já detinham comercios primarios e o sistemas de junção de conquistas e status sobre essas conquistas começava a caminhar... A escuridão chegou. Homens que navegavam no mar, ao serem tomados por ela, começaram a matar suas próprias familias e comer a carne delas. Homens  ainda puros, avisaram aos deuses que tentaram lutar contra a força. 
+
+Haragum girou seu cajado de luz e conseguiu conjurar uma espiral nos céus, afim de banir a criatura das trevas para o submundo, mas ela era grande demais para adentrar o portal. E cuspia algo azul, algo que disparava como uma pedra jogada contra uma casa de madeira. Nabulork então pensou em conjurar a finitude para com seu toque, findar a criatura, mas seu cuspe o atingiu no peito.
+
+Nabulork caiu no chão enquanto seu corpo convuncionava, talvez recusando o poder dado pela criatura que agora o consumia. Haragum tentou conjurar algo que sabia que retirava dos corpos o mal e o canalizava de volta para a criatura, um cristal azulado de brilho forte demais para cegar qualquer pessoa que o encarasse por tempo suficiente. Mas o poder da criatura ofuscou Nabulork. Seus olhos antes castanhos se tornaram vermelhos, sua pele obscureceu até ficar como carvão e uma aura maligna tomou conta dele. 
+
+Ao ver que não poderia vencer a criatura sozinho, Haragum voltou aos céus, onde explicou sobre o problema a Hyobdor, que decidiu por simplesmente apagar o mundo. Mas Haragum tentou o convencer de que deixasse o mundo sobreviver pelos humanos e por seu irmão, que ainda estava lá. Hyobdor concordou perdendo a aposta. 
+
+Os dois deuses fizeram outro encantamento divinal, e enviaram tal ser ao submundo, junto com Nabulork e os maus homens. E Walingardyn continuou. 
                 </p>
+
             </div>
         </div>
 
-     
     </div>
 
     <script>
         function toggleConflito(headerElement) {
-            // Pega o ID do card associado a este cabeçalho clicado
-            const targetId = headerElement.getAttribute('data-target');
-            const targetCard = document.getElementById(targetId);
 
-            // Alterna a abertura do card clicado
+            const targetId =
+                headerElement.getAttribute('data-target');
+
+            const targetCard =
+                document.getElementById(targetId);
+
             targetCard.classList.toggle('open');
-            
-            // Alterna a rotação da seta correspondente
+
             headerElement.classList.toggle('active');
         }
 
-        // Bloqueio de atalhos de teclado (Ctrl+C, Ctrl+S, Ctrl+P, Ctrl+U e F12)
+        // Bloqueio de atalhos de teclado
         document.addEventListener('keydown', function(e) {
-            // Bloqueia Ctrl+C (Copiar)
+
+            // Ctrl+C
             if (e.ctrlKey && e.keyCode == 67) {
                 e.preventDefault();
                 return false;
             }
-            // Bloqueia Ctrl+S (Salvar página)
+
+            // Ctrl+S
             if (e.ctrlKey && e.keyCode == 83) {
                 e.preventDefault();
                 return false;
             }
-            // Bloqueia Ctrl+P (Imprimir/Gerar PDF)
+
+            // Ctrl+P
             if (e.ctrlKey && e.keyCode == 80) {
                 e.preventDefault();
                 return false;
             }
-            // Bloqueia Ctrl+U (Ver código fonte)
+
+            // Ctrl+U
             if (e.ctrlKey && e.keyCode == 85) {
                 e.preventDefault();
                 return false;
             }
-            // Bloqueia F12 (Inspecionar elemento)
+
+            // F12
             if (e.keyCode == 123) {
                 e.preventDefault();
                 return false;
@@ -210,3 +269,4 @@
 
 </body>
 </html>
+```
