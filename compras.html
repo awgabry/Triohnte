@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Compra - Os Segredários</title>
+    <style>
+        body {
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            background-color: #111;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .capa-livro {
+            width: 220px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .sinopse {
+            font-size: 0.95rem;
+            color: #bbb;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .preco {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffffff; /* Cor ajustada para o tom da Wise */
+            margin-bottom: 30px;
+        }
+
+        /* Estilização do Botão da Wise para manter o padrão */
+        .btn-wise {
+            display: inline-block;
+            background-color: #00bfa5;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 15px 40px;
+            border-radius: 50px;
+            transition: background 0.3s ease;
+            width: 80%;
+        }
+
+        .btn-wise:hover {
+            background-color: #25ffda;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="Coloque aqui seu png" alt="Capa do Livro" class="capa-livro">
+        
+        <h1>Segredários</h1>
+
+        <div class="sinopse">
+            <p>Marco, João e Lucas vivem a rotina sem graça da Kenya Enlatados, uma pequena empresa de São Paulo que enlata legumes e sardinhas. Mas a monotonia acaba quando recebem um telefonema inesperado de Cleber F. Junior, do Amazonas: investigar um parque aquático abandonado, palco de uma tragédia que ainda assombra o local.</p>
+            <p>Aproveitando que suas férias estavam chegando, inventam um retiro espiritual para justificar a ausência, e claro, o chefe não entende nada! Munidos de curiosidade, improviso e sua van carateristicamente cômica, os Segredários partem rumo ao Amazonas.</p>
+            <p>No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agora é coordenada por seu filho, Victor, que quer resolver o problema da propriedade para vendê-la. Entre mistérios, absurdos e perigos que ninguém ousaria enfrentar, Marco, João e Lucas vão aprender que segredos enterrados nem sempre ficam onde deveriam, e que a linha entre o banal e o bizarro pode ser mais fina do que imaginam.</p>
+        </div>
+
+        <p class="preco">R$ 1,99</p>
+
+        <div id="payment-area">
+            <a href="https://wise.com/pay/r/Qyp3kK4i9WF3ouI" class="btn-wise">
+                Pagar com Wise
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
+
