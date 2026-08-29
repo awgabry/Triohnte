@@ -7,6 +7,15 @@
 
   <title>Loja</title>
 
+  <!-- Fonte Cinzel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+
   <link
     href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
     rel="stylesheet"
@@ -21,7 +30,7 @@
       background: #000;
       color: #fff;
       min-height: 100vh;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: "Cinzel", serif;
     }
 
     .produto {
@@ -40,6 +49,7 @@
       color: white;
       border: 1px solid #55351f;
       transition: 0.2s ease;
+      font-family: "Cinzel", serif;
     }
 
     .botao-comprar:hover {
@@ -66,7 +76,8 @@
       min-width: 280px;
       max-width: 90%;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+      font-family: "Cinzel", serif;
     }
   </style>
 </head>
@@ -187,35 +198,6 @@
 
     </section>
 
-
-    <!-- =================================================== -->
-    <!-- STATUS -->
-    <!-- =================================================== -->
-
-    <div
-      id="status-usuario"
-      class="text-center mt-8 text-sm text-gray-500"
-    >
-      Verificando sessão...
-    </div>
-
-
-    <!-- =================================================== -->
-    <!-- VOLTAR -->
-    <!-- =================================================== -->
-
-    <div class="text-center">
-
-      <a
-        href="index.html"
-        id="link-voltar"
-        class="inline-block mt-12 text-blue-400 hover:underline"
-      >
-        ← Voltar para a página inicial
-      </a>
-
-    </div>
-
   </main>
 
 
@@ -281,9 +263,6 @@
     const botaoComprar =
       document.getElementById("botao-comprar");
 
-    const statusUsuario =
-      document.getElementById("status-usuario");
-
     const mensagem =
       document.getElementById("mensagem");
 
@@ -322,33 +301,6 @@
 
 
     /* =====================================================
-       STATUS DO USUÁRIO
-       ===================================================== */
-
-    function atualizarStatus() {
-
-      if (usuarioAtual) {
-
-        statusUsuario.textContent =
-          "Você está conectado.";
-
-        statusUsuario.className =
-          "text-center mt-8 text-sm text-green-500";
-
-      } else {
-
-        statusUsuario.textContent =
-          "Você não está conectado.";
-
-        statusUsuario.className =
-          "text-center mt-8 text-sm text-gray-500";
-
-      }
-
-    }
-
-
-    /* =====================================================
        FIREBASE AUTH
        ===================================================== */
 
@@ -356,9 +308,6 @@
       function(user) {
 
         usuarioAtual = user;
-
-        atualizarStatus();
-
 
         console.log(
           "Estado de autenticação:",
@@ -437,4 +386,3 @@
 
 </body>
 </html>
-
