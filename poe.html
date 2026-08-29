@@ -1,652 +1,993 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+  <title>Biblioteca</title>
 
-  <title>Loja</title>
-
+  <!-- Fonte Cinzel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap"
     rel="stylesheet"
-  />
+  >
 
   <style>
+
+    /* ============================= */
+    /* CONFIGURAÇÕES GERAIS */
+    /* ============================= */
+
     body {
-      background: #050505;
-      color: white;
+      margin: 0;
+      font-family: sans-serif;
+      background: #000;
+      color: #e7e9ee;
     }
 
-    .gold {
+
+    /* ============================= */
+    /* BARRA SUPERIOR */
+    /* ============================= */
+
+    .topbar {
+      padding: 1rem;
+      background: #b8860b;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      color: #000;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+
+    /* Botão Loja */
+
+    .btn-loja {
+      margin-left: auto;
+      padding: 0.55rem 1rem;
+      border-radius: 12px;
+      background: #000;
       color: #d4af37;
+      text-decoration: none;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
     }
 
-    .gold-bg {
-      background: #d4af37;
+    .btn-loja:hover {
+      background: #1a1a1a;
+      color: #fff;
+      transform: translateY(-1px);
     }
 
-    .gold-border {
-      border-color: #d4af37;
+
+    /* ============================= */
+    /* LAYOUT */
+    /* ============================= */
+
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 58px);
     }
 
-    .card {
-      background: #111;
-      border: 1px solid #292929;
-      transition: 0.2s ease;
+    .sidebar {
+      background: #000;
+      padding: 1rem;
+      overflow: auto;
+      border-right: 1px solid #b8860b;
+      width: 260px;
+      flex-shrink: 0;
     }
 
-    .card:hover {
-      border-color: #d4af37;
-      transform: translateY(-2px);
+    .main {
+      display: flex;
+      flex: 1;
+      gap: 1.5rem;
+      padding: 1rem;
+      align-items: flex-start;
     }
 
-    .loading {
-      animation: pulse 1.5s infinite;
+
+    /* ============================= */
+    /* GRADE PRINCIPAL */
+    /* ============================= */
+
+    #grade {
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fill,
+        minmax(280px, 1fr)
+      );
+      gap: 1.5rem;
+      flex: 1;
     }
 
-    @keyframes pulse {
-      0% {
-        opacity: 0.4;
+
+    /* ============================= */
+    /* CONTOS DE WALINGARDYN */
+    /* ============================= */
+
+    #novelGrid {
+      width: 300px;
+      background: #b8860b;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 1rem;
+      border-left: 2px solid #b8860b;
+      flex-shrink: 0;
+    }
+
+    #novelGrid h2 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-align: center;
+      color: #000;
+      margin-bottom: 0.5rem;
+      font-family: 'Cinzel', serif;
+    }
+
+
+    /* ============================= */
+    /* CARDS */
+    /* ============================= */
+
+    .card-book {
+      background: #b8860b;
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #d4af37;
+      height: auto;
+      color: #000;
+    }
+
+    .cover {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: #000;
+      flex-shrink: 0;
+    }
+
+    .cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .meta {
+      padding: 1.2rem;
+      flex-grow: 1;
+    }
+
+    .meta h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.2rem;
+      color: #000;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+    }
+
+    .meta .author {
+      color: #241800;
+      font-size: 0.9rem;
+      font-style: italic;
+      margin-bottom: 0.8rem;
+    }
+
+    .meta .synopsis {
+      font-size: 0.85rem;
+      color: #1c1400;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+
+    /* ============================= */
+    /* BOTÕES */
+    /* ============================= */
+
+    .actions {
+      display: flex;
+      gap: 0.8rem;
+      padding: 1.2rem;
+      align-items: center;
+      border-top: 1px solid #8c6508;
+      margin-top: auto;
+    }
+
+    .btn {
+      padding: .5rem .8rem;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: #000;
+      color: #e7e9ee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      width: 70px;
+      height: 38px;
+      flex-shrink: 0;
+    }
+
+    .btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
+
+
+    /* ============================= */
+    /* ESTRELAS */
+    /* ============================= */
+
+    .fav[aria-pressed="true"]::before {
+      content: "★";
+      color: #fff;
+    }
+
+    .fav[aria-pressed="false"]::before {
+      content: "☆";
+    }
+
+    .star-count {
+      color: #fff;
+      font-weight: 400;
+      font-size: 0.75rem;
+    }
+
+
+    /* ============================= */
+    /* COMENTÁRIOS */
+    /* ============================= */
+
+    .comment-section {
+      margin-top: 2rem;
+      background: #1a0901;
+      padding: 1rem;
+      border-radius: 12px;
+    }
+
+    .comment-section textarea {
+      width: 100%;
+      height: 80px;
+      background: #000;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 0.5rem;
+      box-sizing: border-box;
+      resize: none;
+    }
+
+    .btn-comment {
+      margin-top: 0.5rem;
+      width: 100%;
+      background: #000;
+      color: #fff;
+      padding: 0.6rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #listaComentarios {
+      margin-top: 1.5rem;
+    }
+
+    .comentario-item {
+      border-bottom: 1px solid #333;
+      padding: 12px 0;
+    }
+
+    .comentario-texto {
+      font-size: 0.9rem;
+      color: #e7e9ee;
+      margin: 0;
+    }
+
+    .comentario-meta {
+      color: #aab0bd;
+      font-size: 0.75rem;
+      display: block;
+      margin-top: 6px;
+    }
+
+
+    /* ============================= */
+    /* DRAWER */
+    /* ============================= */
+
+    .drawer {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .95);
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform .2s ease;
+      z-index: 50;
+    }
+
+    .drawer.open {
+      transform: translateY(0);
+    }
+
+    .drawer-content {
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .drawer-content img {
+      width: 100%;
+      max-width: 800px;
+      height: auto;
+      margin-bottom: 1rem;
+    }
+
+
+    /* Barra do Drawer */
+
+    #drawer .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 1rem;
+      background: #b8860b;
+    }
+
+    #drawer .topbar #closeDrawer {
+      position: absolute;
+      left: 1rem;
+    }
+
+    #drawer .topbar #toggleSlide {
+      position: absolute;
+      right: 1rem;
+    }
+
+
+    /* ============================= */
+    /* RESPONSIVIDADE */
+    /* ============================= */
+
+    @media (max-width: 900px) {
+
+      .layout {
+        flex-direction: column;
       }
 
-      50% {
-        opacity: 1;
+      .sidebar {
+        width: auto;
+        border-right: none;
+        border-bottom: 1px solid #b8860b;
       }
 
-      100% {
-        opacity: 0.4;
+      .main {
+        flex-direction: column;
       }
+
+      #grade {
+        width: 100%;
+      }
+
+      #novelGrid {
+        width: auto;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
     }
+
   </style>
+
 </head>
 
-<body class="min-h-screen">
 
-  <!-- =========================
-       CABEÇALHO
-  ========================== -->
+<body>
 
-  <header class="border-b border-gray-800 bg-black">
 
-    <div
-      class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between"
+  <!-- ============================= -->
+  <!-- BARRA SUPERIOR -->
+  <!-- ============================= -->
+
+  <header class="topbar">
+
+    <span>Biblioteca</span>
+
+    <!-- BOTÃO DA LOJA -->
+
+    <a
+      href="loja.html"
+      class="btn-loja"
     >
-
-      <div>
-        <h1 class="text-2xl font-bold gold">
-          Loja
-        </h1>
-
-        <p class="text-xs text-gray-500">
-          SW Editorial
-        </p>
-      </div>
-
-      <div class="flex items-center gap-4">
-
-        <div
-          id="userArea"
-          class="text-right"
-        >
-          <div class="text-sm text-gray-400 loading">
-            Verificando sessão...
-          </div>
-        </div>
-
-        <button
-          id="logoutButton"
-          class="hidden px-4 py-2 rounded border border-gray-700 hover:border-red-500 hover:text-red-400 transition"
-        >
-          Sair
-        </button>
-
-      </div>
-
-    </div>
+      Loja
+    </a>
 
   </header>
 
 
-  <!-- =========================
-       CONTEÚDO
-  ========================== -->
+  <!-- ============================= -->
+  <!-- LAYOUT PRINCIPAL -->
+  <!-- ============================= -->
 
-  <main class="max-w-6xl mx-auto px-6 py-10">
-
-    <!-- CARREGANDO -->
-
-    <section
-      id="loadingScreen"
-      class="text-center py-20"
-    >
-
-      <div
-        class="inline-block w-10 h-10 border-4 border-gray-700 border-t-yellow-500 rounded-full animate-spin mb-5"
-      ></div>
-
-      <p class="text-gray-400">
-        Verificando sua conta...
-      </p>
-
-    </section>
+  <div class="layout">
 
 
-    <!-- NÃO AUTENTICADO -->
+    <!-- SIDEBAR -->
 
-    <section
-      id="loginRequired"
-      class="hidden text-center py-20"
-    >
+    <aside class="sidebar">
 
-      <div class="max-w-md mx-auto">
+      <h2>
+        Suas obras reunidas em um só lugar.
+      </h2>
 
-        <div class="text-5xl mb-6">
-          🔐
-        </div>
 
-        <h2 class="text-2xl font-bold mb-3">
-          Você precisa estar conectado
-        </h2>
+      <div class="comment-section">
 
-        <p class="text-gray-400 mb-8">
-          Faça login para acessar a loja e visualizar seus produtos.
-        </p>
+        <h3>
+          Deixe seu comentário
+        </h3>
 
-        <a
-          href="index.html"
-          class="inline-block px-6 py-3 rounded gold-bg text-black font-bold hover:opacity-90 transition"
+
+        <textarea
+          id="commentText"
+          placeholder="O que você está lendo hoje?"
+        ></textarea>
+
+
+        <button
+          class="btn-comment"
+          id="btnComment"
         >
-          Voltar para o início
-        </a>
+          Enviar
+        </button>
+
+
+        <div id="listaComentarios"></div>
 
       </div>
 
-    </section>
+    </aside>
 
 
-    <!-- USUÁRIO AUTENTICADO -->
+    <!-- CONTEÚDO -->
 
-    <section
-      id="storeContent"
-      class="hidden"
-    >
+    <main class="main">
 
-      <!-- BOAS-VINDAS -->
 
-      <div class="mb-10">
+      <!-- GRADE PRINCIPAL -->
 
-        <p class="text-sm text-gray-500 mb-2">
-          Bem-vindo à biblioteca
-        </p>
+      <div id="grade"></div>
 
-        <h2
-          id="welcomeMessage"
-          class="text-3xl font-bold"
-        >
-          Olá!
+
+      <!-- CONTOS DE WALINGARDYN -->
+
+      <div id="novelGrid">
+
+        <h2>
+          Contos de Walingardyn
         </h2>
-
-        <p
-          id="userEmail"
-          class="text-gray-500 mt-2"
-        ></p>
 
       </div>
 
+    </main>
 
-      <!-- PRODUTOS -->
+  </div>
 
-      <div
-        id="productsGrid"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+
+  <!-- ============================= -->
+  <!-- DRAWER -->
+  <!-- ============================= -->
+
+  <div
+    id="drawer"
+    class="drawer"
+    aria-hidden="true"
+  >
+
+    <div class="topbar">
+
+      <button
+        class="btn"
+        id="closeDrawer"
       >
-
-        <!-- Produto 1 -->
-
-        <article class="card rounded-lg overflow-hidden">
-
-          <div
-            class="h-48 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center"
-          >
-
-            <span class="text-5xl">
-              📖
-            </span>
-
-          </div>
-
-          <div class="p-6">
-
-            <h3 class="text-xl font-bold mb-2">
-              Triohnte
-            </h3>
-
-            <p class="text-gray-400 text-sm mb-5">
-              Uma obra do universo de Walingardyn.
-            </p>
-
-            <div class="flex items-center justify-between">
-
-              <span class="gold font-bold">
-                € 0,00
-              </span>
-
-              <button
-                class="px-4 py-2 border gold-border gold rounded hover:bg-yellow-600 hover:text-black transition"
-                onclick="comprarProduto('Triohnte')"
-              >
-                Comprar
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
+        Fechar
+      </button>
 
 
-        <!-- Produto 2 -->
-
-        <article class="card rounded-lg overflow-hidden">
-
-          <div
-            class="h-48 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center"
-          >
-
-            <span class="text-5xl">
-              📜
-            </span>
-
-          </div>
-
-          <div class="p-6">
-
-            <h3 class="text-xl font-bold mb-2">
-              Edição Especial
-            </h3>
-
-            <p class="text-gray-400 text-sm mb-5">
-              Conteúdo exclusivo da SW Editorial.
-            </p>
-
-            <div class="flex items-center justify-between">
-
-              <span class="gold font-bold">
-                € 0,00
-              </span>
-
-              <button
-                class="px-4 py-2 border gold-border gold rounded hover:bg-yellow-600 hover:text-black transition"
-                onclick="comprarProduto('Edição Especial')"
-              >
-                Comprar
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
+      <h2 id="drawerTitle"></h2>
 
 
-        <!-- Produto 3 -->
+      <button
+        class="btn"
+        id="toggleSlide"
+      >
+        Slide
+      </button>
 
-        <article class="card rounded-lg overflow-hidden">
-
-          <div
-            class="h-48 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center"
-          >
-
-            <span class="text-5xl">
-              ⚔️
-            </span>
-
-          </div>
-
-          <div class="p-6">
-
-            <h3 class="text-xl font-bold mb-2">
-              Biblioteca Walingardyn
-            </h3>
-
-            <p class="text-gray-400 text-sm mb-5">
-              Materiais e conteúdos do universo.
-            </p>
-
-            <div class="flex items-center justify-between">
-
-              <span class="gold font-bold">
-                € 0,00
-              </span>
-
-              <button
-                class="px-4 py-2 border gold-border gold rounded hover:bg-yellow-600 hover:text-black transition"
-                onclick="comprarProduto('Biblioteca Walingardyn')"
-              >
-                Comprar
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-      </div>
-
-    </section>
-
-  </main>
+    </div>
 
 
-  <!-- =========================
-       FIREBASE
-  ========================== -->
+    <div class="drawer-content"></div>
 
-  <script type="module">
-
-    /*
-     * ============================================================
-     * FIREBASE
-     * ============================================================
-     *
-     * MUITO IMPORTANTE:
-     *
-     * O firebaseConfig abaixo precisa ser EXATAMENTE o mesmo
-     * utilizado no seu index.html.
-     *
-     * Não crie outro projeto Firebase.
-     * Não altere o authDomain.
-     * Não altere o projectId.
-     *
-     * Copie a configuração do seu index.html para cá.
-     */
-
-    import {
-      initializeApp
-    } from
-      "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+  </div>
 
 
-    import {
-      getAuth,
-      onAuthStateChanged,
-      signOut
-    } from
-      "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+  <!-- ============================= -->
+  <!-- FIREBASE -->
+  <!-- ============================= -->
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 
-    /*
-     * ============================================================
-     * CONFIGURAÇÃO DO FIREBASE
-     * ============================================================
-     */
+  <script>
+
+    /* ========================================================= */
+    /* FIREBASE */
+    /* ========================================================= */
 
     const firebaseConfig = {
 
-      apiKey: "COLOQUE_SUA_API_KEY_AQUI",
+      apiKey:
+        "AIzaSyBPSH4g1rtk27n9wCCBJZ2GK1UKCMH-Yjs",
 
-      authDomain: "SEU-PROJETO.firebaseapp.com",
+      authDomain:
+        "login-sw-14940.firebaseapp.com",
 
-      projectId: "SEU-PROJECT-ID",
+      databaseURL:
+        "https://login-sw-14940-default-rtdb.europe-west1.firebasedatabase.app/",
 
-      storageBucket: "SEU-PROJETO.firebasestorage.app",
+      projectId:
+        "login-sw-14940",
 
-      messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-
-      appId: "SEU_APP_ID"
+      appId:
+        "1:252978150700:web:2c7d3997389f7675058089"
 
     };
 
 
-    /*
-     * ============================================================
-     * INICIALIZAÇÃO
-     * ============================================================
-     */
-
-    const app = initializeApp(firebaseConfig);
-
-    const auth = getAuth(app);
-
+    /* ========================================================= */
+    /* INICIALIZAÇÃO DO FIREBASE */
+    /* ========================================================= */
 
     /*
-     * ============================================================
-     * ELEMENTOS DA PÁGINA
-     * ============================================================
+     * Não inicializa o Firebase duas vezes.
      */
 
-    const loadingScreen =
-      document.getElementById("loadingScreen");
+    if (!firebase.apps.length) {
 
-    const loginRequired =
-      document.getElementById("loginRequired");
+      firebase.initializeApp(firebaseConfig);
 
-    const storeContent =
-      document.getElementById("storeContent");
+    }
 
-    const userArea =
-      document.getElementById("userArea");
 
-    const userEmail =
-      document.getElementById("userEmail");
+    const auth = firebase.auth();
 
-    const welcomeMessage =
-      document.getElementById("welcomeMessage");
+    const db = firebase.database();
 
-    const logoutButton =
-      document.getElementById("logoutButton");
 
+    /* ========================================================= */
+    /* PERSISTÊNCIA DA SESSÃO */
+    /* ========================================================= */
 
     /*
-     * ============================================================
-     * OBSERVADOR DE AUTENTICAÇÃO
-     * ============================================================
+     * ESTA É UMA DAS PARTES IMPORTANTES.
      *
-     * NÃO usamos:
+     * O Firebase mantém o login no navegador.
      *
-     *     auth.currentUser
+     * Portanto:
      *
-     * imediatamente ao carregar a página.
+     * index.html
+     *      ↓
+     * usuário faz login
+     *      ↓
+     * Firebase salva a sessão
+     *      ↓
+     * biblioteca.html
+     *      ↓
+     * Firebase restaura a sessão
      *
-     * O Firebase pode ainda estar restaurando a sessão.
-     *
-     * onAuthStateChanged espera a inicialização terminar e
-     * informa corretamente se existe um usuário autenticado.
+     * Não é necessário fazer login novamente.
      */
 
-    onAuthStateChanged(auth, (user) => {
+    auth.setPersistence(
+      firebase.auth.Auth.Persistence.LOCAL
+    ).catch(error => {
 
-      console.log(
-        "Estado de autenticação:",
-        user
+      console.error(
+        "Erro ao configurar persistência:",
+        error
       );
-
-
-      /*
-       * ----------------------------------------------------------
-       * USUÁRIO LOGADO
-       * ----------------------------------------------------------
-       */
-
-      if (user) {
-
-        console.log(
-          "Usuário autenticado:",
-          user.uid
-        );
-
-        console.log(
-          "Email:",
-          user.email
-        );
-
-
-        /*
-         * Esconde carregamento
-         */
-
-        loadingScreen.classList.add("hidden");
-
-
-        /*
-         * Esconde tela de login
-         */
-
-        loginRequired.classList.add("hidden");
-
-
-        /*
-         * Mostra loja
-         */
-
-        storeContent.classList.remove("hidden");
-
-
-        /*
-         * Mostra botão sair
-         */
-
-        logoutButton.classList.remove("hidden");
-
-
-        /*
-         * Informações do usuário
-         */
-
-        const nome =
-          user.displayName ||
-          (
-            user.email
-              ? user.email.split("@")[0]
-              : "usuário"
-          );
-
-
-        welcomeMessage.textContent =
-          `Olá, ${nome}!`;
-
-
-        userEmail.textContent =
-          user.email || "Conta autenticada";
-
-
-        /*
-         * Área superior
-         */
-
-        userArea.innerHTML = `
-
-          <div class="text-sm font-semibold text-white">
-            ${escapeHtml(nome)}
-          </div>
-
-          <div class="text-xs text-gray-500">
-            ${escapeHtml(user.email || "")}
-          </div>
-
-        `;
-
-      }
-
-
-      /*
-       * ----------------------------------------------------------
-       * USUÁRIO NÃO LOGADO
-       * ----------------------------------------------------------
-       */
-
-      else {
-
-        console.log(
-          "Nenhum usuário autenticado."
-        );
-
-
-        /*
-         * Esconde carregamento
-         */
-
-        loadingScreen.classList.add("hidden");
-
-
-        /*
-         * Esconde loja
-         */
-
-        storeContent.classList.add("hidden");
-
-
-        /*
-         * Mostra aviso de login
-         */
-
-        loginRequired.classList.remove("hidden");
-
-
-        /*
-         * Esconde botão sair
-         */
-
-        logoutButton.classList.add("hidden");
-
-
-        /*
-         * Atualiza área superior
-         */
-
-        userArea.innerHTML = `
-
-          <div class="text-sm text-gray-500">
-            Não conectado
-          </div>
-
-        `;
-
-      }
 
     });
 
 
-    /*
-     * ============================================================
-     * LOGOUT
-     * ============================================================
-     */
+    /* ========================================================= */
+    /* LIVROS */
+    /* ========================================================= */
 
-    logoutButton.addEventListener(
-      "click",
-      async () => {
+    const livros = [
 
-        try {
+      {
+        id: 2,
 
-          await signOut(auth);
+        titulo: "Triohnte",
 
-          console.log(
-            "Usuário desconectado."
+        autor: "Gabryell Aweryan",
+
+        capa: "Coloque aqui seu png",
+
+        pasta: "Triohnte",
+
+        totalPaginas: 3,
+
+        prefixo: "",
+
+        synopsis:
+          "No tumultuoso mundo de Walingardyn, onde profecias antigas e guerras entre nobres definem o destino de gerações..."
+      }
+
+    ];
+
+
+    /* ========================================================= */
+    /* CONTOS */
+    /* ========================================================= */
+
+    const novels = [
+
+      {
+        id: 101,
+
+        titulo: "Segredários",
+
+        autor: "Gabryell Aweryan",
+
+        capa: "Coloque aqui seu png",
+
+        pasta: "S CAPS",
+
+        totalPaginas: 1,
+
+        prefixo: "S CAP ",
+
+        synopsis:
+          "Marco, João e Lucas vivem a rotina sem graça da Kenya Enlatados, uma pequena empresa de São Paulo que enlata legumes e sardinhas. Mas a monotonia acaba quando recebem um telefonema inesperado de Cleber F. Junior, do Amazonas: investigar um parque aquático abandonado, palco de uma tragédia que ainda assombra o local.\n\n" +
+
+          "Aproveitando que suas férias estavam chegando, inventam um retiro espiritual para justificar a ausência, e claro, o chefe não entende nada! Munidos de curiosidade, improviso e sua van carateristicamente cômica, os Segredários partem rumo ao Amazonas.\n\n" +
+
+          "No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agora é coordenada por seu filho, Victor, que quer resolver o problema da propriedade para vendê-la. Entre mistérios, absurdos e perigos que ninguém ousaria enfrentar, Marco, João e Lucas vão aprender que segredos enterrados nem sempre ficam onde deveriam, e que a linha entre o banal e o bizarro pode ser mais fina do que imaginam."
+      }
+
+    ];
+
+
+    /* ========================================================= */
+    /* ELEMENTOS */
+    /* ========================================================= */
+
+    const grade =
+      document.getElementById("grade");
+
+    const novelGrid =
+      document.getElementById("novelGrid");
+
+
+    /* ========================================================= */
+    /* RENDER DOS CARDS */
+    /* ========================================================= */
+
+    function renderCard(
+      item,
+      container,
+      includeFav = false
+    ) {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "card-book";
+
+
+      card.innerHTML = `
+
+        <div class="cover">
+
+          <img
+            src="${item.capa}"
+            alt="Capa de ${item.titulo}"
+          >
+
+        </div>
+
+
+        <div class="meta">
+
+          <h3>
+            ${item.titulo}
+          </h3>
+
+
+          <div class="author">
+            Por: ${item.autor}
+          </div>
+
+
+          <div class="synopsis">
+            ${item.synopsis}
+          </div>
+
+        </div>
+
+
+        <div class="actions">
+
+          <button
+            class="btn ler"
+            data-id="${item.id}"
+            disabled
+          >
+            🔒
+          </button>
+
+
+          ${
+            includeFav
+              ? `
+
+                <button
+                  class="btn fav"
+                  aria-pressed="false"
+                  data-id="${item.id}"
+                >
+
+                  <span
+                    class="star-count"
+                    id="stars-${item.id}"
+                  >
+                    0
+                  </span>
+
+                </button>
+
+              `
+              : ""
+          }
+
+        </div>
+
+      `;
+
+
+      container.appendChild(card);
+
+    }
+
+
+    /* ========================================================= */
+    /* RENDERIZA LIVROS */
+    /* ========================================================= */
+
+    livros.forEach(
+      livro => renderCard(
+        livro,
+        grade,
+        true
+      )
+    );
+
+
+    /* ========================================================= */
+    /* RENDERIZA CONTOS */
+    /* ========================================================= */
+
+    novels.forEach(
+      conto => renderCard(
+        conto,
+        novelGrid,
+        true
+      )
+    );
+
+
+    /* ========================================================= */
+    /* GESTÃO DE ACESSO */
+    /* ========================================================= */
+
+    function atualizarPermissoesBotao(
+      emailLogado
+    ) {
+
+      if (!emailLogado) {
+
+        document
+          .querySelectorAll(".btn.ler")
+          .forEach(botao => {
+
+            botao.disabled = true;
+
+            botao.innerText = "🔒";
+
+          });
+
+        return;
+
+      }
+
+
+      let permissoes = [];
+
+
+      /*
+       * Recupera as permissões do sistema atual.
+       */
+
+      try {
+
+        permissoes =
+          JSON.parse(
+            localStorage.getItem(
+              "sw_permissoes"
+            )
+          ) || [];
+
+      } catch (error) {
+
+        console.error(
+          "Erro ao ler permissões:",
+          error
+        );
+
+        permissoes = [];
+
+      }
+
+
+      const botoesLer =
+        document.querySelectorAll(
+          ".btn.ler"
+        );
+
+
+      botoesLer.forEach(botao => {
+
+        const idDoLivro =
+          botao.getAttribute(
+            "data-id"
           );
 
-          /*
-           * O onAuthStateChanged vai detectar
-           * automaticamente a saída.
-           */
+
+        const temAcesso =
+          permissoes.some(p => {
+
+            if (
+              !p.email ||
+              p.bookId === undefined ||
+              p.bookId === null
+            ) {
+
+              return false;
+
+            }
+
+
+            return (
+
+              p.email
+                .toLowerCase()
+                .trim()
+              ===
+              emailLogado
+                .toLowerCase()
+                .trim()
+
+              &&
+
+              p.bookId
+                .toString()
+              ===
+              idDoLivro
+                .toString()
+
+            );
+
+          });
+
+
+        if (temAcesso) {
+
+          botao.disabled = false;
+
+          botao.innerText = "Ler";
+
+        } else {
+
+          botao.disabled = true;
+
+          botao.innerText = "🔒";
 
         }
 
-        catch (error) {
+      });
 
-          console.error(
-            "Erro ao sair:",
-            error
+    }
+
+
+    /* ========================================================= */
+    /* AUTENTICAÇÃO */
+    /* ========================================================= */
+
+    /*
+     * NÃO usamos apenas auth.currentUser aqui.
+     *
+     * Quando a página abre, o Firebase pode levar alguns
+     * instantes para restaurar a sessão salva no navegador.
+     *
+     * onAuthStateChanged espera exatamente esse processo.
+     */
+
+    auth.onAuthStateChanged(
+      user => {
+
+        console.log(
+          "Estado da autenticação:",
+          user
+            ? "USUÁRIO CONECTADO"
+            : "NENHUM USUÁRIO"
+        );
+
+
+        if (user) {
+
+          console.log(
+            "Usuário reconhecido:",
+            user.email
           );
 
-          alert(
-            "Não foi possível sair da conta."
+
+          /*
+           * Aplica imediatamente as permissões
+           * do usuário que veio do index.html.
+           */
+
+          atualizarPermissoesBotao(
+            user.email
+          );
+
+
+        } else {
+
+          /*
+           * Nenhum usuário conectado.
+           */
+
+          atualizarPermissoesBotao(
+            null
           );
 
         }
@@ -655,27 +996,240 @@
     );
 
 
-    /*
-     * ============================================================
-     * BOTÃO DE COMPRA
-     * ============================================================
-     */
+    /* ========================================================= */
+    /* EVENTOS DE CLIQUE */
+    /* ========================================================= */
 
-    window.comprarProduto = function(nomeProduto) {
+    document.body.addEventListener(
+      "click",
+      e => {
 
-      const user = auth.currentUser;
 
+        /* ============================= */
+        /* BOTÃO LER */
+        /* ============================= */
+
+        const btnLer =
+          e.target.closest(
+            ".ler"
+          );
+
+
+        if (
+          btnLer &&
+          !btnLer.disabled
+        ) {
+
+          const id =
+            btnLer.dataset.id;
+
+
+          const item =
+            [
+              ...livros,
+              ...novels
+            ].find(
+              x =>
+                x.id == id
+            );
+
+
+          if (item) {
+
+            openDrawer(item);
+
+          }
+
+
+          return;
+
+        }
+
+
+        /* ============================= */
+        /* FAVORITOS */
+        /* ============================= */
+
+        const btnFav =
+          e.target.closest(
+            ".fav"
+          );
+
+
+        if (btnFav) {
+
+          const id =
+            btnFav.dataset.id;
+
+
+          const pressionado =
+            btnFav.getAttribute(
+              "aria-pressed"
+            ) === "true";
+
+
+          /*
+           * Evita aumentar a estrela infinitamente
+           * toda vez que o usuário clicar.
+           */
+
+          if (!pressionado) {
+
+            btnFav.setAttribute(
+              "aria-pressed",
+              "true"
+            );
+
+
+            db.ref(
+              "estrelas/" + id
+            )
+            .transaction(
+              valor =>
+                (valor || 0) + 1
+            );
+
+          }
+
+        }
+
+      }
+    );
+
+
+    /* ========================================================= */
+    /* ABRIR LIVRO */
+    /* ========================================================= */
+
+    function openDrawer(item) {
+
+      const drawer =
+        document.getElementById(
+          "drawer"
+        );
+
+
+      const content =
+        document.querySelector(
+          ".drawer-content"
+        );
+
+
+      document.getElementById(
+        "drawerTitle"
+      ).textContent =
+        item.titulo;
+
+
+      content.innerHTML = "";
+
+
+      for (
+        let i = 1;
+        i <= item.totalPaginas;
+        i++
+      ) {
+
+        const img =
+          document.createElement(
+            "img"
+          );
+
+
+        img.src =
+          `${item.pasta}/${item.prefixo}${i}.png`;
+
+
+        img.alt =
+          `${item.titulo} - página ${i}`;
+
+
+        content.appendChild(
+          img
+        );
+
+      }
+
+
+      drawer.classList.add(
+        "open"
+      );
+
+
+      drawer.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+
+      document.body.style.overflow =
+        "hidden";
+
+    }
+
+
+    /* ========================================================= */
+    /* FECHAR LIVRO */
+    /* ========================================================= */
+
+    document.getElementById(
+      "closeDrawer"
+    ).onclick = () => {
+
+      const drawer =
+        document.getElementById(
+          "drawer"
+        );
+
+
+      drawer.classList.remove(
+        "open"
+      );
+
+
+      drawer.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+
+      document.body.style.overflow =
+        "auto";
+
+    };
+
+
+    /* ========================================================= */
+    /* COMENTÁRIOS */
+    /* ========================================================= */
+
+    const btnComment =
+      document.getElementById(
+        "btnComment"
+      );
+
+
+    const textarea =
+      document.getElementById(
+        "commentText"
+      );
+
+
+    btnComment.onclick = () => {
 
       /*
-       * Segurança adicional:
-       * mesmo que alguém tente chamar a função manualmente,
-       * verificamos novamente a autenticação.
+       * Aqui também usamos a sessão atual
+       * do Firebase.
        */
+
+      const user =
+        auth.currentUser;
+
 
       if (!user) {
 
         alert(
-          "Você precisa estar conectado para comprar."
+          "Faça login para comentar."
         );
 
         return;
@@ -683,54 +1237,205 @@
       }
 
 
-      console.log(
-        "Compra iniciada:",
-        nomeProduto
-      );
+      const texto =
+        textarea.value.trim();
 
 
-      /*
-       * Aqui você poderá posteriormente integrar:
-       *
-       * - Stripe
-       * - Mercado Pago
-       * - PayPal
-       * - Firebase Functions
-       * - Checkout próprio
-       *
-       * Por enquanto:
-       */
+      if (!texto) {
 
-      alert(
-        `Produto selecionado: ${nomeProduto}`
+        return;
+
+      }
+
+
+      db.ref(
+        `usuarios/${user.uid}`
+      )
+      .once(
+        "value",
+        snapshot => {
+
+          const d =
+            snapshot.val() || {};
+
+
+          db.ref(
+            "comentarios"
+          )
+          .push({
+
+            texto: texto,
+
+            data: Date.now(),
+
+            pais:
+              `- de ${
+                d.nome ||
+                user.email.split("@")[0]
+              } (${
+                d.pais ||
+                "Walingardyn"
+              })`
+
+          });
+
+
+          textarea.value = "";
+
+        }
       );
 
     };
 
 
+    /* ========================================================= */
+    /* CARREGAR COMENTÁRIOS */
+    /* ========================================================= */
+
+    db.ref(
+      "comentarios"
+    )
+    .on(
+      "child_added",
+      snapshot => {
+
+        const dados =
+          snapshot.val();
+
+
+        const lista =
+          document.getElementById(
+            "listaComentarios"
+          );
+
+
+        const div =
+          document.createElement(
+            "div"
+          );
+
+
+        div.className =
+          "comentario-item";
+
+
+        /*
+         * textContent é utilizado para o texto do comentário,
+         * evitando que HTML enviado pelo usuário seja executado.
+         */
+
+        const p =
+          document.createElement(
+            "p"
+          );
+
+        p.className =
+          "comentario-texto";
+
+        p.textContent =
+          dados.texto || "";
+
+
+        const small =
+          document.createElement(
+            "small"
+          );
+
+        small.className =
+          "comentario-meta";
+
+
+        small.textContent =
+          `${dados.pais || ""} • ${
+            dados.data
+              ? new Date(
+                  dados.data
+                ).toLocaleDateString()
+              : ""
+          }`;
+
+
+        div.appendChild(p);
+
+        div.appendChild(small);
+
+
+        lista.prepend(div);
+
+      }
+    );
+
+
+    /* ========================================================= */
+    /* ESTRELAS */
+    /* ========================================================= */
+
+    [
+      ...livros,
+      ...novels
+    ]
+    .forEach(
+      item => {
+
+        db.ref(
+          "estrelas/" + item.id
+        )
+        .on(
+          "value",
+          snapshot => {
+
+            const el =
+              document.getElementById(
+                "stars-" + item.id
+              );
+
+
+            if (el) {
+
+              el.textContent =
+                snapshot.val() || 0;
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+
+    /* ========================================================= */
+    /* VERIFICAÇÃO FINAL DA SESSÃO */
+    /* ========================================================= */
+
     /*
-     * ============================================================
-     * ESCAPE HTML
-     * ============================================================
+     * Isso serve apenas para diagnóstico.
      *
-     * Evita inserir diretamente no HTML dados vindos
-     * do perfil do usuário.
+     * Se você abrir o console do navegador (F12), deverá
+     * aparecer o e-mail do usuário que entrou no index.html.
      */
 
-    function escapeHtml(text) {
+    setTimeout(() => {
 
-      const div =
-        document.createElement("div");
+      if (auth.currentUser) {
 
-      div.textContent =
-        text;
+        console.log(
+          "Biblioteca conectada ao usuário:",
+          auth.currentUser.email
+        );
 
-      return div.innerHTML;
+      } else {
 
-    }
+        console.log(
+          "Biblioteca: nenhum usuário autenticado."
+        );
+
+      }
+
+    }, 1500);
 
   </script>
 
 </body>
+
 </html>
-```
