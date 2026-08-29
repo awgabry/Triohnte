@@ -4,88 +4,328 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Biblioteca</title>
+
+<!-- Fonte Cinzel -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-/* CSS ATUALIZADO: SEM SCROLL, CARD EXPANSÍVEL */
+/* CSS ATUALIZADO: DOURADO + CINZEL */
 body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
-.topbar { padding: 1rem; background: #1a0901; display: flex; align-items: center; gap: 1rem; position: sticky; top: 0; z-index: 10; }
+
+.topbar {
+  padding: 1rem;
+  background: #b8860b;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  color: #000;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
 .layout { display: flex; min-height: calc(100vh - 58px); }
-.sidebar { background: #000; padding: 1rem; overflow: auto; border-right: 1px solid #1a0901; width: 260px; flex-shrink: 0; }
-.main { display: flex; flex: 1; gap: 1.5rem; padding: 1rem; align-items: flex-start; }
+
+.sidebar {
+  background: #000;
+  padding: 1rem;
+  overflow: auto;
+  border-right: 1px solid #b8860b;
+  width: 260px;
+  flex-shrink: 0;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  gap: 1.5rem;
+  padding: 1rem;
+  align-items: flex-start;
+}
 
 /* Grade de livros principal */
-#grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; flex: 1; }
+#grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  flex: 1;
+}
 
-/* Coluna de Novels */
-#novelGrid { width: 300px; background: #1a0901; display: flex; flex-direction: column; gap: 1.5rem; padding: 1rem; border-left: 2px solid #1a0901; flex-shrink: 0; }
-#novelGrid h2 { font-size: 1.2rem; font-weight: bold; text-align: center; color: #ffffff; margin-bottom: 0.5rem; }
+/* Coluna de Contos de Walingardyn */
+#novelGrid {
+  width: 300px;
+  background: #b8860b;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+  border-left: 2px solid #b8860b;
+  flex-shrink: 0;
+}
 
-/* Estilo do Card: Sem altura máxima para não gerar scroll */
-.card-book { background: #1a0901; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; border: 1px solid #333; height: auto; }
-.cover { width: 100%; aspect-ratio: 3/4; background: #000; flex-shrink: 0; }
-.cover img { width: 100%; height: 100%; object-fit: cover; }
+#novelGrid h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  color: #000;
+  margin-bottom: 0.5rem;
+  font-family: 'Cinzel', serif;
+}
 
-.meta { padding: 1.2rem; flex-grow: 1; }
-.meta h3 { margin: 0 0 0.5rem 0; font-size: 1.2rem; color: #fff; }
-.meta .author { color: #aab0bd; font-size: 0.9rem; font-style: italic; margin-bottom: 0.8rem; }
-.meta .synopsis { font-size: 0.85rem; color: #c0c0c0; line-height: 1.5; white-space: pre-line; }
+/* Estilo do Card */
+.card-book {
+  background: #b8860b;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #d4af37;
+  height: auto;
+  color: #000;
+}
 
-.actions { display: flex; gap: 0.8rem; padding: 1.2rem; align-items: center; border-top: 1px solid #222; margin-top: auto; }
-.btn { padding: .5rem .8rem; border-radius: 12px; border: none; cursor: pointer; background: #000; color: #e7e9ee; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.9rem; width: 70px; height: 38px; flex-shrink: 0; }
+.cover {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: #000;
+  flex-shrink: 0;
+}
 
-.btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); }
-.fav[aria-pressed="true"]::before { content: "★"; color: #fff; }
-.fav[aria-pressed="false"]::before { content: "☆"; }
-.star-count { color: #fff; font-weight: 400; font-size: 0.75rem; }
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.meta {
+  padding: 1.2rem;
+  flex-grow: 1;
+}
+
+.meta h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  color: #000;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+}
+
+.meta .author {
+  color: #241800;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-bottom: 0.8rem;
+}
+
+.meta .synopsis {
+  font-size: 0.85rem;
+  color: #1c1400;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.actions {
+  display: flex;
+  gap: 0.8rem;
+  padding: 1.2rem;
+  align-items: center;
+  border-top: 1px solid #8c6508;
+  margin-top: auto;
+}
+
+.btn {
+  padding: .5rem .8rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: #000;
+  color: #e7e9ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  width: 70px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+.btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+.fav[aria-pressed="true"]::before {
+  content: "★";
+  color: #fff;
+}
+
+.fav[aria-pressed="false"]::before {
+  content: "☆";
+}
+
+.star-count {
+  color: #fff;
+  font-weight: 400;
+  font-size: 0.75rem;
+}
 
 /* Comentários */
-.comment-section { margin-top: 2rem; background: #1a0901; padding: 1rem; border-radius: 12px; }
-.comment-section textarea { width: 100%; height: 80px; background: #000; color: #fff; border: 1px solid #333; border-radius: 8px; padding: 0.5rem; box-sizing: border-box; resize: none; }
-.btn-comment { margin-top: 0.5rem; width: 100%; background: #000; color: #fff; padding: 0.6rem; border: none; border-radius: 8px; cursor: pointer; }
-#listaComentarios { margin-top: 1.5rem; }
-.comentario-item { border-bottom: 1px solid #333; padding: 12px 0; }
-.comentario-texto { font-size: 0.9rem; color: #e7e9ee; margin: 0; }
-.comentario-meta { color: #aab0bd; font-size: 0.75rem; display: block; margin-top: 6px; }
+.comment-section {
+  margin-top: 2rem;
+  background: #1a0901;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.comment-section textarea {
+  width: 100%;
+  height: 80px;
+  background: #000;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  resize: none;
+}
+
+.btn-comment {
+  margin-top: 0.5rem;
+  width: 100%;
+  background: #000;
+  color: #fff;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#listaComentarios {
+  margin-top: 1.5rem;
+}
+
+.comentario-item {
+  border-bottom: 1px solid #333;
+  padding: 12px 0;
+}
+
+.comentario-texto {
+  font-size: 0.9rem;
+  color: #e7e9ee;
+  margin: 0;
+}
+
+.comentario-meta {
+  color: #aab0bd;
+  font-size: 0.75rem;
+  display: block;
+  margin-top: 6px;
+}
 
 /* Drawer */
-.drawer { position: fixed; inset:0; background: rgba(0,0,0,.95); display:flex; flex-direction:column; transform:translateY(100%); transition: transform .2s ease; z-index:50; }
-.drawer.open { transform: translateY(0); }
-.drawer-content { overflow-y:auto; padding:1rem; display:flex; flex-direction:column; align-items:center; }
-.drawer-content img { width:100%; max-width: 800px; height:auto; margin-bottom:1rem; }
-#drawer .topbar { display: flex; align-items: center; justify-content: center; position: relative; padding: 1rem; background: #1a0901; }
-#drawer .topbar #closeDrawer { position: absolute; left: 1rem; }
-#drawer .topbar #toggleSlide { position: absolute; right: 1rem; }
+.drawer {
+  position: fixed;
+  inset:0;
+  background: rgba(0,0,0,.95);
+  display:flex;
+  flex-direction:column;
+  transform:translateY(100%);
+  transition: transform .2s ease;
+  z-index:50;
+}
+
+.drawer.open {
+  transform: translateY(0);
+}
+
+.drawer-content {
+  overflow-y:auto;
+  padding:1rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.drawer-content img {
+  width:100%;
+  max-width: 800px;
+  height:auto;
+  margin-bottom:1rem;
+}
+
+#drawer .topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 1rem;
+  background: #b8860b;
+}
+
+#drawer .topbar #closeDrawer {
+  position: absolute;
+  left: 1rem;
+}
+
+#drawer .topbar #toggleSlide {
+  position: absolute;
+  right: 1rem;
+}
 </style>
 </head>
+
 <body>
 
 <header class="topbar">Biblioteca</header>
 
 <div class="layout">
+
     <aside class="sidebar">
         <h2>Suas obras reunidas em um só lugar.</h2>
+
         <div class="comment-section">
             <h3>Deixe seu comentário</h3>
+
             <textarea id="commentText" placeholder="O que você está lendo hoje?"></textarea>
+
             <button class="btn-comment" id="btnComment">Enviar</button>
+
             <div id="listaComentarios"></div>
         </div>
     </aside>
 
     <main class="main">
+
         <div id="grade"></div>
+
         <div id="novelGrid">
-            <h2>Nossos novels</h2>
+            <h2>Contos de Walingardyn</h2>
         </div>
+
     </main>
 </div>
 
 <div id="drawer" class="drawer" aria-hidden="true">
+
     <div class="topbar">
+
         <button class="btn" id="closeDrawer">Fechar</button>
+
         <h2 id="drawerTitle"></h2>
+
         <button class="btn" id="toggleSlide">Slide</button>
+
     </div>
+
     <div class="drawer-content"></div>
+
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -100,7 +340,9 @@ const firebaseConfig = {
   projectId: "login-sw-14940",
   appId: "1:252978150700:web:2c7d3997389f7675058089"
 };
+
 firebase.initializeApp(firebaseConfig);
+
 const auth = firebase.auth();
 const db = firebase.database();
 
@@ -114,7 +356,8 @@ const livros = [
     totalPaginas: 6, 
     prefixo: "Pagina ", 
     synopsis: "Composto ao longo de treze anos, Melissa — Desespero, Amor e Morte, é uma antologia de contos de terror, realismo mágico, crônicas e confissões..."
-  }, // Vírgula para separar os objetos
+  },
+
   {
     id: 2, 
     titulo: "Triohnte", 
@@ -126,7 +369,6 @@ const livros = [
     synopsis: "No tumultuoso mundo de Walingardyn, onde profecias antigas e guerras entre nobres definem o destino de gerações..."
   },
 ]; 
-
 
 const novels = [
   {
@@ -146,20 +388,40 @@ const novelGrid = document.getElementById("novelGrid");
 
 function renderCard(item, container, includeFav=false){
   const card = document.createElement("div");
+
   card.className = "card-book";
+
   card.innerHTML = `
-    <div class="cover"><img src="${item.capa}"></div>
+    <div class="cover">
+      <img src="${item.capa}">
+    </div>
+
     <div class="meta">
       <h3>${item.titulo}</h3>
-      <div class="author">Por: ${item.autor}</div>
-      <div class="synopsis">${item.synopsis}</div>
+
+      <div class="author">
+        Por: ${item.autor}
+      </div>
+
+      <div class="synopsis">
+        ${item.synopsis}
+      </div>
     </div>
+
     <div class="actions">
-      <button class="btn ler" data-id="${item.id}" disabled>Ler</button>
-      ${includeFav ? `<button class="btn fav" aria-pressed="false" data-id="${item.id}">
+
+      <button class="btn ler" data-id="${item.id}" disabled>
+        Ler
+      </button>
+
+      ${includeFav ? `
+      <button class="btn fav" aria-pressed="false" data-id="${item.id}">
         <span class="star-count" id="stars-${item.id}">0</span>
-      </button>` : ""}
+      </button>
+      ` : ""}
+
     </div>`;
+
   container.appendChild(card);
 }
 
@@ -167,106 +429,215 @@ livros.forEach(l => renderCard(l, grade, true));
 novels.forEach(n => renderCard(n, novelGrid, true));
 
 /* --- GESTÃO DE ACESSO --- */
+
 function atualizarPermissoesBotao(emailLogado) {
-    const permissoes = JSON.parse(localStorage.getItem('sw_permissoes')) || [];
-    const botoesLer = document.querySelectorAll('.btn.ler');
+
+    const permissoes =
+        JSON.parse(localStorage.getItem('sw_permissoes')) || [];
+
+    const botoesLer =
+        document.querySelectorAll('.btn.ler');
+
     botoesLer.forEach(botao => {
-        const idDoLivro = botao.getAttribute('data-id');
-        const temAcesso = permissoes.some(p => 
-            p.email.toLowerCase() === emailLogado.toLowerCase() && 
-            p.bookId.toString() === idDoLivro.toString()
-        );
+
+        const idDoLivro =
+            botao.getAttribute('data-id');
+
+        const temAcesso =
+            permissoes.some(p => 
+                p.email.toLowerCase() === emailLogado.toLowerCase() && 
+                p.bookId.toString() === idDoLivro.toString()
+            );
+
         if (temAcesso) {
+
             botao.disabled = false;
             botao.innerText = "Ler";
+
         } else {
+
             botao.disabled = true;
             botao.innerText = "🔒";
+
         }
     });
 }
 
 auth.onAuthStateChanged(user => {
+
     if (user && user.email) {
         atualizarPermissoesBotao(user.email);
     }
+
 });
 
 /* --- EVENTOS DE CLIQUE --- */
+
 document.body.addEventListener("click", e => {
-  const btnLer = e.target.closest(".ler");
+
+  const btnLer =
+      e.target.closest(".ler");
+
   if(btnLer && !btnLer.disabled){
-    const id = btnLer.dataset.id;
-    const item = [...livros, ...novels].find(x => x.id == id);
-    if(item) openDrawer(item);
+
+    const id =
+        btnLer.dataset.id;
+
+    const item =
+        [...livros, ...novels].find(x => x.id == id);
+
+    if(item)
+        openDrawer(item);
+
     return;
   }
-  const btnFav = e.target.closest(".fav");
+
+  const btnFav =
+      e.target.closest(".fav");
+
   if(btnFav){
-    const id = btnFav.dataset.id;
-    btnFav.setAttribute("aria-pressed","true");
-    db.ref("estrelas/"+id).transaction(v => (v||0)+1);
+
+    const id =
+        btnFav.dataset.id;
+
+    btnFav.setAttribute(
+        "aria-pressed",
+        "true"
+    );
+
+    db.ref("estrelas/"+id)
+      .transaction(v => (v||0)+1);
   }
+
 });
 
 function openDrawer(item){
-  const drawer = document.getElementById("drawer");
-  const content = document.querySelector(".drawer-content");
-  document.getElementById("drawerTitle").textContent = item.titulo;
+
+  const drawer =
+      document.getElementById("drawer");
+
+  const content =
+      document.querySelector(".drawer-content");
+
+  document.getElementById("drawerTitle")
+      .textContent = item.titulo;
+
   content.innerHTML = "";
+
   for(let i=1; i<=item.totalPaginas; i++){
-    const img = document.createElement("img");
-    img.src = `${item.pasta}/${item.prefixo}${i}.png`;
+
+    const img =
+        document.createElement("img");
+
+    img.src =
+        `${item.pasta}/${item.prefixo}${i}.png`;
+
     content.appendChild(img);
   }
+
   drawer.classList.add("open");
+
   document.body.style.overflow = "hidden";
 }
 
 document.getElementById("closeDrawer").onclick = () => {
-  document.getElementById("drawer").classList.remove("open");
+
+  document.getElementById("drawer")
+      .classList.remove("open");
+
   document.body.style.overflow = "auto";
+
 };
 
 /* --- SISTEMA DE COMENTÁRIOS --- */
-const btnComment = document.getElementById("btnComment");
-const textarea = document.getElementById("commentText");
+
+const btnComment =
+    document.getElementById("btnComment");
+
+const textarea =
+    document.getElementById("commentText");
 
 btnComment.onclick = () => {
-    const user = auth.currentUser;
-    if(!user) return alert("Faça login para comentar.");
-    if(!textarea.value.trim()) return;
 
-    db.ref(`usuarios/${user.uid}`).once('value', snap => {
-        const d = snap.val() || {};
+    const user =
+        auth.currentUser;
+
+    if(!user)
+        return alert("Faça login para comentar.");
+
+    if(!textarea.value.trim())
+        return;
+
+    db.ref(`usuarios/${user.uid}`)
+      .once('value', snap => {
+
+        const d =
+            snap.val() || {};
+
         db.ref("comentarios").push({
+
             texto: textarea.value,
+
             data: Date.now(),
-            pais: `- de ${d.nome || user.email.split('@')[0]} (${d.pais || 'Walingardyn'})`
+
+            pais:
+              `- de ${d.nome || user.email.split('@')[0]} (${d.pais || 'Walingardyn'})`
+
         });
+
         textarea.value = "";
     });
 };
 
-db.ref("comentarios").on("child_added", (snapshot) => {
-    const dados = snapshot.val();
-    const lista = document.getElementById("listaComentarios");
-    const div = document.createElement("div");
-    div.className = "comentario-item";
+db.ref("comentarios")
+  .on("child_added", (snapshot) => {
+
+    const dados =
+        snapshot.val();
+
+    const lista =
+        document.getElementById("listaComentarios");
+
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "comentario-item";
+
     div.innerHTML = `
-        <p class="comentario-texto">${dados.texto}</p>
-        <small class="comentario-meta">${dados.pais} • ${new Date(dados.data).toLocaleDateString()}</small>
+        <p class="comentario-texto">
+          ${dados.texto}
+        </p>
+
+        <small class="comentario-meta">
+          ${dados.pais} • ${new Date(dados.data).toLocaleDateString()}
+        </small>
     `;
+
     lista.prepend(div);
+
 });
 
 /* --- ESTRELAS --- */
+
 [...livros, ...novels].forEach(item => {
-  db.ref("estrelas/"+item.id).on("value", snap => {
-    const el = document.getElementById("stars-"+item.id);
-    if(el) el.textContent = snap.val() || 0;
-  });
+
+  db.ref("estrelas/"+item.id)
+    .on("value", snap => {
+
+      const el =
+          document.getElementById(
+              "stars-"+item.id
+          );
+
+      if(el)
+        el.textContent =
+            snap.val() || 0;
+
+    });
+
 });
 </script>
+
 </body>
 </html>
