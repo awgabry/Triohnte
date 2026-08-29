@@ -10,6 +10,7 @@
   <!-- Fonte Cinzel -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link
     href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap"
     rel="stylesheet"
@@ -156,7 +157,7 @@
 
     .cover {
       width: 100%;
-      aspect-ratio: 3 / 4;
+      aspect-ratio: 3/4;
       background: #000;
       flex-shrink: 0;
     }
@@ -286,6 +287,11 @@
       cursor: pointer;
     }
 
+    .btn-comment:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     #listaComentarios {
       margin-top: 1.5rem;
     }
@@ -299,6 +305,7 @@
       font-size: 0.9rem;
       color: #e7e9ee;
       margin: 0;
+      word-break: break-word;
     }
 
     .comentario-meta {
@@ -316,7 +323,7 @@
     .drawer {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, .95);
+      background: rgba(0,0,0,.95);
       display: flex;
       flex-direction: column;
       transform: translateY(100%);
@@ -365,41 +372,7 @@
       right: 1rem;
     }
 
-
-    /* ============================= */
-    /* RESPONSIVIDADE */
-    /* ============================= */
-
-    @media (max-width: 900px) {
-
-      .layout {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: auto;
-        border-right: none;
-        border-bottom: 1px solid #b8860b;
-      }
-
-      .main {
-        flex-direction: column;
-      }
-
-      #grade {
-        width: 100%;
-      }
-
-      #novelGrid {
-        width: auto;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-    }
-
   </style>
-
 </head>
 
 
@@ -415,11 +388,7 @@
     <span>Biblioteca</span>
 
     <!-- BOTÃO DA LOJA -->
-
-    <a
-      href="loja.html"
-      class="btn-loja"
-    >
+    <a href="loja.html" class="btn-loja">
       Loja
     </a>
 
@@ -458,8 +427,9 @@
         <button
           class="btn-comment"
           id="btnComment"
+          disabled
         >
-          Enviar
+          Verificando login...
         </button>
 
 
@@ -514,9 +484,7 @@
         Fechar
       </button>
 
-
       <h2 id="drawerTitle"></h2>
-
 
       <button
         class="btn"
@@ -546,9 +514,9 @@
 
   <script>
 
-    /* ========================================================= */
+    /* ============================= */
     /* FIREBASE */
-    /* ========================================================= */
+    /* ============================= */
 
     const firebaseConfig = {
 
@@ -570,18 +538,10 @@
     };
 
 
-    /* ========================================================= */
-    /* INICIALIZAÇÃO DO FIREBASE */
-    /* ========================================================= */
-
-    /*
-     * Não inicializa o Firebase duas vezes.
-     */
+    /* Inicializa Firebase */
 
     if (!firebase.apps.length) {
-
       firebase.initializeApp(firebaseConfig);
-
     }
 
 
@@ -590,33 +550,40 @@
     const db = firebase.database();
 
 
-    /* ========================================================= */
-    /* PERSISTÊNCIA DA SESSÃO */
-    /* ========================================================= */
+    /* ===================================================== */
+    /* IMPORTANTE: MANTER A SESSÃO DO INDEX.HTML             */
+    /* ===================================================== */
+
+    let usuarioLogado = null;
+
+    let autenticacaoVerificada = false;
+
 
     /*
-     * ESTA É UMA DAS PARTES IMPORTANTES.
-     *
-     * O Firebase mantém o login no navegador.
-     *
-     * Portanto:
-     *
-     * index.html
-     *      ↓
-     * usuário faz login
-     *      ↓
-     * Firebase salva a sessão
-     *      ↓
-     * biblioteca.html
-     *      ↓
-     * Firebase restaura a sessão
-     *
-     * Não é necessário fazer login novamente.
-     */
+      Força o Firebase a manter a sessão no navegador.
+
+      Assim:
+
+      index.html
+          ↓
+      usuário faz login
+          ↓
+      biblioteca.html
+          ↓
+      Firebase reconhece o mesmo usuário
+    */
 
     auth.setPersistence(
       firebase.auth.Auth.Persistence.LOCAL
-    ).catch(error => {
+    )
+    .then(() => {
+
+      console.log(
+        "Persistência de autenticação ativada."
+      );
+
+    })
+    .catch(error => {
 
       console.error(
         "Erro ao configurar persistência:",
@@ -626,13 +593,14 @@
     });
 
 
-    /* ========================================================= */
+    /* ============================= */
     /* LIVROS */
-    /* ========================================================= */
+    /* ============================= */
 
     const livros = [
 
       {
+
         id: 2,
 
         titulo: "Triohnte",
@@ -649,18 +617,20 @@
 
         synopsis:
           "No tumultuoso mundo de Walingardyn, onde profecias antigas e guerras entre nobres definem o destino de gerações..."
+
       }
 
     ];
 
 
-    /* ========================================================= */
+    /* ============================= */
     /* CONTOS */
-    /* ========================================================= */
+    /* ============================= */
 
     const novels = [
 
       {
+
         id: 101,
 
         titulo: "Segredários",
@@ -676,19 +646,20 @@
         prefixo: "S CAP ",
 
         synopsis:
-          "Marco, João e Lucas vivem a rotina sem graça da Kenya Enlatados, uma pequena empresa de São Paulo que enlata legumes e sardinhas. Mas a monotonia acaba quando recebem um telefonema inesperado de Cleber F. Junior, do Amazonas: investigar um parque aquático abandonado, palco de uma tragédia que ainda assombra o local.\n\n" +
+          `Marco, João e Lucas vivem a rotina sem graça da Kenya Enlatados, uma pequena empresa de São Paulo que enlata legumes e sardinhas. Mas a monotonia acaba quando recebem um telefonema inesperado de Cleber F. Junior, do Amazonas: investigar um parque aquático abandonado, palco de uma tragédia que ainda assombra o local.
 
-          "Aproveitando que suas férias estavam chegando, inventam um retiro espiritual para justificar a ausência, e claro, o chefe não entende nada! Munidos de curiosidade, improviso e sua van carateristicamente cômica, os Segredários partem rumo ao Amazonas.\n\n" +
+Aproveitando que suas férias estavam chegando, inventam um retiro espiritual para justificar a ausência, e claro, o chefe não entende nada! Munidos de curiosidade, improviso e sua van carateristicamente cômica, os Segredários partem rumo ao Amazonas.
 
-          "No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agora é coordenada por seu filho, Victor, que quer resolver o problema da propriedade para vendê-la. Entre mistérios, absurdos e perigos que ninguém ousaria enfrentar, Marco, João e Lucas vão aprender que segredos enterrados nem sempre ficam onde deveriam, e que a linha entre o banal e o bizarro pode ser mais fina do que imaginam."
+No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agora é coordenada por seu filho, Victor, que quer resolver o problema da propriedade para vendê-la. Entre mistérios, absurdos e perigos que ninguém ousaria enfrentar, Marco, João e Lucas vão aprender que segredos enterrados nem sempre ficam onde deveriam, e que a linha entre o banal e o bizarro pode ser mais fina do que imaginam.`
+
       }
 
     ];
 
 
-    /* ========================================================= */
+    /* ============================= */
     /* ELEMENTOS */
-    /* ========================================================= */
+    /* ============================= */
 
     const grade =
       document.getElementById("grade");
@@ -696,10 +667,19 @@
     const novelGrid =
       document.getElementById("novelGrid");
 
+    const btnComment =
+      document.getElementById("btnComment");
 
-    /* ========================================================= */
+    const textarea =
+      document.getElementById("commentText");
+
+    const listaComentarios =
+      document.getElementById("listaComentarios");
+
+
+    /* ============================= */
     /* RENDER DOS CARDS */
-    /* ========================================================= */
+    /* ============================= */
 
     function renderCard(
       item,
@@ -720,7 +700,8 @@
 
           <img
             src="${item.capa}"
-            alt="Capa de ${item.titulo}"
+            alt="${item.titulo}"
+            onerror="this.style.display='none'"
           >
 
         </div>
@@ -732,11 +713,9 @@
             ${item.titulo}
           </h3>
 
-
           <div class="author">
             Por: ${item.autor}
           </div>
-
 
           <div class="synopsis">
             ${item.synopsis}
@@ -758,25 +737,28 @@
 
           ${
             includeFav
-              ? `
+            ?
 
-                <button
-                  class="btn fav"
-                  aria-pressed="false"
-                  data-id="${item.id}"
+            `
+              <button
+                class="btn fav"
+                aria-pressed="false"
+                data-id="${item.id}"
+              >
+
+                <span
+                  class="star-count"
+                  id="stars-${item.id}"
                 >
+                  0
+                </span>
 
-                  <span
-                    class="star-count"
-                    id="stars-${item.id}"
-                  >
-                    0
-                  </span>
+              </button>
+            `
 
-                </button>
+            :
 
-              `
-              : ""
+            ""
           }
 
         </div>
@@ -789,83 +771,44 @@
     }
 
 
-    /* ========================================================= */
-    /* RENDERIZA LIVROS */
-    /* ========================================================= */
+    /* Renderiza livros */
 
     livros.forEach(
-      livro => renderCard(
-        livro,
-        grade,
-        true
-      )
+      livro =>
+        renderCard(
+          livro,
+          grade,
+          true
+        )
     );
 
 
-    /* ========================================================= */
-    /* RENDERIZA CONTOS */
-    /* ========================================================= */
+    /* Renderiza contos */
 
     novels.forEach(
-      conto => renderCard(
-        conto,
-        novelGrid,
-        true
-      )
+      conto =>
+        renderCard(
+          conto,
+          novelGrid,
+          true
+        )
     );
 
 
-    /* ========================================================= */
+    /* ============================= */
     /* GESTÃO DE ACESSO */
-    /* ========================================================= */
+    /* ============================= */
 
     function atualizarPermissoesBotao(
       emailLogado
     ) {
 
-      if (!emailLogado) {
-
-        document
-          .querySelectorAll(".btn.ler")
-          .forEach(botao => {
-
-            botao.disabled = true;
-
-            botao.innerText = "🔒";
-
-          });
-
-        return;
-
-      }
-
-
-      let permissoes = [];
-
-
-      /*
-       * Recupera as permissões do sistema atual.
-       */
-
-      try {
-
-        permissoes =
-          JSON.parse(
-            localStorage.getItem(
-              "sw_permissoes"
-            )
-          ) || [];
-
-      } catch (error) {
-
-        console.error(
-          "Erro ao ler permissões:",
-          error
-        );
-
-        permissoes = [];
-
-      }
+      const permissoes =
+        JSON.parse(
+          localStorage.getItem(
+            "sw_permissoes"
+          )
+        ) || [];
 
 
       const botoesLer =
@@ -887,12 +830,9 @@
 
             if (
               !p.email ||
-              p.bookId === undefined ||
-              p.bookId === null
+              p.bookId === undefined
             ) {
-
               return false;
-
             }
 
 
@@ -900,19 +840,15 @@
 
               p.email
                 .toLowerCase()
-                .trim()
-              ===
+                ===
               emailLogado
                 .toLowerCase()
-                .trim()
 
               &&
 
-              p.bookId
-                .toString()
-              ===
-              idDoLivro
-                .toString()
+              p.bookId.toString()
+                ===
+              idDoLivro.toString()
 
             );
 
@@ -923,13 +859,17 @@
 
           botao.disabled = false;
 
-          botao.innerText = "Ler";
+          botao.innerText =
+            "Ler";
 
-        } else {
+        }
+
+        else {
 
           botao.disabled = true;
 
-          botao.innerText = "🔒";
+          botao.innerText =
+            "🔒";
 
         }
 
@@ -938,57 +878,91 @@
     }
 
 
-    /* ========================================================= */
-    /* AUTENTICAÇÃO */
-    /* ========================================================= */
-
-    /*
-     * NÃO usamos apenas auth.currentUser aqui.
-     *
-     * Quando a página abre, o Firebase pode levar alguns
-     * instantes para restaurar a sessão salva no navegador.
-     *
-     * onAuthStateChanged espera exatamente esse processo.
-     */
+    /* ===================================================== */
+    /* AUTENTICAÇÃO                                           */
+    /* ===================================================== */
 
     auth.onAuthStateChanged(
       user => {
 
+        autenticacaoVerificada = true;
+
+        usuarioLogado = user;
+
+
         console.log(
-          "Estado da autenticação:",
+          "Estado de autenticação:",
           user
-            ? "USUÁRIO CONECTADO"
-            : "NENHUM USUÁRIO"
+            ? user.email
+            : "nenhum usuário"
         );
 
 
-        if (user) {
+        /* ===================================== */
+        /* USUÁRIO ESTÁ LOGADO                   */
+        /* ===================================== */
+
+        if (
+          user &&
+          user.email
+        ) {
 
           console.log(
-            "Usuário reconhecido:",
+            "Usuário reconhecido na Biblioteca:",
             user.email
           );
 
 
-          /*
-           * Aplica imediatamente as permissões
-           * do usuário que veio do index.html.
-           */
+          /* Libera comentários */
+
+          btnComment.disabled = false;
+
+          btnComment.innerText =
+            "Enviar";
+
+
+          /* Atualiza permissões */
 
           atualizarPermissoesBotao(
             user.email
           );
 
+        }
 
-        } else {
+
+        /* ===================================== */
+        /* USUÁRIO NÃO ESTÁ LOGADO               */
+        /* ===================================== */
+
+        else {
+
+          console.log(
+            "Nenhum usuário autenticado."
+          );
+
+
+          btnComment.disabled = false;
+
+          btnComment.innerText =
+            "Entrar para comentar";
+
 
           /*
-           * Nenhum usuário conectado.
-           */
+            Os livros continuam aparecendo.
 
-          atualizarPermissoesBotao(
-            null
-          );
+            Apenas comentários exigem login.
+          */
+
+          document
+            .querySelectorAll(".btn.ler")
+            .forEach(botao => {
+
+              botao.disabled = true;
+
+              botao.innerText =
+                "🔒";
+
+            });
 
         }
 
@@ -996,9 +970,9 @@
     );
 
 
-    /* ========================================================= */
-    /* EVENTOS DE CLIQUE */
-    /* ========================================================= */
+    /* ===================================================== */
+    /* EVENTOS DE CLIQUE                                      */
+    /* ===================================================== */
 
     document.body.addEventListener(
       "click",
@@ -1062,34 +1036,43 @@
             btnFav.dataset.id;
 
 
-          const pressionado =
+          /*
+            Evita clicar repetidamente
+            no mesmo botão.
+          */
+
+          if (
             btnFav.getAttribute(
               "aria-pressed"
-            ) === "true";
+            ) === "true"
+          ) {
 
-
-          /*
-           * Evita aumentar a estrela infinitamente
-           * toda vez que o usuário clicar.
-           */
-
-          if (!pressionado) {
-
-            btnFav.setAttribute(
-              "aria-pressed",
-              "true"
-            );
-
-
-            db.ref(
-              "estrelas/" + id
-            )
-            .transaction(
-              valor =>
-                (valor || 0) + 1
-            );
+            return;
 
           }
+
+
+          btnFav.setAttribute(
+            "aria-pressed",
+            "true"
+          );
+
+
+          db.ref(
+            "estrelas/" + id
+          )
+          .transaction(
+            valor =>
+              (valor || 0) + 1
+          )
+          .catch(error => {
+
+            console.error(
+              "Erro ao registrar estrela:",
+              error
+            );
+
+          });
 
         }
 
@@ -1097,9 +1080,9 @@
     );
 
 
-    /* ========================================================= */
+    /* ============================= */
     /* ABRIR LIVRO */
-    /* ========================================================= */
+    /* ============================= */
 
     function openDrawer(item) {
 
@@ -1168,9 +1151,9 @@
     }
 
 
-    /* ========================================================= */
+    /* ============================= */
     /* FECHAR LIVRO */
-    /* ========================================================= */
+    /* ============================= */
 
     document.getElementById(
       "closeDrawer"
@@ -1199,37 +1182,22 @@
     };
 
 
-    /* ========================================================= */
-    /* COMENTÁRIOS */
-    /* ========================================================= */
+    /* ===================================================== */
+    /* COMENTÁRIOS                                            */
+    /* ===================================================== */
 
-    const btnComment =
-      document.getElementById(
-        "btnComment"
-      );
+    btnComment.onclick = async () => {
 
 
-    const textarea =
-      document.getElementById(
-        "commentText"
-      );
+      /* ================================= */
+      /* GARANTE QUE O FIREBASE TERMINOU   */
+      /* DE VERIFICAR A SESSÃO             */
+      /* ================================= */
 
-
-    btnComment.onclick = () => {
-
-      /*
-       * Aqui também usamos a sessão atual
-       * do Firebase.
-       */
-
-      const user =
-        auth.currentUser;
-
-
-      if (!user) {
+      if (!autenticacaoVerificada) {
 
         alert(
-          "Faça login para comentar."
+          "Aguarde. Estamos verificando seu login..."
         );
 
         return;
@@ -1237,60 +1205,177 @@
       }
 
 
-      const texto =
-        textarea.value.trim();
+      /* ================================= */
+      /* VERIFICA USUÁRIO                  */
+      /* ================================= */
+
+      const user =
+        usuarioLogado ||
+        auth.currentUser;
 
 
-      if (!texto) {
+      if (!user) {
+
+        alert(
+          "Você precisa estar conectado para comentar."
+        );
 
         return;
 
       }
 
 
-      db.ref(
-        `usuarios/${user.uid}`
-      )
-      .once(
-        "value",
-        snapshot => {
+      /* ================================= */
+      /* VERIFICA TEXTO                    */
+      /* ================================= */
 
-          const d =
-            snapshot.val() || {};
+      const texto =
+        textarea.value.trim();
 
 
-          db.ref(
-            "comentarios"
-          )
-          .push({
+      if (!texto) {
 
-            texto: texto,
+        alert(
+          "Escreva um comentário antes de enviar."
+        );
 
-            data: Date.now(),
+        return;
 
-            pais:
-              `- de ${
-                d.nome ||
-                user.email.split("@")[0]
-              } (${
-                d.pais ||
-                "Walingardyn"
-              })`
-
-          });
+      }
 
 
-          textarea.value = "";
+      /* ================================= */
+      /* DESABILITA BOTÃO                  */
+      /* ================================= */
+
+      btnComment.disabled = true;
+
+      btnComment.innerText =
+        "Enviando...";
+
+
+      try {
+
+
+        /* ================================= */
+        /* BUSCA DADOS DO USUÁRIO             */
+        /* ================================= */
+
+        const snapshot =
+          await db.ref(
+            `usuarios/${user.uid}`
+          ).once("value");
+
+
+        const dados =
+          snapshot.val() || {};
+
+
+        const nome =
+          dados.nome ||
+          user.displayName ||
+          user.email.split("@")[0];
+
+
+        const pais =
+          dados.pais ||
+          "Walingardyn";
+
+
+        /* ================================= */
+        /* CRIA COMENTÁRIO                    */
+        /* ================================= */
+
+        await db.ref(
+          "comentarios"
+        ).push({
+
+          uid:
+            user.uid,
+
+          email:
+            user.email,
+
+          nome:
+            nome,
+
+          texto:
+            texto,
+
+          data:
+            Date.now(),
+
+          pais:
+            `- de ${nome} (${pais})`
+
+        });
+
+
+        /* ================================= */
+        /* LIMPA CAMPO                        */
+        /* ================================= */
+
+        textarea.value = "";
+
+
+        alert(
+          "Comentário publicado com sucesso."
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Erro ao publicar comentário:",
+          error
+        );
+
+
+        /*
+          Agora o erro real aparece.
+          Isso é importante para descobrir
+          se são as Rules do Firebase.
+        */
+
+        if (
+          error.code ===
+          "PERMISSION_DENIED"
+        ) {
+
+          alert(
+            "O Firebase recusou o comentário. Verifique as regras do Realtime Database."
+          );
 
         }
-      );
+
+        else {
+
+          alert(
+            "Não foi possível publicar o comentário.\n\nErro: " +
+            error.message
+          );
+
+        }
+
+      }
+
+
+      /* ================================= */
+      /* RESTAURA BOTÃO                     */
+      /* ================================= */
+
+      btnComment.disabled = false;
+
+      btnComment.innerText =
+        "Enviar";
 
     };
 
 
-    /* ========================================================= */
-    /* CARREGAR COMENTÁRIOS */
-    /* ========================================================= */
+    /* ===================================================== */
+    /* CARREGAR COMENTÁRIOS                                  */
+    /* ===================================================== */
 
     db.ref(
       "comentarios"
@@ -1303,10 +1388,9 @@
           snapshot.val();
 
 
-        const lista =
-          document.getElementById(
-            "listaComentarios"
-          );
+        if (!dados) {
+          return;
+        }
 
 
         const div =
@@ -1320,17 +1404,22 @@
 
 
         /*
-         * textContent é utilizado para o texto do comentário,
-         * evitando que HTML enviado pelo usuário seja executado.
-         */
+          NÃO usamos innerHTML para o texto
+          do usuário.
+
+          Isso evita que alguém publique
+          HTML/JavaScript dentro do comentário.
+        */
 
         const p =
           document.createElement(
             "p"
           );
 
+
         p.className =
           "comentario-texto";
+
 
         p.textContent =
           dados.texto || "";
@@ -1341,40 +1430,60 @@
             "small"
           );
 
+
         small.className =
           "comentario-meta";
 
 
+        const dataFormatada =
+          dados.data
+            ? new Date(
+                dados.data
+              ).toLocaleDateString(
+                "pt-BR"
+              )
+            : "";
+
+
         small.textContent =
-          `${dados.pais || ""} • ${
-            dados.data
-              ? new Date(
-                  dados.data
-                ).toLocaleDateString()
-              : ""
-          }`;
+          `${dados.pais || "Walingardyn"} • ${dataFormatada}`;
 
 
-        div.appendChild(p);
+        div.appendChild(
+          p
+        );
 
-        div.appendChild(small);
+
+        div.appendChild(
+          small
+        );
 
 
-        lista.prepend(div);
+        listaComentarios.prepend(
+          div
+        );
+
+      },
+
+      error => {
+
+        console.error(
+          "Erro ao carregar comentários:",
+          error
+        );
 
       }
     );
 
 
-    /* ========================================================= */
-    /* ESTRELAS */
-    /* ========================================================= */
+    /* ===================================================== */
+    /* ESTRELAS                                               */
+    /* ===================================================== */
 
     [
       ...livros,
       ...novels
-    ]
-    .forEach(
+    ].forEach(
       item => {
 
         db.ref(
@@ -1382,7 +1491,7 @@
         )
         .on(
           "value",
-          snapshot => {
+          snap => {
 
             const el =
               document.getElementById(
@@ -1393,7 +1502,7 @@
             if (el) {
 
               el.textContent =
-                snapshot.val() || 0;
+                snap.val() || 0;
 
             }
 
@@ -1402,37 +1511,6 @@
 
       }
     );
-
-
-    /* ========================================================= */
-    /* VERIFICAÇÃO FINAL DA SESSÃO */
-    /* ========================================================= */
-
-    /*
-     * Isso serve apenas para diagnóstico.
-     *
-     * Se você abrir o console do navegador (F12), deverá
-     * aparecer o e-mail do usuário que entrou no index.html.
-     */
-
-    setTimeout(() => {
-
-      if (auth.currentUser) {
-
-        console.log(
-          "Biblioteca conectada ao usuário:",
-          auth.currentUser.email
-        );
-
-      } else {
-
-        console.log(
-          "Biblioteca: nenhum usuário autenticado."
-        );
-
-      }
-
-    }, 1500);
 
   </script>
 
