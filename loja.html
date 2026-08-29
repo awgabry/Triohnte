@@ -1,160 +1,878 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Loja</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-</head>
-<body class="bg-black text-white p-8 min-h-screen flex flex-col items-center">
 
-  <!-- Seletor de idioma -->
-  <div id="language-selector" style="position: fixed; top: 10px; right: 10px; width: 30px; height: 30px; background: #1a1a1a; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 9999;">
-    <span style="color: white; font-size: 16px; user-select: none;">▼</span>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Loja - Sociedade Walingardyana</title>
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    rel="stylesheet"
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .produto {
+      background: #281109;
+      border: 1px solid rgba(160, 110, 60, 0.25);
+      transition: 0.25s ease;
+    }
+
+    .produto:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    .botao-comprar {
+      background: #000;
+      color: white;
+      border: 1px solid #55351f;
+      transition: 0.2s ease;
+    }
+
+    .botao-comprar:hover {
+      background: #160a05;
+      border-color: #8a5b32;
+    }
+
+    .botao-comprar:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #language-list li:hover {
+      background: #333;
+    }
+
+    #mensagem {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10000;
+
+      background: #181818;
+      border: 1px solid #694528;
+      border-radius: 8px;
+
+      padding: 14px 20px;
+
+      min-width: 280px;
+      max-width: 90%;
+
+      text-align: center;
+
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    }
+  </style>
+</head>
+
+
+<body class="bg-black text-white p-6 md:p-10">
+
+
+  <!-- ===================================================== -->
+  <!-- MENSAGEM -->
+  <!-- ===================================================== -->
+
+  <div id="mensagem"></div>
+
+
+  <!-- ===================================================== -->
+  <!-- SELETOR DE IDIOMA -->
+  <!-- ===================================================== -->
+
+  <div
+    id="language-selector"
+    style="
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      width: 38px;
+      height: 38px;
+      background: #1a1a1a;
+      border: 1px solid #444;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    "
+  >
+    <span style="color:white;font-size:15px;">▼</span>
   </div>
 
-  <ul id="language-list" style="position: fixed; top: 45px; right: 10px; width: 140px; max-height: 150px; overflow-y: auto; background: #222; border: 1px solid #ccc; border-radius: 5px; list-style: none; padding: 5px 0; margin: 0; display: none; z-index: 9999;">
-    <li style="padding: 8px 12px; color: white; cursor: pointer; user-select: none;">Português</li>
-    <li style="padding: 8px 12px; color: white; cursor: pointer; user-select: none;">Español</li>
-    <li style="padding: 8px 12px; color: white; cursor: pointer; user-select: none;">English</li>
+
+  <ul
+    id="language-list"
+    style="
+      position: fixed;
+      top: 55px;
+      right: 10px;
+      width: 150px;
+      max-height: 180px;
+      overflow-y: auto;
+      background: #222;
+      border: 1px solid #555;
+      border-radius: 6px;
+      list-style: none;
+      padding: 5px 0;
+      margin: 0;
+      display: none;
+      z-index: 9999;
+    "
+  >
+
+    <li
+      data-lang="pt"
+      style="padding:10px 14px;color:white;cursor:pointer;"
+    >
+      Português
+    </li>
+
+    <li
+      data-lang="es"
+      style="padding:10px 14px;color:white;cursor:pointer;"
+    >
+      Español
+    </li>
+
+    <li
+      data-lang="en"
+      style="padding:10px 14px;color:white;cursor:pointer;"
+    >
+      English
+    </li>
+
   </ul>
 
-  <h1 id="titulo-principal" class="text-3xl font-bold mb-6">Loja</h1>
 
-  <!-- Produtos -->
-  <div class="grid grid-cols-1 gap-8 max-w-4xl w-full">
+  <!-- ===================================================== -->
+  <!-- CONTEÚDO -->
+  <!-- ===================================================== -->
+
+  <main class="w-full max-w-5xl mx-auto">
 
 
-    <!-- Segredários -->
-    <div class="p-6 rounded-lg shadow-lg text-center" style="background-color: #281109;">
-      <img src="Coloque aqui seu png" alt="Compêndio" class="mx-auto mb-4 w-50 h-32" />
-      <h2 class="text-xl font-semibold mb-2">Segredários (Novel)</h2>
-      <p class="text-sm mb-2">Download desabilitado pela proteção de dados.</p>
-      <p class="text-lg font-bold mb-4">Preço: R$ 1,99</p>
-      <p class="text-lg mb-2">De: Gabryell Aweryan.</p>
-      <button id="botao-pdf" style="background-color: #000000; color: white;" class="px-8 py-3 rounded-full font-bold transition-colors hover:opacity-90">
-        Comprar
-      </button>
+    <!-- TÍTULO -->
+
+    <header class="text-center mb-10">
+
+      <h1
+        id="titulo-principal"
+        class="text-4xl md:text-5xl font-bold mb-3"
+      >
+        Loja
+      </h1>
+
+      <p
+        id="subtitulo"
+        class="text-gray-400"
+      >
+        Obras e publicações da Sociedade Walingardyana
+      </p>
+
+    </header>
+
+
+    <!-- =================================================== -->
+    <!-- PRODUTO -->
+    <!-- =================================================== -->
+
+    <section class="grid grid-cols-1 gap-8 max-w-4xl mx-auto">
+
+
+      <article
+        class="produto p-6 md:p-8 rounded-xl text-center"
+      >
+
+
+        <!--
+          CAPA DO LIVRO
+
+          Coloque o arquivo "segredarios.png"
+          na mesma pasta deste HTML.
+
+          Se o nome do arquivo for diferente,
+          altere somente o src abaixo.
+        -->
+
+        <div
+          class="flex justify-center items-center mb-6"
+          style="min-height:220px;"
+        >
+
+          <img
+            id="imagem-produto"
+            src="segredarios.png"
+            alt="Segredários"
+            class="max-w-xs w-full rounded-lg object-cover"
+            onerror="this.style.display='none';"
+          >
+
+        </div>
+
+
+        <h2
+          id="produto-titulo"
+          class="text-2xl font-bold mb-2"
+        >
+          Segredários
+        </h2>
+
+
+        <p
+          id="produto-tipo"
+          class="text-sm text-gray-400 mb-4"
+        >
+          Novel
+        </p>
+
+
+        <p
+          id="produto-descricao"
+          class="text-sm text-gray-300 mb-4"
+        >
+          Download desabilitado pela proteção de dados.
+        </p>
+
+
+        <p
+          id="produto-preco"
+          class="text-2xl font-bold mb-3"
+        >
+          Preço: R$ 1,99
+        </p>
+
+
+        <p
+          id="produto-autor"
+          class="text-lg mb-6"
+        >
+          De: Gabryell Aweryan.
+        </p>
+
+
+        <button
+          id="botao-comprar"
+          type="button"
+          class="botao-comprar px-10 py-3 rounded-full font-bold"
+        >
+          Comprar
+        </button>
+
+
+      </article>
+
+    </section>
+
+
+    <!-- =================================================== -->
+    <!-- STATUS -->
+    <!-- =================================================== -->
+
+    <div
+      id="status-usuario"
+      class="text-center mt-8 text-sm text-gray-500"
+    >
+      Verificando sessão...
     </div>
 
-  </div>
 
-  <a href="index.html" id="link-voltar" class="mt-12 text-blue-400 hover:underline">← Voltar para a página inicial</a>
+    <!-- =================================================== -->
+    <!-- VOLTAR -->
+    <!-- =================================================== -->
 
-  <!-- JS -->
-  <script>
-    // Seletor de idioma
-    const selector = document.getElementById('language-selector');
-    const list = document.getElementById('language-list');
+    <div class="text-center">
 
-    selector.addEventListener('click', () => {
-      list.style.display = (list.style.display === 'none' || list.style.display === '') ? 'block' : 'none';
-    });
+      <a
+        href="index.html"
+        id="link-voltar"
+        class="inline-block mt-12 text-blue-400 hover:underline"
+      >
+        ← Voltar para a página inicial
+      </a>
 
-    document.addEventListener('click', (e) => {
-      if (!selector.contains(e.target) && !list.contains(e.target)) {
-        list.style.display = 'none';
-      }
-    });
+    </div>
 
-    const traducoes = {
-      pt: {
-        "titulo-principal": "Loja",
-        "Capa.png": "Triohnte e-book",
-        "produto-1-desc": "Download desabilitado pela proteção de dados.",
-        "produto-1-preco": "Preço: R$ 32,90",
-        "botao-pdf": "Comprar",
-        "link-voltar": "← Voltar para a página inicial"
-      },
-      en: {
-        "titulo-principal": "Store",
-        "Capa.png": "Triohnte e-book",
-        "produto-1-desc": "Download disabled by data protection.",
-        "produto-1-preco": "Price: R$ 32.90",
-        "botao-pdf": "Buy Now",
-        "link-voltar": "← Back to the homepage"
-      },
-      es: {
-        "titulo-principal": "Tienda",
-        "Capa.png": "Triohnte e-book",
-        "produto-1-desc": "Descarga deshabilitada por protección de datos.",
-        "produto-1-preco": "Precio: R$ 32,90",
-        "botao-pdf": "Comprar",
-        "link-voltar": "← Volver a la página principal"
-      }
-    };
 
-    function setLanguage(lang) {
-      const t = traducoes[lang];
-      if (!t) return;
-      for (const id in t) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = t[id];
-      }
-      document.title = t["titulo-principal"] + " - Sociedade Walingardyana";
-      localStorage.setItem("idioma", lang);
-    }
+  </main>
 
-    window.onload = () => {
-      const lang = localStorage.getItem("idioma") || "pt";
-      setLanguage(lang);
-    };
 
-    list.querySelectorAll('li').forEach((li) => {
-      li.addEventListener('click', () => {
-        let langCode = li.textContent === 'Português' ? 'pt' : (li.textContent === 'Español' ? 'es' : 'en');
-        setLanguage(langCode);
-        list.style.display = 'none';
-      });
-    });
-  </script>
+  <!-- ===================================================== -->
+  <!-- FIREBASE -->
+  <!-- ===================================================== -->
 
-  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+
   <script>
-    // Inicializa Firebase
+
+    /* =====================================================
+       MESMO FIREBASE DO INDEX.HTML
+       ===================================================== */
+
     const firebaseConfig = {
-      apiKey: "AIzaSyBPSH4g1rtk27n9wCCBJZ2GK1UKCMH-Yjs",
-      authDomain: "login-sw-14940.firebaseapp.com",
-      databaseURL: "https://login-sw-14940-default-rtdb.europe-west1.firebasedatabase.app/",
-      projectId: "login-sw-14940",
-      appId: "1:252978150700:web:2c7d3997389f7675058089"
+
+      apiKey:
+        "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
+
+      authDomain:
+        "triohnte-database.firebaseapp.com",
+
+      databaseURL:
+        "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app",
+
+      projectId:
+        "triohnte-database",
+
+      appId:
+        "1:127473963183:web:c071072d846a8d7240045a"
+
     };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
 
-    // Função de registrar compra
-    function registrarCompraPDF(livroId) {
-      const user = auth.currentUser;
 
-      if (!user) {
-        alert("Faça login para comprar.");
-        return;
+    /* =====================================================
+       INICIALIZA FIREBASE
+       ===================================================== */
+
+    if (!firebase.apps.length) {
+
+      firebase.initializeApp(firebaseConfig);
+
+    }
+
+
+    const auth =
+      firebase.auth();
+
+    const database =
+      firebase.database();
+
+
+    /* =====================================================
+       ELEMENTOS
+       ===================================================== */
+
+    const botaoComprar =
+      document.getElementById("botao-comprar");
+
+    const statusUsuario =
+      document.getElementById("status-usuario");
+
+    const mensagem =
+      document.getElementById("mensagem");
+
+    const languageSelector =
+      document.getElementById("language-selector");
+
+    const languageList =
+      document.getElementById("language-list");
+
+
+    /* =====================================================
+       USUÁRIO ATUAL
+       ===================================================== */
+
+    let usuarioAtual = null;
+
+
+    /* =====================================================
+       IDIOMA
+       ===================================================== */
+
+    const traducoes = {
+
+      pt: {
+
+        titulo:
+          "Loja",
+
+        subtitulo:
+          "Obras e publicações da Sociedade Walingardyana",
+
+        produtoTitulo:
+          "Segredários",
+
+        produtoTipo:
+          "Novel",
+
+        descricao:
+          "Download desabilitado pela proteção de dados.",
+
+        preco:
+          "Preço: R$ 1,99",
+
+        autor:
+          "De: Gabryell Aweryan.",
+
+        comprar:
+          "Comprar",
+
+        verificando:
+          "Verificando sessão...",
+
+        logado:
+          "Você está conectado.",
+
+        deslogado:
+          "Você não está conectado.",
+
+        login:
+          "Faça login para comprar.",
+
+        encaminhando:
+          "Encaminhando para compra...",
+
+        voltar:
+          "← Voltar para a página inicial"
+
+      },
+
+
+      en: {
+
+        titulo:
+          "Store",
+
+        subtitulo:
+          "Works and publications of the Walingardyana Society",
+
+        produtoTitulo:
+          "Segredários",
+
+        produtoTipo:
+          "Novel",
+
+        descricao:
+          "Download disabled by data protection.",
+
+        preco:
+          "Price: R$ 1.99",
+
+        autor:
+          "By: Gabryell Aweryan.",
+
+        comprar:
+          "Buy Now",
+
+        verificando:
+          "Checking session...",
+
+        logado:
+          "You are signed in.",
+
+        deslogado:
+          "You are not signed in.",
+
+        login:
+          "Please sign in to purchase.",
+
+        encaminhando:
+          "Redirecting to purchase...",
+
+        voltar:
+          "← Back to the homepage"
+
+      },
+
+
+      es: {
+
+        titulo:
+          "Tienda",
+
+        subtitulo:
+          "Obras y publicaciones de la Sociedad Walingardyana",
+
+        produtoTitulo:
+          "Segredários",
+
+        produtoTipo:
+          "Novela",
+
+        descricao:
+          "Descarga deshabilitada por protección de datos.",
+
+        preco:
+          "Precio: R$ 1,99",
+
+        autor:
+          "De: Gabryell Aweryan.",
+
+        comprar:
+          "Comprar",
+
+        verificando:
+          "Verificando sesión...",
+
+        logado:
+          "Has iniciado sesión.",
+
+        deslogado:
+          "No has iniciado sesión.",
+
+        login:
+          "Inicia sesión para comprar.",
+
+        encaminhando:
+          "Redirigiendo a la compra...",
+
+        voltar:
+          "← Volver a la página principal"
+
       }
 
-      db.ref(`usuarios/${user.uid}/livros_comprados/${livroId}`)
-        .set(true)
-        .then(() => {
-          alert("Encaminhando usuário para compra.");
-          window.location.href = "compras.html";
-        })
-        .catch(err => {
-          alert("Erro ao registrar compra.");
-          console.error(err);
-        });
+    };
+
+
+    let idiomaAtual =
+      localStorage.getItem("idioma") || "pt";
+
+
+    /* =====================================================
+       APLICAR IDIOMA
+       ===================================================== */
+
+    function aplicarIdioma(lang) {
+
+      if (!traducoes[lang]) {
+
+        lang = "pt";
+
+      }
+
+
+      idiomaAtual = lang;
+
+
+      const t =
+        traducoes[lang];
+
+
+      document.documentElement.lang =
+        lang === "pt"
+          ? "pt-BR"
+          : lang;
+
+
+      document.title =
+        t.titulo +
+        " - Sociedade Walingardyana";
+
+
+      document.getElementById(
+        "titulo-principal"
+      ).textContent =
+        t.titulo;
+
+
+      document.getElementById(
+        "subtitulo"
+      ).textContent =
+        t.subtitulo;
+
+
+      document.getElementById(
+        "produto-titulo"
+      ).textContent =
+        t.produtoTitulo;
+
+
+      document.getElementById(
+        "produto-tipo"
+      ).textContent =
+        t.produtoTipo;
+
+
+      document.getElementById(
+        "produto-descricao"
+      ).textContent =
+        t.descricao;
+
+
+      document.getElementById(
+        "produto-preco"
+      ).textContent =
+        t.preco;
+
+
+      document.getElementById(
+        "produto-autor"
+      ).textContent =
+        t.autor;
+
+
+      document.getElementById(
+        "botao-comprar"
+      ).textContent =
+        t.comprar;
+
+
+      document.getElementById(
+        "link-voltar"
+      ).textContent =
+        t.voltar;
+
+
+      localStorage.setItem(
+        "idioma",
+        lang
+      );
+
+
+      atualizarStatus();
+
     }
 
-    // Configura botão de compra do Segredários
-    const botaoSegredarios = document.getElementById('botao-pdf');
-    if (botaoSegredarios) {
-      botaoSegredarios.addEventListener('click', () => {
-        registrarCompraPDF('segredarios');
+
+    /* =====================================================
+       MENU DE IDIOMAS
+       ===================================================== */
+
+    languageSelector.addEventListener(
+      "click",
+      function(event) {
+
+        event.stopPropagation();
+
+        if (
+          languageList.style.display === "block"
+        ) {
+
+          languageList.style.display =
+            "none";
+
+        } else {
+
+          languageList.style.display =
+            "block";
+
+        }
+
+      }
+    );
+
+
+    document.addEventListener(
+      "click",
+      function(event) {
+
+        if (
+          !languageSelector.contains(event.target) &&
+          !languageList.contains(event.target)
+        ) {
+
+          languageList.style.display =
+            "none";
+
+        }
+
+      }
+    );
+
+
+    document
+      .querySelectorAll("#language-list li")
+      .forEach(function(item) {
+
+        item.addEventListener(
+          "click",
+          function() {
+
+            aplicarIdioma(
+              this.dataset.lang
+            );
+
+            languageList.style.display =
+              "none";
+
+          }
+        );
+
       });
+
+
+    /* =====================================================
+       MENSAGEM
+       ===================================================== */
+
+    function mostrarMensagem(texto) {
+
+      mensagem.textContent =
+        texto;
+
+      mensagem.style.display =
+        "block";
+
+
+      setTimeout(
+        function() {
+
+          mensagem.style.display =
+            "none";
+
+        },
+        3500
+      );
+
     }
+
+
+    /* =====================================================
+       STATUS DO USUÁRIO
+       ===================================================== */
+
+    function atualizarStatus() {
+
+      const t =
+        traducoes[idiomaAtual];
+
+
+      if (usuarioAtual) {
+
+        statusUsuario.textContent =
+          t.logado;
+
+        statusUsuario.className =
+          "text-center mt-8 text-sm text-green-500";
+
+      } else {
+
+        statusUsuario.textContent =
+          t.deslogado;
+
+        statusUsuario.className =
+          "text-center mt-8 text-sm text-gray-500";
+
+      }
+
+    }
+
+
+    /* =====================================================
+       FIREBASE AUTH
+
+       É AQUI QUE A CORREÇÃO ACONTECE.
+
+       A loja espera o Firebase restaurar a sessão.
+       ===================================================== */
+
+    auth.onAuthStateChanged(
+      function(user) {
+
+        usuarioAtual = user;
+
+        atualizarStatus();
+
+
+        console.log(
+          "Estado de autenticação:",
+          user
+            ? "LOGADO"
+            : "NÃO LOGADO"
+        );
+
+
+        if (user) {
+
+          console.log(
+            "UID:",
+            user.uid
+          );
+
+          console.log(
+            "E-mail:",
+            user.email
+          );
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       COMPRAR
+       ===================================================== */
+
+    botaoComprar.addEventListener(
+      "click",
+      function() {
+
+        const t =
+          traducoes[idiomaAtual];
+
+
+        /*
+          Agora utilizamos a variável
+          preenchida pelo onAuthStateChanged.
+        */
+
+        if (!usuarioAtual) {
+
+          mostrarMensagem(
+            t.login
+          );
+
+          return;
+
+        }
+
+
+        /*
+          Não marcamos o livro como comprado
+          neste momento.
+
+          Primeiro encaminhamos para a página
+          de compra.
+        */
+
+        botaoComprar.disabled =
+          true;
+
+
+        botaoComprar.textContent =
+          t.encaminhando;
+
+
+        /*
+          Envia o produto para compras.html.
+        */
+
+        window.location.href =
+          "compras.html?produto=segredarios";
+
+      }
+    );
+
+
+    /* =====================================================
+       INICIALIZAÇÃO
+       ===================================================== */
+
+    aplicarIdioma(
+      localStorage.getItem("idioma") || "pt"
+    );
+
   </script>
 
 </body>
