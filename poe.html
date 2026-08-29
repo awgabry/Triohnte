@@ -1,1103 +1,735 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
 
-<title>Biblioteca</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
-<!-- Fonte Cinzel -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Loja</title>
 
-<style>
+  <link
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    rel="stylesheet"
+  />
 
-/* ============================= */
-/* CONFIGURAÇÕES GERAIS */
-/* ============================= */
+  <style>
+    body {
+      background: #050505;
+      color: white;
+    }
 
-body {
-  margin: 0;
-  font-family: sans-serif;
-  background: #000;
-  color: #e7e9ee;
-}
+    .gold {
+      color: #d4af37;
+    }
 
-/* ============================= */
-/* BARRA SUPERIOR */
-/* ============================= */
+    .gold-bg {
+      background: #d4af37;
+    }
 
-.topbar {
-  padding: 1rem;
-  background: #b8860b;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  color: #000;
-  font-family: 'Cinzel', serif;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
+    .gold-border {
+      border-color: #d4af37;
+    }
 
-/* Botão Loja */
+    .card {
+      background: #111;
+      border: 1px solid #292929;
+      transition: 0.2s ease;
+    }
 
-.btn-loja {
-  margin-left: auto;
-  padding: 0.55rem 1rem;
-  border-radius: 12px;
-  background: #000;
-  color: #d4af37;
-  text-decoration: none;
-  font-family: 'Cinzel', serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  transition: all 0.2s ease;
-}
+    .card:hover {
+      border-color: #d4af37;
+      transform: translateY(-2px);
+    }
 
-.btn-loja:hover {
-  background: #1a1a1a;
-  color: #fff;
-  transform: translateY(-1px);
-}
+    .loading {
+      animation: pulse 1.5s infinite;
+    }
 
-/* ============================= */
-/* LAYOUT */
-/* ============================= */
+    @keyframes pulse {
+      0% {
+        opacity: 0.4;
+      }
 
-.layout {
-  display: flex;
-  min-height: calc(100vh - 58px);
-}
+      50% {
+        opacity: 1;
+      }
 
-.sidebar {
-  background: #000;
-  padding: 1rem;
-  overflow: auto;
-  border-right: 1px solid #b8860b;
-  width: 260px;
-  flex-shrink: 0;
-}
-
-.main {
-  display: flex;
-  flex: 1;
-  gap: 1.5rem;
-  padding: 1rem;
-  align-items: flex-start;
-}
-
-/* ============================= */
-/* GRADE PRINCIPAL */
-/* ============================= */
-
-#grade {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  flex: 1;
-}
-
-/* ============================= */
-/* CONTOS DE WALINGARDYN */
-/* ============================= */
-
-#novelGrid {
-  width: 300px;
-  background: #b8860b;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 1rem;
-  border-left: 2px solid #b8860b;
-  flex-shrink: 0;
-}
-
-#novelGrid h2 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-align: center;
-  color: #000;
-  margin-bottom: 0.5rem;
-  font-family: 'Cinzel', serif;
-}
-
-/* ============================= */
-/* CARDS */
-/* ============================= */
-
-.card-book {
-  background: #b8860b;
-  border-radius: 20px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #d4af37;
-  height: auto;
-  color: #000;
-}
-
-.cover {
-  width: 100%;
-  aspect-ratio: 3/4;
-  background: #000;
-  flex-shrink: 0;
-}
-
-.cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.meta {
-  padding: 1.2rem;
-  flex-grow: 1;
-}
-
-.meta h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.2rem;
-  color: #000;
-  font-family: 'Cinzel', serif;
-  font-weight: 700;
-}
-
-.meta .author {
-  color: #241800;
-  font-size: 0.9rem;
-  font-style: italic;
-  margin-bottom: 0.8rem;
-}
-
-.meta .synopsis {
-  font-size: 0.85rem;
-  color: #1c1400;
-  line-height: 1.5;
-  white-space: pre-line;
-}
-
-/* ============================= */
-/* BOTÕES */
-/* ============================= */
-
-.actions {
-  display: flex;
-  gap: 0.8rem;
-  padding: 1.2rem;
-  align-items: center;
-  border-top: 1px solid #8c6508;
-  margin-top: auto;
-}
-
-.btn {
-  padding: .5rem .8rem;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  background: #000;
-  color: #e7e9ee;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  width: 70px;
-  height: 38px;
-  flex-shrink: 0;
-}
-
-.btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  filter: grayscale(1);
-}
-
-/* ============================= */
-/* ESTRELAS */
-/* ============================= */
-
-.fav[aria-pressed="true"]::before {
-  content: "★";
-  color: #fff;
-}
-
-.fav[aria-pressed="false"]::before {
-  content: "☆";
-}
-
-.star-count {
-  color: #fff;
-  font-weight: 400;
-  font-size: 0.75rem;
-}
-
-/* ============================= */
-/* COMENTÁRIOS */
-/* ============================= */
-
-.comment-section {
-  margin-top: 2rem;
-  background: #1a0901;
-  padding: 1rem;
-  border-radius: 12px;
-}
-
-.comment-section textarea {
-  width: 100%;
-  height: 80px;
-  background: #000;
-  color: #fff;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 0.5rem;
-  box-sizing: border-box;
-  resize: none;
-}
-
-.btn-comment {
-  margin-top: 0.5rem;
-  width: 100%;
-  background: #000;
-  color: #fff;
-  padding: 0.6rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-#listaComentarios {
-  margin-top: 1.5rem;
-}
-
-.comentario-item {
-  border-bottom: 1px solid #333;
-  padding: 12px 0;
-}
-
-.comentario-texto {
-  font-size: 0.9rem;
-  color: #e7e9ee;
-  margin: 0;
-}
-
-.comentario-meta {
-  color: #aab0bd;
-  font-size: 0.75rem;
-  display: block;
-  margin-top: 6px;
-}
-
-/* ============================= */
-/* DRAWER */
-/* ============================= */
-
-.drawer {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.95);
-  display: flex;
-  flex-direction: column;
-  transform: translateY(100%);
-  transition: transform .2s ease;
-  z-index: 50;
-}
-
-.drawer.open {
-  transform: translateY(0);
-}
-
-.drawer-content {
-  overflow-y: auto;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.drawer-content img {
-  width: 100%;
-  max-width: 800px;
-  height: auto;
-  margin-bottom: 1rem;
-}
-
-/* Barra do Drawer */
-
-#drawer .topbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 1rem;
-  background: #b8860b;
-}
-
-#drawer .topbar #closeDrawer {
-  position: absolute;
-  left: 1rem;
-}
-
-#drawer .topbar #toggleSlide {
-  position: absolute;
-  right: 1rem;
-}
-
-</style>
+      100% {
+        opacity: 0.4;
+      }
+    }
+  </style>
 </head>
 
-<body>
+<body class="min-h-screen">
 
-<!-- ============================= -->
-<!-- BARRA SUPERIOR -->
-<!-- ============================= -->
+  <!-- =========================
+       CABEÇALHO
+  ========================== -->
 
-<header class="topbar">
+  <header class="border-b border-gray-800 bg-black">
 
-  <span>Biblioteca</span>
+    <div
+      class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between"
+    >
 
-  <!-- BOTÃO DA LOJA -->
-  <a href="loja.html" class="btn-loja">
-    Loja
-  </a>
+      <div>
+        <h1 class="text-2xl font-bold gold">
+          Loja
+        </h1>
 
-</header>
+        <p class="text-xs text-gray-500">
+          SW Editorial
+        </p>
+      </div>
+
+      <div class="flex items-center gap-4">
+
+        <div
+          id="userArea"
+          class="text-right"
+        >
+          <div class="text-sm text-gray-400 loading">
+            Verificando sessão...
+          </div>
+        </div>
+
+        <button
+          id="logoutButton"
+          class="hidden px-4 py-2 rounded border border-gray-700 hover:border-red-500 hover:text-red-400 transition"
+        >
+          Sair
+        </button>
+
+      </div>
+
+    </div>
+
+  </header>
 
 
-<!-- ============================= -->
-<!-- LAYOUT PRINCIPAL -->
-<!-- ============================= -->
+  <!-- =========================
+       CONTEÚDO
+  ========================== -->
 
-<div class="layout">
+  <main class="max-w-6xl mx-auto px-6 py-10">
 
-  <!-- SIDEBAR -->
+    <!-- CARREGANDO -->
 
-  <aside class="sidebar">
+    <section
+      id="loadingScreen"
+      class="text-center py-20"
+    >
 
-    <h2>
-      Suas obras reunidas em um só lugar.
-    </h2>
+      <div
+        class="inline-block w-10 h-10 border-4 border-gray-700 border-t-yellow-500 rounded-full animate-spin mb-5"
+      ></div>
 
-    <div class="comment-section">
+      <p class="text-gray-400">
+        Verificando sua conta...
+      </p>
 
-      <h3>
-        Deixe seu comentário
-      </h3>
+    </section>
 
-      <textarea
-        id="commentText"
-        placeholder="O que você está lendo hoje?"
-      ></textarea>
 
-      <button
-        class="btn-comment"
-        id="btnComment"
+    <!-- NÃO AUTENTICADO -->
+
+    <section
+      id="loginRequired"
+      class="hidden text-center py-20"
+    >
+
+      <div class="max-w-md mx-auto">
+
+        <div class="text-5xl mb-6">
+          🔐
+        </div>
+
+        <h2 class="text-2xl font-bold mb-3">
+          Você precisa estar conectado
+        </h2>
+
+        <p class="text-gray-400 mb-8">
+          Faça login para acessar a loja e visualizar seus produtos.
+        </p>
+
+        <a
+          href="index.html"
+          class="inline-block px-6 py-3 rounded gold-bg text-black font-bold hover:opacity-90 transition"
+        >
+          Voltar para o início
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- USUÁRIO AUTENTICADO -->
+
+    <section
+      id="storeContent"
+      class="hidden"
+    >
+
+      <!-- BOAS-VINDAS -->
+
+      <div class="mb-10">
+
+        <p class="text-sm text-gray-500 mb-2">
+          Bem-vindo à biblioteca
+        </p>
+
+        <h2
+          id="welcomeMessage"
+          class="text-3xl font-bold"
+        >
+          Olá!
+        </h2>
+
+        <p
+          id="userEmail"
+          class="text-gray-500 mt-2"
+        ></p>
+
+      </div>
+
+
+      <!-- PRODUTOS -->
+
+      <div
+        id="productsGrid"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
       >
-        Enviar
-      </button>
 
-      <div id="listaComentarios"></div>
+        <!-- Produto 1 -->
 
-    </div>
+        <article class="card rounded-lg overflow-hidden">
 
-  </aside>
+          <div
+            class="h-48 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center"
+          >
+
+            <span class="text-5xl">
+              📖
+            </span>
+
+          </div>
+
+          <div class="p-6">
+
+            <h3 class="text-xl font-bold mb-2">
+              Triohnte
+            </h3>
+
+            <p class="text-gray-400 text-sm mb-5">
+              Uma obra do universo de Walingardyn.
+            </p>
+
+            <div class="flex items-center justify-between">
+
+              <span class="gold font-bold">
+                € 0,00
+              </span>
+
+              <button
+                class="px-4 py-2 border gold-border gold rounded hover:bg-yellow-600 hover:text-black transition"
+                onclick="comprarProduto('Triohnte')"
+              >
+                Comprar
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
 
 
-  <!-- CONTEÚDO -->
+        <!-- Produto 2 -->
 
-  <main class="main">
+        <article class="card rounded-lg overflow-hidden">
 
-    <!-- GRADE PRINCIPAL -->
+          <div
+            class="h-48 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center"
+          >
 
-    <div id="grade"></div>
+            <span class="text-5xl">
+              📜
+            </span>
+
+          </div>
+
+          <div class="p-6">
+
+            <h3 class="text-xl font-bold mb-2">
+              Edição Especial
+            </h3>
+
+            <p class="text-gray-400 text-sm mb-5">
+              Conteúdo exclusivo da SW Editorial.
+            </p>
+
+            <div class="flex items-center justify-between">
+
+              <span class="gold font-bold">
+                € 0,00
+              </span>
+
+              <button
+                class="px-4 py-2 border gold-border gold rounded hover:bg-yellow-600 hover:text-black transition"
+                onclick="comprarProduto('Edição Especial')"
+              >
+                Comprar
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
 
 
-    <!-- CONTOS DE WALINGARDYN -->
+        <!-- Produto 3 -->
 
-    <div id="novelGrid">
+        <article class="card rounded-lg overflow-hidden">
 
-      <h2>
-        Contos de Walingardyn
-      </h2>
+          <div
+            class="h-48 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center"
+          >
 
-    </div>
+            <span class="text-5xl">
+              ⚔️
+            </span>
+
+          </div>
+
+          <div class="p-6">
+
+            <h3 class="text-xl font-bold mb-2">
+              Biblioteca Walingardyn
+            </h3>
+
+            <p class="text-gray-400 text-sm mb-5">
+              Materiais e conteúdos do universo.
+            </p>
+
+            <div class="flex items-center justify-between">
+
+              <span class="gold font-bold">
+                € 0,00
+              </span>
+
+              <button
+                class="px-4 py-2 border gold-border gold rounded hover:bg-yellow-600 hover:text-black transition"
+                onclick="comprarProduto('Biblioteca Walingardyn')"
+              >
+                Comprar
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
 
   </main>
 
-</div>
 
+  <!-- =========================
+       FIREBASE
+  ========================== -->
 
-<!-- ============================= -->
-<!-- DRAWER -->
-<!-- ============================= -->
+  <script type="module">
 
-<div
-  id="drawer"
-  class="drawer"
-  aria-hidden="true"
->
+    /*
+     * ============================================================
+     * FIREBASE
+     * ============================================================
+     *
+     * MUITO IMPORTANTE:
+     *
+     * O firebaseConfig abaixo precisa ser EXATAMENTE o mesmo
+     * utilizado no seu index.html.
+     *
+     * Não crie outro projeto Firebase.
+     * Não altere o authDomain.
+     * Não altere o projectId.
+     *
+     * Copie a configuração do seu index.html para cá.
+     */
 
-  <div class="topbar">
+    import {
+      initializeApp
+    } from
+      "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 
-    <button
-      class="btn"
-      id="closeDrawer"
-    >
-      Fechar
-    </button>
 
-    <h2 id="drawerTitle"></h2>
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from
+      "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
-    <button
-      class="btn"
-      id="toggleSlide"
-    >
-      Slide
-    </button>
 
-  </div>
+    /*
+     * ============================================================
+     * CONFIGURAÇÃO DO FIREBASE
+     * ============================================================
+     */
 
-  <div class="drawer-content"></div>
+    const firebaseConfig = {
 
-</div>
+      apiKey: "COLOQUE_SUA_API_KEY_AQUI",
 
+      authDomain: "SEU-PROJETO.firebaseapp.com",
 
-<!-- ============================= -->
-<!-- FIREBASE -->
-<!-- ============================= -->
+      projectId: "SEU-PROJECT-ID",
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+      storageBucket: "SEU-PROJETO.firebasestorage.app",
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+      messagingSenderId: "SEU_MESSAGING_SENDER_ID",
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+      appId: "SEU_APP_ID"
 
+    };
 
-<script>
 
-/* ============================= */
-/* FIREBASE */
-/* ============================= */
+    /*
+     * ============================================================
+     * INICIALIZAÇÃO
+     * ============================================================
+     */
 
-const firebaseConfig = {
+    const app = initializeApp(firebaseConfig);
 
-  apiKey:
-    "AIzaSyBPSH4g1rtk27n9wCCBJZ2GK1UKCMH-Yjs",
+    const auth = getAuth(app);
 
-  authDomain:
-    "login-sw-14940.firebaseapp.com",
 
-  databaseURL:
-    "https://login-sw-14940-default-rtdb.europe-west1.firebasedatabase.app/",
+    /*
+     * ============================================================
+     * ELEMENTOS DA PÁGINA
+     * ============================================================
+     */
 
-  projectId:
-    "login-sw-14940",
+    const loadingScreen =
+      document.getElementById("loadingScreen");
 
-  appId:
-    "1:252978150700:web:2c7d3997389f7675058089"
+    const loginRequired =
+      document.getElementById("loginRequired");
 
-};
+    const storeContent =
+      document.getElementById("storeContent");
 
-firebase.initializeApp(firebaseConfig);
+    const userArea =
+      document.getElementById("userArea");
 
-const auth = firebase.auth();
+    const userEmail =
+      document.getElementById("userEmail");
 
-const db = firebase.database();
+    const welcomeMessage =
+      document.getElementById("welcomeMessage");
 
+    const logoutButton =
+      document.getElementById("logoutButton");
 
-/* ============================= */
-/* LIVROS */
-/* ============================= */
 
-const livros = [
-
-  {
-    id: 2,
-
-    titulo: "Triohnte",
-
-    autor: "Gabryell Aweryan",
-
-    capa: "Coloque aqui seu png",
-
-    pasta: "Triohnte",
-
-    totalPaginas: 3,
-
-    prefixo: "",
-
-    synopsis:
-      "No tumultuoso mundo de Walingardyn, onde profecias antigas e guerras entre nobres definem o destino de gerações..."
-  }
-
-];
-
-
-/* ============================= */
-/* CONTOS */
-/* ============================= */
-
-const novels = [
-
-  {
-    id: 101,
-
-    titulo: "Segredários",
-
-    autor: "Gabryell Aweryan",
-
-    capa: "Coloque aqui seu png",
-
-    pasta: "S CAPS",
-
-    totalPaginas: 1,
-
-    prefixo: "S CAP ",
-
-    synopsis:
-      "Marco, João e Lucas vivem a rotina sem graça da Kenya Enlatados, uma pequena empresa de São Paulo que enlata legumes e sardinhas. Mas a monotonia acaba quando recebem um telefonema inesperado de Cleber F. Junior, do Amazonas: investigar um parque aquático abandonado, palco de uma tragédia que ainda assombra o local.\n\nAproveitando que suas férias estavam chegando, inventam um retiro espiritual para justificar a ausência, e claro, o chefe não entende nada! Munidos de curiosidade, improviso e sua van carateristicamente cômica, os Segredários partem rumo ao Amazonas.\n\nNo parque, descobrem que Cleber desapareceu misteriosamente e que a missão agora é coordenada por seu filho, Victor, que quer resolver o problema da propriedade para vendê-la. Entre mistérios, absurdos e perigos que ninguém ousaria enfrentar, Marco, João e Lucas vão aprender que segredos enterrados nem sempre ficam onde deveriam, e que a linha entre o banal e o bizarro pode ser mais fina do que imaginam."
-  }
-
-];
-
-
-/* ============================= */
-/* ELEMENTOS */
-/* ============================= */
-
-const grade =
-  document.getElementById("grade");
-
-const novelGrid =
-  document.getElementById("novelGrid");
-
-
-/* ============================= */
-/* RENDER DOS CARDS */
-/* ============================= */
-
-function renderCard(
-  item,
-  container,
-  includeFav = false
-) {
-
-  const card =
-    document.createElement("div");
-
-  card.className =
-    "card-book";
-
-  card.innerHTML = `
-
-    <div class="cover">
-
-      <img
-        src="${item.capa}"
-      >
-
-    </div>
-
-
-    <div class="meta">
-
-      <h3>
-        ${item.titulo}
-      </h3>
-
-      <div class="author">
-        Por: ${item.autor}
-      </div>
-
-      <div class="synopsis">
-        ${item.synopsis}
-      </div>
-
-    </div>
-
-
-    <div class="actions">
-
-      <button
-        class="btn ler"
-        data-id="${item.id}"
-        disabled
-      >
-        Ler
-      </button>
-
-      ${
-        includeFav
-        ?
-        `
-        <button
-          class="btn fav"
-          aria-pressed="false"
-          data-id="${item.id}"
-        >
-
-          <span
-            class="star-count"
-            id="stars-${item.id}"
-          >
-            0
-          </span>
-
-        </button>
-        `
-        :
-        ""
-      }
-
-    </div>
-
-  `;
-
-  container.appendChild(card);
-
-}
-
-
-/* Renderiza livros */
-
-livros.forEach(
-  l => renderCard(l, grade, true)
-);
-
-
-/* Renderiza contos */
-
-novels.forEach(
-  n => renderCard(n, novelGrid, true)
-);
-
-
-/* ============================= */
-/* GESTÃO DE ACESSO */
-/* ============================= */
-
-function atualizarPermissoesBotao(
-  emailLogado
-) {
-
-  const permissoes =
-    JSON.parse(
-      localStorage.getItem(
-        'sw_permissoes'
-      )
-    ) || [];
-
-
-  const botoesLer =
-    document.querySelectorAll(
-      '.btn.ler'
-    );
-
-
-  botoesLer.forEach(botao => {
-
-    const idDoLivro =
-      botao.getAttribute(
-        'data-id'
+    /*
+     * ============================================================
+     * OBSERVADOR DE AUTENTICAÇÃO
+     * ============================================================
+     *
+     * NÃO usamos:
+     *
+     *     auth.currentUser
+     *
+     * imediatamente ao carregar a página.
+     *
+     * O Firebase pode ainda estar restaurando a sessão.
+     *
+     * onAuthStateChanged espera a inicialização terminar e
+     * informa corretamente se existe um usuário autenticado.
+     */
+
+    onAuthStateChanged(auth, (user) => {
+
+      console.log(
+        "Estado de autenticação:",
+        user
       );
 
 
-    const temAcesso =
-      permissoes.some(p =>
+      /*
+       * ----------------------------------------------------------
+       * USUÁRIO LOGADO
+       * ----------------------------------------------------------
+       */
 
-        p.email.toLowerCase()
-        ===
-        emailLogado.toLowerCase()
+      if (user) {
 
-        &&
+        console.log(
+          "Usuário autenticado:",
+          user.uid
+        );
 
-        p.bookId.toString()
-        ===
-        idDoLivro.toString()
-
-      );
-
-
-    if (temAcesso) {
-
-      botao.disabled = false;
-
-      botao.innerText = "Ler";
-
-    }
-
-    else {
-
-      botao.disabled = true;
-
-      botao.innerText = "🔒";
-
-    }
-
-  });
-
-}
-
-
-/* ============================= */
-/* AUTENTICAÇÃO */
-/* ============================= */
-
-auth.onAuthStateChanged(
-  user => {
-
-    if (
-      user &&
-      user.email
-    ) {
-
-      atualizarPermissoesBotao(
-        user.email
-      );
-
-    }
-
-  }
-);
-
-
-/* ============================= */
-/* EVENTOS DE CLIQUE */
-/* ============================= */
-
-document.body.addEventListener(
-  "click",
-  e => {
-
-    /* Botão Ler */
-
-    const btnLer =
-      e.target.closest(".ler");
-
-
-    if (
-      btnLer &&
-      !btnLer.disabled
-    ) {
-
-      const id =
-        btnLer.dataset.id;
-
-
-      const item =
-        [
-          ...livros,
-          ...novels
-        ].find(
-          x => x.id == id
+        console.log(
+          "Email:",
+          user.email
         );
 
 
-      if (item) {
+        /*
+         * Esconde carregamento
+         */
 
-        openDrawer(item);
+        loadingScreen.classList.add("hidden");
 
-      }
 
-      return;
+        /*
+         * Esconde tela de login
+         */
 
-    }
+        loginRequired.classList.add("hidden");
 
 
-    /* Favoritos */
+        /*
+         * Mostra loja
+         */
 
-    const btnFav =
-      e.target.closest(".fav");
+        storeContent.classList.remove("hidden");
 
 
-    if (btnFav) {
+        /*
+         * Mostra botão sair
+         */
 
-      const id =
-        btnFav.dataset.id;
+        logoutButton.classList.remove("hidden");
 
 
-      btnFav.setAttribute(
-        "aria-pressed",
-        "true"
-      );
+        /*
+         * Informações do usuário
+         */
 
-
-      db.ref(
-        "estrelas/" + id
-      )
-      .transaction(
-        v => (v || 0) + 1
-      );
-
-    }
-
-  }
-);
-
-
-/* ============================= */
-/* ABRIR LIVRO */
-/* ============================= */
-
-function openDrawer(item) {
-
-  const drawer =
-    document.getElementById(
-      "drawer"
-    );
-
-
-  const content =
-    document.querySelector(
-      ".drawer-content"
-    );
-
-
-  document.getElementById(
-    "drawerTitle"
-  ).textContent =
-    item.titulo;
-
-
-  content.innerHTML = "";
-
-
-  for (
-    let i = 1;
-    i <= item.totalPaginas;
-    i++
-  ) {
-
-    const img =
-      document.createElement(
-        "img"
-      );
-
-
-    img.src =
-      `${item.pasta}/${item.prefixo}${i}.png`;
-
-
-    content.appendChild(img);
-
-  }
-
-
-  drawer.classList.add(
-    "open"
-  );
-
-
-  document.body.style.overflow =
-    "hidden";
-
-}
-
-
-/* ============================= */
-/* FECHAR LIVRO */
-/* ============================= */
-
-document.getElementById(
-  "closeDrawer"
-).onclick = () => {
-
-  document.getElementById(
-    "drawer"
-  ).classList.remove(
-    "open"
-  );
-
-
-  document.body.style.overflow =
-    "auto";
-
-};
-
-
-/* ============================= */
-/* COMENTÁRIOS */
-/* ============================= */
-
-const btnComment =
-  document.getElementById(
-    "btnComment"
-  );
-
-
-const textarea =
-  document.getElementById(
-    "commentText"
-  );
-
-
-btnComment.onclick = () => {
-
-  const user =
-    auth.currentUser;
-
-
-  if (!user) {
-
-    return alert(
-      "Faça login para comentar."
-    );
-
-  }
-
-
-  if (
-    !textarea.value.trim()
-  ) {
-
-    return;
-
-  }
-
-
-  db.ref(
-    `usuarios/${user.uid}`
-  )
-  .once(
-    'value',
-    snap => {
-
-      const d =
-        snap.val() || {};
-
-
-      db.ref(
-        "comentarios"
-      )
-      .push({
-
-        texto:
-          textarea.value,
-
-        data:
-          Date.now(),
-
-        pais:
-          `- de ${
-            d.nome ||
-            user.email.split('@')[0]
-          } (${
-            d.pais ||
-            'Walingardyn'
-          })`
-
-      });
-
-
-      textarea.value = "";
-
-    }
-  );
-
-};
-
-
-/* ============================= */
-/* CARREGAR COMENTÁRIOS */
-/* ============================= */
-
-db.ref(
-  "comentarios"
-)
-.on(
-  "child_added",
-  snapshot => {
-
-    const dados =
-      snapshot.val();
-
-
-    const lista =
-      document.getElementById(
-        "listaComentarios"
-      );
-
-
-    const div =
-      document.createElement(
-        "div"
-      );
-
-
-    div.className =
-      "comentario-item";
-
-
-    div.innerHTML = `
-
-      <p class="comentario-texto">
-        ${dados.texto}
-      </p>
-
-      <small class="comentario-meta">
-
-        ${dados.pais}
-
-        •
-
-        ${
-          new Date(
-            dados.data
-          ).toLocaleDateString()
-        }
-
-      </small>
-
-    `;
-
-
-    lista.prepend(div);
-
-  }
-);
-
-
-/* ============================= */
-/* ESTRELAS */
-/* ============================= */
-
-[
-  ...livros,
-  ...novels
-].forEach(
-  item => {
-
-    db.ref(
-      "estrelas/" + item.id
-    )
-    .on(
-      "value",
-      snap => {
-
-        const el =
-          document.getElementById(
-            "stars-" + item.id
+        const nome =
+          user.displayName ||
+          (
+            user.email
+              ? user.email.split("@")[0]
+              : "usuário"
           );
 
 
-        if (el) {
+        welcomeMessage.textContent =
+          `Olá, ${nome}!`;
 
-          el.textContent =
-            snap.val() || 0;
+
+        userEmail.textContent =
+          user.email || "Conta autenticada";
+
+
+        /*
+         * Área superior
+         */
+
+        userArea.innerHTML = `
+
+          <div class="text-sm font-semibold text-white">
+            ${escapeHtml(nome)}
+          </div>
+
+          <div class="text-xs text-gray-500">
+            ${escapeHtml(user.email || "")}
+          </div>
+
+        `;
+
+      }
+
+
+      /*
+       * ----------------------------------------------------------
+       * USUÁRIO NÃO LOGADO
+       * ----------------------------------------------------------
+       */
+
+      else {
+
+        console.log(
+          "Nenhum usuário autenticado."
+        );
+
+
+        /*
+         * Esconde carregamento
+         */
+
+        loadingScreen.classList.add("hidden");
+
+
+        /*
+         * Esconde loja
+         */
+
+        storeContent.classList.add("hidden");
+
+
+        /*
+         * Mostra aviso de login
+         */
+
+        loginRequired.classList.remove("hidden");
+
+
+        /*
+         * Esconde botão sair
+         */
+
+        logoutButton.classList.add("hidden");
+
+
+        /*
+         * Atualiza área superior
+         */
+
+        userArea.innerHTML = `
+
+          <div class="text-sm text-gray-500">
+            Não conectado
+          </div>
+
+        `;
+
+      }
+
+    });
+
+
+    /*
+     * ============================================================
+     * LOGOUT
+     * ============================================================
+     */
+
+    logoutButton.addEventListener(
+      "click",
+      async () => {
+
+        try {
+
+          await signOut(auth);
+
+          console.log(
+            "Usuário desconectado."
+          );
+
+          /*
+           * O onAuthStateChanged vai detectar
+           * automaticamente a saída.
+           */
+
+        }
+
+        catch (error) {
+
+          console.error(
+            "Erro ao sair:",
+            error
+          );
+
+          alert(
+            "Não foi possível sair da conta."
+          );
 
         }
 
       }
     );
 
-  }
-);
 
-</script>
+    /*
+     * ============================================================
+     * BOTÃO DE COMPRA
+     * ============================================================
+     */
+
+    window.comprarProduto = function(nomeProduto) {
+
+      const user = auth.currentUser;
+
+
+      /*
+       * Segurança adicional:
+       * mesmo que alguém tente chamar a função manualmente,
+       * verificamos novamente a autenticação.
+       */
+
+      if (!user) {
+
+        alert(
+          "Você precisa estar conectado para comprar."
+        );
+
+        return;
+
+      }
+
+
+      console.log(
+        "Compra iniciada:",
+        nomeProduto
+      );
+
+
+      /*
+       * Aqui você poderá posteriormente integrar:
+       *
+       * - Stripe
+       * - Mercado Pago
+       * - PayPal
+       * - Firebase Functions
+       * - Checkout próprio
+       *
+       * Por enquanto:
+       */
+
+      alert(
+        `Produto selecionado: ${nomeProduto}`
+      );
+
+    };
+
+
+    /*
+     * ============================================================
+     * ESCAPE HTML
+     * ============================================================
+     *
+     * Evita inserir diretamente no HTML dados vindos
+     * do perfil do usuário.
+     */
+
+    function escapeHtml(text) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent =
+        text;
+
+      return div.innerHTML;
+
+    }
+
+  </script>
 
 </body>
 </html>
