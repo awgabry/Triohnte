@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -19,21 +18,12 @@
 
   <style>
 
-    /* ============================= */
-    /* CONFIGURAÇÕES GERAIS */
-    /* ============================= */
-
     body {
       margin: 0;
       font-family: sans-serif;
       background: #000;
       color: #e7e9ee;
     }
-
-
-    /* ============================= */
-    /* BARRA SUPERIOR */
-    /* ============================= */
 
     .topbar {
       padding: 1rem;
@@ -49,9 +39,6 @@
       font-weight: 700;
       letter-spacing: 1px;
     }
-
-
-    /* Botão Loja */
 
     .btn-loja {
       margin-left: auto;
@@ -73,12 +60,9 @@
       transform: translateY(-1px);
     }
 
+    /* BOTÃO ADMINISTRATIVO */
 
-    /* ============================= */
-    /* BOTÃO RESTRITO                 */
-    /* ============================= */
-
-    .btn-restrito {
+    .btn-admin {
       display: none;
       padding: 0.55rem 1rem;
       border-radius: 12px;
@@ -92,16 +76,11 @@
       transition: all 0.2s ease;
     }
 
-    .btn-restrito:hover {
+    .btn-admin:hover {
       background: #1a1a1a;
       color: #fff;
       transform: translateY(-1px);
     }
-
-
-    /* ============================= */
-    /* LAYOUT */
-    /* ============================= */
 
     .layout {
       display: flex;
@@ -125,11 +104,6 @@
       align-items: flex-start;
     }
 
-
-    /* ============================= */
-    /* GRADE PRINCIPAL */
-    /* ============================= */
-
     #grade {
       display: grid;
       grid-template-columns: repeat(
@@ -139,11 +113,6 @@
       gap: 1.5rem;
       flex: 1;
     }
-
-
-    /* ============================= */
-    /* CONTOS DE WALINGARDYN */
-    /* ============================= */
 
     #novelGrid {
       width: 300px;
@@ -164,11 +133,6 @@
       margin-bottom: 0.5rem;
       font-family: 'Cinzel', serif;
     }
-
-
-    /* ============================= */
-    /* CARDS */
-    /* ============================= */
 
     .card-book {
       background: #b8860b;
@@ -221,11 +185,6 @@
       white-space: pre-line;
     }
 
-
-    /* ============================= */
-    /* BOTÕES */
-    /* ============================= */
-
     .actions {
       display: flex;
       gap: 0.8rem;
@@ -258,11 +217,6 @@
       filter: grayscale(1);
     }
 
-
-    /* ============================= */
-    /* ESTRELAS */
-    /* ============================= */
-
     .fav[aria-pressed="true"]::before {
       content: "★";
       color: #fff;
@@ -277,11 +231,6 @@
       font-weight: 400;
       font-size: 0.75rem;
     }
-
-
-    /* ============================= */
-    /* COMENTÁRIOS */
-    /* ============================= */
 
     .comment-section {
       margin-top: 2rem;
@@ -341,11 +290,6 @@
       margin-top: 6px;
     }
 
-
-    /* ============================= */
-    /* DRAWER */
-    /* ============================= */
-
     .drawer {
       position: fixed;
       inset: 0;
@@ -376,9 +320,6 @@
       margin-bottom: 1rem;
     }
 
-
-    /* Barra do Drawer */
-
     #drawer .topbar {
       display: flex;
       align-items: center;
@@ -401,29 +342,29 @@
   </style>
 </head>
 
-
 <body>
 
-
-  <!-- ============================= -->
   <!-- BARRA SUPERIOR -->
-  <!-- ============================= -->
 
   <header class="topbar">
 
     <span>Biblioteca</span>
 
-    <!-- BOTÃO DA LOJA -->
     <a href="loja.html" class="btn-loja">
       Loja
     </a>
 
-    <!-- BOTÃO RESTRITO -->
-    <!-- Só aparece para os e-mails autorizados pelo Firebase -->
+    <!--
+      ESTE BOTÃO COMEÇA INVISÍVEL.
+
+      O Firebase Authentication decidirá
+      se ele será exibido.
+    -->
+
     <a
       href="admin.html"
-      class="btn-restrito"
-      id="btnRestrito"
+      class="btn-admin"
+      id="btnAdmin"
     >
       Administração
     </a>
@@ -431,14 +372,7 @@
   </header>
 
 
-  <!-- ============================= -->
-  <!-- LAYOUT PRINCIPAL -->
-  <!-- ============================= -->
-
   <div class="layout">
-
-
-    <!-- SIDEBAR -->
 
     <aside class="sidebar">
 
@@ -446,19 +380,16 @@
         Suas obras reunidas em um só lugar.
       </h2>
 
-
       <div class="comment-section">
 
         <h3>
           Deixe seu comentário
         </h3>
 
-
         <textarea
           id="commentText"
           placeholder="O que você está lendo hoje?"
         ></textarea>
-
 
         <button
           class="btn-comment"
@@ -468,7 +399,6 @@
           Verificando login...
         </button>
 
-
         <div id="listaComentarios"></div>
 
       </div>
@@ -476,17 +406,9 @@
     </aside>
 
 
-    <!-- CONTEÚDO -->
-
     <main class="main">
 
-
-      <!-- GRADE PRINCIPAL -->
-
       <div id="grade"></div>
-
-
-      <!-- CONTOS DE WALINGARDYN -->
 
       <div id="novelGrid">
 
@@ -501,9 +423,7 @@
   </div>
 
 
-  <!-- ============================= -->
   <!-- DRAWER -->
-  <!-- ============================= -->
 
   <div
     id="drawer"
@@ -531,15 +451,12 @@
 
     </div>
 
-
     <div class="drawer-content"></div>
 
   </div>
 
 
-  <!-- ============================= -->
   <!-- FIREBASE -->
-  <!-- ============================= -->
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 
@@ -550,9 +467,9 @@
 
   <script>
 
-    /* ============================= */
-    /* FIREBASE */
-    /* ============================= */
+    /* ===================================================== */
+    /* FIREBASE                                                */
+    /* ===================================================== */
 
     const firebaseConfig = {
 
@@ -574,25 +491,29 @@
     };
 
 
-    /* Inicializa Firebase */
-
     if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
+
+      firebase.initializeApp(
+        firebaseConfig
+      );
+
     }
 
 
-    const auth = firebase.auth();
+    const auth =
+      firebase.auth();
 
-    const db = firebase.database();
+    const db =
+      firebase.database();
 
 
     /* ===================================================== */
-    /* E-MAILS AUTORIZADOS PARA O BOTÃO RESTRITO             */
+    /* E-MAILS COM ACESSO ADMINISTRATIVO                      */
     /* ===================================================== */
 
-    const emailsAutorizados = [
+    const EMAILS_AUTORIZADOS = [
 
-      "mr.gabriel04.07.02@hotmail",
+      "mr.gabriel04.07.02@hotmail.com",
 
       "ga7144492@gmail.com"
 
@@ -600,57 +521,111 @@
 
 
     /* ===================================================== */
-    /* BOTÃO RESTRITO                                        */
+    /* BOTÃO ADMIN                                             */
     /* ===================================================== */
 
-    const btnRestrito =
-      document.getElementById("btnRestrito");
+    const btnAdmin =
+      document.getElementById(
+        "btnAdmin"
+      );
 
 
-    function atualizarBotaoRestrito(user) {
+    /*
+      Sempre começa escondido.
+
+      Isso evita que o botão apareça
+      por alguns segundos para usuários
+      não autorizados enquanto o Firebase
+      restaura a sessão.
+    */
+
+    btnAdmin.style.display =
+      "none";
+
+
+    /*
+      Esta função NÃO procura o e-mail
+      no localStorage.
+
+      Ela recebe diretamente o objeto
+      "user" fornecido pelo Firebase Authentication.
+    */
+
+    function verificarAcessoAdministrativo(user) {
 
       /*
-        Por segurança, começa sempre escondido.
+        Primeiro remove o acesso visual.
       */
 
-      btnRestrito.style.display = "none";
+      btnAdmin.style.display =
+        "none";
 
 
       /*
-        Se não existe usuário, não mostra.
+        Se não existe usuário autenticado,
+        termina aqui.
       */
 
-      if (!user || !user.email) {
+      if (!user) {
+
+        console.log(
+          "Firebase: nenhum usuário logado."
+        );
+
         return;
+
       }
 
 
       /*
-        Normaliza o e-mail para evitar
-        diferença entre letras maiúsculas/minúsculas.
+        O Firebase informou o e-mail
+        da conta atualmente autenticada
+        neste navegador/dispositivo.
       */
 
-      const email =
-        user.email.trim().toLowerCase();
+      const emailFirebase =
+        (user.email || "")
+          .trim()
+          .toLowerCase();
+
+
+      console.log(
+        "Firebase Authentication informou:",
+        emailFirebase
+      );
 
 
       /*
-        Verifica se o e-mail está na lista.
+        Compara o e-mail recebido do Firebase
+        com a lista de administradores.
       */
 
-      const autorizado =
-        emailsAutorizados.includes(email);
+      if (
+        EMAILS_AUTORIZADOS.includes(
+          emailFirebase
+        )
+      ) {
+
+        console.log(
+          "ACESSO ADMINISTRATIVO CONCEDIDO:",
+          emailFirebase
+        );
 
 
-      /*
-        Só os e-mails autorizados
-        recebem o botão.
-      */
-
-      if (autorizado) {
-
-        btnRestrito.style.display =
+        btnAdmin.style.display =
           "inline-block";
+
+      }
+
+      else {
+
+        console.log(
+          "Usuário autenticado, mas sem acesso administrativo:",
+          emailFirebase
+        );
+
+        btnAdmin.style.display =
+          "none";
 
       }
 
@@ -658,27 +633,8 @@
 
 
     /* ===================================================== */
-    /* IMPORTANTE: MANTER A SESSÃO DO INDEX.HTML             */
+    /* PERSISTÊNCIA                                            */
     /* ===================================================== */
-
-    let usuarioLogado = null;
-
-    let autenticacaoVerificada = false;
-
-
-    /*
-      Força o Firebase a manter a sessão no navegador.
-
-      Assim:
-
-      index.html
-          ↓
-      usuário faz login
-          ↓
-      biblioteca.html
-          ↓
-      Firebase reconhece o mesmo usuário
-    */
 
     auth.setPersistence(
       firebase.auth.Auth.Persistence.LOCAL
@@ -686,23 +642,23 @@
     .then(() => {
 
       console.log(
-        "Persistência de autenticação ativada."
+        "Firebase: persistência LOCAL ativada."
       );
 
     })
     .catch(error => {
 
       console.error(
-        "Erro ao configurar persistência:",
+        "Firebase: erro na persistência:",
         error
       );
 
     });
 
 
-    /* ============================= */
-    /* LIVROS */
-    /* ============================= */
+    /* ===================================================== */
+    /* LIVROS                                                  */
+    /* ===================================================== */
 
     const livros = [
 
@@ -730,9 +686,9 @@
     ];
 
 
-    /* ============================= */
-    /* CONTOS */
-    /* ============================= */
+    /* ===================================================== */
+    /* CONTOS                                                  */
+    /* ===================================================== */
 
     const novels = [
 
@@ -764,29 +720,39 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
     ];
 
 
-    /* ============================= */
-    /* ELEMENTOS */
-    /* ============================= */
+    /* ===================================================== */
+    /* ELEMENTOS                                               */
+    /* ===================================================== */
 
     const grade =
-      document.getElementById("grade");
+      document.getElementById(
+        "grade"
+      );
 
     const novelGrid =
-      document.getElementById("novelGrid");
+      document.getElementById(
+        "novelGrid"
+      );
 
     const btnComment =
-      document.getElementById("btnComment");
+      document.getElementById(
+        "btnComment"
+      );
 
     const textarea =
-      document.getElementById("commentText");
+      document.getElementById(
+        "commentText"
+      );
 
     const listaComentarios =
-      document.getElementById("listaComentarios");
+      document.getElementById(
+        "listaComentarios"
+      );
 
 
-    /* ============================= */
-    /* RENDER DOS CARDS */
-    /* ============================= */
+    /* ===================================================== */
+    /* RENDER DOS CARDS                                        */
+    /* ===================================================== */
 
     function renderCard(
       item,
@@ -795,7 +761,9 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
     ) {
 
       const card =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       card.className =
         "card-book";
@@ -813,7 +781,6 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 
         </div>
 
-
         <div class="meta">
 
           <h3>
@@ -830,7 +797,6 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 
         </div>
 
-
         <div class="actions">
 
           <button
@@ -840,7 +806,6 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
           >
             🔒
           </button>
-
 
           ${
             includeFav
@@ -873,12 +838,12 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
       `;
 
 
-      container.appendChild(card);
+      container.appendChild(
+        card
+      );
 
     }
 
-
-    /* Renderiza livros */
 
     livros.forEach(
       livro =>
@@ -890,8 +855,6 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
     );
 
 
-    /* Renderiza contos */
-
     novels.forEach(
       conto =>
         renderCard(
@@ -902,9 +865,9 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
     );
 
 
-    /* ============================= */
-    /* GESTÃO DE ACESSO */
-    /* ============================= */
+    /* ===================================================== */
+    /* PERMISSÕES DOS LIVROS                                  */
+    /* ===================================================== */
 
     function atualizarPermissoesBotao(
       emailLogado
@@ -924,97 +887,139 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
         );
 
 
-      botoesLer.forEach(botao => {
+      botoesLer.forEach(
+        botao => {
 
-        const idDoLivro =
-          botao.getAttribute(
-            "data-id"
-          );
-
-
-        const temAcesso =
-          permissoes.some(p => {
-
-            if (
-              !p.email ||
-              p.bookId === undefined
-            ) {
-              return false;
-            }
-
-
-            return (
-
-              p.email
-                .toLowerCase()
-                ===
-              emailLogado
-                .toLowerCase()
-
-              &&
-
-              p.bookId.toString()
-                ===
-              idDoLivro.toString()
-
+          const idDoLivro =
+            botao.getAttribute(
+              "data-id"
             );
 
-          });
+
+          const temAcesso =
+            permissoes.some(
+              p => {
+
+                if (
+                  !p.email ||
+                  p.bookId === undefined
+                ) {
+
+                  return false;
+
+                }
 
 
-        if (temAcesso) {
+                return (
 
-          botao.disabled = false;
+                  p.email
+                    .toLowerCase()
+                    ===
+                  emailLogado
+                    .toLowerCase()
 
-          botao.innerText =
-            "Ler";
+                  &&
+
+                  p.bookId
+                    .toString()
+                    ===
+                  idDoLivro
+                    .toString()
+
+                );
+
+              }
+            );
+
+
+          if (temAcesso) {
+
+            botao.disabled =
+              false;
+
+            botao.innerText =
+              "Ler";
+
+          }
+
+          else {
+
+            botao.disabled =
+              true;
+
+            botao.innerText =
+              "🔒";
+
+          }
 
         }
-
-        else {
-
-          botao.disabled = true;
-
-          botao.innerText =
-            "🔒";
-
-        }
-
-      });
+      );
 
     }
 
 
     /* ===================================================== */
-    /* AUTENTICAÇÃO                                           */
+    /* AUTENTICAÇÃO FIREBASE                                  */
     /* ===================================================== */
 
     auth.onAuthStateChanged(
       user => {
 
-        autenticacaoVerificada = true;
+        /*
+          A partir daqui, o Firebase terminou
+          de verificar/restaurar a sessão.
+        */
 
-        usuarioLogado = user;
+        usuarioLogado =
+          user;
+
+
+        autenticacaoVerificada =
+          true;
 
 
         console.log(
-          "Estado de autenticação:",
+          "================================="
+        );
+
+        console.log(
+          "FIREBASE AUTHENTICATION"
+        );
+
+        console.log(
+          "Usuário:",
           user
             ? user.email
-            : "nenhum usuário"
+            : "nenhum"
+        );
+
+        console.log(
+          "UID:",
+          user
+            ? user.uid
+            : "nenhum"
+        );
+
+        console.log(
+          "================================="
         );
 
 
-        /* ================================================= */
-        /* ATUALIZA BOTÃO RESTRITO                            */
-        /* ================================================= */
+        /*
+          ESTA É A PARTE IMPORTANTE.
 
-        atualizarBotaoRestrito(user);
+          O Firebase fornece diretamente
+          o usuário atualmente autenticado.
 
+          Não estamos lendo o login do index.html.
+          Não estamos usando localStorage para
+          descobrir quem está logado.
+        */
 
-        /* ===================================== */
-        /* USUÁRIO ESTÁ LOGADO                   */
-        /* ===================================== */
+        verificarAcessoAdministrativo(
+          user
+        );
+
 
         if (
           user &&
@@ -1027,26 +1032,18 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
           );
 
 
-          /* Libera comentários */
-
-          btnComment.disabled = false;
+          btnComment.disabled =
+            false;
 
           btnComment.innerText =
             "Enviar";
 
-
-          /* Atualiza permissões */
 
           atualizarPermissoesBotao(
             user.email
           );
 
         }
-
-
-        /* ===================================== */
-        /* USUÁRIO NÃO ESTÁ LOGADO               */
-        /* ===================================== */
 
         else {
 
@@ -1055,28 +1052,28 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
           );
 
 
-          btnComment.disabled = false;
+          btnComment.disabled =
+            false;
 
           btnComment.innerText =
             "Entrar para comentar";
 
 
-          /*
-            Os livros continuam aparecendo.
-
-            Apenas comentários exigem login.
-          */
-
           document
-            .querySelectorAll(".btn.ler")
-            .forEach(botao => {
+            .querySelectorAll(
+              ".btn.ler"
+            )
+            .forEach(
+              botao => {
 
-              botao.disabled = true;
+                botao.disabled =
+                  true;
 
-              botao.innerText =
-                "🔒";
+                botao.innerText =
+                  "🔒";
 
-            });
+              }
+            );
 
         }
 
@@ -1085,17 +1082,12 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 
 
     /* ===================================================== */
-    /* EVENTOS DE CLIQUE                                      */
+    /* EVENTOS                                                 */
     /* ===================================================== */
 
     document.body.addEventListener(
       "click",
       e => {
-
-
-        /* ============================= */
-        /* BOTÃO LER */
-        /* ============================= */
 
         const btnLer =
           e.target.closest(
@@ -1124,7 +1116,9 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 
           if (item) {
 
-            openDrawer(item);
+            openDrawer(
+              item
+            );
 
           }
 
@@ -1133,10 +1127,6 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 
         }
 
-
-        /* ============================= */
-        /* FAVORITOS */
-        /* ============================= */
 
         const btnFav =
           e.target.closest(
@@ -1149,11 +1139,6 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
           const id =
             btnFav.dataset.id;
 
-
-          /*
-            Evita clicar repetidamente
-            no mesmo botão.
-          */
 
           if (
             btnFav.getAttribute(
@@ -1179,14 +1164,16 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
             valor =>
               (valor || 0) + 1
           )
-          .catch(error => {
+          .catch(
+            error => {
 
-            console.error(
-              "Erro ao registrar estrela:",
-              error
-            );
+              console.error(
+                "Erro ao registrar estrela:",
+                error
+              );
 
-          });
+            }
+          );
 
         }
 
@@ -1194,11 +1181,13 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
     );
 
 
-    /* ============================= */
-    /* ABRIR LIVRO */
-    /* ============================= */
+    /* ===================================================== */
+    /* ABRIR LIVRO                                             */
+    /* ===================================================== */
 
-    function openDrawer(item) {
+    function openDrawer(
+      item
+    ) {
 
       const drawer =
         document.getElementById(
@@ -1218,7 +1207,8 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
         item.titulo;
 
 
-      content.innerHTML = "";
+      content.innerHTML =
+        "";
 
 
       for (
@@ -1265,9 +1255,9 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
     }
 
 
-    /* ============================= */
-    /* FECHAR LIVRO */
-    /* ============================= */
+    /* ===================================================== */
+    /* FECHAR LIVRO                                           */
+    /* ===================================================== */
 
     document.getElementById(
       "closeDrawer"
@@ -1297,194 +1287,161 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 
 
     /* ===================================================== */
-    /* COMENTÁRIOS                                            */
+    /* COMENTÁRIOS                                             */
     /* ===================================================== */
 
-    btnComment.onclick = async () => {
-
-
-      /* ================================= */
-      /* GARANTE QUE O FIREBASE TERMINOU   */
-      /* DE VERIFICAR A SESSÃO             */
-      /* ================================= */
-
-      if (!autenticacaoVerificada) {
-
-        alert(
-          "Aguarde. Estamos verificando seu login..."
-        );
-
-        return;
-
-      }
-
-
-      /* ================================= */
-      /* VERIFICA USUÁRIO                  */
-      /* ================================= */
-
-      const user =
-        usuarioLogado ||
-        auth.currentUser;
-
-
-      if (!user) {
-
-        alert(
-          "Você precisa estar conectado para comentar."
-        );
-
-        return;
-
-      }
-
-
-      /* ================================= */
-      /* VERIFICA TEXTO                    */
-      /* ================================= */
-
-      const texto =
-        textarea.value.trim();
-
-
-      if (!texto) {
-
-        alert(
-          "Escreva um comentário antes de enviar."
-        );
-
-        return;
-
-      }
-
-
-      /* ================================= */
-      /* DESABILITA BOTÃO                  */
-      /* ================================= */
-
-      btnComment.disabled = true;
-
-      btnComment.innerText =
-        "Enviando...";
-
-
-      try {
-
-
-        /* ================================= */
-        /* BUSCA DADOS DO USUÁRIO             */
-        /* ================================= */
-
-        const snapshot =
-          await db.ref(
-            `usuarios/${user.uid}`
-          ).once("value");
-
-
-        const dados =
-          snapshot.val() || {};
-
-
-        const nome =
-          dados.nome ||
-          user.displayName ||
-          user.email.split("@")[0];
-
-
-        const pais =
-          dados.pais ||
-          "Walingardyn";
-
-
-        /* ================================= */
-        /* CRIA COMENTÁRIO                    */
-        /* ================================= */
-
-        await db.ref(
-          "comentarios"
-        ).push({
-
-          uid:
-            user.uid,
-
-          email:
-            user.email,
-
-          nome:
-            nome,
-
-          texto:
-            texto,
-
-          data:
-            Date.now(),
-
-          pais:
-            `- de ${nome} (${pais})`
-
-        });
-
-
-        /* ================================= */
-        /* LIMPA CAMPO                        */
-        /* ================================= */
-
-        textarea.value = "";
-
-
-        alert(
-          "Comentário publicado com sucesso."
-        );
-
-      }
-
-      catch (error) {
-
-        console.error(
-          "Erro ao publicar comentário:",
-          error
-        );
-
-
-        /*
-          Agora o erro real aparece.
-          Isso é importante para descobrir
-          se são as Rules do Firebase.
-        */
+    btnComment.onclick =
+      async () => {
 
         if (
-          error.code ===
-          "PERMISSION_DENIED"
+          !autenticacaoVerificada
         ) {
 
           alert(
-            "O Firebase recusou o comentário. Verifique as regras do Realtime Database."
+            "Aguarde. Estamos verificando seu login..."
           );
+
+          return;
 
         }
 
-        else {
+
+        const user =
+          usuarioLogado ||
+          auth.currentUser;
+
+
+        if (!user) {
 
           alert(
-            "Não foi possível publicar o comentário.\n\nErro: " +
-            error.message
+            "Você precisa estar conectado para comentar."
+          );
+
+          return;
+
+        }
+
+
+        const texto =
+          textarea.value.trim();
+
+
+        if (!texto) {
+
+          alert(
+            "Escreva um comentário antes de enviar."
+          );
+
+          return;
+
+        }
+
+
+        btnComment.disabled =
+          true;
+
+        btnComment.innerText =
+          "Enviando...";
+
+
+        try {
+
+          const snapshot =
+            await db.ref(
+              `usuarios/${user.uid}`
+            ).once(
+              "value"
+            );
+
+
+          const dados =
+            snapshot.val() || {};
+
+
+          const nome =
+            dados.nome ||
+            user.displayName ||
+            user.email.split("@")[0];
+
+
+          const pais =
+            dados.pais ||
+            "Walingardyn";
+
+
+          await db.ref(
+            "comentarios"
+          ).push({
+
+            uid:
+              user.uid,
+
+            email:
+              user.email,
+
+            nome:
+              nome,
+
+            texto:
+              texto,
+
+            data:
+              Date.now(),
+
+            pais:
+              `- de ${nome} (${pais})`
+
+          });
+
+
+          textarea.value =
+            "";
+
+
+          alert(
+            "Comentário publicado com sucesso."
           );
 
         }
 
-      }
+        catch (error) {
+
+          console.error(
+            "Erro ao publicar comentário:",
+            error
+          );
 
 
-      /* ================================= */
-      /* RESTAURA BOTÃO                     */
-      /* ================================= */
+          if (
+            error.code ===
+            "PERMISSION_DENIED"
+          ) {
 
-      btnComment.disabled = false;
+            alert(
+              "O Firebase recusou o comentário. Verifique as regras do Realtime Database."
+            );
 
-      btnComment.innerText =
-        "Enviar";
+          }
 
-    };
+          else {
+
+            alert(
+              "Não foi possível publicar o comentário.\n\nErro: " +
+              error.message
+            );
+
+          }
+
+        }
+
+
+        btnComment.disabled =
+          false;
+
+        btnComment.innerText =
+          "Enviar";
+
+      };
 
 
     /* ===================================================== */
@@ -1503,7 +1460,9 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 
 
         if (!dados) {
+
           return;
+
         }
 
 
@@ -1516,14 +1475,6 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
         div.className =
           "comentario-item";
 
-
-        /*
-          NÃO usamos innerHTML para o texto
-          do usuário.
-
-          Isso evita que alguém publique
-          HTML/JavaScript dentro do comentário.
-        */
 
         const p =
           document.createElement(
@@ -1631,4 +1582,4 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 </body>
 
 </html>
-```
+
