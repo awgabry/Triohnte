@@ -18,326 +18,836 @@
 
   <style>
 
+    /* ===================================================== */
+    /* BASE                                                   */
+    /* ===================================================== */
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: sans-serif;
       background: #000;
-      color: #e7e9ee;
+      color: #d6d6d6;
     }
+
+
+    /* ===================================================== */
+    /* OURO METÁLICO — REFERÊNCIA DA IMAGEM                  */
+    /* ===================================================== */
+
+    .gold-text {
+      background: linear-gradient(
+        180deg,
+        #f7e6b5 0%,
+        #e4c27d 22%,
+        #c89a4c 50%,
+        #a8732d 72%,
+        #e1bd72 100%
+      );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      -webkit-text-fill-color: transparent;
+
+      text-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.8);
+    }
+
+
+    /* ===================================================== */
+    /* BARRA SUPERIOR                                        */
+    /* ===================================================== */
 
     .topbar {
       padding: 1rem;
-      background: #b8860b;
+      background: #080808;
+
       display: flex;
       align-items: center;
       gap: 1rem;
+
       position: sticky;
       top: 0;
       z-index: 10;
-      color: #000;
+
+      color: #d4af37;
+
       font-family: 'Cinzel', serif;
       font-weight: 700;
       letter-spacing: 1px;
+
+      border-bottom: 1px solid #242424;
     }
+
+
+    .topbar > span {
+      background: linear-gradient(
+        180deg,
+        #f7e6b5 0%,
+        #e4c27d 25%,
+        #c89a4c 50%,
+        #a8732d 75%,
+        #e1bd72 100%
+      );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      -webkit-text-fill-color: transparent;
+
+      text-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.9);
+    }
+
+
+    /* ===================================================== */
+    /* BOTÃO LOJA                                             */
+    /* ===================================================== */
 
     .btn-loja {
       margin-left: auto;
+
       padding: 0.55rem 1rem;
-      border-radius: 12px;
-      background: #000;
+
+      border-radius: 10px;
+
+      background: #111;
       color: #d4af37;
+
       text-decoration: none;
+
       font-family: 'Cinzel', serif;
       font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.5px;
+
+      border: 1px solid #292929;
+
       transition: all 0.2s ease;
     }
 
+
     .btn-loja:hover {
-      background: #1a1a1a;
-      color: #fff;
+      background: #1b1b1b;
+
+      color: #f2d99d;
+
+      border-color: #4a4a4a;
+
       transform: translateY(-1px);
     }
 
-    /* BOTÃO ADMINISTRATIVO */
+
+    /* ===================================================== */
+    /* BOTÃO ADMINISTRATIVO                                  */
+    /* ===================================================== */
 
     .btn-admin {
       display: none;
+
       padding: 0.55rem 1rem;
-      border-radius: 12px;
-      background: #000;
+
+      border-radius: 10px;
+
+      background: #111;
       color: #d4af37;
+
       text-decoration: none;
+
       font-family: 'Cinzel', serif;
       font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.5px;
+
+      border: 1px solid #292929;
+
       transition: all 0.2s ease;
     }
 
+
     .btn-admin:hover {
-      background: #1a1a1a;
-      color: #fff;
+      background: #1b1b1b;
+
+      color: #f2d99d;
+
+      border-color: #4a4a4a;
+
       transform: translateY(-1px);
     }
 
+
+    /* ===================================================== */
+    /* LAYOUT                                                 */
+    /* ===================================================== */
+
     .layout {
       display: flex;
+
       min-height: calc(100vh - 58px);
+
+      background: #000;
     }
 
+
+    /* ===================================================== */
+    /* SIDEBAR                                                */
+    /* ===================================================== */
+
     .sidebar {
-      background: #000;
+      background: #080808;
+
       padding: 1rem;
+
       overflow: auto;
-      border-right: 1px solid #b8860b;
+
+      border-right: 1px solid #242424;
+
       width: 260px;
+
       flex-shrink: 0;
     }
+
+
+    .sidebar h2 {
+      margin-top: 0;
+
+      font-family: 'Cinzel', serif;
+
+      font-size: 1rem;
+
+      line-height: 1.5;
+
+      background: linear-gradient(
+        180deg,
+        #f7e6b5 0%,
+        #e4c27d 30%,
+        #c89a4c 55%,
+        #a8732d 80%,
+        #dcb66d 100%
+      );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      -webkit-text-fill-color: transparent;
+    }
+
+
+    /* ===================================================== */
+    /* CONTEÚDO PRINCIPAL                                     */
+    /* ===================================================== */
 
     .main {
       display: flex;
+
       flex: 1;
+
       gap: 1.5rem;
+
       padding: 1rem;
+
       align-items: flex-start;
+
+      background: #000;
     }
+
+
+    /* ===================================================== */
+    /* GRADE                                                  */
+    /* ===================================================== */
 
     #grade {
       display: grid;
-      grid-template-columns: repeat(
-        auto-fill,
-        minmax(280px, 1fr)
-      );
+
+      grid-template-columns:
+        repeat(
+          auto-fill,
+          minmax(280px, 1fr)
+        );
+
       gap: 1.5rem;
+
       flex: 1;
     }
 
+
+    /* ===================================================== */
+    /* CONTOS DE WALINGARDYN                                  */
+    /* ===================================================== */
+
     #novelGrid {
       width: 300px;
-      background: #b8860b;
+
+      background: #0b0b0b;
+
       display: flex;
+
       flex-direction: column;
+
       gap: 1.5rem;
+
       padding: 1rem;
-      border-left: 2px solid #b8860b;
+
+      border-left: 1px solid #242424;
+
+      border-right: 1px solid #171717;
+
       flex-shrink: 0;
     }
+
 
     #novelGrid h2 {
       font-size: 1.2rem;
+
       font-weight: bold;
+
       text-align: center;
-      color: #000;
+
       margin-bottom: 0.5rem;
+
       font-family: 'Cinzel', serif;
+
+      background: linear-gradient(
+        180deg,
+        #f7e6b5 0%,
+        #e4c27d 25%,
+        #c89a4c 50%,
+        #a8732d 75%,
+        #dfba70 100%
+      );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      -webkit-text-fill-color: transparent;
+
+      text-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.9);
     }
 
+
+    /* ===================================================== */
+    /* CARD DOS LIVROS                                        */
+    /* ===================================================== */
+
     .card-book {
-      background: #b8860b;
-      border-radius: 20px;
+      background: #101010;
+
+      border-radius: 16px;
+
       overflow: hidden;
+
       display: flex;
+
       flex-direction: column;
-      border: 1px solid #d4af37;
+
+      border: 1px solid #292929;
+
       height: auto;
-      color: #000;
+
+      color: #d4d4d4;
+
+      box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.45);
+
+      transition:
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
     }
+
+
+    .card-book:hover {
+      border-color: #3a3a3a;
+
+      transform: translateY(-2px);
+
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.65);
+    }
+
+
+    /* ===================================================== */
+    /* CAPA                                                   */
+    /* ===================================================== */
 
     .cover {
       width: 100%;
-      aspect-ratio: 3/4;
+
+      aspect-ratio: 3 / 4;
+
       background: #000;
+
       flex-shrink: 0;
+
+      border-bottom: 1px solid #292929;
     }
+
 
     .cover img {
       width: 100%;
+
       height: 100%;
+
       object-fit: cover;
     }
 
+
+    /* ===================================================== */
+    /* METADADOS                                              */
+    /* ===================================================== */
+
     .meta {
       padding: 1.2rem;
+
       flex-grow: 1;
+
+      background: #101010;
     }
+
 
     .meta h3 {
       margin: 0 0 0.5rem 0;
+
       font-size: 1.2rem;
-      color: #000;
+
       font-family: 'Cinzel', serif;
+
       font-weight: 700;
+
+      background: linear-gradient(
+        180deg,
+        #f7e6b5 0%,
+        #e4c27d 25%,
+        #c89a4c 50%,
+        #a8732d 75%,
+        #dfba70 100%
+      );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      -webkit-text-fill-color: transparent;
+
+      text-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.9);
     }
 
+
     .meta .author {
-      color: #241800;
+      color: #969696;
+
       font-size: 0.9rem;
+
       font-style: italic;
+
       margin-bottom: 0.8rem;
     }
 
+
     .meta .synopsis {
       font-size: 0.85rem;
-      color: #1c1400;
+
+      color: #b8b8b8;
+
       line-height: 1.5;
+
       white-space: pre-line;
     }
 
+
+    /* ===================================================== */
+    /* AÇÕES                                                   */
+    /* ===================================================== */
+
     .actions {
       display: flex;
+
       gap: 0.8rem;
+
       padding: 1.2rem;
+
       align-items: center;
-      border-top: 1px solid #8c6508;
+
+      border-top: 1px solid #282828;
+
       margin-top: auto;
+
+      background: #0c0c0c;
     }
+
+
+    /* ===================================================== */
+    /* BOTÕES                                                  */
+    /* ===================================================== */
 
     .btn {
       padding: .5rem .8rem;
-      border-radius: 12px;
-      border: none;
+
+      border-radius: 10px;
+
+      border: 1px solid #292929;
+
       cursor: pointer;
-      background: #000;
-      color: #e7e9ee;
+
+      background: #050505;
+
+      color: #d6d6d6;
+
       display: flex;
+
       align-items: center;
+
       justify-content: center;
+
       gap: 0.5rem;
+
       font-size: 0.9rem;
+
       width: 70px;
+
       height: 38px;
+
       flex-shrink: 0;
+
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
     }
+
+
+    .btn:hover:not(:disabled) {
+      background: #171717;
+
+      border-color: #444;
+    }
+
 
     .btn:disabled {
       opacity: 0.3;
+
       cursor: not-allowed;
+
       filter: grayscale(1);
     }
 
+
+    /* ===================================================== */
+    /* ESTRELA                                                 */
+    /* ===================================================== */
+
     .fav[aria-pressed="true"]::before {
       content: "★";
-      color: #fff;
+
+      background: linear-gradient(
+        180deg,
+        #f7e6b5,
+        #c89a4c,
+        #9b6827
+      );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      -webkit-text-fill-color: transparent;
     }
+
 
     .fav[aria-pressed="false"]::before {
       content: "☆";
+
+      color: #777;
     }
 
+
     .star-count {
-      color: #fff;
+      color: #aaa;
+
       font-weight: 400;
+
       font-size: 0.75rem;
     }
 
+
+    /* ===================================================== */
+    /* COMENTÁRIOS                                            */
+    /* ===================================================== */
+
     .comment-section {
       margin-top: 2rem;
-      background: #1a0901;
+
+      background: #101010;
+
       padding: 1rem;
+
       border-radius: 12px;
+
+      border: 1px solid #242424;
     }
+
+
+    .comment-section h3 {
+      font-family: 'Cinzel', serif;
+
+      font-size: 1rem;
+
+      background: linear-gradient(
+        180deg,
+        #f7e6b5 0%,
+        #e4c27d 30%,
+        #c89a4c 55%,
+        #a8732d 80%,
+        #dcb66d 100%
+      );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      -webkit-text-fill-color: transparent;
+    }
+
 
     .comment-section textarea {
       width: 100%;
+
       height: 80px;
-      background: #000;
+
+      background: #050505;
+
       color: #fff;
-      border: 1px solid #333;
+
+      border: 1px solid #292929;
+
       border-radius: 8px;
+
       padding: 0.5rem;
+
       box-sizing: border-box;
+
       resize: none;
+
+      outline: none;
+
+      transition: border-color 0.2s ease;
     }
+
+
+    .comment-section textarea:focus {
+      border-color: #4a4a4a;
+    }
+
 
     .btn-comment {
       margin-top: 0.5rem;
+
       width: 100%;
-      background: #000;
-      color: #fff;
+
+      background: #050505;
+
+      color: #d6d6d6;
+
       padding: 0.6rem;
-      border: none;
+
+      border: 1px solid #292929;
+
       border-radius: 8px;
+
       cursor: pointer;
+
+      transition: all 0.2s ease;
     }
+
+
+    .btn-comment:hover:not(:disabled) {
+      background: #171717;
+
+      border-color: #444;
+    }
+
 
     .btn-comment:disabled {
       opacity: 0.5;
+
       cursor: not-allowed;
     }
+
 
     #listaComentarios {
       margin-top: 1.5rem;
     }
 
+
     .comentario-item {
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid #282828;
+
       padding: 12px 0;
     }
 
+
     .comentario-texto {
       font-size: 0.9rem;
-      color: #e7e9ee;
+
+      color: #d0d0d0;
+
       margin: 0;
+
       word-break: break-word;
     }
 
+
     .comentario-meta {
-      color: #aab0bd;
+      color: #777;
+
       font-size: 0.75rem;
+
       display: block;
+
       margin-top: 6px;
     }
 
+
+    /* ===================================================== */
+    /* DRAWER                                                  */
+    /* ===================================================== */
+
     .drawer {
       position: fixed;
+
       inset: 0;
-      background: rgba(0,0,0,.95);
+
+      background: rgba(0, 0, 0, .97);
+
       display: flex;
+
       flex-direction: column;
+
       transform: translateY(100%);
+
       transition: transform .2s ease;
+
       z-index: 50;
     }
+
 
     .drawer.open {
       transform: translateY(0);
     }
 
+
     .drawer-content {
       overflow-y: auto;
+
       padding: 1rem;
+
       display: flex;
+
       flex-direction: column;
+
       align-items: center;
+
+      background: #000;
     }
+
 
     .drawer-content img {
       width: 100%;
+
       max-width: 800px;
+
       height: auto;
+
       margin-bottom: 1rem;
     }
 
+
+    /* ===================================================== */
+    /* DRAWER TOPBAR                                          */
+    /* ===================================================== */
+
     #drawer .topbar {
       display: flex;
+
       align-items: center;
+
       justify-content: center;
+
       position: relative;
+
       padding: 1rem;
-      background: #b8860b;
+
+      background: #080808;
+
+      border-bottom: 1px solid #292929;
     }
+
 
     #drawer .topbar #closeDrawer {
       position: absolute;
+
       left: 1rem;
     }
 
+
     #drawer .topbar #toggleSlide {
       position: absolute;
+
       right: 1rem;
     }
+
+
+    #drawer .topbar #drawerTitle {
+      margin: 0;
+
+      font-family: 'Cinzel', serif;
+
+      background: linear-gradient(
+        180deg,
+        #f7e6b5 0%,
+        #e4c27d 25%,
+        #c89a4c 50%,
+        #a8732d 75%,
+        #dfba70 100%
+      );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      -webkit-text-fill-color: transparent;
+
+      text-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.9);
+    }
+
+
+    /* ===================================================== */
+    /* BARRA DE ROLAGEM                                       */
+    /* ===================================================== */
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+
+    ::-webkit-scrollbar-track {
+      background: #050505;
+    }
+
+
+    ::-webkit-scrollbar-thumb {
+      background: #252525;
+
+      border-radius: 10px;
+    }
+
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #383838;
+    }
+
 
   </style>
 </head>
@@ -353,13 +863,6 @@
     <a href="loja.html" class="btn-loja">
       Loja
     </a>
-
-    <!--
-      ESTE BOTÃO COMEÇA INVISÍVEL.
-
-      O Firebase Authentication decidirá
-      se ele será exibido.
-    -->
 
     <a
       href="admin.html"
@@ -507,6 +1010,11 @@
       firebase.database();
 
 
+    let usuarioLogado = null;
+
+    let autenticacaoVerificada = false;
+
+
     /* ===================================================== */
     /* E-MAILS COM ACESSO ADMINISTRATIVO                      */
     /* ===================================================== */
@@ -530,41 +1038,15 @@
       );
 
 
-    /*
-      Sempre começa escondido.
-
-      Isso evita que o botão apareça
-      por alguns segundos para usuários
-      não autorizados enquanto o Firebase
-      restaura a sessão.
-    */
-
     btnAdmin.style.display =
       "none";
 
 
-    /*
-      Esta função NÃO procura o e-mail
-      no localStorage.
-
-      Ela recebe diretamente o objeto
-      "user" fornecido pelo Firebase Authentication.
-    */
-
     function verificarAcessoAdministrativo(user) {
-
-      /*
-        Primeiro remove o acesso visual.
-      */
 
       btnAdmin.style.display =
         "none";
 
-
-      /*
-        Se não existe usuário autenticado,
-        termina aqui.
-      */
 
       if (!user) {
 
@@ -577,12 +1059,6 @@
       }
 
 
-      /*
-        O Firebase informou o e-mail
-        da conta atualmente autenticada
-        neste navegador/dispositivo.
-      */
-
       const emailFirebase =
         (user.email || "")
           .trim()
@@ -594,11 +1070,6 @@
         emailFirebase
       );
 
-
-      /*
-        Compara o e-mail recebido do Firebase
-        com a lista de administradores.
-      */
 
       if (
         EMAILS_AUTORIZADOS.includes(
@@ -729,20 +1200,24 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
         "grade"
       );
 
+
     const novelGrid =
       document.getElementById(
         "novelGrid"
       );
+
 
     const btnComment =
       document.getElementById(
         "btnComment"
       );
 
+
     const textarea =
       document.getElementById(
         "commentText"
       );
+
 
     const listaComentarios =
       document.getElementById(
@@ -764,6 +1239,7 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
         document.createElement(
           "div"
         );
+
 
       card.className =
         "card-book";
@@ -965,11 +1441,6 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
     auth.onAuthStateChanged(
       user => {
 
-        /*
-          A partir daqui, o Firebase terminou
-          de verificar/restaurar a sessão.
-        */
-
         usuarioLogado =
           user;
 
@@ -982,9 +1453,11 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
           "================================="
         );
 
+
         console.log(
           "FIREBASE AUTHENTICATION"
         );
+
 
         console.log(
           "Usuário:",
@@ -993,6 +1466,7 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
             : "nenhum"
         );
 
+
         console.log(
           "UID:",
           user
@@ -1000,21 +1474,11 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
             : "nenhum"
         );
 
+
         console.log(
           "================================="
         );
 
-
-        /*
-          ESTA É A PARTE IMPORTANTE.
-
-          O Firebase fornece diretamente
-          o usuário atualmente autenticado.
-
-          Não estamos lendo o login do index.html.
-          Não estamos usando localStorage para
-          descobrir quem está logado.
-        */
 
         verificarAcessoAdministrativo(
           user
@@ -1034,6 +1498,7 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 
           btnComment.disabled =
             false;
+
 
           btnComment.innerText =
             "Enviar";
@@ -1055,6 +1520,7 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
           btnComment.disabled =
             false;
 
+
           btnComment.innerText =
             "Entrar para comentar";
 
@@ -1068,6 +1534,7 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 
                 botao.disabled =
                   true;
+
 
                 botao.innerText =
                   "🔒";
@@ -1340,6 +1807,7 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
         btnComment.disabled =
           true;
 
+
         btnComment.innerText =
           "Enviando...";
 
@@ -1437,6 +1905,7 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 
         btnComment.disabled =
           false;
+
 
         btnComment.innerText =
           "Enviar";
@@ -1582,4 +2051,3 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 </body>
 
 </html>
-
