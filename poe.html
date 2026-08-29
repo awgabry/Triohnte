@@ -1,8 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Biblioteca</title>
 
 <!-- Fonte Cinzel -->
@@ -11,8 +13,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* CSS ATUALIZADO: DOURADO + CINZEL */
-body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
+
+/* ============================= */
+/* CONFIGURAÇÕES GERAIS */
+/* ============================= */
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #000;
+  color: #e7e9ee;
+}
+
+/* ============================= */
+/* BARRA SUPERIOR */
+/* ============================= */
 
 .topbar {
   padding: 1rem;
@@ -29,7 +44,36 @@ body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
   letter-spacing: 1px;
 }
 
-.layout { display: flex; min-height: calc(100vh - 58px); }
+/* Botão Loja */
+
+.btn-loja {
+  margin-left: auto;
+  padding: 0.55rem 1rem;
+  border-radius: 12px;
+  background: #000;
+  color: #d4af37;
+  text-decoration: none;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.btn-loja:hover {
+  background: #1a1a1a;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* ============================= */
+/* LAYOUT */
+/* ============================= */
+
+.layout {
+  display: flex;
+  min-height: calc(100vh - 58px);
+}
 
 .sidebar {
   background: #000;
@@ -48,7 +92,10 @@ body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
   align-items: flex-start;
 }
 
-/* Grade de livros principal */
+/* ============================= */
+/* GRADE PRINCIPAL */
+/* ============================= */
+
 #grade {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -56,7 +103,10 @@ body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
   flex: 1;
 }
 
-/* Coluna de Contos de Walingardyn */
+/* ============================= */
+/* CONTOS DE WALINGARDYN */
+/* ============================= */
+
 #novelGrid {
   width: 300px;
   background: #b8860b;
@@ -77,7 +127,10 @@ body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
   font-family: 'Cinzel', serif;
 }
 
-/* Estilo do Card */
+/* ============================= */
+/* CARDS */
+/* ============================= */
+
 .card-book {
   background: #b8860b;
   border-radius: 20px;
@@ -129,6 +182,10 @@ body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
   white-space: pre-line;
 }
 
+/* ============================= */
+/* BOTÕES */
+/* ============================= */
+
 .actions {
   display: flex;
   gap: 0.8rem;
@@ -161,6 +218,10 @@ body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
   filter: grayscale(1);
 }
 
+/* ============================= */
+/* ESTRELAS */
+/* ============================= */
+
 .fav[aria-pressed="true"]::before {
   content: "★";
   color: #fff;
@@ -176,7 +237,10 @@ body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
   font-size: 0.75rem;
 }
 
-/* Comentários */
+/* ============================= */
+/* COMENTÁRIOS */
+/* ============================= */
+
 .comment-section {
   margin-top: 2rem;
   background: #1a0901;
@@ -229,16 +293,19 @@ body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
   margin-top: 6px;
 }
 
-/* Drawer */
+/* ============================= */
+/* DRAWER */
+/* ============================= */
+
 .drawer {
   position: fixed;
-  inset:0;
+  inset: 0;
   background: rgba(0,0,0,.95);
-  display:flex;
-  flex-direction:column;
-  transform:translateY(100%);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
   transition: transform .2s ease;
-  z-index:50;
+  z-index: 50;
 }
 
 .drawer.open {
@@ -246,19 +313,21 @@ body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
 }
 
 .drawer-content {
-  overflow-y:auto;
-  padding:1rem;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .drawer-content img {
-  width:100%;
+  width: 100%;
   max-width: 800px;
-  height:auto;
-  margin-bottom:1rem;
+  height: auto;
+  margin-bottom: 1rem;
 }
+
+/* Barra do Drawer */
 
 #drawer .topbar {
   display: flex;
@@ -278,126 +347,287 @@ body { margin: 0; font-family: sans-serif; background: #000; color: #e7e9ee; }
   position: absolute;
   right: 1rem;
 }
+
 </style>
 </head>
 
 <body>
 
-<header class="topbar">Biblioteca</header>
+<!-- ============================= -->
+<!-- BARRA SUPERIOR -->
+<!-- ============================= -->
+
+<header class="topbar">
+
+  <span>Biblioteca</span>
+
+  <!-- BOTÃO DA LOJA -->
+  <a href="loja.html" class="btn-loja">
+    Loja
+  </a>
+
+</header>
+
+
+<!-- ============================= -->
+<!-- LAYOUT PRINCIPAL -->
+<!-- ============================= -->
 
 <div class="layout">
 
-    <aside class="sidebar">
-        <h2>Suas obras reunidas em um só lugar.</h2>
+  <!-- SIDEBAR -->
 
-        <div class="comment-section">
-            <h3>Deixe seu comentário</h3>
+  <aside class="sidebar">
 
-            <textarea id="commentText" placeholder="O que você está lendo hoje?"></textarea>
+    <h2>
+      Suas obras reunidas em um só lugar.
+    </h2>
 
-            <button class="btn-comment" id="btnComment">Enviar</button>
+    <div class="comment-section">
 
-            <div id="listaComentarios"></div>
-        </div>
-    </aside>
+      <h3>
+        Deixe seu comentário
+      </h3>
 
-    <main class="main">
+      <textarea
+        id="commentText"
+        placeholder="O que você está lendo hoje?"
+      ></textarea>
 
-        <div id="grade"></div>
+      <button
+        class="btn-comment"
+        id="btnComment"
+      >
+        Enviar
+      </button>
 
-        <div id="novelGrid">
-            <h2>Contos de Walingardyn</h2>
-        </div>
-
-    </main>
-</div>
-
-<div id="drawer" class="drawer" aria-hidden="true">
-
-    <div class="topbar">
-
-        <button class="btn" id="closeDrawer">Fechar</button>
-
-        <h2 id="drawerTitle"></h2>
-
-        <button class="btn" id="toggleSlide">Slide</button>
+      <div id="listaComentarios"></div>
 
     </div>
 
-    <div class="drawer-content"></div>
+  </aside>
+
+
+  <!-- CONTEÚDO -->
+
+  <main class="main">
+
+    <!-- GRADE PRINCIPAL -->
+
+    <div id="grade"></div>
+
+
+    <!-- CONTOS DE WALINGARDYN -->
+
+    <div id="novelGrid">
+
+      <h2>
+        Contos de Walingardyn
+      </h2>
+
+    </div>
+
+  </main>
 
 </div>
 
+
+<!-- ============================= -->
+<!-- DRAWER -->
+<!-- ============================= -->
+
+<div
+  id="drawer"
+  class="drawer"
+  aria-hidden="true"
+>
+
+  <div class="topbar">
+
+    <button
+      class="btn"
+      id="closeDrawer"
+    >
+      Fechar
+    </button>
+
+    <h2 id="drawerTitle"></h2>
+
+    <button
+      class="btn"
+      id="toggleSlide"
+    >
+      Slide
+    </button>
+
+  </div>
+
+  <div class="drawer-content"></div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- FIREBASE -->
+<!-- ============================= -->
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+
 <script>
+
+/* ============================= */
+/* FIREBASE */
+/* ============================= */
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBPSH4g1rtk27n9wCCBJZ2GK1UKCMH-Yjs",
-  authDomain: "login-sw-14940.firebaseapp.com",
-  databaseURL: "https://login-sw-14940-default-rtdb.europe-west1.firebasedatabase.app/", 
-  projectId: "login-sw-14940",
-  appId: "1:252978150700:web:2c7d3997389f7675058089"
+
+  apiKey:
+    "AIzaSyBPSH4g1rtk27n9wCCBJZ2GK1UKCMH-Yjs",
+
+  authDomain:
+    "login-sw-14940.firebaseapp.com",
+
+  databaseURL:
+    "https://login-sw-14940-default-rtdb.europe-west1.firebasedatabase.app/",
+
+  projectId:
+    "login-sw-14940",
+
+  appId:
+    "1:252978150700:web:2c7d3997389f7675058089"
+
 };
 
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
+
 const db = firebase.database();
 
+
+/* ============================= */
+/* LIVROS */
+/* ============================= */
+
 const livros = [
+
   {
-    id: 1, 
-    titulo: "Melissa", 
-    autor: "Wellington Novaes", 
-    capa: "link_da_capa.png", 
-    pasta: "paginas_compendio", 
-    totalPaginas: 6, 
-    prefixo: "Pagina ", 
-    synopsis: "Composto ao longo de treze anos, Melissa — Desespero, Amor e Morte, é uma antologia de contos de terror, realismo mágico, crônicas e confissões..."
+    id: 1,
+
+    titulo: "Melissa",
+
+    autor: "Wellington Novaes",
+
+    capa: "link_da_capa.png",
+
+    pasta: "paginas_compendio",
+
+    totalPaginas: 6,
+
+    prefixo: "Pagina ",
+
+    synopsis:
+      "Composto ao longo de treze anos, Melissa — Desespero, Amor e Morte, é uma antologia de contos de terror, realismo mágico, crônicas e confissões..."
   },
 
   {
-    id: 2, 
-    titulo: "Triohnte", 
-    autor: "Gabryell Aweryan", 
-    capa: "Coloque aqui seu png", 
-    pasta: "Triohnte", 
-    totalPaginas: 3, 
-    prefixo: "", 
-    synopsis: "No tumultuoso mundo de Walingardyn, onde profecias antigas e guerras entre nobres definem o destino de gerações..."
-  },
-]; 
+    id: 2,
 
-const novels = [
-  {
-    id:101, 
-    titulo:"Segredários", 
-    autor:"Gabryell Aweryan", 
-    capa:"Coloque aqui seu png", 
-    pasta:"S CAPS", 
-    totalPaginas:1, 
-    prefixo: "S CAP ", 
-    synopsis: "Marco, João e Lucas vivem a rotina sem graça da Kenya Enlatados, uma pequena empresa de São Paulo que enlata legumes e sardinhas. Mas a monotonia acaba quando recebem um telefonema inesperado de Cleber F. Junior, do Amazonas: investigar um parque aquático abandonado, palco de uma tragédia que ainda assombra o local.\n\nAproveitando que suas férias estavam chegando, inventam um retiro espiritual para justificar a ausência, e claro, o chefe não entende nada! Munidos de curiosidade, improviso e sua van carateristicamente cômica, os Segredários partem rumo ao Amazonas.\n\nNo parque, descobrem que Cleber desapareceu misteriosamente e que a missão agora é coordenada por seu filho, Victor, que quer resolver o problema da propriedade para vendê-la. Entre mistérios, absurdos e perigos que ninguém ousaria enfrentar, Marco, João e Lucas vão aprender que segredos enterrados nem sempre ficam onde deveriam, e que a linha entre o banal e o bizarro pode ser mais fina do que imaginam."
+    titulo: "Triohnte",
+
+    autor: "Gabryell Aweryan",
+
+    capa: "Coloque aqui seu png",
+
+    pasta: "Triohnte",
+
+    totalPaginas: 3,
+
+    prefixo: "",
+
+    synopsis:
+      "No tumultuoso mundo de Walingardyn, onde profecias antigas e guerras entre nobres definem o destino de gerações..."
   }
+
 ];
 
-const grade = document.getElementById("grade");
-const novelGrid = document.getElementById("novelGrid");
 
-function renderCard(item, container, includeFav=false){
-  const card = document.createElement("div");
+/* ============================= */
+/* CONTOS */
+/* ============================= */
 
-  card.className = "card-book";
+const novels = [
+
+  {
+    id: 101,
+
+    titulo: "Segredários",
+
+    autor: "Gabryell Aweryan",
+
+    capa: "Coloque aqui seu png",
+
+    pasta: "S CAPS",
+
+    totalPaginas: 1,
+
+    prefixo: "S CAP ",
+
+    synopsis:
+      "Marco, João e Lucas vivem a rotina sem graça da Kenya Enlatados, uma pequena empresa de São Paulo que enlata legumes e sardinhas. Mas a monotonia acaba quando recebem um telefonema inesperado de Cleber F. Junior, do Amazonas: investigar um parque aquático abandonado, palco de uma tragédia que ainda assombra o local.\n\nAproveitando que suas férias estavam chegando, inventam um retiro espiritual para justificar a ausência, e claro, o chefe não entende nada! Munidos de curiosidade, improviso e sua van carateristicamente cômica, os Segredários partem rumo ao Amazonas.\n\nNo parque, descobrem que Cleber desapareceu misteriosamente e que a missão agora é coordenada por seu filho, Victor, que quer resolver o problema da propriedade para vendê-la. Entre mistérios, absurdos e perigos que ninguém ousaria enfrentar, Marco, João e Lucas vão aprender que segredos enterrados nem sempre ficam onde deveriam, e que a linha entre o banal e o bizarro pode ser mais fina do que imaginam."
+  }
+
+];
+
+
+/* ============================= */
+/* ELEMENTOS */
+/* ============================= */
+
+const grade =
+  document.getElementById("grade");
+
+const novelGrid =
+  document.getElementById("novelGrid");
+
+
+/* ============================= */
+/* RENDER DOS CARDS */
+/* ============================= */
+
+function renderCard(
+  item,
+  container,
+  includeFav = false
+) {
+
+  const card =
+    document.createElement("div");
+
+  card.className =
+    "card-book";
 
   card.innerHTML = `
+
     <div class="cover">
-      <img src="${item.capa}">
+
+      <img
+        src="${item.capa}"
+      >
+
     </div>
 
+
     <div class="meta">
-      <h3>${item.titulo}</h3>
+
+      <h3>
+        ${item.titulo}
+      </h3>
 
       <div class="author">
         Por: ${item.autor}
@@ -406,238 +636,489 @@ function renderCard(item, container, includeFav=false){
       <div class="synopsis">
         ${item.synopsis}
       </div>
+
     </div>
+
 
     <div class="actions">
 
-      <button class="btn ler" data-id="${item.id}" disabled>
+      <button
+        class="btn ler"
+        data-id="${item.id}"
+        disabled
+      >
         Ler
       </button>
 
-      ${includeFav ? `
-      <button class="btn fav" aria-pressed="false" data-id="${item.id}">
-        <span class="star-count" id="stars-${item.id}">0</span>
-      </button>
-      ` : ""}
+      ${
+        includeFav
+        ?
+        `
+        <button
+          class="btn fav"
+          aria-pressed="false"
+          data-id="${item.id}"
+        >
 
-    </div>`;
+          <span
+            class="star-count"
+            id="stars-${item.id}"
+          >
+            0
+          </span>
+
+        </button>
+        `
+        :
+        ""
+      }
+
+    </div>
+
+  `;
 
   container.appendChild(card);
+
 }
 
-livros.forEach(l => renderCard(l, grade, true));
-novels.forEach(n => renderCard(n, novelGrid, true));
 
-/* --- GESTÃO DE ACESSO --- */
+/* Renderiza livros */
 
-function atualizarPermissoesBotao(emailLogado) {
+livros.forEach(
+  l => renderCard(l, grade, true)
+);
 
-    const permissoes =
-        JSON.parse(localStorage.getItem('sw_permissoes')) || [];
 
-    const botoesLer =
-        document.querySelectorAll('.btn.ler');
+/* Renderiza contos */
 
-    botoesLer.forEach(botao => {
+novels.forEach(
+  n => renderCard(n, novelGrid, true)
+);
 
-        const idDoLivro =
-            botao.getAttribute('data-id');
 
-        const temAcesso =
-            permissoes.some(p => 
-                p.email.toLowerCase() === emailLogado.toLowerCase() && 
-                p.bookId.toString() === idDoLivro.toString()
-            );
+/* ============================= */
+/* GESTÃO DE ACESSO */
+/* ============================= */
 
-        if (temAcesso) {
+function atualizarPermissoesBotao(
+  emailLogado
+) {
 
-            botao.disabled = false;
-            botao.innerText = "Ler";
+  const permissoes =
+    JSON.parse(
+      localStorage.getItem(
+        'sw_permissoes'
+      )
+    ) || [];
 
-        } else {
 
-            botao.disabled = true;
-            botao.innerText = "🔒";
-
-        }
-    });
-}
-
-auth.onAuthStateChanged(user => {
-
-    if (user && user.email) {
-        atualizarPermissoesBotao(user.email);
-    }
-
-});
-
-/* --- EVENTOS DE CLIQUE --- */
-
-document.body.addEventListener("click", e => {
-
-  const btnLer =
-      e.target.closest(".ler");
-
-  if(btnLer && !btnLer.disabled){
-
-    const id =
-        btnLer.dataset.id;
-
-    const item =
-        [...livros, ...novels].find(x => x.id == id);
-
-    if(item)
-        openDrawer(item);
-
-    return;
-  }
-
-  const btnFav =
-      e.target.closest(".fav");
-
-  if(btnFav){
-
-    const id =
-        btnFav.dataset.id;
-
-    btnFav.setAttribute(
-        "aria-pressed",
-        "true"
+  const botoesLer =
+    document.querySelectorAll(
+      '.btn.ler'
     );
 
-    db.ref("estrelas/"+id)
-      .transaction(v => (v||0)+1);
+
+  botoesLer.forEach(botao => {
+
+    const idDoLivro =
+      botao.getAttribute(
+        'data-id'
+      );
+
+
+    const temAcesso =
+      permissoes.some(p =>
+
+        p.email.toLowerCase()
+        ===
+        emailLogado.toLowerCase()
+
+        &&
+
+        p.bookId.toString()
+        ===
+        idDoLivro.toString()
+
+      );
+
+
+    if (temAcesso) {
+
+      botao.disabled = false;
+
+      botao.innerText = "Ler";
+
+    }
+
+    else {
+
+      botao.disabled = true;
+
+      botao.innerText = "🔒";
+
+    }
+
+  });
+
+}
+
+
+/* ============================= */
+/* AUTENTICAÇÃO */
+/* ============================= */
+
+auth.onAuthStateChanged(
+  user => {
+
+    if (
+      user &&
+      user.email
+    ) {
+
+      atualizarPermissoesBotao(
+        user.email
+      );
+
+    }
+
   }
+);
 
-});
 
-function openDrawer(item){
+/* ============================= */
+/* EVENTOS DE CLIQUE */
+/* ============================= */
+
+document.body.addEventListener(
+  "click",
+  e => {
+
+    /* Botão Ler */
+
+    const btnLer =
+      e.target.closest(".ler");
+
+
+    if (
+      btnLer &&
+      !btnLer.disabled
+    ) {
+
+      const id =
+        btnLer.dataset.id;
+
+
+      const item =
+        [
+          ...livros,
+          ...novels
+        ].find(
+          x => x.id == id
+        );
+
+
+      if (item) {
+
+        openDrawer(item);
+
+      }
+
+      return;
+
+    }
+
+
+    /* Favoritos */
+
+    const btnFav =
+      e.target.closest(".fav");
+
+
+    if (btnFav) {
+
+      const id =
+        btnFav.dataset.id;
+
+
+      btnFav.setAttribute(
+        "aria-pressed",
+        "true"
+      );
+
+
+      db.ref(
+        "estrelas/" + id
+      )
+      .transaction(
+        v => (v || 0) + 1
+      );
+
+    }
+
+  }
+);
+
+
+/* ============================= */
+/* ABRIR LIVRO */
+/* ============================= */
+
+function openDrawer(item) {
 
   const drawer =
-      document.getElementById("drawer");
+    document.getElementById(
+      "drawer"
+    );
+
 
   const content =
-      document.querySelector(".drawer-content");
+    document.querySelector(
+      ".drawer-content"
+    );
 
-  document.getElementById("drawerTitle")
-      .textContent = item.titulo;
+
+  document.getElementById(
+    "drawerTitle"
+  ).textContent =
+    item.titulo;
+
 
   content.innerHTML = "";
 
-  for(let i=1; i<=item.totalPaginas; i++){
+
+  for (
+    let i = 1;
+    i <= item.totalPaginas;
+    i++
+  ) {
 
     const img =
-        document.createElement("img");
+      document.createElement(
+        "img"
+      );
+
 
     img.src =
-        `${item.pasta}/${item.prefixo}${i}.png`;
+      `${item.pasta}/${item.prefixo}${i}.png`;
+
 
     content.appendChild(img);
+
   }
 
-  drawer.classList.add("open");
 
-  document.body.style.overflow = "hidden";
+  drawer.classList.add(
+    "open"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
 }
 
-document.getElementById("closeDrawer").onclick = () => {
 
-  document.getElementById("drawer")
-      .classList.remove("open");
+/* ============================= */
+/* FECHAR LIVRO */
+/* ============================= */
 
-  document.body.style.overflow = "auto";
+document.getElementById(
+  "closeDrawer"
+).onclick = () => {
+
+  document.getElementById(
+    "drawer"
+  ).classList.remove(
+    "open"
+  );
+
+
+  document.body.style.overflow =
+    "auto";
 
 };
 
-/* --- SISTEMA DE COMENTÁRIOS --- */
+
+/* ============================= */
+/* COMENTÁRIOS */
+/* ============================= */
 
 const btnComment =
-    document.getElementById("btnComment");
+  document.getElementById(
+    "btnComment"
+  );
+
 
 const textarea =
-    document.getElementById("commentText");
+  document.getElementById(
+    "commentText"
+  );
+
 
 btnComment.onclick = () => {
 
-    const user =
-        auth.currentUser;
+  const user =
+    auth.currentUser;
 
-    if(!user)
-        return alert("Faça login para comentar.");
 
-    if(!textarea.value.trim())
-        return;
+  if (!user) {
 
-    db.ref(`usuarios/${user.uid}`)
-      .once('value', snap => {
+    return alert(
+      "Faça login para comentar."
+    );
 
-        const d =
-            snap.val() || {};
+  }
 
-        db.ref("comentarios").push({
 
-            texto: textarea.value,
+  if (
+    !textarea.value.trim()
+  ) {
 
-            data: Date.now(),
+    return;
 
-            pais:
-              `- de ${d.nome || user.email.split('@')[0]} (${d.pais || 'Walingardyn'})`
+  }
 
-        });
 
-        textarea.value = "";
-    });
+  db.ref(
+    `usuarios/${user.uid}`
+  )
+  .once(
+    'value',
+    snap => {
+
+      const d =
+        snap.val() || {};
+
+
+      db.ref(
+        "comentarios"
+      )
+      .push({
+
+        texto:
+          textarea.value,
+
+        data:
+          Date.now(),
+
+        pais:
+          `- de ${
+            d.nome ||
+            user.email.split('@')[0]
+          } (${
+            d.pais ||
+            'Walingardyn'
+          })`
+
+      });
+
+
+      textarea.value = "";
+
+    }
+  );
+
 };
 
-db.ref("comentarios")
-  .on("child_added", (snapshot) => {
+
+/* ============================= */
+/* CARREGAR COMENTÁRIOS */
+/* ============================= */
+
+db.ref(
+  "comentarios"
+)
+.on(
+  "child_added",
+  snapshot => {
 
     const dados =
-        snapshot.val();
+      snapshot.val();
+
 
     const lista =
-        document.getElementById("listaComentarios");
+      document.getElementById(
+        "listaComentarios"
+      );
+
 
     const div =
-        document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     div.className =
-        "comentario-item";
+      "comentario-item";
+
 
     div.innerHTML = `
-        <p class="comentario-texto">
-          ${dados.texto}
-        </p>
 
-        <small class="comentario-meta">
-          ${dados.pais} • ${new Date(dados.data).toLocaleDateString()}
-        </small>
+      <p class="comentario-texto">
+        ${dados.texto}
+      </p>
+
+      <small class="comentario-meta">
+
+        ${dados.pais}
+
+        •
+
+        ${
+          new Date(
+            dados.data
+          ).toLocaleDateString()
+        }
+
+      </small>
+
     `;
+
 
     lista.prepend(div);
 
-});
+  }
+);
 
-/* --- ESTRELAS --- */
 
-[...livros, ...novels].forEach(item => {
+/* ============================= */
+/* ESTRELAS */
+/* ============================= */
 
-  db.ref("estrelas/"+item.id)
-    .on("value", snap => {
+[
+  ...livros,
+  ...novels
+].forEach(
+  item => {
 
-      const el =
+    db.ref(
+      "estrelas/" + item.id
+    )
+    .on(
+      "value",
+      snap => {
+
+        const el =
           document.getElementById(
-              "stars-"+item.id
+            "stars-" + item.id
           );
 
-      if(el)
-        el.textContent =
+
+        if (el) {
+
+          el.textContent =
             snap.val() || 0;
 
-    });
+        }
 
-});
+      }
+    );
+
+  }
+);
+
 </script>
 
 </body>
 </html>
+```
