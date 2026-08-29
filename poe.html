@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -67,6 +68,31 @@
     }
 
     .btn-loja:hover {
+      background: #1a1a1a;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+
+    /* ============================= */
+    /* BOTÃO RESTRITO                 */
+    /* ============================= */
+
+    .btn-restrito {
+      display: none;
+      padding: 0.55rem 1rem;
+      border-radius: 12px;
+      background: #000;
+      color: #d4af37;
+      text-decoration: none;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-restrito:hover {
       background: #1a1a1a;
       color: #fff;
       transform: translateY(-1px);
@@ -392,6 +418,16 @@
       Loja
     </a>
 
+    <!-- BOTÃO RESTRITO -->
+    <!-- Só aparece para os e-mails autorizados pelo Firebase -->
+    <a
+      href="admin.html"
+      class="btn-restrito"
+      id="btnRestrito"
+    >
+      Administração
+    </a>
+
   </header>
 
 
@@ -548,6 +584,77 @@
     const auth = firebase.auth();
 
     const db = firebase.database();
+
+
+    /* ===================================================== */
+    /* E-MAILS AUTORIZADOS PARA O BOTÃO RESTRITO             */
+    /* ===================================================== */
+
+    const emailsAutorizados = [
+
+      "mr.gabriel04.07.02@hotmail",
+
+      "ga7144492@gmail.com"
+
+    ];
+
+
+    /* ===================================================== */
+    /* BOTÃO RESTRITO                                        */
+    /* ===================================================== */
+
+    const btnRestrito =
+      document.getElementById("btnRestrito");
+
+
+    function atualizarBotaoRestrito(user) {
+
+      /*
+        Por segurança, começa sempre escondido.
+      */
+
+      btnRestrito.style.display = "none";
+
+
+      /*
+        Se não existe usuário, não mostra.
+      */
+
+      if (!user || !user.email) {
+        return;
+      }
+
+
+      /*
+        Normaliza o e-mail para evitar
+        diferença entre letras maiúsculas/minúsculas.
+      */
+
+      const email =
+        user.email.trim().toLowerCase();
+
+
+      /*
+        Verifica se o e-mail está na lista.
+      */
+
+      const autorizado =
+        emailsAutorizados.includes(email);
+
+
+      /*
+        Só os e-mails autorizados
+        recebem o botão.
+      */
+
+      if (autorizado) {
+
+        btnRestrito.style.display =
+          "inline-block";
+
+      }
+
+    }
 
 
     /* ===================================================== */
@@ -896,6 +1003,13 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
             ? user.email
             : "nenhum usuário"
         );
+
+
+        /* ================================================= */
+        /* ATUALIZA BOTÃO RESTRITO                            */
+        /* ================================================= */
+
+        atualizarBotaoRestrito(user);
 
 
         /* ===================================== */
@@ -1517,3 +1631,4 @@ No parque, descobrem que Cleber desapareceu misteriosamente e que a missão agor
 </body>
 
 </html>
+```
