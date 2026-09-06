@@ -117,6 +117,7 @@
         .forum-post {
             border-bottom: 1px solid #33260c;
             padding: .5rem 0;
+            margin-top: 0.5rem;
         }
         
         iframe {
@@ -126,7 +127,7 @@
             border-radius: 12px;
         }
 
-        /* Estilos para a tabela de gestão */
+        /* Estilos para tabelas de gestão e finanças */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -183,7 +184,7 @@
 
         <div id="demo" class="section active">
             <div class="card">
-                <h3 style="color:#f3d06c">Leitores Globais</h3>
+                <h3 style="color:#f3d06c">Leitores Globais (Clique no mapa para adicionar um alfinete)</h3>
                 <div id="map"></div>
             </div>
         </div>
@@ -191,14 +192,28 @@
         <div id="fin" class="section">
             <div class="card">
                 <h3 style="color:#f3d06c">Histórico de Vendas</h3>
-                <ul id="sales"></ul>
+                <div style="display:flex; gap:5px;">
+                    <input id="saleItem" placeholder="Item / Livro">
+                    <input id="saleValue" placeholder="Valor (R$)">
+                    <button onclick="adicionarVenda()" style="width:150px">Adicionar</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item / Descrição</th>
+                            <th>Valor</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesList"></tbody>
+                </table>
             </div>
         </div>
 
         <div id="plan" class="section">
             <div class="card">
                 <h3 style="color:#f3d06c">Fórum Interno</h3>
-                <textarea id="idea"></textarea>
+                <textarea id="idea" placeholder="Escreva sua ideia ou planejamento..."></textarea>
                 <button onclick="postIdea()">Publicar</button>
                 <div id="forum"></div>
             </div>
@@ -241,6 +256,7 @@
     <script>
         const users = { 'G200207': 'Gabriel' };
         let currentUser = '';
+        const DB_URL = 'https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app/';
 
         function login() {
             const code = document.getElementById('code').value.trim();
@@ -250,6 +266,7 @@
                 document.getElementById('app').classList.remove('hidden');
                 initMap(); 
                 loadSales(); 
+                renderForum();
                 renderAccessList();
             } else {
                 document.getElementById('error').innerText = 'Código inválido';
@@ -262,6 +279,9 @@
             el.classList.add('active');
             document.getElementById(id).classList.add('active');
             if (id === 'gestao') renderAccessList();
+            if (id === 'fin') loadSales();
+            if (id === 'plan') renderForum();
+            if (id === 'demo' && map) setTimeout(() => map.invalidateSize(), 200);
         }
 
         /* Lógica de Gestão de Acesso */
@@ -273,7 +293,6 @@
 
             let permissoes = JSON.parse(localStorage.getItem('sw_permissoes')) || [];
             
-            // Evitar duplicados
             if (!permissoes.find(p => p.email === email && p.bookId === bookId)) {
                 permissoes.push({ email, bookId });
                 localStorage.setItem('sw_permissoes', JSON.stringify(permissoes));
@@ -306,30 +325,126 @@
             renderAccessList();
         }
 
-        /* Funções Originais */
+        /* Lógica de Finanças / Histórico de Vendas (Firebase Realtime Database) */
+        async function loadSales() {
+            try {
+                const response = await fetch(`${DB_URL}/vendas.json`);
+                const data = await response.json() || {};
+                const list = document.getElementById('salesList');
+                list.innerHTML = '';
+
+                Object.keys(data).forEach(key => {
+                    const venda = data[key];
+                    const row = `<tr>
+                        <td>${venda.item}</td>
+                        <td>${venda.valor}</td>
+                        <td><button class="btn-del" onclick="removerVenda('${key}')">Excluir</button></td>
+                    </tr>`;
+                    list.innerHTML += row;
+                });
+            } catch (e) {
+                console.error("Erro ao carregar vendas", e);
+            }
+        }
+
+        async function adicionarVenda() {
+            const item = document.getElementById('saleItem').value.trim();
+            const valor = document.getElementById('saleValue').value.trim();
+
+            if (!item || !valor) return alert("Preencha todos os campos da venda");
+
+            try {
+                await fetch(`${DB_URL}/vendas.json`, {
+                    method: 'POST',
+                    body: JSON.stringify({ item, valor })
+                });
+                document.getElementById('saleItem').value = '';
+                document.getElementById('saleValue').value = '';
+                loadSales();
+            } catch (e) {
+                console.error("Erro ao adicionar venda", e);
+            }
+        }
+
+        async function removerVenda(key) {
+            try {
+                await fetch(`${DB_URL}/vendas/${key}.json`, {
+                    method: 'DELETE'
+                });
+                loadSales();
+            } catch (e) {
+                console.error("Erro ao remover venda", e);
+            }
+        }
+
+        /* Lógica de Planejamentos / Fórum Interno (Persistente com LocalStorage) */
+        function postIdea() {
+            const text = document.getElementById('idea').value.trim();
+            if (!text) return alert("Escreva algo para publicar");
+
+            let posts = JSON.parse(localStorage.getItem('sw_forum')) || [];
+            posts.unshift({ user: currentUser, text, date: new Date().toLocaleString() });
+            localStorage.setItem('sw_forum', JSON.stringify(posts));
+
+            document.getElementById('idea').value = '';
+            renderForum();
+        }
+
+        function renderForum() {
+            const forum = document.getElementById('forum');
+            forum.innerHTML = '';
+            let posts = JSON.parse(localStorage.getItem('sw_forum')) || [];
+
+            posts.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'forum-post';
+                div.innerHTML = `<strong style="color:#f3d06c">${p.user}</strong> <span class="small">(${p.date})</span><p style="margin:5px 0 0 0">${p.text}</p>`;
+                forum.appendChild(div);
+            });
+        }
+
+        /* Lógica de Demografia / Leitores Globais (Mapa interativo com alfinete vermelho) */
         let map;
         function initMap() {
             if (map) return;
             map = L.map('map').setView([20, 0], 2);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            
-            setInterval(() => {
-                const lat = Math.random() * 140 - 70; 
-                const lng = Math.random() * 360 - 180;
-                L.circle([lat, lng], { radius: 500000, color: '#c59b27' }).addTo(map);
-            }, 3000);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(map);
+
+            // Carregar alfinetes salvos no localStorage se houver
+            let pins = JSON.parse(localStorage.getItem('sw_pins')) || [];
+            pins.forEach(pos => {
+                addRedPin(pos.lat, pos.lng, false);
+            });
+
+            map.on('click', function(e) {
+                addRedPin(e.latlng.lat, e.latlng.lng, true);
+            });
         }
-        
-        function loadSales() { 
-            /* Código original mantido */ 
-        }
-        
-        function postIdea() { 
-            /* Código original mantido */ 
+
+        function addRedPin(lat, lng, save) {
+            const redIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            L.marker([lat, lng], { icon: redIcon }).addTo(map);
+
+            if (save) {
+                let pins = JSON.parse(localStorage.getItem('sw_pins')) || [];
+                pins.push({ lat, lng });
+                localStorage.setItem('sw_pins', JSON.stringify(pins));
+            }
         }
         
         function startCall() { 
-            /* Código original mantido */ 
+            const callArea = document.getElementById('callArea');
+            callArea.classList.toggle('hidden');
         }
     </script>
 </body>
