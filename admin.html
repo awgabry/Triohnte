@@ -270,7 +270,7 @@
         </div>
     </div>
 
-    <!-- Scripts da Aplicação -->
+    <!-- Scripts da Aplicacao -->
     <script>
         const users = { 'G200207': 'Gabriel' };
         let currentUser = '';
@@ -438,33 +438,50 @@
             }
         }
 
-        /* Lógica de Planejamentos / Fórum Interno (Persistente com LocalStorage) */
-        function postIdea() {
+        /* Lógica de Planejamentos / Fórum Interno (Sincronizado com o Firebase) */
+        async function postIdea() {
             const text = document.getElementById('idea').value.trim();
             if (!text) return alert("Escreva algo para publicar");
 
-            let posts = JSON.parse(localStorage.getItem('sw_forum')) || [];
-            posts.unshift({ user: currentUser, text, date: new Date().toLocaleString() });
-            localStorage.setItem('sw_forum', JSON.stringify(posts));
-
-            document.getElementById('idea').value = '';
-            renderForum();
+            try {
+                await fetch(`${DB_URL}/forum.json`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        user: currentUser,
+                        text: text,
+                        date: new Date().toLocaleString()
+                    })
+                });
+                document.getElementById('idea').value = '';
+                renderForum();
+            } catch (e) {
+                console.error("Erro ao postar no fórum", e);
+            }
         }
 
-        function renderForum() {
+        async function renderForum() {
             const forum = document.getElementById('forum');
             forum.innerHTML = '';
-            let posts = JSON.parse(localStorage.getItem('sw_forum')) || [];
-
-            posts.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'forum-post';
-                div.innerHTML = `<strong style="color:#f3d06c">${p.user}</strong> <span class="small">(${p.date})</span><p style="margin:5px 0 0 0">${p.text}</p>`;
-                forum.appendChild(div);
-            });
+            
+            try {
+                const response = await fetch(`${DB_URL}/forum.json`);
+                const data = await response.json() || {};
+                
+                // Converte o objeto do Firebase em array mantendo as chaves para exibição reversa (mais recentes primeiro)
+                const postsKeys = Object.keys(data);
+                postsKeys.reverse().forEach(key => {
+                    const p = data[key];
+                    const div = document.createElement('div');
+                    div.className = 'forum-post';
+                    div.innerHTML = `<strong style="color:#f3d06c">${p.user}</strong> <span class="small">(${p.date})</span><p style="margin:5px 0 0 0">${p.text}</p>`;
+                    forum.appendChild(div);
+                });
+            } catch (e) {
+                console.error("Erro ao carregar fórum", e);
+            }
         }
 
-        /* Lógica de Demografia / Leitores Globais (Mapa interativo com alfinetes amarelos salvos e exclusão por duplo clique) */
+        /* Lógica de Demografia / Leitores Globais (Mapa interativo com alfinetes amarelos no Firebase e exclusão por duplo clique) */
         let map;
         let markersGroup = [];
 
@@ -482,17 +499,24 @@
             });
         }
 
-        function carregarPins() {
+        async function carregarPins() {
             markersGroup.forEach(m => map.removeLayer(m));
             markersGroup = [];
 
-            let pins = JSON.parse(localStorage.getItem('sw_pins')) || [];
-            pins.forEach((pos, index) => {
-                criarMarcadorNoMapa(pos.lat, pos.lng, index);
-            });
+            try {
+                const response = await fetch(`${DB_URL}/pins.json`);
+                const data = await response.json() || {};
+
+                Object.keys(data).forEach(key => {
+                    const pos = data[key];
+                    criarMarcadorNoMapa(pos.lat, pos.lng, key);
+                });
+            } catch (e) {
+                console.error("Erro ao carregar alfinetes", e);
+            }
         }
 
-        function criarMarcadorNoMapa(lat, lng, index) {
+        function criarMarcadorNoMapa(lat, lng, dbKey) {
             const yellowIcon = L.icon({
                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
@@ -504,13 +528,12 @@
 
             const marker = L.marker([lat, lng], { icon: yellowIcon }).addTo(map);
             
-            // Tratamento correto do evento de duplo clique diretamente no elemento do DOM do marcador
             marker.on('add', function() {
                 const el = marker.getElement();
                 if (el) {
                     el.addEventListener('dblclick', function(e) {
                         L.DomEvent.stopPropagation(e);
-                        removerPin(index);
+                        removerPinDoBanco(dbKey);
                     });
                 }
             });
@@ -518,18 +541,27 @@
             markersGroup.push(marker);
         }
 
-        function adicionarPinNoBanco(lat, lng) {
-            let pins = JSON.parse(localStorage.getItem('sw_pins')) || [];
-            pins.push({ lat, lng });
-            localStorage.setItem('sw_pins', JSON.stringify(pins));
-            carregarPins();
+        async function adicionarPinNoBanco(lat, lng) {
+            try {
+                await fetch(`${DB_URL}/pins.json`, {
+                    method: 'POST',
+                    body: JSON.stringify({ lat, lng })
+                });
+                carregarPins();
+            } catch (e) {
+                console.error("Erro ao adicionar alfinete", e);
+            }
         }
 
-        function removerPin(index) {
-            let pins = JSON.parse(localStorage.getItem('sw_pins')) || [];
-            pins.splice(index, 1);
-            localStorage.setItem('sw_pins', JSON.stringify(pins));
-            carregarPins();
+        async function removerPinDoBanco(dbKey) {
+            try {
+                await fetch(`${DB_URL}/pins/${dbKey}.json`, {
+                    method: 'DELETE'
+                });
+                carregarPins();
+            } catch (e) {
+                console.error("Erro ao remover alfinete", e);
+            }
         }
         
         function startCall() { 
