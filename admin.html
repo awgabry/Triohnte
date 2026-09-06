@@ -199,7 +199,7 @@
 
         <div id="demo" class="section active">
             <div class="card">
-                <h3 style="color:#f3d06c">Leitores Globais (Clique no mapa para adicionar um alfinete | Dê duplo clique em cima do alfinete para apagá-lo)</h3>
+                <h3 style="color:#f3d06c">Leitores Globais (Clique no mapa para adicionar um alfinete amarelo | Dê duplo clique em cima do alfinete para apagá-lo)</h3>
                 <div id="map"></div>
             </div>
         </div>
@@ -464,7 +464,7 @@
             });
         }
 
-        /* Lógica de Demografia / Leitores Globais (Mapa interativo com alfinetes salvos e exclusão por duplo clique) */
+        /* Lógica de Demografia / Leitores Globais (Mapa interativo com alfinetes amarelos salvos e exclusão por duplo clique) */
         let map;
         let markersGroup = [];
 
@@ -493,8 +493,8 @@
         }
 
         function criarMarcadorNoMapa(lat, lng, index) {
-            const redIcon = L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            const yellowIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
@@ -502,7 +502,7 @@
                 shadowSize: [41, 41]
             });
 
-            const marker = L.marker([lat, lng], { icon: redIcon }).addTo(map);
+            const marker = L.marker([lat, lng], { icon: yellowIcon }).addTo(map);
             
             // Evento de duplo clique para apagar o alfinete específico
             marker.on('dblclick', function(e) {
