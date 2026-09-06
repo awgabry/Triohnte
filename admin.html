@@ -110,6 +110,11 @@
             border-radius: 12px;
             border: 1px solid #c59b27;
         }
+
+        /* Oculta o selo/marca d'água do Leaflet */
+        .leaflet-control-attribution {
+            display: none !important;
+        }
         
         .small {
             font-size: .85rem;
@@ -270,7 +275,7 @@
         </div>
     </div>
 
-    <!-- Scripts da Aplicacao -->
+    <!-- Scripts da Aplicação -->
     <script>
         const users = { 'G200207': 'Gabriel' };
         let currentUser = '';
@@ -467,7 +472,6 @@
                 const response = await fetch(`${DB_URL}/forum.json`);
                 const data = await response.json() || {};
                 
-                // Converte o objeto do Firebase em array mantendo as chaves para exibição reversa (mais recentes primeiro)
                 const postsKeys = Object.keys(data);
                 postsKeys.reverse().forEach(key => {
                     const p = data[key];
