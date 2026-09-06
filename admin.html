@@ -1,164 +1,336 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistem - Admin</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#000000;color:#eaeaea}
-.hidden{display:none}
-#login,#app{min-height:100vh}
-.center{display:flex;align-items:center;justify-content:center}
-.card{background:#1a0a00;padding:1.5rem;border-radius:14px;margin-bottom:1rem}
-input,textarea,button{width:100%;padding:.7rem;border-radius:10px;border:none;margin-top:.5rem}
-button{background:#ffffff;font-weight:bold;cursor:pointer}
-.top{display:flex;gap:1rem;padding:1rem;background:#1a0a00;flex-wrap:wrap}
-.tab{cursor:pointer;opacity:.6}
-.tab.active{opacity:1;font-weight:bold}
-.section{display:none;padding:1rem}
-.section.active{display:block}
-#map{height:420px;border-radius:12px}
-.small{font-size:.85rem;opacity:.7}
-.forum-post{border-bottom:1px solid #1a0a00;padding:.5rem 0}
-iframe{width:100%;height:420px;border:none;border-radius:12px}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem - Admin</title>
+    
+    <!-- Bibliotecas externas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Cinzel', serif;
+            background: #050505;
+            color: #e5c585;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        #login, #app {
+            min-height: 100vh;
+        }
+        
+        .center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card {
+            background: #0d0d0d;
+            border: 1px solid #c59b27;
+            padding: 1.5rem;
+            border-radius: 14px;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 15px rgba(197, 155, 39, 0.08);
+        }
+        
+        input, textarea, button {
+            width: 100%;
+            padding: .7rem;
+            border-radius: 10px;
+            border: 1px solid #c59b27;
+            margin-top: .5rem;
+            background: #141414;
+            color: #e5c585;
+            font-family: 'Cinzel', serif;
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: #7a652a;
+        }
+        
+        button {
+            background: #c59b27;
+            color: #050505;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #dfae30;
+        }
+        
+        .top {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: #0d0d0d;
+            border-bottom: 1px solid #c59b27;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            cursor: pointer;
+            opacity: .6;
+            color: #e5c585;
+        }
+        
+        .tab.active {
+            opacity: 1;
+            font-weight: bold;
+            color: #f3d06c;
+            border-bottom: 2px solid #c59b27;
+        }
+        
+        .section {
+            display: none;
+            padding: 1rem;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        #map {
+            height: 420px;
+            border-radius: 12px;
+            border: 1px solid #c59b27;
+        }
+        
+        .small {
+            font-size: .85rem;
+            opacity: .7;
+        }
+        
+        .forum-post {
+            border-bottom: 1px solid #33260c;
+            padding: .5rem 0;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 420px;
+            border: none;
+            border-radius: 12px;
+        }
 
-/* Estilos para a nova tabela de gestão */
-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-th, td { text-align: left; padding: 8px; border-bottom: 1px solid #333; }
-.btn-del { background: #ff4444; color: white; padding: 4px 8px; font-size: 10px; width: auto; }
-</style>
+        /* Estilos para a tabela de gestão */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #33260c;
+        }
+        
+        th {
+            color: #f3d06c;
+        }
+        
+        .btn-del {
+            background: #5a1a1a;
+            color: #ff9999;
+            border: 1px solid #ff4444;
+            padding: 4px 8px;
+            font-size: 10px;
+            width: auto;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .btn-del:hover {
+            background: #ff4444;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
 
-<div id="login" class="center">
-  <div class="card" style="width:320px">
-    <h2>Admin Sitem</h2>
-    <input id="code" placeholder="Código de acesso">
-    <button onclick="login()">Entrar</button>
-    <p id="error" class="small"></p>
-  </div>
-</div>
-
-<div id="app" class="hidden">
-  <div class="top">
-    <div class="tab active" onclick="openTab('demo',this)">Demografia</div>
-    <div class="tab" onclick="openTab('fin',this)">Finanças</div>
-    <div class="tab" onclick="openTab('plan',this)">Planejamentos</div>
-    <div class="tab" onclick="openTab('gestao',this)">Gestão de Acesso</div> <div class="tab" onclick="openTab('conf',this)">Conferência</div>
-  </div>
-
-  <div id="demo" class="section active"><div class="card"><h3>Leitores Globais</h3><div id="map"></div></div></div>
-  <div id="fin" class="section"><div class="card"><h3>Histórico de Vendas</h3><ul id="sales"></ul></div></div>
-  <div id="plan" class="section"><div class="card"><h3>Fórum Interno</h3><textarea id="idea"></textarea><button onclick="postIdea()">Publicar</button><div id="forum"></div></div></div>
-
-  <div id="gestao" class="section">
-    <div class="card">
-      <h3>Liberar Livros para Usuários</h3>
-      <div style="display:flex; gap:5px;">
-        <input id="userEmail" placeholder="E-mail do Usuário">
-        <input id="bookID" placeholder="ID do Livro">
-        <button onclick="permitirAcesso()" style="width:150px">Permitir Acesso</button>
-      </div>
-      
-      <table>
-        <thead>
-          <tr>
-            <th>Usuário</th>
-            <th>ID Livro</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
-        <tbody id="accessList"></tbody>
-      </table>
+    <!-- Tela de Login -->
+    <div id="login" class="center">
+        <div class="card" style="width:320px">
+            <h2 style="color:#f3d06c; text-align:center; margin-top:0;">Admin Sitem</h2>
+            <input id="code" placeholder="Código de acesso">
+            <button onclick="login()">Entrar</button>
+            <p id="error" class="small" style="color:#ff9999; text-align:center;"></p>
+        </div>
     </div>
-  </div>
 
-  <div id="conf" class="section"><div class="card"><h3>Conferência SW</h3><button onclick="startCall()">Iniciar Sala</button><div id="callArea" class="hidden"><iframe id="callFrame"></iframe></div></div></div>
-</div>
+    <!-- Aplicação Principal -->
+    <div id="app" class="hidden">
+        <div class="top">
+            <div class="tab active" onclick="openTab('demo', this)">Demografia</div>
+            <div class="tab" onclick="openTab('fin', this)">Finanças</div>
+            <div class="tab" onclick="openTab('plan', this)">Planejamentos</div>
+            <div class="tab" onclick="openTab('gestao', this)">Gestão de Acesso</div>
+            <div class="tab" onclick="openTab('conf', this)">Conferência</div>
+        </div>
 
-<script>
-const users={'G200207':'Gabriel'};
-let currentUser='';
+        <div id="demo" class="section active">
+            <div class="card">
+                <h3 style="color:#f3d06c">Leitores Globais</h3>
+                <div id="map"></div>
+            </div>
+        </div>
 
-function login(){
-  const code=document.getElementById('code').value.trim();
-  if(users[code]){
-    currentUser=users[code];
-    document.getElementById('login').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
-    initMap(); loadSales(); renderAccessList();
-  }else{
-    document.getElementById('error').innerText='Código inválido';
-  }
-}
+        <div id="fin" class="section">
+            <div class="card">
+                <h3 style="color:#f3d06c">Histórico de Vendas</h3>
+                <ul id="sales"></ul>
+            </div>
+        </div>
 
-function openTab(id,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById(id).classList.add('active');
-  if(id==='gestao') renderAccessList();
-}
+        <div id="plan" class="section">
+            <div class="card">
+                <h3 style="color:#f3d06c">Fórum Interno</h3>
+                <textarea id="idea"></textarea>
+                <button onclick="postIdea()">Publicar</button>
+                <div id="forum"></div>
+            </div>
+        </div>
 
-/* LÓGICA DE GESTÃO DE ACESSO */
-function permitirAcesso() {
-  const email = document.getElementById('userEmail').value.trim().toLowerCase();
-  const bookId = document.getElementById('bookID').value.trim();
+        <div id="gestao" class="section">
+            <div class="card">
+                <h3 style="color:#f3d06c">Liberar Livros para Usuários</h3>
+                <div style="display:flex; gap:5px;">
+                    <input id="userEmail" placeholder="E-mail do Usuário">
+                    <input id="bookID" placeholder="ID do Livro">
+                    <button onclick="permitirAcesso()" style="width:150px">Permitir Acesso</button>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>ID Livro</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accessList"></tbody>
+                </table>
+            </div>
+        </div>
 
-  if(!email || !bookId) return alert("Preencha todos os campos");
+        <div id="conf" class="section">
+            <div class="card">
+                <h3 style="color:#f3d06c">Conferência SW</h3>
+                <button onclick="startCall()">Iniciar Sala</button>
+                <div id="callArea" class="hidden">
+                    <iframe id="callFrame"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  let permissoes = JSON.parse(localStorage.getItem('sw_permissoes')) || [];
-  
-  // Evitar duplicados
-  if(!permissoes.find(p => p.email === email && p.bookId === bookId)) {
-    permissoes.push({ email, bookId });
-    localStorage.setItem('sw_permissoes', JSON.stringify(permissoes));
-    renderAccessList();
-  }
-  
-  document.getElementById('userEmail').value = '';
-  document.getElementById('bookID').value = '';
-}
+    <!-- Scripts da Aplicação -->
+    <script>
+        const users = { 'G200207': 'Gabriel' };
+        let currentUser = '';
 
-function renderAccessList() {
-  const list = document.getElementById('accessList');
-  list.innerHTML = '';
-  const permissoes = JSON.parse(localStorage.getItem('sw_permissoes')) || [];
+        function login() {
+            const code = document.getElementById('code').value.trim();
+            if (users[code]) {
+                currentUser = users[code];
+                document.getElementById('login').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                initMap(); 
+                loadSales(); 
+                renderAccessList();
+            } else {
+                document.getElementById('error').innerText = 'Código inválido';
+            }
+        }
 
-  permissoes.forEach((p, index) => {
-    const row = `<tr>
-      <td>${p.email}</td>
-      <td>${p.bookId}</td>
-      <td><button class="btn-del" onclick="removerAcesso(${index})">Revogar</button></td>
-    </tr>`;
-    list.innerHTML += row;
-  });
-}
+        function openTab(id, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById(id).classList.add('active');
+            if (id === 'gestao') renderAccessList();
+        }
 
-function removerAcesso(index) {
-  let permissoes = JSON.parse(localStorage.getItem('sw_permissoes')) || [];
-  permissoes.splice(index, 1);
-  localStorage.setItem('sw_permissoes', JSON.stringify(permissoes));
-  renderAccessList();
-}
+        /* Lógica de Gestão de Acesso */
+        function permitirAcesso() {
+            const email = document.getElementById('userEmail').value.trim().toLowerCase();
+            const bookId = document.getElementById('bookID').value.trim();
 
-// Funções originais mantidas
-let map;
-function initMap(){
-  if(map) return;
-  map=L.map('map').setView([20,0],2);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-  setInterval(()=>{
-    const lat=Math.random()*140-70; const lng=Math.random()*360-180;
-    L.circle([lat,lng],{radius:500000,color:'#e7c46a'}).addTo(map);
-  },3000);
-}
-function loadSales(){ /* ... código original ... */ }
-function postIdea(){ /* ... código original ... */ }
-function startCall(){ /* ... código original ... */ }
-</script>
+            if (!email || !bookId) return alert("Preencha todos os campos");
+
+            let permissoes = JSON.parse(localStorage.getItem('sw_permissoes')) || [];
+            
+            // Evitar duplicados
+            if (!permissoes.find(p => p.email === email && p.bookId === bookId)) {
+                permissoes.push({ email, bookId });
+                localStorage.setItem('sw_permissoes', JSON.stringify(permissoes));
+                renderAccessList();
+            }
+            
+            document.getElementById('userEmail').value = '';
+            document.getElementById('bookID').value = '';
+        }
+
+        function renderAccessList() {
+            const list = document.getElementById('accessList');
+            list.innerHTML = '';
+            const permissoes = JSON.parse(localStorage.getItem('sw_permissoes')) || [];
+
+            permissoes.forEach((p, index) => {
+                const row = `<tr>
+                    <td>${p.email}</td>
+                    <td>${p.bookId}</td>
+                    <td><button class="btn-del" onclick="removerAcesso(${index})">Revogar</button></td>
+                </tr>`;
+                list.innerHTML += row;
+            });
+        }
+
+        function removerAcesso(index) {
+            let permissoes = JSON.parse(localStorage.getItem('sw_permissoes')) || [];
+            permissoes.splice(index, 1);
+            localStorage.setItem('sw_permissoes', JSON.stringify(permissoes));
+            renderAccessList();
+        }
+
+        /* Funções Originais */
+        let map;
+        function initMap() {
+            if (map) return;
+            map = L.map('map').setView([20, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            
+            setInterval(() => {
+                const lat = Math.random() * 140 - 70; 
+                const lng = Math.random() * 360 - 180;
+                L.circle([lat, lng], { radius: 500000, color: '#c59b27' }).addTo(map);
+            }, 3000);
+        }
+        
+        function loadSales() { 
+            /* Código original mantido */ 
+        }
+        
+        function postIdea() { 
+            /* Código original mantido */ 
+        }
+        
+        function startCall() { 
+            /* Código original mantido */ 
+        }
+    </script>
 </body>
 </html>
