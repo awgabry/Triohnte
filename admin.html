@@ -221,7 +221,7 @@
                 <div id="map"></div>
             </div>
 
-            <!-- Nova Seção: Países onde Triohnte está vendendo -->
+            <!-- Países onde Triohnte está vendendo -->
             <div class="card" style="margin-top: 1.5rem;">
                 <h3 style="color:#f3d06c">Países com Vendas Ativas</h3>
                 <div style="display:flex; gap:5px; flex-wrap: wrap; margin-bottom: 1rem;">
@@ -246,17 +246,22 @@
             <div class="card">
                 <h3 style="color:#f3d06c">Histórico de Vendas</h3>
                 <div style="display:flex; gap:5px; flex-wrap: wrap;">
-                    <input id="saleItem" placeholder="Item / Livro" style="flex: 2; min-width: 140px;">
-                    <input id="saleEmail" placeholder="E-mail do Comprador" style="flex: 2; min-width: 150px;">
-                    <input id="saleValue" placeholder="Valor (R$)" style="flex: 1; min-width: 90px;">
-                    <input id="saleMonthYear" type="month" style="flex: 1.2; min-width: 130px;" title="Mês / Ano do Faturamento">
-                    <button onclick="adicionarVenda()" style="width:140px">Adicionar</button>
+                    <input id="saleItem" placeholder="Item / Livro" style="flex: 1.8; min-width: 130px;">
+                    <input id="saleEmail" placeholder="E-mail do Comprador" style="flex: 1.8; min-width: 140px;">
+                    <select id="saleFormat" style="flex: 1.2; min-width: 110px;">
+                        <option value="E-book">E-book</option>
+                        <option value="Livro Físico">Livro Físico</option>
+                    </select>
+                    <input id="saleValue" placeholder="Valor (R$)" style="flex: 0.9; min-width: 85px;">
+                    <input id="saleMonthYear" type="month" style="flex: 1.1; min-width: 120px;" title="Mês / Ano do Faturamento">
+                    <button onclick="adicionarVenda()" style="width:130px">Adicionar</button>
                 </div>
                 <table>
                     <thead>
                         <tr>
                             <th>Item / Descrição</th>
                             <th>E-mail do Comprador</th>
+                            <th>Formato</th>
                             <th>Mês/Ano</th>
                             <th>Valor</th>
                             <th>Ação</th>
@@ -470,9 +475,12 @@
                         }
                     }
 
+                    const formatoBadge = venda.formato || 'E-book';
+
                     const row = `<tr>
                         <td>${venda.item}</td>
                         <td>${venda.email || '-'}</td>
+                        <td>${formatoBadge}</td>
                         <td>${mesAnoFormatado}</td>
                         <td>${venda.valor}</td>
                         <td><button class="btn-del" onclick="removerVenda('${key}')">Excluir</button></td>
@@ -489,6 +497,7 @@
         async function adicionarVenda() {
             const item = document.getElementById('saleItem').value.trim();
             const email = document.getElementById('saleEmail').value.trim().toLowerCase();
+            const formato = document.getElementById('saleFormat').value;
             const valor = document.getElementById('saleValue').value.trim();
             const mesAno = document.getElementById('saleMonthYear').value;
 
@@ -497,7 +506,7 @@
             try {
                 await fetch(`${DB_URL}/vendas.json`, {
                     method: 'POST',
-                    body: JSON.stringify({ item, email, valor, mesAno })
+                    body: JSON.stringify({ item, email, formato, valor, mesAno })
                 });
                 document.getElementById('saleItem').value = '';
                 document.getElementById('saleEmail').value = '';
@@ -532,13 +541,14 @@
                 doc.setFontSize(18);
                 doc.text("Historico de Vendas - Sistem Admin", 14, 20);
 
-                doc.setFontSize(11);
+                doc.setFontSize(10);
                 doc.setFont("Helvetica", "normal");
                 let y = 30;
                 doc.text("Item / Livro", 14, y);
-                doc.text("E-mail do Comprador", 75, y);
-                doc.text("Mes/Ano", 135, y);
-                doc.text("Valor", 165, y);
+                doc.text("E-mail", 65, y);
+                doc.text("Formato", 115, y);
+                doc.text("Mes/Ano", 145, y);
+                doc.text("Valor", 175, y);
                 doc.line(14, y + 2, 195, y + 2);
 
                 y += 8;
@@ -569,9 +579,10 @@
                     somaPdf += valorNumerico;
 
                     doc.text(String(venda.item || ''), 14, y);
-                    doc.text(String(venda.email || '-'), 75, y);
-                    doc.text(String(mesAnoFormatado), 135, y);
-                    doc.text(String(venda.valor || ''), 165, y);
+                    doc.text(String(venda.email || '-'), 65, y);
+                    doc.text(String(venda.formato || 'E-book'), 115, y);
+                    doc.text(String(mesAnoFormatado), 145, y);
+                    doc.text(String(venda.valor || ''), 175, y);
                     y += 8;
                 });
 
