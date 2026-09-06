@@ -47,7 +47,7 @@
             box-shadow: 0 0 15px rgba(197, 155, 39, 0.08);
         }
         
-        input, textarea, button {
+        input, textarea, button, select {
             width: 100%;
             padding: .7rem;
             border-radius: 10px;
@@ -167,16 +167,29 @@
         }
 
         .btn-pdf {
-            background: #2765c5;
-            color: #ffffff;
-            border: 1px solid #4a8ff5;
-            padding: 8px;
+            background: #c59b27;
+            color: #050505;
+            border: 1px solid #dfae30;
+            padding: 10px;
             margin-top: 1rem;
             font-family: 'Cinzel', serif;
+            font-weight: bold;
         }
         
         .btn-pdf:hover {
-            background: #357ae8;
+            background: #dfae30;
+        }
+
+        .total-box {
+            margin-top: 1rem;
+            padding: 10px;
+            background: #141414;
+            border: 1px solid #c59b27;
+            border-radius: 10px;
+            text-align: right;
+            font-size: 1.1rem;
+            color: #f3d06c;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -213,22 +226,25 @@
             <div class="card">
                 <h3 style="color:#f3d06c">Histórico de Vendas</h3>
                 <div style="display:flex; gap:5px; flex-wrap: wrap;">
-                    <input id="saleItem" placeholder="Item / Livro" style="flex: 1; min-width: 150px;">
-                    <input id="saleEmail" placeholder="E-mail do Comprador" style="flex: 1; min-width: 150px;">
-                    <input id="saleValue" placeholder="Valor (R$)" style="flex: 1; min-width: 100px;">
-                    <button onclick="adicionarVenda()" style="width:150px">Adicionar</button>
+                    <input id="saleItem" placeholder="Item / Livro" style="flex: 2; min-width: 140px;">
+                    <input id="saleEmail" placeholder="E-mail do Comprador" style="flex: 2; min-width: 150px;">
+                    <input id="saleValue" placeholder="Valor (R$)" style="flex: 1; min-width: 90px;">
+                    <input id="saleMonthYear" type="month" style="flex: 1.2; min-width: 130px;" title="Mês / Ano do Faturamento">
+                    <button onclick="adicionarVenda()" style="width:140px">Adicionar</button>
                 </div>
                 <table>
                     <thead>
                         <tr>
                             <th>Item / Descrição</th>
                             <th>E-mail do Comprador</th>
+                            <th>Mês/Ano</th>
                             <th>Valor</th>
                             <th>Ação</th>
                         </tr>
                     </thead>
                     <tbody id="salesList"></tbody>
                 </table>
+                <div id="salesTotal" class="total-box">Total Geral: R$ 0,00</div>
                 <button class="btn-pdf" onclick="baixarPDFVendas()">Baixar Relatório em PDF</button>
             </div>
         </div>
@@ -356,16 +372,41 @@
                 const list = document.getElementById('salesList');
                 list.innerHTML = '';
 
+                let totalGeral = 0;
+
                 Object.keys(data).forEach(key => {
                     const venda = data[key];
+                    
+                    // Tratamento seguro para conversão numéricado valor (substituindo vírgula por ponto se necessário)
+                    let valorNumerico = 0;
+                    if (venda.valor) {
+                        let limpo = String(venda.valor).replace('R$', '').trim().replace(/\./g, '').replace(',', '.');
+                        valorNumerico = parseFloat(limpo) || 0;
+                    }
+                    totalGeral += valorNumerico;
+
+                    // Formatar o mês/ano (ex: 2026-06 para 06/2026 se desejar, ou manter o padrão)
+                    let mesAnoFormatado = '-';
+                    if (venda.mesAno) {
+                        const partes = venda.mesAno.split('-');
+                        if (partes.length === 2) {
+                            mesAnoFormatado = `${partes[1]}/${partes[0]}`;
+                        } else {
+                            mesAnoFormatado = venda.mesAno;
+                        }
+                    }
+
                     const row = `<tr>
                         <td>${venda.item}</td>
                         <td>${venda.email || '-'}</td>
+                        <td>${mesAnoFormatado}</td>
                         <td>${venda.valor}</td>
                         <td><button class="btn-del" onclick="removerVenda('${key}')">Excluir</button></td>
                     </tr>`;
                     list.innerHTML += row;
                 });
+
+                document.getElementById('salesTotal').innerText = `Total Geral: R$ ${totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
             } catch (e) {
                 console.error("Erro ao carregar vendas", e);
             }
@@ -375,17 +416,19 @@
             const item = document.getElementById('saleItem').value.trim();
             const email = document.getElementById('saleEmail').value.trim().toLowerCase();
             const valor = document.getElementById('saleValue').value.trim();
+            const mesAno = document.getElementById('saleMonthYear').value;
 
             if (!item || !valor) return alert("Preencha pelo menos o item e o valor da venda");
 
             try {
                 await fetch(`${DB_URL}/vendas.json`, {
                     method: 'POST',
-                    body: JSON.stringify({ item, email, valor })
+                    body: JSON.stringify({ item, email, valor, mesAno })
                 });
                 document.getElementById('saleItem').value = '';
                 document.getElementById('saleEmail').value = '';
                 document.getElementById('saleValue').value = '';
+                document.getElementById('saleMonthYear').value = '';
                 loadSales();
             } catch (e) {
                 console.error("Erro ao adicionar venda", e);
@@ -419,22 +462,50 @@
                 doc.setFont("Helvetica", "normal");
                 let y = 30;
                 doc.text("Item / Livro", 14, y);
-                doc.text("E-mail do Comprador", 80, y);
-                doc.text("Valor", 160, y);
+                doc.text("E-mail do Comprador", 75, y);
+                doc.text("Mes/Ano", 135, y);
+                doc.text("Valor", 165, y);
                 doc.line(14, y + 2, 195, y + 2);
 
                 y += 8;
+                let somaPdf = 0;
+
                 Object.keys(data).forEach(key => {
                     const venda = data[key];
                     if (y > 280) {
                         doc.addPage();
                         y = 20;
                     }
+
+                    let mesAnoFormatado = '-';
+                    if (venda.mesAno) {
+                        const partes = venda.mesAno.split('-');
+                        if (partes.length === 2) {
+                            mesAnoFormatado = `${partes[1]}/${partes[0]}`;
+                        } else {
+                            mesAnoFormatado = venda.mesAno;
+                        }
+                    }
+
+                    let valorNumerico = 0;
+                    if (venda.valor) {
+                        let limpo = String(venda.valor).replace('R$', '').trim().replace(/\./g, '').replace(',', '.');
+                        valorNumerico = parseFloat(limpo) || 0;
+                    }
+                    somaPdf += valorNumerico;
+
                     doc.text(String(venda.item || ''), 14, y);
-                    doc.text(String(venda.email || '-'), 80, y);
-                    doc.text(String(venda.valor || ''), 160, y);
+                    doc.text(String(venda.email || '-'), 75, y);
+                    doc.text(String(mesAnoFormatado), 135, y);
+                    doc.text(String(venda.valor || ''), 165, y);
                     y += 8;
                 });
+
+                y += 4;
+                doc.line(14, y, 195, y);
+                y += 8;
+                doc.setFont("Helvetica", "bold");
+                doc.text(`Total Geral: R$ ${somaPdf.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 14, y);
 
                 doc.save("historico_vendas.pdf");
             } catch (e) {
@@ -542,6 +613,7 @@
                 }
             });
 
+            markersGroup.number = (markersGroup.number || 0) + 1;
             markersGroup.push(marker);
         }
 
