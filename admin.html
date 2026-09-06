@@ -504,10 +504,15 @@
 
             const marker = L.marker([lat, lng], { icon: yellowIcon }).addTo(map);
             
-            // Evento de duplo clique para apagar o alfinete específico
-            marker.on('dblclick', function(e) {
-                L.DomEvent.stopPropagation(e); // Evita conflito com o click do mapa
-                removerPin(index);
+            // Tratamento correto do evento de duplo clique diretamente no elemento do DOM do marcador
+            marker.on('add', function() {
+                const el = marker.getElement();
+                if (el) {
+                    el.addEventListener('dblclick', function(e) {
+                        L.DomEvent.stopPropagation(e);
+                        removerPin(index);
+                    });
+                }
             });
 
             markersGroup.push(marker);
