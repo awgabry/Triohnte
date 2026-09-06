@@ -220,6 +220,26 @@
                 <h3 style="color:#f3d06c">Leitores / Compradores Globais</h3>
                 <div id="map"></div>
             </div>
+
+            <!-- Nova Seção: Países onde Triohnte está vendendo -->
+            <div class="card" style="margin-top: 1.5rem;">
+                <h3 style="color:#f3d06c">Países com Vendas Ativas</h3>
+                <div style="display:flex; gap:5px; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <input id="countryName" placeholder="Nome do País" style="flex: 2; min-width: 180px;">
+                    <input id="countryCount" placeholder="Qtd. Leitores / Vendas" type="number" style="flex: 1; min-width: 120px;">
+                    <button onclick="adicionarPais()" style="width:140px">Adicionar País</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>País</th>
+                            <th>Volume / Leitores</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="countriesList"></tbody>
+                </table>
+            </div>
         </div>
 
         <div id="fin" class="section">
@@ -307,6 +327,7 @@
                 loadSales(); 
                 renderForum();
                 renderAccessList();
+                loadCountries();
             } else {
                 document.getElementById('error').innerText = 'Código inválido';
             }
@@ -320,7 +341,62 @@
             if (id === 'gestao') renderAccessList();
             if (id === 'fin') loadSales();
             if (id === 'plan') renderForum();
-            if (id === 'demo' && map) setTimeout(() => map.invalidateSize(), 200);
+            if (id === 'demo') {
+                loadCountries();
+                if (map) setTimeout(() => map.invalidateSize(), 200);
+            }
+        }
+
+        /* Lógica de Países (Firebase Realtime Database) */
+        async function loadCountries() {
+            try {
+                const response = await fetch(`${DB_URL}/paises.json`);
+                const data = await response.json() || {};
+                const list = document.getElementById('countriesList');
+                list.innerHTML = '';
+
+                Object.keys(data).forEach(key => {
+                    const pais = data[key];
+                    const row = `<tr>
+                        <td>${pais.nome}</td>
+                        <td>${pais.quantidade || '1'}</td>
+                        <td><button class="btn-del" onclick="removerPais('${key}')">Excluir</button></td>
+                    </tr>`;
+                    list.innerHTML += row;
+                });
+            } catch (e) {
+                console.error("Erro ao carregar países", e);
+            }
+        }
+
+        async function adicionarPais() {
+            const nome = document.getElementById('countryName').value.trim();
+            const quantidade = document.getElementById('countryCount').value.trim();
+
+            if (!nome) return alert("Preencha o nome do país");
+
+            try {
+                await fetch(`${DB_URL}/paises.json`, {
+                    method: 'POST',
+                    body: JSON.stringify({ nome, quantidade: quantidade || '1' })
+                });
+                document.getElementById('countryName').value = '';
+                document.getElementById('countryCount').value = '';
+                loadCountries();
+            } catch (e) {
+                console.error("Erro ao adicionar país", e);
+            }
+        }
+
+        async function removerPais(key) {
+            try {
+                await fetch(`${DB_URL}/paises/${key}.json`, {
+                    method: 'DELETE'
+                });
+                loadCountries();
+            } catch (e) {
+                console.error("Erro ao remover país", e);
+            }
         }
 
         /* Lógica de Gestão de Acesso */
@@ -377,7 +453,6 @@
                 Object.keys(data).forEach(key => {
                     const venda = data[key];
                     
-                    // Tratamento seguro para conversão numéricado valor (substituindo vírgula por ponto se necessário)
                     let valorNumerico = 0;
                     if (venda.valor) {
                         let limpo = String(venda.valor).replace('R$', '').trim().replace(/\./g, '').replace(',', '.');
@@ -385,7 +460,6 @@
                     }
                     totalGeral += valorNumerico;
 
-                    // Formatar o mês/ano (ex: 2026-06 para 06/2026 se desejar, ou manter o padrão)
                     let mesAnoFormatado = '-';
                     if (venda.mesAno) {
                         const partes = venda.mesAno.split('-');
@@ -556,7 +630,7 @@
             }
         }
 
-        /* Lógica de Demografia / Leitores Globais (Mapa interativo com alfinetes amarelos no Firebase e exclusão por duplo clique) */
+        /* Lógica de Demografia / Leitores Globais */
         let map;
         let markersGroup = [];
 
