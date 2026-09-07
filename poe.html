@@ -21,11 +21,11 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   </script>
 
-  <!-- EmailJS para envio de e-mails -->
+  <!-- EmailJS configurado com suas chaves oficiais -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script type="text/javascript">
     (function() {
-      emailjs.init("SEU_PUBLIC_KEY_DO_EMAILJS");
+      emailjs.init("AJRjiPfNJeMN84rol");
     })();
   </script>
 
@@ -705,12 +705,12 @@
     /* ===================================================== */
     async function dispararEmail(tipoAcao, conteudoTexto) {
       try {
-        await emailjs.send("service_rqptbco", "TEMPLATE_ID_AQUI", {
-          to_email: "triohnte@gmail.com",
+        await emailjs.send("service_rqptbco", "template_uzh4ocn", {
+          email: usuarioLogado ? usuarioLogado.email : "triohnte@gmail.com",
+          name: usuarioLogado ? usuarioLogado.email.split('@')[0] : "Leitor",
+          title: `${tipoAcao} - ${document.getElementById("drawerTitle") ? document.getElementById("drawerTitle").textContent : "Obra"}`,
           tipo: tipoAcao,
-          conteudo: conteudoTexto,
-          usuario: usuarioLogado ? usuarioLogado.email : "Anônimo",
-          livro: document.getElementById("drawerTitle") ? document.getElementById("drawerTitle").textContent : "Obra"
+          conteudo: conteudoTexto
         });
       } catch (err) {
         console.error("Erro ao despachar e-mail via EmailJS:", err);
@@ -794,7 +794,6 @@
         const nota = parseInt(star.dataset.value);
 
         try {
-          // Salva voto individual do usuário por UID para evitar votos duplicados sem controle
           const safeUid = usuarioLogado.uid;
           await db.ref(`avaliacoes_estrelas/${livroId}/${safeUid}`).set({
             nota: nota,
