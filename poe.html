@@ -909,14 +909,19 @@
       const storageKey = `triohnte_bookmark_${item.id}`;
       const savedPage = localStorage.getItem(storageKey);
 
+      // Função auxiliar robusta para saltar para a página correta dentro do container de scroll (.drawer-content)
+      const saltarParaPagina = (pageNum) => {
+        const targetElement = document.getElementById(`page-wrapper-${pageNum}`);
+        if (targetElement) {
+          content.scrollTop = targetElement.offsetTop - content.offsetTop;
+        }
+      };
+
       if (savedPage) {
         savedPageInfo.textContent = `Página salva: ${savedPage}`;
         readerControls.style.display = "flex";
         btnResume.onclick = () => {
-          const targetElement = document.getElementById(`page-wrapper-${savedPage}`);
-          if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
+          saltarParaPagina(savedPage);
         };
       } else {
         readerControls.style.display = "none";
@@ -969,10 +974,7 @@
         // Se houver página salva, salta automaticamente para ela após o carregamento completo do documento
         if (savedPage) {
           setTimeout(() => {
-            const targetElement = document.getElementById(`page-wrapper-${savedPage}`);
-            if (targetElement) {
-              targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            saltarParaPagina(savedPage);
           }, 300);
         }
 
