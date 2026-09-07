@@ -21,6 +21,15 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   </script>
 
+  <!-- EmailJS para envio de e-mails -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function() {
+      // Substitua pela sua Public Key (User ID) do EmailJS se necessário
+      emailjs.init("SEU_PUBLIC_KEY_DO_EMAILJS");
+    })();
+  </script>
+
   <style>
     /* ===================================================== */
     /* BASE E PROTEÇÃO CONTRA SELEÇÃO INDEVIDA E PRINT        */
@@ -282,7 +291,6 @@
       position: relative;
     }
 
-    /* Área central onde o PDF é renderizado */
     .drawer-content {
       overflow-y: auto;
       padding: 1.5rem;
@@ -298,7 +306,6 @@
       user-select: text;
     }
 
-    /* Painel lateral interno do visualizador para comentários e avisos */
     .reader-sidebar {
       width: 340px;
       background: #080808;
@@ -421,8 +428,15 @@
       transform-origin: 0% 0%;
     }
 
+    /* Seleção padrão com o mouse */
     .textLayer span::selection {
-      background: rgba(200, 154, 76, 0.4);
+      background: rgba(255, 235, 59, 0.4);
+    }
+
+    /* CLASSE DE DESTAQUE AMARELO PERMANENTE PARA MARCAÇÃO DE TEXTO */
+    .textLayer span.marcado-amarelo {
+      background-color: rgba(255, 235, 59, 0.65) !important;
+      color: rgba(0, 0, 0, 0.9) !important;
     }
 
     .btn-marcar-pagina {
@@ -551,7 +565,7 @@
     </main>
   </div>
 
-  <!-- DRAWER / LEITOR (COM CAIXA DE COMENTÁRIOS INTEGRADA) -->
+  <!-- DRAWER / LEITOR -->
   <div id="drawer" class="drawer" aria-hidden="true">
     <div class="topbar">
       <button class="btn" id="closeDrawer">Fechar</button>
@@ -565,10 +579,8 @@
     </div>
     
     <div class="drawer-body">
-      <!-- CONTEÚDO DO PDF COM SELEÇÃO DE TEXTO -->
       <div class="drawer-content" id="drawerContent"></div>
 
-      <!-- PAINEL LATERAL DE COMENTÁRIOS E AVISO POR E-MAIL DENTRO DO LEITOR -->
       <aside class="reader-sidebar">
         <div class="comment-section">
           <h3>Comentários da Leitura</h3>
@@ -576,7 +588,7 @@
           <button class="btn-comment" id="btnComment" disabled>Verificando login...</button>
           
           <div class="email-alert-box">
-            📧 <strong>Aviso por E-mail:</strong> Anotações de seleção, marcações e comentários são enviados automaticamente para o autor/editor.
+            📧 <strong>Aviso por E-mail:</strong> Anotações de seleção, marcações e comentários são enviados automaticamente para triohnte@gmail.com.
           </div>
 
           <div id="listaComentarios"></div>
@@ -585,7 +597,7 @@
     </div>
   </div>
 
-  <!-- MENU FLUTUANTE PARA SELEÇÃO DE TEXTO -->
+  <!-- MENU FLUTUANTE DE SELEÇÃO DE TEXTO -->
   <div id="selectionMenu">
     <button id="menuMarcarTexto">Marcar texto</button>
     <button id="menuComentario">Comentário</button>
@@ -647,7 +659,8 @@
 
     const EMAILS_AUTORIZADOS = [
       "mr.gabriel04.07.02@hotmail.com",
-      "ga7144492@gmail.com"
+      "ga7144492@gmail.com",
+      "triohnte@gmail.com"
     ];
 
     const btnAdmin = document.getElementById("btnAdmin");
@@ -664,6 +677,23 @@
         document.getElementById("btnComment").innerText = "Entrar para comentar";
       }
     });
+
+    /* ===================================================== */
+    /* FUNÇÃO DE ENVIO DE E-MAIL VIA EMAILJS                 */
+    /* ===================================================== */
+    async function dispararEmail(tipoAcao, conteudoTexto) {
+      try {
+        await emailjs.send("service_rqptbco", "TEMPLATE_ID_AQUI", {
+          to_email: "triohnte@gmail.com",
+          tipo: tipoAcao,
+          conteudo: conteudoTexto,
+          usuario: usuarioLogado ? usuarioLogado.email : "Anônimo",
+          livro: document.getElementById("drawerTitle").textContent
+        });
+      } catch (err) {
+        console.error("Erro ao despachar e-mail via EmailJS:", err);
+      }
+    }
 
     /* ===================================================== */
     /* DADOS DOS LIVROS                                      */
@@ -711,6 +741,7 @@
     /* LEITOR DE PDF COM CAMADA DE TEXTO E MENU FLUTUANTE    */
     /* ===================================================== */
     let textoSelecionadoGlobal = "";
+    let rangeSelecionadoGlobal = null;
 
     async function openDrawer(item) {
       livroAtualId = item.id;
@@ -827,8 +858,8 @@
 
       if (selectedText.length > 0) {
         textoSelecionadoGlobal = selectedText;
-        const range = selection.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
+        rangeSelecionadoGlobal = selection.getRangeAt(0);
+        const rect = rangeSelecionadoGlobal.getBoundingClientRect();
 
         selectionMenu.style.display = "flex";
         selectionMenu.style.top = `${rect.bottom + window.scrollY + 8}px`;
@@ -840,13 +871,31 @@
       }
     });
 
+    function aplicarDestaqueAmareloNaSelecao() {
+      if (!rangeSelecionadoGlobal) return;
+      try {
+        const container = document.createElement("span");
+        container.className = "marcado-amarelo";
+        rangeSelecionadoGlobal.surroundContents(container);
+      } catch (ex) {
+        const spans = document.querySelectorAll('.textLayer span');
+        spans.forEach(span => {
+          if (window.getSelection().containsNode(span, true)) {
+            span.classList.add('marcado-amarelo');
+          }
+        });
+      }
+    }
+
     document.getElementById("menuMarcarTexto").onclick = () => {
+      aplicarDestaqueAmareloNaSelecao();
       salvarAcaoNoFirebase("Marcar texto", textoSelecionadoGlobal);
     };
 
     document.getElementById("menuComentario").onclick = () => {
       const comentario = prompt("Digite seu comentário para este trecho:");
       if (comentario) {
+        aplicarDestaqueAmareloNaSelecao();
         salvarAcaoNoFirebase("Comentário", `${textoSelecionadoGlobal} - [Comentário: ${comentario}]`);
       }
     };
@@ -854,6 +903,7 @@
     document.getElementById("menuComentarioEditor").onclick = () => {
       const comentarioEditor = prompt("Digite o comentário de editor para este trecho:");
       if (comentarioEditor) {
+        aplicarDestaqueAmareloNaSelecao();
         salvarAcaoNoFirebase("Comentário de editor", `${textoSelecionadoGlobal} - [Editor: ${comentarioEditor}]`);
       }
     };
@@ -873,7 +923,11 @@
           conteudo: conteudo,
           data: Date.now()
         });
-        alert(`Ação "${tipoAcao}" salva com sucesso no Firebase e notificação enviada por e-mail ao autor!`);
+
+        // Dispara o e-mail via EmailJS para triohnte@gmail.com
+        await dispararEmail(tipoAcao, conteudo);
+
+        alert(`Ação "${tipoAcao}" salva com sucesso e aviso enviado para triohnte@gmail.com!`);
       } catch (err) {
         console.error("Erro ao salvar:", err);
         alert("Erro ao salvar no banco de dados.");
@@ -881,7 +935,7 @@
     }
 
     /* ===================================================== */
-    /* COMENTÁRIOS E AVISO POR E-MAIL (INTERNO AO LEITOR)    */
+    /* COMENTÁRIOS E AVISO POR E-MAIL                        */
     /* ===================================================== */
     const btnComment = document.getElementById("btnComment");
     const commentText = document.getElementById("commentText");
@@ -907,8 +961,11 @@
           data: Date.now()
         });
 
+        // Dispara o e-mail geral do comentário para triohnte@gmail.com
+        await dispararEmail("Comentário Geral", texto);
+
         commentText.value = "";
-        alert("Comentário publicado! Aviso por e-mail despachado ao autor/editor.");
+        alert("Comentário publicado e notificação enviada para triohnte@gmail.com!");
       } catch (e) {
         console.error(e);
         alert("Erro ao enviar comentário.");
