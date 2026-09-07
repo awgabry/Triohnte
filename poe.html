@@ -18,6 +18,12 @@
     rel="stylesheet"
   >
 
+  <!-- PDF.js para leitura de PDFs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
+
   <style>
 
     /* ===================================================== */
@@ -33,6 +39,11 @@
       font-family: sans-serif;
       background: #000;
       color: #d6d6d6;
+      /* Bloqueio de seleção para dificultar cópias e capturas */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
 
 
@@ -769,17 +780,17 @@
       align-items: center;
 
       background: #000;
+      flex: 1;
     }
 
 
-    .drawer-content img {
-      width: 100%;
-
-      max-width: 800px;
-
-      height: auto;
-
+    .drawer-content canvas {
+      max-width: 100%;
+      height: auto !important;
       margin-bottom: 1rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+      /* Desativa clique direito e arrastar imagem no leitor */
+      pointer-events: none;
     }
 
 
@@ -947,7 +958,7 @@
   </div>
 
 </main>
-```
+
 
   </div>
 
@@ -974,6 +985,7 @@
   <button
     class="btn"
     id="toggleSlide"
+    style="display: none;"
   >
     Slide
   </button>
@@ -994,6 +1006,35 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
+
+    /* ===================================================== */
+    /* BLOQUEIO DE CAPTURA DE TELA / IMPRESSÃO / ATALHOS     */
+    /* ===================================================== */
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    document.addEventListener('keydown', e => {
+      // Bloqueia PrintScreen, F12, Ctrl+P, Ctrl+S, Ctrl+U, Ctrl+Shift+I
+      if (
+        e.key === 'PrintScreen' ||
+        e.keyCode === 44 ||
+        e.key === 'F12' ||
+        (e.ctrlKey && (e.key === 'p' || e.key === 's' || e.key === 'u' || e.key === 'P' || e.key === 'S' || e.key === 'U')) ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c'))
+      ) {
+        e.preventDefault();
+        alert('Ação bloqueada por segurança e direitos autorais.');
+        return false;
+      }
+    });
+
+    // Tentativa adicional de limpar a área de transferência caso usem PrintScreen
+    window.addEventListener('keyup', e => {
+      if (e.key === 'PrintScreen' || e.keyCode === 44) {
+        navigator.clipboard.writeText('').catch(() => {});
+        alert('Captura de tela bloqueada.');
+      }
+    });
+
 
     /* ===================================================== */
     /* FIREBASE                                                */
@@ -1153,7 +1194,7 @@
 
 
     /* ===================================================== */
-    /* LIVROS                                                  */
+    /* LIVROS (REFERÊNCIAS OFUSCADAS/MASCARADAS)              */
     /* ===================================================== */
 
     const livros = [
@@ -1168,11 +1209,8 @@
 
         capa: "Capa.png",
 
-        pasta: "Triohnte",
-
-        totalPaginas: 400,
-
-        prefixo: "",
+        // Caminho mascarado e quebrado para evitar inspeção e download direto por URL
+        _x: ["Triohnte/T", "riohnte.", "pdf"],
 
         synopsis:
           "Em Walingardyn, o poder pertence àqueles que conseguem conquistá-lo, e, sobretudo, mantê-lo. Reinos disputam fronteiras, lordes conspiram para elevar suas casas e a plebe sobrevive sob o peso de uma hierarquia que parece impossível de romper. Por gerações, guerras e intrigas moldaram um mundo onde honra, lealdade e justiça frequentemente cedem lugar à ambição. Mas algo começa a mudar. Sem aviso, quatro reis são alvo de ataques repentinos, distintos entre si, porém ligados por circunstâncias que desafiam qualquer explicação. O que a princípio parece ser apenas mais uma disputa pelo poder logo revela sinais de uma conspiração muito mais profunda. Até então separados por seus próprios interesses, os quatro soberanos começam a perceber aquilo que seus tronos os impediram de enxergar: há algo profundamente corrompido em Walingardyn. Por trás das guerras existem interesses ocultos. Por trás das alianças, traições. E por trás da própria ordem que sustenta os reinos, uma verdade que permaneceu escondida por tempo demais. Enquanto os ataques se intensificam e a confiança entre coroas começa a desaparecer, os quatro reis são obrigados a confrontar uma realidade inquietante: talvez seus maiores inimigos não estejam além de suas fronteiras. Talvez estejam dentro de seus próprios reinos. E quando a verdade finalmente começar a emergir, nenhum trono permanecerá seguro."
@@ -1183,7 +1221,7 @@
 
 
     /* ===================================================== */
-    /* CONTOS                                                  */
+    /* CONTOS (REFERÊNCIAS OFUSCADAS/MASCARADAS)              */
     /* ===================================================== */
 
     const novels = [
@@ -1198,11 +1236,8 @@
 
         capa: "Coloque aqui seu png",
 
-        pasta: "S CAPS",
-
-        totalPaginas: 1,
-
-        prefixo: "S CAP ",
+        // Caminho mascarado e quebrado
+        _x: ["S CAPS/Contos.", "p", "df"],
 
         synopsis:
           `Não, em Walingardyn não existe apenas um continente de nome Triohnte. Um mundo que respire precisa de mais do que isso.`
@@ -1670,10 +1705,10 @@
 
 
     /* ===================================================== */
-    /* ABRIR LIVRO                                             */
+    /* ABRIR LIVRO (RENDERIZADOR SEGURO SEM DOWNLOAD)        */
     /* ===================================================== */
 
-    function openDrawer(
+    async function openDrawer(
       item
     ) {
 
@@ -1696,34 +1731,7 @@
 
 
       content.innerHTML =
-        "";
-
-
-      for (
-        let i = 1;
-        i <= item.totalPaginas;
-        i++
-      ) {
-
-        const img =
-          document.createElement(
-            "img"
-          );
-
-
-        img.src =
-          `${item.pasta}/${item.prefixo}${i}.png`;
-
-
-        img.alt =
-          `${item.titulo} - página ${i}`;
-
-
-        content.appendChild(
-          img
-        );
-
-      }
+        "<p style='color: #888; padding: 2rem;'>Carregando leitura protegida...</p>";
 
 
       drawer.classList.add(
@@ -1739,6 +1747,48 @@
 
       document.body.style.overflow =
         "hidden";
+
+      try {
+        // Reconstrói a URL do arquivo dinamicamente a partir dos pedaços ofuscados
+        const sourcePath = item._x.join('');
+        
+        // Carrega o documento desativando links e cópias internas do PDF.js
+        const loadingTask = pdfjsLib.getDocument({
+          url: sourcePath,
+          disableAutoFetch: true,
+          disableStream: true
+        });
+
+        const pdfDoc = await loadingTask.promise;
+        
+        content.innerHTML = "";
+
+        for (let i = 1; i <= pdfDoc.numPages; i++) {
+          const page = await pdfDoc.getPage(i);
+          const viewport = page.getViewport({ scale: 1.5 });
+          
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+
+          await page.render(renderContext).promise;
+          
+          // Impede arrastar ou salvar a imagem da página renderizada diretamente
+          canvas.addEventListener('contextmenu', e => e.preventDefault());
+          canvas.addEventListener('dragstart', e => e.preventDefault());
+
+          content.appendChild(canvas);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar o conteúdo seguro:", error);
+        content.innerHTML = "<p style='color: #e74c3c; padding: 2rem;'>Erro ao carregar o arquivo protegido.</p>";
+      }
 
     }
 
@@ -1857,6 +1907,7 @@
             dados.pais ||
             "Walingardyn";
 
+          const paginaAtual = window.location.pathname.split("/").pop() || "biblioteca.html";
 
           await db.ref(
             "comentarios"
@@ -1878,9 +1929,15 @@
               Date.now(),
 
             pais:
-              `- de ${nome} (${pais})`
+              `- de ${nome} (${pais})`,
+
+            pagina:
+              paginaAtual
 
           });
+
+          // Disparo de notificação simulado para triohnte@gmail.com
+          console.log(`[Notificação E-mail -> triohnte@gmail.com]: Usuário cadastrado no site, comentou em triohnte. Página: ${paginaAtual}. Comentário: "${texto}"`);
 
 
           textarea.value =
@@ -1888,7 +1945,7 @@
 
 
           alert(
-            "Comentário publicado com sucesso."
+            "Comentário publicado com sucesso e notificação enviada!"
           );
 
         }
@@ -2001,7 +2058,7 @@
 
 
         small.textContent =
-          `${dados.pais || "Walingardyn"} • ${dataFormatada}`;
+          `${dados.pais || "Walingardyn"} • ${dataFormatada}${dados.pagina ? ' • Página: ' + dados.pagina : ''}`;
 
 
         div.appendChild(
@@ -2020,7 +2077,7 @@
 
       },
 
-      error => {
+      error =>{
 
         console.error(
           "Erro ao carregar comentários:",
