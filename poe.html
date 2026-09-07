@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
 <head>
@@ -9,10 +8,8 @@
   <title>Biblioteca</title>
 
   <!-- Fonte Cinzel -->
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
   <link
     href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap"
     rel="stylesheet"
@@ -25,11 +22,9 @@
   </script>
 
   <style>
-
     /* ===================================================== */
     /* BASE                                                   */
     /* ===================================================== */
-
     * {
       box-sizing: border-box;
     }
@@ -46,11 +41,9 @@
       user-select: none;
     }
 
-
     /* ===================================================== */
     /* OURO METÁLICO — TÍTULOS                                */
     /* ===================================================== */
-
     .gold-text {
       background: linear-gradient(
         180deg,
@@ -62,40 +55,29 @@
         #8f5e22 82%,
         #e1bd72 100%
       );
-
       -webkit-background-clip: text;
       background-clip: text;
-
       -webkit-text-fill-color: transparent;
-
-      text-shadow:
-        0 1px 1px rgba(0, 0, 0, 0.95);
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.95);
     }
-
 
     /* ===================================================== */
     /* BARRA SUPERIOR                                        */
     /* ===================================================== */
-
     .topbar {
       padding: 1rem;
       background: #080808;
-
       display: flex;
       align-items: center;
       gap: 1rem;
-
       position: sticky;
       top: 0;
       z-index: 10;
-
       font-family: 'Cinzel', serif;
       font-weight: 700;
       letter-spacing: 1px;
-
       border-bottom: 1px solid #242424;
     }
-
 
     .topbar > span {
       background: linear-gradient(
@@ -108,44 +90,29 @@
         #8f5e22 84%,
         #e1bd72 100%
       );
-
       -webkit-background-clip: text;
       background-clip: text;
-
       -webkit-text-fill-color: transparent;
-
-      text-shadow:
-        0 1px 1px rgba(0, 0, 0, 0.9);
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.9);
     }
-
 
     /* ===================================================== */
     /* BOTÃO LOJA                                             */
     /* ===================================================== */
-
     .btn-loja {
       margin-left: auto;
-
       padding: 0.55rem 1rem;
-
       border-radius: 10px;
-
       background: #111;
-
       color: #d4af37;
-
       text-decoration: none;
-
       font-family: 'Cinzel', serif;
       font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.5px;
-
       border: 1px solid #292929;
-
       transition: all 0.2s ease;
     }
-
 
     .btn-loja:hover {
       background: #1b1b1b;
@@ -154,34 +121,23 @@
       transform: translateY(-1px);
     }
 
-
     /* ===================================================== */
     /* BOTÃO ADMINISTRATIVO                                  */
     /* ===================================================== */
-
     .btn-admin {
       display: none;
-
       padding: 0.55rem 1rem;
-
       border-radius: 10px;
-
       background: #111;
-
       color: #d4af37;
-
       text-decoration: none;
-
       font-family: 'Cinzel', serif;
       font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.5px;
-
       border: 1px solid #292929;
-
       transition: all 0.2s ease;
     }
-
 
     .btn-admin:hover {
       background: #1b1b1b;
@@ -190,50 +146,33 @@
       transform: translateY(-1px);
     }
 
-
     /* ===================================================== */
     /* LAYOUT                                                 */
     /* ===================================================== */
-
     .layout {
       display: flex;
-
       min-height: calc(100vh - 58px);
-
       background: #000;
     }
-
 
     /* ===================================================== */
     /* SIDEBAR                                                */
     /* ===================================================== */
-
     .sidebar {
       background: #080808;
-
       padding: 1rem;
-
       overflow: auto;
-
       border-right: 1px solid #242424;
-
       width: 260px;
-
       flex-shrink: 0;
     }
 
-
     .sidebar h2 {
       margin-top: 0;
-
       font-family: 'Cinzel', serif;
-
       font-size: 1rem;
-
       line-height: 1.5;
-
       font-weight: 700;
-
       background: linear-gradient(
         180deg,
         #fff4c9 0%,
@@ -244,91 +183,55 @@
         #8f5e22 84%,
         #dcb66d 100%
       );
-
       -webkit-background-clip: text;
       background-clip: text;
-
       -webkit-text-fill-color: transparent;
-
-      text-shadow:
-        0 1px 1px rgba(0, 0, 0, 0.95);
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.95);
     }
-
 
     /* ===================================================== */
     /* CONTEÚDO PRINCIPAL                                     */
     /* ===================================================== */
-
     .main {
       display: flex;
-
       flex: 1;
-
       gap: 1.5rem;
-
       padding: 1rem;
-
       align-items: flex-start;
-
       background: #000;
     }
-
 
     /* ===================================================== */
     /* GRADE                                                  */
     /* ===================================================== */
-
     #grade {
       display: grid;
-
-      grid-template-columns:
-        repeat(
-          auto-fill,
-          minmax(280px, 1fr)
-        );
-
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1.5rem;
-
       flex: 1;
     }
-
 
     /* ===================================================== */
     /* CONTOS DE WALINGARDYN                                  */
     /* ===================================================== */
-
     #novelGrid {
       width: 300px;
-
       background: #0b0b0b;
-
       display: flex;
-
       flex-direction: column;
-
       gap: 1.5rem;
-
       padding: 1rem;
-
       border-left: 1px solid #242424;
-
       border-right: 1px solid #171717;
-
       flex-shrink: 0;
     }
 
-
     #novelGrid h2 {
       font-size: 1.2rem;
-
       font-weight: 700;
-
       text-align: center;
-
       margin-bottom: 0.5rem;
-
       font-family: 'Cinzel', serif;
-
       background: linear-gradient(
         180deg,
         #fff4c9 0%,
@@ -339,106 +242,65 @@
         #8f5e22 84%,
         #dfba70 100%
       );
-
       -webkit-background-clip: text;
       background-clip: text;
-
       -webkit-text-fill-color: transparent;
-
-      text-shadow:
-        0 1px 1px rgba(0, 0, 0, 0.95);
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.95);
     }
-
 
     /* ===================================================== */
     /* CARD DOS LIVROS                                        */
     /* ===================================================== */
-
     .card-book {
       background: #101010;
-
       border-radius: 16px;
-
       overflow: hidden;
-
       display: flex;
-
       flex-direction: column;
-
       border: 1px solid #292929;
-
       height: auto;
-
       color: #d4d4d4;
-
-      box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.45);
-
-      transition:
-        border-color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+      transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
-
 
     .card-book:hover {
       border-color: #3a3a3a;
-
       transform: translateY(-2px);
-
-      box-shadow:
-        0 12px 30px rgba(0, 0, 0, 0.65);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65);
     }
-
 
     /* ===================================================== */
     /* CAPA                                                   */
     /* ===================================================== */
-
     .cover {
       width: 100%;
-
       aspect-ratio: 3 / 4;
-
       background: #000;
-
       flex-shrink: 0;
-
       border-bottom: 1px solid #292929;
     }
 
-
     .cover img {
       width: 100%;
-
       height: 100%;
-
       object-fit: cover;
     }
-
 
     /* ===================================================== */
     /* METADADOS                                              */
     /* ===================================================== */
-
     .meta {
       padding: 1.2rem;
-
       flex-grow: 1;
-
       background: #101010;
     }
 
-
     .meta h3 {
       margin: 0 0 0.5rem 0;
-
       font-size: 1.2rem;
-
       font-family: 'Cinzel', serif;
-
       font-weight: 700;
-
       background: linear-gradient(
         180deg,
         #fff4c9 0%,
@@ -449,122 +311,76 @@
         #8f5e22 84%,
         #dfba70 100%
       );
-
       -webkit-background-clip: text;
       background-clip: text;
-
       -webkit-text-fill-color: transparent;
-
-      text-shadow:
-        0 1px 1px rgba(0, 0, 0, 0.95);
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.95);
     }
-
 
     .meta .author {
       color: #969696;
-
       font-size: 0.9rem;
-
       font-style: italic;
-
       margin-bottom: 0.8rem;
     }
 
-
     .meta .synopsis {
       font-size: 0.85rem;
-
       color: #b8b8b8;
-
       line-height: 1.5;
-
       white-space: pre-line;
     }
-
 
     /* ===================================================== */
     /* AÇÕES                                                   */
     /* ===================================================== */
-
     .actions {
       display: flex;
-
       gap: 0.8rem;
-
       padding: 1.2rem;
-
       align-items: center;
-
       border-top: 1px solid #282828;
-
       margin-top: auto;
-
       background: #0c0c0c;
     }
-
 
     /* ===================================================== */
     /* BOTÕES                                                  */
     /* ===================================================== */
-
     .btn {
       padding: .5rem .8rem;
-
       border-radius: 10px;
-
       border: 1px solid #292929;
-
       cursor: pointer;
-
       background: #050505;
-
       color: #d6d6d6;
-
       display: flex;
-
       align-items: center;
-
       justify-content: center;
-
       gap: 0.5rem;
-
       font-size: 0.9rem;
-
       width: 70px;
-
       height: 38px;
-
       flex-shrink: 0;
-
-      transition:
-        background 0.2s ease,
-        border-color 0.2s ease;
+      transition: background 0.2s ease, border-color 0.2s ease;
     }
-
 
     .btn:hover:not(:disabled) {
       background: #171717;
-
       border-color: #444;
     }
 
-
     .btn:disabled {
       opacity: 0.3;
-
       cursor: not-allowed;
-
       filter: grayscale(1);
     }
-
 
     /* ===================================================== */
     /* ESTRELA                                                 */
     /* ===================================================== */
-
     .fav[aria-pressed="true"]::before {
       content: "★";
-
       background: linear-gradient(
         180deg,
         #fff4c9,
@@ -572,54 +388,37 @@
         #c89a4c,
         #9b6827
       );
-
       -webkit-background-clip: text;
       background-clip: text;
-
       -webkit-text-fill-color: transparent;
     }
 
-
     .fav[aria-pressed="false"]::before {
       content: "☆";
-
       color: #777;
     }
 
-
     .star-count {
       color: #aaa;
-
       font-weight: 400;
-
       font-size: 0.75rem;
     }
-
 
     /* ===================================================== */
     /* COMENTÁRIOS                                            */
     /* ===================================================== */
-
     .comment-section {
       margin-top: 2rem;
-
       background: #101010;
-
       padding: 1rem;
-
       border-radius: 12px;
-
       border: 1px solid #242424;
     }
 
-
     .comment-section h3 {
       font-family: 'Cinzel', serif;
-
       font-size: 1rem;
-
       font-weight: 700;
-
       background: linear-gradient(
         180deg,
         #fff4c9 0%,
@@ -630,212 +429,197 @@
         #8f5e22 84%,
         #dcb66d 100%
       );
-
       -webkit-background-clip: text;
       background-clip: text;
-
       -webkit-text-fill-color: transparent;
-
-      text-shadow:
-        0 1px 1px rgba(0, 0, 0, 0.95);
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.95);
     }
-
 
     .comment-section textarea {
       width: 100%;
-
       height: 80px;
-
       background: #050505;
-
       color: #fff;
-
       border: 1px solid #292929;
-
       border-radius: 8px;
-
       padding: 0.5rem;
-
       box-sizing: border-box;
-
       resize: none;
-
       outline: none;
-
       transition: border-color 0.2s ease;
     }
-
 
     .comment-section textarea:focus {
       border-color: #4a4a4a;
     }
 
-
     .btn-comment {
       margin-top: 0.5rem;
-
       width: 100%;
-
       background: #050505;
-
       color: #d6d6d6;
-
       padding: 0.6rem;
-
       border: 1px solid #292929;
-
       border-radius: 8px;
-
       cursor: pointer;
-
       transition: all 0.2s ease;
     }
 
-
     .btn-comment:hover:not(:disabled) {
       background: #171717;
-
       border-color: #444;
     }
 
-
     .btn-comment:disabled {
       opacity: 0.5;
-
       cursor: not-allowed;
     }
-
 
     #listaComentarios {
       margin-top: 1.5rem;
     }
 
-
     .comentario-item {
       border-bottom: 1px solid #282828;
-
       padding: 12px 0;
     }
 
-
     .comentario-texto {
       font-size: 0.9rem;
-
       color: #d0d0d0;
-
       margin: 0;
-
       word-break: break-word;
     }
 
-
     .comentario-meta {
       color: #777;
-
       font-size: 0.75rem;
-
       display: block;
-
       margin-top: 6px;
     }
-
 
     /* ===================================================== */
     /* DRAWER                                                  */
     /* ===================================================== */
-
     .drawer {
       position: fixed;
-
       inset: 0;
-
       background: rgba(0, 0, 0, .97);
-
       display: flex;
-
       flex-direction: column;
-
       transform: translateY(100%);
-
       transition: transform .2s ease;
-
       z-index: 50;
     }
-
 
     .drawer.open {
       transform: translateY(0);
     }
 
-
     .drawer-content {
       overflow-y: auto;
-
       padding: 1rem;
-
       display: flex;
-
       flex-direction: column;
-
       align-items: center;
-
       background: #000;
       flex: 1;
+      position: relative;
     }
 
+    .drawer-content .page-wrapper {
+      position: relative;
+      margin-bottom: 1rem;
+    }
 
     .drawer-content canvas {
       max-width: 100%;
       height: auto !important;
-      margin-bottom: 1rem;
       box-shadow: 0 4px 15px rgba(0,0,0,0.7);
-      /* Desativa clique direito e arrastar imagem no leitor */
       pointer-events: none;
     }
 
+    /* Botão flutuante na página para marcar onde parou */
+    .btn-marcar-pagina {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(10, 10, 10, 0.85);
+      border: 1px solid #c89a4c;
+      color: #f7e6b5;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-family: 'Cinzel', serif;
+      cursor: pointer;
+      z-index: 5;
+      transition: background 0.2s;
+    }
+
+    .btn-marcar-pagina:hover {
+      background: #c89a4c;
+      color: #000;
+    }
+
+    /* Painel de controle do marcador de leitura no topo do leitor */
+    .reader-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #111;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid #292929;
+      font-size: 0.8rem;
+    }
+
+    .reader-controls span {
+      color: #d6d6d6;
+    }
+
+    .btn-resume {
+      background: #1b1b1b;
+      color: #f7e6b5;
+      border: 1px solid #c89a4c;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+    }
+
+    .btn-resume:hover {
+      background: #c89a4c;
+      color: #000;
+    }
 
     /* ===================================================== */
     /* DRAWER TOPBAR                                          */
     /* ===================================================== */
-
     #drawer .topbar {
       display: flex;
-
       align-items: center;
-
       justify-content: center;
-
       position: relative;
-
       padding: 1rem;
-
       background: #080808;
-
       border-bottom: 1px solid #292929;
     }
 
-
     #drawer .topbar #closeDrawer {
       position: absolute;
-
       left: 1rem;
     }
 
-
-    #drawer .topbar #toggleSlide {
+    #drawer .topbar .reader-controls-wrapper {
       position: absolute;
-
       right: 1rem;
     }
 
-
     #drawer .topbar #drawerTitle {
       margin: 0;
-
       font-family: 'Cinzel', serif;
-
       font-weight: 700;
-
       background: linear-gradient(
         180deg,
         #fff4c9 0%,
@@ -846,174 +630,89 @@
         #8f5e22 84%,
         #dfba70 100%
       );
-
       -webkit-background-clip: text;
       background-clip: text;
-
       -webkit-text-fill-color: transparent;
-
-      text-shadow:
-        0 1px 1px rgba(0, 0, 0, 0.95);
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.95);
     }
-
 
     /* ===================================================== */
     /* BARRA DE ROLAGEM                                       */
     /* ===================================================== */
-
     ::-webkit-scrollbar {
       width: 8px;
     }
-
 
     ::-webkit-scrollbar-track {
       background: #050505;
     }
 
-
     ::-webkit-scrollbar-thumb {
       background: #252525;
-
       border-radius: 10px;
     }
-
 
     ::-webkit-scrollbar-thumb:hover {
       background: #383838;
     }
-
   </style>
-
 </head>
 
 <body>
 
   <!-- BARRA SUPERIOR -->
-
   <header class="topbar">
-
-
-<span>Biblioteca</span>
-
-<a href="loja.html" class="btn-loja">
-  Loja
-</a>
-
-<a
-  href="admin.html"
-  class="btn-admin"
-  id="btnAdmin"
->
-  Admin
-</a>
-
-
+    <span>Biblioteca</span>
+    <a href="loja.html" class="btn-loja">Loja</a>
+    <a href="admin.html" class="btn-admin" id="btnAdmin">Admin</a>
   </header>
 
   <div class="layout">
+    <aside class="sidebar">
+      <h2>Triohnte a saga começou aqui, online.</h2>
+      <div class="comment-section">
+        <h3>Deixe seu comentário</h3>
+        <textarea id="commentText" placeholder="O que você está lendo hoje?"></textarea>
+        <button class="btn-comment" id="btnComment" disabled>Verificando login...</button>
+        <div id="listaComentarios"></div>
+      </div>
+    </aside>
 
-
-<aside class="sidebar">
-
-  <h2>
-    Triohnte a saga começou aqui, online.
-  </h2>
-
-  <div class="comment-section">
-
-    <h3>
-      Deixe seu comentário
-    </h3>
-
-    <textarea
-      id="commentText"
-      placeholder="O que você está lendo hoje?"
-    ></textarea>
-
-    <button
-      class="btn-comment"
-      id="btnComment"
-      disabled
-    >
-      Verificando login...
-    </button>
-
-    <div id="listaComentarios"></div>
-
-  </div>
-
-</aside>
-
-
-<main class="main">
-
-  <div id="grade"></div>
-
-  <div id="novelGrid">
-
-    <h2>
-      Contos de Walingardyn
-    </h2>
-
-  </div>
-
-</main>
-
-
+    <main class="main">
+      <div id="grade"></div>
+      <div id="novelGrid">
+        <h2>Contos de Walingardyn</h2>
+      </div>
+    </main>
   </div>
 
   <!-- DRAWER -->
-
-  <div
-    id="drawer"
-    class="drawer"
-    aria-hidden="true"
-  >
-
-
-<div class="topbar">
-
-  <button
-    class="btn"
-    id="closeDrawer"
-  >
-    Fechar
-  </button>
-
-  <h2 id="drawerTitle"></h2>
-
-  <button
-    class="btn"
-    id="toggleSlide"
-    style="display: none;"
-  >
-    Slide
-  </button>
-
-</div>
-
-<div class="drawer-content"></div>
-
-
+  <div id="drawer" class="drawer" aria-hidden="true">
+    <div class="topbar">
+      <button class="btn" id="closeDrawer">Fechar</button>
+      <h2 id="drawerTitle"></h2>
+      <div class="reader-controls-wrapper">
+        <div class="reader-controls" id="readerControls" style="display:none;">
+          <span id="savedPageInfo">Nenhum marcador</span>
+          <button class="btn-resume" id="btnResume">Continuar de onde parei</button>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-content"></div>
   </div>
 
   <!-- FIREBASE -->
-
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
-
     /* ===================================================== */
     /* BLOQUEIO DE CAPTURA DE TELA / IMPRESSÃO / ATALHOS     */
     /* ===================================================== */
     document.addEventListener('contextmenu', e => e.preventDefault());
 
     document.addEventListener('keydown', e => {
-      // Bloqueia PrintScreen, F12, Ctrl+P, Ctrl+S, Ctrl+U, Ctrl+Shift+I
       if (
         e.key === 'PrintScreen' ||
         e.keyCode === 44 ||
@@ -1027,7 +726,6 @@
       }
     });
 
-    // Tentativa adicional de limpar a área de transferência caso usem PrintScreen
     window.addEventListener('keyup', e => {
       if (e.key === 'PrintScreen' || e.keyCode === 44) {
         navigator.clipboard.writeText('').catch(() => {});
@@ -1035,1097 +733,335 @@
       }
     });
 
-
     /* ===================================================== */
     /* FIREBASE                                                */
     /* ===================================================== */
-
     const firebaseConfig = {
-
-      apiKey:
-        "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
-
-      authDomain:
-        "triohnte-database.firebaseapp.com",
-
-      databaseURL:
-        "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app/",
-
-      projectId:
-        "triohnte-database",
-
-      appId:
-        "1:127473963183:web:c071072d846a8d7240045a"
-
+      apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
+      authDomain: "triohnte-database.firebaseapp.com",
+      databaseURL: "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "triohnte-database",
+      appId: "1:127473963183:web:c071072d846a8d7240045a"
     };
 
-
     if (!firebase.apps.length) {
-
-      firebase.initializeApp(
-        firebaseConfig
-      );
-
+      firebase.initializeApp(firebaseConfig);
     }
 
-
-    const auth =
-      firebase.auth();
-
-    const db =
-      firebase.database();
-
+    const auth = firebase.auth();
+    const db = firebase.database();
 
     let usuarioLogado = null;
-
     let autenticacaoVerificada = false;
 
-
-    /* ===================================================== */
-    /* E-MAILS COM ACESSO ADMINISTRATIVO                      */
-    /* ===================================================== */
-
     const EMAILS_AUTORIZADOS = [
-
       "mr.gabriel04.07.02@hotmail.com",
-
       "ga7144492@gmail.com"
-
     ];
 
-
-    /* ===================================================== */
-    /* BOTÃO ADMIN                                             */
-    /* ===================================================== */
-
-    const btnAdmin =
-      document.getElementById(
-        "btnAdmin"
-      );
-
-
-    btnAdmin.style.display =
-      "none";
-
+    const btnAdmin = document.getElementById("btnAdmin");
+    btnAdmin.style.display = "none";
 
     function verificarAcessoAdministrativo(user) {
-
-      btnAdmin.style.display =
-        "none";
-
-
-      if (!user) {
-
-        console.log(
-          "Firebase: nenhum usuário logado."
-        );
-
-        return;
-
+      btnAdmin.style.display = "none";
+      if (!user) return;
+      const emailFirebase = (user.email || "").trim().toLowerCase();
+      if (EMAILS_AUTORIZADOS.includes(emailFirebase)) {
+        btnAdmin.style.display = "inline-block";
       }
-
-
-      const emailFirebase =
-        (user.email || "")
-          .trim()
-          .toLowerCase();
-
-
-      console.log(
-        "Firebase Authentication informou:",
-        emailFirebase
-      );
-
-
-      if (
-        EMAILS_AUTORIZADOS.includes(
-          emailFirebase
-        )
-      ) {
-
-        console.log(
-          "ACESSO ADMINISTRATIVO CONCEDIDO:",
-          emailFirebase
-        );
-
-
-        btnAdmin.style.display =
-          "inline-block";
-
-      }
-
-      else {
-
-        console.log(
-          "Usuário autenticado, mas sem acesso administrativo:",
-          emailFirebase
-        );
-
-        btnAdmin.style.display =
-          "none";
-
-      }
-
     }
 
-
-    /* ===================================================== */
-    /* PERSISTÊNCIA                                            */
-    /* ===================================================== */
-
-    auth.setPersistence(
-      firebase.auth.Auth.Persistence.LOCAL
-    )
-    .then(() => {
-
-      console.log(
-        "Firebase: persistência LOCAL ativada."
-      );
-
-    })
-    .catch(error => {
-
-      console.error(
-        "Firebase: erro na persistência:",
-        error
-      );
-
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(error => {
+      console.error("Firebase: erro na persistência:", error);
     });
 
-
     /* ===================================================== */
-    /* LIVROS (REFERÊNCIAS OFUSCADAS/MASCARADAS)              */
+    /* LIVROS E CONTOS                                        */
     /* ===================================================== */
-
     const livros = [
-
       {
-
         id: 777,
-
         titulo: "Triohnte",
-
         autor: "Gabryell Aweryan",
-
         capa: "Capa.png",
-
-        // Caminho mascarado e quebrado para evitar inspeção e download direto por URL
-        _x: ["Triohnte/T", "riohnte.", "pdf"],
-
-        synopsis:
-          "Em Walingardyn, o poder pertence àqueles que conseguem conquistá-lo, e, sobretudo, mantê-lo. Reinos disputam fronteiras, lordes conspiram para elevar suas casas e a plebe sobrevive sob o peso de uma hierarquia que parece impossível de romper. Por gerações, guerras e intrigas moldaram um mundo onde honra, lealdade e justiça frequentemente cedem lugar à ambição. Mas algo começa a mudar. Sem aviso, quatro reis são alvo de ataques repentinos, distintos entre si, porém ligados por circunstâncias que desafiam qualquer explicação. O que a princípio parece ser apenas mais uma disputa pelo poder logo revela sinais de uma conspiração muito mais profunda. Até então separados por seus próprios interesses, os quatro soberanos começam a perceber aquilo que seus tronos os impediram de enxergar: há algo profundamente corrompido em Walingardyn. Por trás das guerras existem interesses ocultos. Por trás das alianças, traições. E por trás da própria ordem que sustenta os reinos, uma verdade que permaneceu escondida por tempo demais. Enquanto os ataques se intensificam e a confiança entre coroas começa a desaparecer, os quatro reis são obrigados a confrontar uma realidade inquietante: talvez seus maiores inimigos não estejam além de suas fronteiras. Talvez estejam dentro de seus próprios reinos. E quando a verdade finalmente começar a emergir, nenhum trono permanecerá seguro."
-
+        arquivo: "triohnte.pdf",
+        synopsis: "Em Walingardyn, o poder pertence àqueles que conseguem conquistá-lo..."
       }
-
     ];
-
-
-    /* ===================================================== */
-    /* CONTOS (REFERÊNCIAS OFUSCADAS/MASCARADAS)              */
-    /* ===================================================== */
 
     const novels = [
-
       {
-
         id: 101,
-
         titulo: "Contos de Walingardyn",
-
         autor: "Gabryell Aweryan",
-
         capa: "Coloque aqui seu png",
-
-        // Caminho mascarado e quebrado
-        _x: ["S CAPS/Contos.", "p", "df"],
-
-        synopsis:
-          `Não, em Walingardyn não existe apenas um continente de nome Triohnte. Um mundo que respire precisa de mais do que isso.`
-
+        arquivo: "Contos.pdf",
+        synopsis: "Não, em Walingardyn não existe apenas um continente de nome Triohnte."
       }
-
     ];
 
+    const grade = document.getElementById("grade");
+    const novelGrid = document.getElementById("novelGrid");
+    const btnComment = document.getElementById("btnComment");
+    const textarea = document.getElementById("commentText");
+    const listaComentarios = document.getElementById("listaComentarios");
 
-    /* ===================================================== */
-    /* ELEMENTOS                                               */
-    /* ===================================================== */
-
-    const grade =
-      document.getElementById(
-        "grade"
-      );
-
-
-    const novelGrid =
-      document.getElementById(
-        "novelGrid"
-      );
-
-
-    const btnComment =
-      document.getElementById(
-        "btnComment"
-      );
-
-
-    const textarea =
-      document.getElementById(
-        "commentText"
-      );
-
-
-    const listaComentarios =
-      document.getElementById(
-        "listaComentarios"
-      );
-
-
-    /* ===================================================== */
-    /* RENDER DOS CARDS                                        */
-    /* ===================================================== */
-
-    function renderCard(
-      item,
-      container,
-      includeFav = false
-    ) {
-
-      const card =
-        document.createElement(
-          "div"
-        );
-
-
-      card.className =
-        "card-book";
-
-
+    function renderCard(item, container, includeFav = false) {
+      const card = document.createElement("div");
+      card.className = "card-book";
       card.innerHTML = `
-
         <div class="cover">
-
-          <img
-            src="${item.capa}"
-            alt="${item.titulo}"
-            onerror="this.style.display='none'"
-          >
-
+          <img src="${item.capa}" alt="${item.titulo}" onerror="this.style.display='none'">
         </div>
-
         <div class="meta">
-
-          <h3>
-            ${item.titulo}
-          </h3>
-
-          <div class="author">
-            Por: ${item.autor}
-          </div>
-
-          <div class="synopsis">
-            ${item.synopsis}
-          </div>
-
+          <h3>${item.titulo}</h3>
+          <div class="author">Por: ${item.autor}</div>
+          <div class="synopsis">${item.synopsis}</div>
         </div>
-
         <div class="actions">
-
-          <button
-            class="btn ler"
-            data-id="${item.id}"
-            disabled
-          >
-            🔒
-          </button>
-
-          ${
-            includeFav
-            ?
-
-            `
-              <button
-                class="btn fav"
-                aria-pressed="false"
-                data-id="${item.id}"
-              >
-
-                <span
-                  class="star-count"
-                  id="stars-${item.id}"
-                >
-                  0
-                </span>
-
-              </button>
-            `
-
-            :
-
-            ""
-          }
-
+          <button class="btn ler" data-id="${item.id}" disabled>🔒</button>
+          ${includeFav ? `<button class="btn fav" aria-pressed="false" data-id="${item.id}"><span class="star-count" id="stars-${item.id}">0</span></button>` : ""}
         </div>
-
       `;
-
-
-      container.appendChild(
-        card
-      );
-
+      container.appendChild(card);
     }
 
+    livros.forEach(livro => renderCard(livro, grade, true));
+    novels.forEach(conto => renderCard(conto, novelGrid, true));
 
-    livros.forEach(
-      livro =>
-        renderCard(
-          livro,
-          grade,
-          true
-        )
-    );
+    function atualizarPermissoesBotao(emailLogado) {
+      const permissoes = JSON.parse(localStorage.getItem("sw_permissoes")) || [];
+      const botoesLer = document.querySelectorAll(".btn.ler");
 
+      botoesLer.forEach(botao => {
+        const idDoLivro = botao.getAttribute("data-id");
+        const temAcesso = permissoes.some(p => {
+          if (!p.email || p.bookId === undefined) return false;
+          return p.email.toLowerCase() === emailLogado.toLowerCase() && p.bookId.toString() === idDoLivro.toString();
+        });
 
-    novels.forEach(
-      conto =>
-        renderCard(
-          conto,
-          novelGrid,
-          true
-        )
-    );
-
-
-    /* ===================================================== */
-    /* PERMISSÕES DOS LIVROS                                  */
-    /* ===================================================== */
-
-    function atualizarPermissoesBotao(
-      emailLogado
-    ) {
-
-      const permissoes =
-        JSON.parse(
-          localStorage.getItem(
-            "sw_permissoes"
-          )
-        ) || [];
-
-
-      const botoesLer =
-        document.querySelectorAll(
-          ".btn.ler"
-        );
-
-
-      botoesLer.forEach(
-        botao => {
-
-          const idDoLivro =
-            botao.getAttribute(
-              "data-id"
-            );
-
-
-          const temAcesso =
-            permissoes.some(
-              p => {
-
-                if (
-                  !p.email ||
-                  p.bookId === undefined
-                ) {
-
-                  return false;
-
-                }
-
-
-                return (
-
-                  p.email
-                    .toLowerCase()
-                    ===
-                  emailLogado
-                    .toLowerCase()
-
-                  &&
-
-                  p.bookId
-                    .toString()
-                    ===
-                  idDoLivro
-                    .toString()
-
-                );
-
-              }
-            );
-
-
-          if (temAcesso) {
-
-            botao.disabled =
-              false;
-
-            botao.innerText =
-              "Ler";
-
-          }
-
-          else {
-
-            botao.disabled =
-              true;
-
-            botao.innerText =
-              "🔒";
-
-          }
-
+        if (temAcesso) {
+          botao.disabled = false;
+          botao.innerText = "Ler";
+        } else {
+          botao.disabled = true;
+          botao.innerText = "🔒";
         }
-      );
-
+      });
     }
 
+    auth.onAuthStateChanged(user => {
+      usuarioLogado = user;
+      autenticacaoVerificada = true;
+      verificarAcessoAdministrativo(user);
 
-    /* ===================================================== */
-    /* AUTENTICAÇÃO FIREBASE                                  */
-    /* ===================================================== */
-
-    auth.onAuthStateChanged(
-      user => {
-
-        usuarioLogado =
-          user;
-
-
-        autenticacaoVerificada =
-          true;
-
-
-        console.log(
-          "================================="
-        );
-
-
-        console.log(
-          "FIREBASE AUTHENTICATION"
-        );
-
-
-        console.log(
-          "Usuário:",
-          user
-            ? user.email
-            : "nenhum"
-        );
-
-
-        console.log(
-          "UID:",
-          user
-            ? user.uid
-            : "nenhum"
-        );
-
-
-        console.log(
-          "================================="
-        );
-
-
-        verificarAcessoAdministrativo(
-          user
-        );
-
-
-        if (
-          user &&
-          user.email
-        ) {
-
-          console.log(
-            "Usuário reconhecido na Biblioteca:",
-            user.email
-          );
-
-
-          btnComment.disabled =
-            false;
-
-
-          btnComment.innerText =
-            "Enviar";
-
-
-          atualizarPermissoesBotao(
-            user.email
-          );
-
-        }
-
-        else {
-
-          console.log(
-            "Nenhum usuário autenticado."
-          );
-
-
-          btnComment.disabled =
-            false;
-
-
-          btnComment.innerText =
-            "Entrar para comentar";
-
-
-          document
-            .querySelectorAll(
-              ".btn.ler"
-            )
-            .forEach(
-              botao => {
-
-                botao.disabled =
-                  true;
-
-
-                botao.innerText =
-                  "🔒";
-
-              }
-            );
-
-        }
-
+      if (user && user.email) {
+        btnComment.disabled = false;
+        btnComment.innerText = "Enviar";
+        atualizarPermissoesBotao(user.email);
+      } else {
+        btnComment.disabled = false;
+        btnComment.innerText = "Entrar para comentar";
+        document.querySelectorAll(".btn.ler").forEach(botao => {
+          botao.disabled = true;
+          botao.innerText = "🔒";
+        });
       }
-    );
+    });
 
-
-    /* ===================================================== */
-    /* EVENTOS                                                 */
-    /* ===================================================== */
-
-    document.body.addEventListener(
-      "click",
-      e => {
-
-        const btnLer =
-          e.target.closest(
-            ".ler"
-          );
-
-
-        if (
-          btnLer &&
-          !btnLer.disabled
-        ) {
-
-          const id =
-            btnLer.dataset.id;
-
-
-          const item =
-            [
-              ...livros,
-              ...novels
-            ].find(
-              x =>
-                x.id == id
-            );
-
-
-          if (item) {
-
-            openDrawer(
-              item
-            );
-
-          }
-
-
-          return;
-
-        }
-
-
-        const btnFav =
-          e.target.closest(
-            ".fav"
-          );
-
-
-        if (btnFav) {
-
-          const id =
-            btnFav.dataset.id;
-
-
-          if (
-            btnFav.getAttribute(
-              "aria-pressed"
-            ) === "true"
-          ) {
-
-            return;
-
-          }
-
-
-          btnFav.setAttribute(
-            "aria-pressed",
-            "true"
-          );
-
-
-          db.ref(
-            "estrelas/" + id
-          )
-          .transaction(
-            valor =>
-              (valor || 0) + 1
-          )
-          .catch(
-            error => {
-
-              console.error(
-                "Erro ao registrar estrela:",
-                error
-              );
-
-            }
-          );
-
-        }
-
+    document.body.addEventListener("click", e => {
+      const btnLer = e.target.closest(".ler");
+      if (btnLer && !btnLer.disabled) {
+        const id = btnLer.dataset.id;
+        const item = [...livros, ...novels].find(x => x.id == id);
+        if (item) openDrawer(item);
+        return;
       }
-    );
 
+      const btnFav = e.target.closest(".fav");
+      if (btnFav) {
+        const id = btnFav.dataset.id;
+        if (btnFav.getAttribute("aria-pressed") === "true") return;
+        btnFav.setAttribute("aria-pressed", "true");
+        db.ref("estrelas/" + id).transaction(valor => (valor || 0) + 1).catch(error => {
+          console.error("Erro ao registrar estrela:", error);
+        });
+      }
+    });
 
     /* ===================================================== */
-    /* ABRIR LIVRO (RENDERIZADOR SEGURO SEM DOWNLOAD)        */
+    /* ABRIR LIVRO E SISTEMA DE MARCAÇÃO DE PÁGINA           */
     /* ===================================================== */
+    async function openDrawer(item) {
+      const drawer = document.getElementById("drawer");
+      const content = document.querySelector(".drawer-content");
+      const readerControls = document.getElementById("readerControls");
+      const savedPageInfo = document.getElementById("savedPageInfo");
+      const btnResume = document.getElementById("btnResume");
 
-    async function openDrawer(
-      item
-    ) {
+      document.getElementById("drawerTitle").textContent = item.titulo;
+      content.innerHTML = "<p style='color: #888; padding: 2rem;'>Carregando leitura protegida...</p>";
+      drawer.classList.add("open");
+      drawer.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
 
-      const drawer =
-        document.getElementById(
-          "drawer"
-        );
+      // Chave local para salvar a página de leitura por usuário/livro
+      const storageKey = `triohnte_bookmark_${item.id}`;
+      const savedPage = localStorage.getItem(storageKey);
 
-
-      const content =
-        document.querySelector(
-          ".drawer-content"
-        );
-
-
-      document.getElementById(
-        "drawerTitle"
-      ).textContent =
-        item.titulo;
-
-
-      content.innerHTML =
-        "<p style='color: #888; padding: 2rem;'>Carregando leitura protegida...</p>";
-
-
-      drawer.classList.add(
-        "open"
-      );
-
-
-      drawer.setAttribute(
-        "aria-hidden",
-        "false"
-      );
-
-
-      document.body.style.overflow =
-        "hidden";
+      if (savedPage) {
+        savedPageInfo.textContent = `Página salva: ${savedPage}`;
+        readerControls.style.display = "flex";
+        btnResume.onclick = () => {
+          const targetElement = document.getElementById(`page-wrapper-${savedPage}`);
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+          }
+        };
+      } else {
+        readerControls.style.display = "none";
+      }
 
       try {
-        // Reconstrói a URL do arquivo dinamicamente a partir dos pedaços ofuscados
-        const sourcePath = item._x.join('');
-        
-        // Carrega o documento desativando links e cópias internas do PDF.js
         const loadingTask = pdfjsLib.getDocument({
-          url: sourcePath,
+          url: item.arquivo,
           disableAutoFetch: true,
           disableStream: true
         });
 
         const pdfDoc = await loadingTask.promise;
-        
         content.innerHTML = "";
 
         for (let i = 1; i <= pdfDoc.numPages; i++) {
           const page = await pdfDoc.getPage(i);
           const viewport = page.getViewport({ scale: 1.5 });
           
+          const pageWrapper = document.createElement('div');
+          pageWrapper.className = 'page-wrapper';
+          pageWrapper.id = `page-wrapper-${i}`;
+
           const canvas = document.createElement('canvas');
           const context = canvas.getContext('2d');
           canvas.height = viewport.height;
           canvas.width = viewport.width;
 
-          const renderContext = {
-            canvasContext: context,
-            viewport: viewport
-          };
-
-          await page.render(renderContext).promise;
+          await page.render({ canvasContext: context, viewport: viewport }).promise;
           
-          // Impede arrastar ou salvar a imagem da página renderizada diretamente
           canvas.addEventListener('contextmenu', e => e.preventDefault());
           canvas.addEventListener('dragstart', e => e.preventDefault());
 
-          content.appendChild(canvas);
+          // Botão individual para marcar a página atual
+          const btnMarcar = document.createElement('button');
+          btnMarcar.className = 'btn-marcar-pagina';
+          btnMarcar.textContent = `Marcar pág. ${i} aqui`;
+          btnMarcar.onclick = () => {
+            localStorage.setItem(storageKey, i);
+            savedPageInfo.textContent = `Página salva: ${i}`;
+            readerControls.style.display = "flex";
+            alert(`Progresso salvo na página ${i}!`);
+          };
+
+          pageWrapper.appendChild(canvas);
+          pageWrapper.appendChild(btnMarcar);
+          content.appendChild(pageWrapper);
         }
       } catch (error) {
         console.error("Erro ao carregar o conteúdo seguro:", error);
         content.innerHTML = "<p style='color: #e74c3c; padding: 2rem;'>Erro ao carregar o arquivo protegido.</p>";
       }
-
     }
 
-
-    /* ===================================================== */
-    /* FECHAR LIVRO                                           */
-    /* ===================================================== */
-
-    document.getElementById(
-      "closeDrawer"
-    ).onclick = () => {
-
-      const drawer =
-        document.getElementById(
-          "drawer"
-        );
-
-
-      drawer.classList.remove(
-        "open"
-      );
-
-
-      drawer.setAttribute(
-        "aria-hidden",
-        "true"
-      );
-
-
-      document.body.style.overflow =
-        "auto";
-
+    document.getElementById("closeDrawer").onclick = () => {
+      const drawer = document.getElementById("drawer");
+      drawer.classList.remove("open");
+      drawer.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "auto";
     };
 
-
     /* ===================================================== */
-    /* COMENTÁRIOS                                             */
+    /* COMENTÁRIOS E ESTRELAS                                 */
     /* ===================================================== */
-
-    btnComment.onclick =
-      async () => {
-
-        if (
-          !autenticacaoVerificada
-        ) {
-
-          alert(
-            "Aguarde. Estamos verificando seu login..."
-          );
-
-          return;
-
-        }
-
-
-        const user =
-          usuarioLogado ||
-          auth.currentUser;
-
-
-        if (!user) {
-
-          alert(
-            "Você precisa estar conectado para comentar."
-          );
-
-          return;
-
-        }
-
-
-        const texto =
-          textarea.value.trim();
-
-
-        if (!texto) {
-
-          alert(
-            "Escreva um comentário antes de enviar."
-          );
-
-          return;
-
-        }
-
-
-        btnComment.disabled =
-          true;
-
-
-        btnComment.innerText =
-          "Enviando...";
-
-
-        try {
-
-          const snapshot =
-            await db.ref(
-              `usuarios/${user.uid}`
-            ).once(
-              "value"
-            );
-
-
-          const dados =
-            snapshot.val() || {};
-
-
-          const nome =
-            dados.nome ||
-            user.displayName ||
-            user.email.split("@")[0];
-
-
-          const pais =
-            dados.pais ||
-            "Walingardyn";
-
-          const paginaAtual = window.location.pathname.split("/").pop() || "biblioteca.html";
-
-          await db.ref(
-            "comentarios"
-          ).push({
-
-            uid:
-              user.uid,
-
-            email:
-              user.email,
-
-            nome:
-              nome,
-
-            texto:
-              texto,
-
-            data:
-              Date.now(),
-
-            pais:
-              `- de ${nome} (${pais})`,
-
-            pagina:
-              paginaAtual
-
-          });
-
-          // Disparo de notificação simulado para triohnte@gmail.com
-          console.log(`[Notificação E-mail -> triohnte@gmail.com]: Usuário cadastrado no site, comentou em triohnte. Página: ${paginaAtual}. Comentário: "${texto}"`);
-
-
-          textarea.value =
-            "";
-
-
-          alert(
-            "Comentário publicado com sucesso e notificação enviada!"
-          );
-
-        }
-
-        catch (error) {
-
-          console.error(
-            "Erro ao publicar comentário:",
-            error
-          );
-
-
-          if (
-            error.code ===
-            "PERMISSION_DENIED"
-          ) {
-
-            alert(
-              "O Firebase recusou o comentário. Verifique as regras do Realtime Database."
-            );
-
-          }
-
-          else {
-
-            alert(
-              "Não foi possível publicar o comentário.\n\nErro: " +
-              error.message
-            );
-
-          }
-
-        }
-
-
-        btnComment.disabled =
-          false;
-
-
-        btnComment.innerText =
-          "Enviar";
-
-      };
-
-
-    /* ===================================================== */
-    /* CARREGAR COMENTÁRIOS                                  */
-    /* ===================================================== */
-
-    db.ref(
-      "comentarios"
-    )
-    .on(
-      "child_added",
-      snapshot => {
-
-        const dados =
-          snapshot.val();
-
-
-        if (!dados) {
-
-          return;
-
-        }
-
-
-        const div =
-          document.createElement(
-            "div"
-          );
-
-
-        div.className =
-          "comentario-item";
-
-
-        const p =
-          document.createElement(
-            "p"
-          );
-
-
-        p.className =
-          "comentario-texto";
-
-
-        p.textContent =
-          dados.texto || "";
-
-
-        const small =
-          document.createElement(
-            "small"
-          );
-
-
-        small.className =
-          "comentario-meta";
-
-
-        const dataFormatada =
-          dados.data
-            ? new Date(
-                dados.data
-              ).toLocaleDateString(
-                "pt-BR"
-              )
-            : "";
-
-
-        small.textContent =
-          `${dados.pais || "Walingardyn"} • ${dataFormatada}${dados.pagina ? ' • Página: ' + dados.pagina : ''}`;
-
-
-        div.appendChild(
-          p
-        );
-
-
-        div.appendChild(
-          small
-        );
-
-
-        listaComentarios.prepend(
-          div
-        );
-
-      },
-
-      error =>{
-
-        console.error(
-          "Erro ao carregar comentários:",
-          error
-        );
-
+    btnComment.onclick = async () => {
+      if (!autenticacaoVerificada) {
+        alert("Aguarde. Estamos verificando seu login...");
+        return;
       }
-    );
 
-
-    /* ===================================================== */
-    /* ESTRELAS                                               */
-    /* ===================================================== */
-
-    [
-      ...livros,
-      ...novels
-    ].forEach(
-      item => {
-
-        db.ref(
-          "estrelas/" + item.id
-        )
-        .on(
-          "value",
-          snap => {
-
-            const el =
-              document.getElementById(
-                "stars-" + item.id
-              );
-
-
-            if (el) {
-
-              el.textContent =
-                snap.val() || 0;
-
-            }
-
-          }
-        );
-
+      const user = usuarioLogado || auth.currentUser;
+      if (!user) {
+        alert("Você precisa estar conectado para comentar.");
+        return;
       }
-    );
 
+      const texto = textarea.value.trim();
+      if (!texto) {
+        alert("Escreva um comentário antes de enviar.");
+        return;
+      }
+
+      btnComment.disabled = true;
+      btnComment.innerText = "Enviando...";
+
+      try {
+        const snapshot = await db.ref(`usuarios/${user.uid}`).once("value");
+        const dados = snapshot.val() || {};
+        const nome = dados.nome || user.displayName || user.email.split("@")[0];
+        const pais = dados.pais || "Walingardyn";
+        const paginaAtual = window.location.pathname.split("/").pop() || "biblioteca.html";
+
+        await db.ref("comentarios").push({
+          uid: user.uid,
+          email: user.email,
+          nome: nome,
+          texto: texto,
+          data: Date.now(),
+          pais: `- de ${nome} (${pais})`,
+          pagina: paginaAtual
+        });
+
+        textarea.value = "";
+        alert("Comentário publicado com sucesso!");
+      } catch (error) {
+        console.error("Erro ao publicar comentário:", error);
+        alert("Não foi possível publicar o comentário.\n\nErro: " + error.message);
+      }
+
+      btnComment.disabled = false;
+      btnComment.innerText = "Enviar";
+    };
+
+    db.ref("comentarios").on("child_added", snapshot => {
+      const dados = snapshot.val();
+      if (!dados) return;
+
+      const div = document.createElement("div");
+      div.className = "comentario-item";
+
+      const p = document.createElement("p");
+      p.className = "comentario-texto";
+      p.textContent = dados.texto || "";
+
+      const small = document.createElement("small");
+      small.className = "comentario-meta";
+      const dataFormatada = dados.data ? new Date(dados.data).toLocaleDateString("pt-BR") : "";
+      small.textContent = `${dados.pais || "Walingardyn"} • ${dataFormatada}${dados.pagina ? ' • Página: ' + dados.pagina : ''}`;
+
+      div.appendChild(p);
+      div.appendChild(small);
+      listaComentarios.prepend(div);
+    }, error => {
+      console.error("Erro ao carregar comentários:", error);
+    });
+
+    [...livros, ...novels].forEach(item => {
+      db.ref("estrelas/" + item.id).on("value", snap => {
+        const el = document.getElementById("stars-" + item.id);
+        if (el) {
+          el.textContent = snap.val() || 0;
+        }
+      });
+    });
   </script>
 
 </body>
-
 </html>
