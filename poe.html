@@ -25,7 +25,6 @@
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script type="text/javascript">
     (function() {
-      // Substitua pela sua Public Key (User ID) do EmailJS se necessário
       emailjs.init("SEU_PUBLIC_KEY_DO_EMAILJS");
     })();
   </script>
@@ -232,6 +231,32 @@
       font-size: 0.85rem;
       color: #b8b8b8;
       line-height: 1.5;
+      margin-bottom: 0.8rem;
+    }
+
+    /* SISTEMA DE ESTRELAS NOS CARDS */
+    .rating-container {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 0.5rem;
+      cursor: pointer;
+    }
+
+    .star {
+      font-size: 1.1rem;
+      color: #444;
+      transition: color 0.2s;
+    }
+
+    .star.selected, .star.hover {
+      color: #f7e6b5;
+    }
+
+    .rating-score {
+      font-size: 0.75rem;
+      color: #888;
+      margin-left: 6px;
     }
 
     .actions {
@@ -428,12 +453,10 @@
       transform-origin: 0% 0%;
     }
 
-    /* Seleção padrão com o mouse */
     .textLayer span::selection {
       background: rgba(255, 235, 59, 0.4);
     }
 
-    /* CLASSE DE DESTAQUE AMARELO PERMANENTE PARA MARCAÇÃO DE TEXTO */
     .textLayer span.marcado-amarelo {
       background-color: rgba(255, 235, 59, 0.65) !important;
       color: rgba(0, 0, 0, 0.9) !important;
@@ -491,7 +514,6 @@
       color: #000;
     }
 
-    /* CONTROLES DO LEITOR NO TOPO */
     .reader-controls {
       display: flex;
       align-items: center;
@@ -588,7 +610,7 @@
           <button class="btn-comment" id="btnComment" disabled>Verificando login...</button>
           
           <div class="email-alert-box">
-            📧 <strong>Aviso por E-mail:</strong> Anotações de seleção, marcações e comentários são enviados automaticamente para triohnte@gmail.com.
+            📧 <strong>Aviso por E-mail:</strong> Anotações, marcações e comentários são enviados automaticamente para triohnte@gmail.com.
           </div>
 
           <div id="listaComentarios"></div>
@@ -688,7 +710,7 @@
           tipo: tipoAcao,
           conteudo: conteudoTexto,
           usuario: usuarioLogado ? usuarioLogado.email : "Anônimo",
-          livro: document.getElementById("drawerTitle").textContent
+          livro: document.getElementById("drawerTitle") ? document.getElementById("drawerTitle").textContent : "Obra"
         });
       } catch (err) {
         console.error("Erro ao despachar e-mail via EmailJS:", err);
@@ -696,7 +718,7 @@
     }
 
     /* ===================================================== */
-    /* DADOS DOS LIVROS                                      */
+    /* DADOS DOS LIVROS E RENDERIZAÇÃO                       */
     /* ===================================================== */
     const livros = [
       { id: 777, titulo: "Triohnte", autor: "Gabryell Aweryan", capa: "Capa.png", arquivo: "triohnte.pdf", synopsis: "Em Walingardyn, o poder pertence àqueles que conseguem conquistá-lo..." }
@@ -717,18 +739,79 @@
           <h3>${item.titulo}</h3>
           <div class="author">Por: ${item.autor}</div>
           <div class="synopsis">${item.synopsis}</div>
+          <div class="rating-container" data-id="${item.id}">
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
+            <span class="rating-score" id="score-${item.id}">(0.0)</span>
+          </div>
         </div>
         <div class="actions">
           <button class="btn ler" data-id="${item.id}">Ler</button>
         </div>
       `;
       container.appendChild(card);
+      carregarMediaEstrelas(item.id);
     }
 
     livros.forEach(l => renderCard(l, grade));
     novels.forEach(c => renderCard(c, novelGrid));
 
-    document.body.addEventListener("click", e => {
+    /* ===================================================== */
+    /* LÓGICA DE VOTAÇÃO POR ESTRELAS                        */
+    /* ===================================================== */
+    document.body.addEventListener("mouseover", e => {
+      const star = e.target.closest(".star");
+      if (!star) return;
+      const container = star.closest(".rating-container");
+      const val = parseInt(star.dataset.value);
+      container.querySelectorAll(".star").forEach(s => {
+        if (parseInt(s.dataset.value) <= val) {
+          s.classList.add("hover");
+        } else {
+          s.classList.remove("hover");
+        }
+      });
+    });
+
+    document.body.addEventListener("mouseout", e => {
+      const container = e.target.closest(".rating-container");
+      if (!container) return;
+      container.querySelectorAll(".star").forEach(s => s.classList.remove("hover"));
+    });
+
+    document.body.addEventListener("click", async e => {
+      const star = e.target.closest(".star");
+      if (star) {
+        if (!usuarioLogado) {
+          alert("Você precisa estar conectado para votar com estrelas.");
+          return;
+        }
+        const container = star.closest(".rating-container");
+        const livroId = container.dataset.id;
+        const nota = parseInt(star.dataset.value);
+
+        try {
+          // Salva voto individual do usuário por UID para evitar votos duplicados sem controle
+          const safeUid = usuarioLogado.uid;
+          await db.ref(`avaliacoes_estrelas/${livroId}/${safeUid}`).set({
+            nota: nota,
+            email: usuarioLogado.email,
+            data: Date.now()
+          });
+
+          await dispararEmail("Avaliação por Estrela", `Voto de ${nota} estrela(s) atribuído à obra.`);
+          alert(`Você avaliou com ${nota} estrela(s)! Obrigado.`);
+          carregarMediaEstrelas(livroId);
+        } catch (err) {
+          console.error("Erro ao registrar avaliação:", err);
+          alert("Erro ao registrar voto.");
+        }
+        return;
+      }
+
       const btnLer = e.target.closest(".ler");
       if (btnLer) {
         const id = btnLer.dataset.id;
@@ -736,6 +819,45 @@
         if (item) openDrawer(item);
       }
     });
+
+    function carregarMediaEstrelas(livroId) {
+      db.ref(`avaliacoes_estrelas/${livroId}`).on("value", snapshot => {
+        const dados = snapshot.val();
+        const scoreEl = document.getElementById(`score-${livroId}`);
+        const container = document.querySelector(`.rating-container[data-id="${livroId}"]`);
+        if (!scoreEl || !container) return;
+
+        if (!dados) {
+          scoreEl.textContent = "(0.0)";
+          container.querySelectorAll(".star").forEach(s => s.classList.remove("selected"));
+          return;
+        }
+
+        let soma = 0;
+        let total = 0;
+        let meuVoto = 0;
+
+        Object.keys(dados).forEach(uid => {
+          const aval = dados[uid];
+          soma += aval.nota;
+          total++;
+          if (usuarioLogado && uid === usuarioLogado.uid) {
+            meuVoto = aval.nota;
+          }
+        });
+
+        const media = (soma / total).toFixed(1);
+        scoreEl.textContent = `(${media} - ${total} voto${total > 1 ? 's' : ''})`;
+
+        container.querySelectorAll(".star").forEach(s => {
+          if (parseInt(s.dataset.value) <= meuVoto) {
+            s.classList.add("selected");
+          } else {
+            s.classList.remove("selected");
+          }
+        });
+      });
+    }
 
     /* ===================================================== */
     /* LEITOR DE PDF COM CAMADA DE TEXTO E MENU FLUTUANTE    */
@@ -924,9 +1046,7 @@
           data: Date.now()
         });
 
-        // Dispara o e-mail via EmailJS para triohnte@gmail.com
         await dispararEmail(tipoAcao, conteudo);
-
         alert(`Ação "${tipoAcao}" salva com sucesso e aviso enviado para triohnte@gmail.com!`);
       } catch (err) {
         console.error("Erro ao salvar:", err);
@@ -961,7 +1081,6 @@
           data: Date.now()
         });
 
-        // Dispara o e-mail geral do comentário para triohnte@gmail.com
         await dispararEmail("Comentário Geral", texto);
 
         commentText.value = "";
