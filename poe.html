@@ -457,9 +457,11 @@
       background: rgba(255, 235, 59, 0.4);
     }
 
+    /* COR FORTE PARA MARCAÇÃO DE TEXTO */
     .textLayer span.marcado-amarelo {
-      background-color: rgba(255, 235, 59, 0.65) !important;
-      color: rgba(0, 0, 0, 0.9) !important;
+      background-color: #ffeb3b !important;
+      color: #000000 !important;
+      opacity: 1 !important;
     }
 
     .btn-marcar-pagina {
@@ -610,7 +612,7 @@
           <button class="btn-comment" id="btnComment" disabled>Verificando login...</button>
           
           <div class="email-alert-box">
-            📧 <strong>Aviso por E-mail:</strong> Anotações, marcações e comentários são enviados automaticamente para triohnte@gmail.com.
+            📧 <strong>Aviso por E-mail:</strong> Comentários enviados são notificados automaticamente para triohnte@gmail.com.
           </div>
 
           <div id="listaComentarios"></div>
@@ -721,10 +723,10 @@
     /* DADOS DOS LIVROS E RENDERIZAÇÃO                       */
     /* ===================================================== */
     const livros = [
-      { id: 777, titulo: "Triohnte", autor: "Gabryell Aweryan", capa: "Capa.png", arquivo: "triohnte.pdf", synopsis: "Em Walingardyn, o poder pertence àqueles que conseguem conquistá-lo..." }
+      { id: 777, titulo: "Triohnte", autor: "Gabriel Aweryan", capa: "Capa.png", arquivo: "triohnte.pdf", synopsis: "Em Walingardyn, o poder pertence àqueles que conseguem conquistá-lo..." }
     ];
     const novels = [
-      { id: 101, titulo: "Contos de Walingardyn", autor: "Gabryell Aweryan", capa: "Coloque aqui seu png", arquivo: "Contos.pdf", synopsis: "Não, em Walingardyn não existe apenas um continente de nome Triohnte." }
+      { id: 101, titulo: "Contos de Walingardyn", autor: "Gabriel Aweryan", capa: "Coloque aqui seu png", arquivo: "Contos.pdf", synopsis: "Não, em Walingardyn não existe apenas um continente de nome Triohnte." }
     ];
 
     const grade = document.getElementById("grade");
@@ -801,7 +803,6 @@
             data: Date.now()
           });
 
-          await dispararEmail("Avaliação por Estrela", `Voto de ${nota} estrela(s) atribuído à obra.`);
           alert(`Você avaliou com ${nota} estrela(s)! Obrigado.`);
           carregarMediaEstrelas(livroId);
         } catch (err) {
@@ -1010,26 +1011,26 @@
 
     document.getElementById("menuMarcarTexto").onclick = () => {
       aplicarDestaqueAmareloNaSelecao();
-      salvarAcaoNoFirebase("Marcar texto", textoSelecionadoGlobal);
+      salvarAcaoNoFirebase("Marcar texto", textoSelecionadoGlobal, false);
     };
 
-    document.getElementById("menuComentario").onclick = () => {
+    document.getElementById("menuComentario").onclick = async () => {
       const comentario = prompt("Digite seu comentário para este trecho:");
       if (comentario) {
         aplicarDestaqueAmareloNaSelecao();
-        salvarAcaoNoFirebase("Comentário", `${textoSelecionadoGlobal} - [Comentário: ${comentario}]`);
+        await salvarAcaoNoFirebase("Comentário", `${textoSelecionadoGlobal} - [Comentário: ${comentario}]`, true);
       }
     };
 
-    document.getElementById("menuComentarioEditor").onclick = () => {
+    document.getElementById("menuComentarioEditor").onclick = async () => {
       const comentarioEditor = prompt("Digite o comentário de editor para este trecho:");
       if (comentarioEditor) {
         aplicarDestaqueAmareloNaSelecao();
-        salvarAcaoNoFirebase("Comentário de editor", `${textoSelecionadoGlobal} - [Editor: ${comentarioEditor}]`);
+        await salvarAcaoNoFirebase("Comentário de editor", `${textoSelecionadoGlobal} - [Editor: ${comentarioEditor}]`, true);
       }
     };
 
-    async function salvarAcaoNoFirebase(tipoAcao, conteudo) {
+    async function salvarAcaoNoFirebase(tipoAcao, conteudo, dispararNotificacao) {
       esconderMenuSelecao();
       if (!usuarioLogado) {
         alert("Você precisa estar conectado para salvar anotações.");
@@ -1045,8 +1046,12 @@
           data: Date.now()
         });
 
-        await dispararEmail(tipoAcao, conteudo);
-        alert(`Ação "${tipoAcao}" salva com sucesso e aviso enviado para triohnte@gmail.com!`);
+        if (dispararNotificacao) {
+          await dispararEmail(tipoAcao, conteudo);
+          alert(`Ação "${tipoAcao}" salva com sucesso e aviso enviado para triohnte@gmail.com!`);
+        } else {
+          alert(`Ação "${tipoAcao}" salva com sucesso!`);
+        }
       } catch (err) {
         console.error("Erro ao salvar:", err);
         alert("Erro ao salvar no banco de dados.");
