@@ -915,7 +915,7 @@
         btnResume.onclick = () => {
           const targetElement = document.getElementById(`page-wrapper-${savedPage}`);
           if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth' });
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
         };
       } else {
@@ -965,6 +965,17 @@
           pageWrapper.appendChild(btnMarcar);
           content.appendChild(pageWrapper);
         }
+
+        // Se houver página salva, salta automaticamente para ela após o carregamento completo do documento
+        if (savedPage) {
+          setTimeout(() => {
+            const targetElement = document.getElementById(`page-wrapper-${savedPage}`);
+            if (targetElement) {
+              targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 300);
+        }
+
       } catch (error) {
         console.error("Erro ao carregar o conteúdo seguro:", error);
         content.innerHTML = "<p style='color: #e74c3c; padding: 2rem;'>Erro ao carregar o arquivo protegido.</p>";
