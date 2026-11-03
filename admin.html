@@ -276,6 +276,18 @@
 
         <div id="plan" class="section">
             <div class="card">
+                <h3 style="color:#f3d06c">Publicar novidade no site</h3>
+                <p class="small">Esta publicação aparecerá na Central de Novidades dos usuários. Não é uma mensagem do Fórum Interno.</p>
+                <input id="publicUpdateTitle" type="text" maxlength="120" placeholder="Título da novidade">
+                <select id="publicUpdateType">
+                    <option value="Notícia">Notícia</option><option value="Vídeo">Vídeo</option><option value="Anúncio">Anúncio</option><option value="Conteúdo">Outro conteúdo</option>
+                </select>
+                <textarea id="publicUpdateDescription" maxlength="2000" placeholder="Descrição da novidade"></textarea>
+                <input id="publicUpdateLink" type="url" placeholder="Link do conteúdo (opcional)">
+                <button onclick="publishPublicUpdate()">Publicar novidade para os usuários</button>
+                <div id="publicUpdateStatus" class="small" aria-live="polite"></div>
+            </div>
+            <div class="card">
                 <h3 style="color:#f3d06c">Fórum Interno</h3>
                 <textarea id="idea" placeholder="Escreva sua ideia ou planejamento..."></textarea>
                 <button onclick="postIdea()">Publicar</button>
@@ -321,6 +333,33 @@
         const users = { 'G200207': 'Gabriel' };
         let currentUser = '';
         const DB_URL = 'https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app/';
+
+
+        async function publishPublicUpdate() {
+            if (!currentUser) return alert('Faça login no painel administrativo.');
+            const titulo = document.getElementById('publicUpdateTitle').value.trim();
+            const tipo = document.getElementById('publicUpdateType').value;
+            const descricao = document.getElementById('publicUpdateDescription').value.trim();
+            const link = document.getElementById('publicUpdateLink').value.trim();
+            const status = document.getElementById('publicUpdateStatus');
+            if (!titulo || !descricao) return alert('Preencha o título e a descrição.');
+            if (link) { try { const u = new URL(link); if (!['http:', 'https:'].includes(u.protocol)) throw new Error(); } catch(e) { return alert('Informe um link HTTP ou HTTPS válido.'); } }
+            try {
+                const response = await fetch(`${DB_URL}/novidades_publicas.json`, {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({titulo, tipo, descricao, link, autor: currentUser, timestamp: Date.now()})
+                });
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                document.getElementById('publicUpdateTitle').value = '';
+                document.getElementById('publicUpdateDescription').value = '';
+                document.getElementById('publicUpdateLink').value = '';
+                if (status) status.textContent = 'Novidade publicada. Os usuários receberão a atualização em tempo real.';
+            } catch (e) {
+                console.error('Erro ao publicar novidade pública:', e);
+                if (status) status.textContent = 'Não foi possível publicar. Verifique a ligação e as regras do Firebase.';
+            }
+        }
 
         function login() {
             const code = document.getElementById('code').value.trim();
