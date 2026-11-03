@@ -1278,37 +1278,12 @@
         }
 
         let cachePostsForum = {};
-
-        function combinarFontesNovidades() {
-            const publicas = cacheNovidadesPublicas || {};
-            const combinadas = { ...publicas };
-
-            // Cada publicação do fórum passa a aparecer como novidade para os outros usuários.
-            Object.entries(cachePostsForum).forEach(([id, post]) => {
-                if (!post) return;
-                combinadas['forum_' + id] = {
-                    titulo: 'Nova publicação no Fórum',
-                    tipo: 'Fórum',
-                    descricao: (post.author || 'Usuário') + ': ' + (post.content || ''),
-                    timestamp: post.timestamp || 0,
-                    link: '#forum'
-                };
-            });
-
-            cacheNovidades = combinadas;
-            atualizarContadorNovidades();
-            renderizarCentralNovidades();
-        }
-
-        let cacheNovidadesPublicas = {};
-
-        let cachePostsForum = {};
         let cacheNovidadesPublicas = {};
 
         function combinarFontesNovidades() {
             const combinadas = { ...cacheNovidadesPublicas };
             Object.entries(cachePostsForum).forEach(([id, post]) => {
-                if (!post || (usuarioAtual && post.uid === usuarioAtual.uid)) return;
+                if (!post) return;
                 combinadas['forum_' + id] = {
                     titulo: 'Nova publicação no Fórum',
                     tipo: 'Fórum',
