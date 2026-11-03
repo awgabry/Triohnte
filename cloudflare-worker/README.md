@@ -42,3 +42,20 @@ O painel atual usa um código local no JavaScript, não uma autenticação Fireb
 - Push é uma notificação do sistema operativo, não uma garantia de contador numérico no ícone quando a app está fechada. Isso depende do Chrome e do sistema operativo.
 - O Worker e KV têm planos gratuitos com limites de utilização; o uso acima desses limites pode exigir pagamento.
 - Não exponha a chave privada da conta de serviço. Se ela vazar, revogue-a imediatamente.
+
+## 6. Regras da Realtime Database para os tokens
+
+Antes de testar, confira as regras atuais da Realtime Database. **Não substitua o conjunto inteiro de regras sem mesclar com as regras que o site já utiliza.** Dentro de `rules`, adicione este ramo:
+
+```json
+"fcmTokens": {
+  "$uid": {
+    ".read": "auth != null && auth.uid === $uid",
+    ".write": "auth != null && auth.uid === $uid"
+  }
+}
+```
+
+Isso permite que cada utilizador leia e atualize apenas os próprios tokens. O Worker usa a credencial de serviço guardada como Secret para ler os tokens no servidor.
+
+Se as regras atuais tiverem permissões herdadas em níveis superiores, elas podem sobrepor esta proteção; revise a árvore completa antes de publicar.
