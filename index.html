@@ -1217,9 +1217,26 @@
 
         // Novidades públicas: /novidades_publicas/{id}; leituras individuais: /leituras_novidades/{uid}/{id}
         function atualizarContadorNovidades() {
+            const pendentes = Object.keys(cacheNovidades).filter(id => !cacheLeituras[id]).length;
+
+            // Atualiza também o emblema do ícone do Triohnte instalado pelo Chrome (PWA).
+            // A API só produz efeito quando o navegador/SO oferece suporte a emblemas de aplicações.
+            if (typeof navigator !== 'undefined' && typeof navigator.setAppBadge === 'function') {
+                const atualizacaoBadge = pendentes > 0
+                    ? navigator.setAppBadge(pendentes)
+                    : (typeof navigator.clearAppBadge === 'function'
+                        ? navigator.clearAppBadge()
+                        : navigator.setAppBadge(0));
+
+                if (atualizacaoBadge && typeof atualizacaoBadge.catch === 'function') {
+                    atualizacaoBadge.catch(error => {
+                        console.warn('Triohnte: não foi possível atualizar o emblema do aplicativo.', error);
+                    });
+                }
+            }
+
             const badge = document.getElementById('notificationsBadge');
             if (!badge) return;
-            const pendentes = Object.keys(cacheNovidades).filter(id => !cacheLeituras[id]).length;
             badge.textContent = pendentes > 99 ? '99+' : String(pendentes);
             badge.style.display = pendentes ? 'inline-block' : 'none';
         }
