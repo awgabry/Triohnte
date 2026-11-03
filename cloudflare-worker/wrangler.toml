@@ -1,0 +1,7 @@
+name = "triohnte-push"
+main = "src/index.js"
+compatibility_date = "2026-11-03"
+
+[[kv_namespaces]]
+binding = "PUSH_DEDUPE"
+id = "SUBSTITUIR_PELO_ID_DO_KV"
