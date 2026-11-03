@@ -828,6 +828,25 @@
             .auth-actions button { width: 100%; }
             .dropdown-grid { grid-template-columns: 1fr; }
         }
+
+        /* Central de novidades Triohnte */
+        .notification-trigger{position:relative;margin-left:14px;background:#17120b;border:1px solid #8b6b32;color:#f3d9a0;padding:9px 13px;border-radius:4px;cursor:pointer;font-family:'Cinzel',serif}
+        .notification-badge{display:none;position:absolute;top:-9px;right:-9px;min-width:21px;height:21px;padding:0 5px;border-radius:20px;background:#d71920;color:#fff;font:700 12px Arial;line-height:21px;text-align:center}
+        .notifications-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:10050;align-items:center;justify-content:center;padding:18px}
+        .notifications-overlay.active{display:flex}
+        .notifications-panel{width:min(620px,100%);max-height:85vh;overflow:auto;background:#090909;border:1px solid #8b6b32;padding:24px;color:#eee;box-shadow:0 10px 50px #000}
+        .notifications-panel h2{font-family:'Cinzel',serif;color:#e5c585;margin:0 0 18px}
+        .notification-row{border:1px solid #29231a;padding:14px;margin:10px 0;background:#111}
+        .notification-row.unread{border-left:4px solid #d71920}
+        .notification-row h3{margin:0 0 7px;color:#f3d9a0;font-size:1rem}
+        .notification-row p{margin:0 0 10px;white-space:pre-wrap;color:#ddd}
+        .notification-meta{font-size:.78rem;color:#999;margin-bottom:8px}
+        .notification-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+        .notification-actions button,.notifications-close{background:#241b0e;border:1px solid #8b6b32;color:#f3d9a0;padding:7px 11px;cursor:pointer}
+        .notification-actions a{color:#e5c585}
+        .notification-empty{color:#aaa;text-align:center;padding:28px}
+        @media(max-width:768px){.notification-trigger{margin:10px 0}.notifications-panel{padding:17px}}
+
     </style>
 </head>
 <body>
@@ -841,7 +860,15 @@
                 <span id="user-greeting">Olá, ...</span>
                 <span id="account-btn" class="account-link">[Conta]</span>
                 <span id="logout-btn" class="logout-link">[Sair]</span>
+                <button type="button" id="notificationsBtn" class="notification-trigger" aria-label="Abrir novidades">Novidades <span id="notificationsBadge" class="notification-badge">0</span></button>
             </div>
+        </div>
+    </div>
+
+    <div id="notificationsModal" class="notifications-overlay" role="dialog" aria-modal="true" aria-labelledby="notificationsTitle">
+        <div class="notifications-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h2 id="notificationsTitle">Central de novidades</h2><button type="button" id="closeNotifications" class="notifications-close">Fechar</button></div>
+            <div id="notificationsList"><div class="notification-empty">Inicia sessão para consultar as novidades.</div></div>
         </div>
     </div>
 
@@ -1185,9 +1212,100 @@
 
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+
         const database = firebase.database();
 
+        // Novidades públicas: /novidades_publicas/{id}; leituras individuais: /leituras_novidades/{uid}/{id}
+        function atualizarContadorNovidades() {
+            const badge = document.getElementById('notificationsBadge');
+            if (!badge) return;
+            const pendentes = Object.keys(cacheNovidades).filter(id => !cacheLeituras[id]).length;
+            badge.textContent = pendentes > 99 ? '99+' : String(pendentes);
+            badge.style.display = pendentes ? 'inline-block' : 'none';
+        }
+
+        function renderizarCentralNovidades() {
+            const lista = document.getElementById('notificationsList');
+            if (!lista) return;
+            const itens = Object.entries(cacheNovidades).map(([id, item]) => ({id, ...item}))
+                .sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+            lista.innerHTML = '';
+            if (!itens.length) {
+                lista.innerHTML = '<div class="notification-empty">Ainda não há novidades publicadas.</div>';
+                return;
+            }
+            itens.forEach(item => {
+                const lida = !!cacheLeituras[item.id];
+                const row = document.createElement('article');
+                row.className = 'notification-row' + (lida ? '' : ' unread');
+                const title = document.createElement('h3');
+                title.textContent = item.titulo || 'Nova publicação';
+                const meta = document.createElement('div');
+                meta.className = 'notification-meta';
+                meta.textContent = (item.tipo || 'Novidade') + ' · ' + (item.timestamp ? new Date(item.timestamp).toLocaleString('pt-BR') : '');
+                const body = document.createElement('p');
+                body.textContent = item.descricao || '';
+                row.append(title, meta, body);
+                const actions = document.createElement('div');
+                actions.className = 'notification-actions';
+                const status = document.createElement('span');
+                status.textContent = lida ? '✓ Lida' : '● Não lida';
+                status.style.color = lida ? '#9c9c9c' : '#ff6464';
+                actions.appendChild(status);
+                if (!lida) {
+                    const mark = document.createElement('button');
+                    mark.type = 'button';
+                    mark.textContent = 'Marcar como lida';
+                    mark.addEventListener('click', async () => {
+                        if (!usuarioAtual) return;
+                        try {
+                            await database.ref('leituras_novidades/' + usuarioAtual.uid + '/' + item.id).set(true);
+                        } catch (e) { console.error('Não foi possível marcar a novidade como lida:', e); }
+                    });
+                    actions.appendChild(mark);
+                }
+                if (item.link) {
+                    const link = document.createElement('a');
+                    link.href = item.link;
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    link.textContent = 'Abrir conteúdo';
+                    actions.appendChild(link);
+                }
+                row.appendChild(actions);
+                lista.appendChild(row);
+            });
+        }
+
+        function iniciarNovidades(uid) {
+            if (pararNovidades) pararNovidades();
+            const novidadesRef = database.ref('novidades_publicas');
+            const leiturasRef = database.ref('leituras_novidades/' + uid);
+            const onNovidades = snap => { cacheNovidades = snap.val() || {}; atualizarContadorNovidades(); renderizarCentralNovidades(); };
+            const onLeituras = snap => { cacheLeituras = snap.val() || {}; atualizarContadorNovidades(); renderizarCentralNovidades(); };
+            novidadesRef.on('value', onNovidades);
+            leiturasRef.on('value', onLeituras);
+            pararNovidades = () => { novidadesRef.off('value', onNovidades); leiturasRef.off('value', onLeituras); };
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const trigger = document.getElementById('notificationsBtn');
+            const panel = document.getElementById('notificationsModal');
+            const close = document.getElementById('closeNotifications');
+            if (trigger) trigger.addEventListener('click', () => {
+                if (!usuarioAtual) { alert('Inicia sessão para consultar as novidades.'); return; }
+                renderizarCentralNovidades();
+                panel.classList.add('active');
+            });
+            if (close) close.addEventListener('click', () => panel.classList.remove('active'));
+            if (panel) panel.addEventListener('click', e => { if (e.target === panel) panel.classList.remove('active'); });
+        });
+
+
         let usuarioAtual = null;
+        let pararNovidades = null;
+        let cacheNovidades = {};
+        let cacheLeituras = {};
         let base64ImagemSelecionada = ""; 
         let casaSelecionada = ""; 
 
@@ -1399,6 +1517,8 @@
                 
                 if (!user) {
                     usuarioAtual = null;
+                    if (pararNovidades) { pararNovidades(); pararNovidades = null; }
+                    cacheNovidades = {}; cacheLeituras = {}; atualizarContadorNovidades();
                     if (authContainer) authContainer.classList.remove('hidden');
                     if (authSection) authSection.classList.remove('hidden');
                     if (userInfo) userInfo.classList.add('hidden');
@@ -1408,6 +1528,7 @@
                 }
                 
                 usuarioAtual = user;
+                iniciarNovidades(user.uid);
                 if (authContainer) authContainer.classList.add('hidden');
                 if (authSection) authSection.classList.add('hidden');
                 if (userInfo) userInfo.classList.remove('hidden');
