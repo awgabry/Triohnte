@@ -1220,6 +1220,29 @@
         const auth = firebase.auth();
 
         const database = firebase.database();
+         
+         // URL do Cloudflare Worker: preencher após publicar o Worker.
+         const PUSH_WORKER_URL = 'COLOQUE_A_URL_DO_WORKER_AQUI';
+
+         async function solicitarPushDeNovoConteudo(source, id) {
+             try {
+                 if (!usuarioAtual || !PUSH_WORKER_URL.startsWith('https://')) return;
+                 const idToken = await usuarioAtual.getIdToken();
+                 const response = await fetch(PUSH_WORKER_URL, {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': 'Bearer ' + idToken
+                     },
+                     body: JSON.stringify({ source, id })
+                 });
+                 if (!response.ok) throw new Error('Worker respondeu HTTP ' + response.status);
+                 return await response.json();
+             } catch (erro) {
+                 console.warn('Triohnte: conteúdo publicado, mas o push não foi enviado.', erro);
+             }
+         }
+
 
         // Novidades públicas: /novidades_publicas/{id}; leituras individuais: /leituras_novidades/{uid}/{id}
         function atualizarContadorNovidades() {
@@ -1936,6 +1959,7 @@
                         try {
                             const referenciaPost = database.ref('posts').push();
                             await referenciaPost.set(novoPost);
+                            await solicitarPushDeNovoConteudo('forum', referenciaPost.key);
                             input.value = '';
                             esconderSugestoes();
                             await notificarMarcacoes(marcacoes, referenciaPost.key, texto, autor);
