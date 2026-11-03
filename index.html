@@ -1277,15 +1277,59 @@
             });
         }
 
+        let cachePostsForum = {};
+
+        function combinarFontesNovidades() {
+            const publicas = cacheNovidadesPublicas || {};
+            const combinadas = { ...publicas };
+
+            // Cada publicação do fórum passa a aparecer como novidade para os outros usuários.
+            Object.entries(cachePostsForum).forEach(([id, post]) => {
+                if (!post || (usuarioAtual && post.uid === usuarioAtual.uid)) return;
+                combinadas['forum_' + id] = {
+                    titulo: 'Nova publicação no Fórum',
+                    tipo: 'Fórum',
+                    descricao: (post.author || 'Usuário') + ': ' + (post.content || ''),
+                    timestamp: post.timestamp || 0,
+                    link: '#forum'
+                };
+            });
+
+            cacheNovidades = combinadas;
+            atualizarContadorNovidades();
+            renderizarCentralNovidades();
+        }
+
+        let cacheNovidadesPublicas = {};
+
         function iniciarNovidades(uid) {
             if (pararNovidades) pararNovidades();
             const novidadesRef = database.ref('novidades_publicas');
             const leiturasRef = database.ref('leituras_novidades/' + uid);
-            const onNovidades = snap => { cacheNovidades = snap.val() || {}; atualizarContadorNovidades(); renderizarCentralNovidades(); };
-            const onLeituras = snap => { cacheLeituras = snap.val() || {}; atualizarContadorNovidades(); renderizarCentralNovidades(); };
+            const postsRef = database.ref('posts');
+
+            const onNovidades = snap => {
+                cacheNovidadesPublicas = snap.val() || {};
+                combinarFontesNovidades();
+            };
+            const onLeituras = snap => {
+                cacheLeituras = snap.val() || {};
+                combinarFontesNovidades();
+            };
+            const onPosts = snap => {
+                cachePostsForum = snap.val() || {};
+                combinarFontesNovidades();
+            };
+
             novidadesRef.on('value', onNovidades);
             leiturasRef.on('value', onLeituras);
-            pararNovidades = () => { novidadesRef.off('value', onNovidades); leiturasRef.off('value', onLeituras); };
+            postsRef.on('value', onPosts);
+
+            pararNovidades = () => {
+                novidadesRef.off('value', onNovidades);
+                leiturasRef.off('value', onLeituras);
+                postsRef.off('value', onPosts);
+            };
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1518,7 +1562,7 @@
                 if (!user) {
                     usuarioAtual = null;
                     if (pararNovidades) { pararNovidades(); pararNovidades = null; }
-                    cacheNovidades = {}; cacheLeituras = {}; atualizarContadorNovidades();
+                    cacheNovidades = {}; cacheNovidadesPublicas = {}; cachePostsForum = {}; cacheLeituras = {}; atualizarContadorNovidades();
                     if (authContainer) authContainer.classList.remove('hidden');
                     if (authSection) authSection.classList.remove('hidden');
                     if (userInfo) userInfo.classList.add('hidden');
