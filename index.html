@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Triohnte</title>
-    
-    <!-- Configurações e Tags PWA -->
-    <link rel="manifest" href="manifest.webmanifest">
+
+    <!-- Configurações PWA integradas sem remover o conteúdo original -->
+    <link rel="manifest" href="./manifest.webmanifest">
     <meta name="theme-color" content="#1a1a1a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -348,6 +348,7 @@
             line-height: 1.6;
             color: #8c8579;
         }
+
 
         /* --- MARCAÇÕES NO FÓRUM --- */
         .post-author-info {
@@ -914,7 +915,7 @@
                         <div class="dropdown-item" data-casa="Fartally" data-img="reinosdemavul/fartally.png">
                             <img src="reinosdemavul/fartally.png" alt="Fartally">
                             <span>Fartally</span>
-                        </div>
+  </div>
                         <div class="dropdown-item" data-casa="Flamaryn" data-img="reinosdemavul/flamaryn.png">
                             <img src="reinosdemavul/flamaryn.png" alt="Flamaryn">
                             <span>Flamaryn</span>
@@ -926,7 +927,7 @@
                         <div class="dropdown-item" data-casa="Klavar" data-img="reinosdemavul/klavar.png">
                             <img src="reinosdemavul/klavar.png" alt="Klavar">
                             <span>Klavar</span>
-                        </div>
+</div>
                         <div class="dropdown-item" data-casa="Korsorovyh" data-img="reinosdemavul/korsorovyh.png">
                             <img src="reinosdemavul/korsorovyh.png" alt="Korsorovyh">
                             <span>Korsorovyh</span>
@@ -934,7 +935,7 @@
                         <div class="dropdown-item" data-casa="Kwadrélya" data-img="reinosdemavul/kwadrélya.png">
                             <img src="reinosdemavul/kwadrélya.png" alt="Kwadrélya">
                             <span>Kwadrélya</span>
-                        </div>
+</div>
                         <div class="dropdown-item" data-casa="Lemoseryon" data-img="reinosdemavul/lemoseryon.png">
                             <img src="reinosdemavul/lemoseryon.png" alt="Lemoseryon">
                             <span>Lemoseryon</span>
@@ -942,30 +943,975 @@
                         <div class="dropdown-item" data-casa="Lutraw" data-img="reinosdemavul/lutraw.png">
                             <img src="reinosdemavul/lutraw.png" alt="Lutraw">
                             <span>Lutraw</span>
-                        </div>
+</div>
                         <div class="dropdown-item" data-casa="Mallavy" data-img="reinosdemavul/mallavy.png">
                             <img src="reinosdemavul/mallavy.png" alt="Mallavy">
                             <span>Mallavy</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Maravos" data-img="reinosdemavul/maravos.png">
+                            <img src="reinosdemavul/maravos.png" alt="Maravos">
+                            <span>Maravos</span>
+</div>
+                        <div class="dropdown-item" data-casa="Maturoz" data-img="reinosdemavul/maturoz.png">
+                            <img src="reinosdemavul/maturoz.png" alt="Maturoz">
+                            <span>Maturoz</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Mitrelly" data-img="reinosdemavul/mitrelly.png">
+                            <img src="reinosdemavul/mitrelly.png" alt="Mitrelly">
+                            <span>Mitrelly</span>
+
+</div>
+                        <div class="dropdown-item" data-casa="Serantha" data-img="reinosdemavul/serantha.png">
+                            <img src="reinosdemavul/serantha.png" alt="Serantha">
+                            <span>Serantha</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Suntyse" data-img="reinosdemavul/suntyse.png">
+                            <img src="reinosdemavul/suntyse.png" alt="Suntyse">
+                            <span>Suntyse</span>
+
+</div>
+                        <div class="dropdown-item" data-casa="Vheynnaris" data-img="reinosdemavul/vheynnaris.png">
+                            <img src="reinosdemavul/vheynnaris.png" alt="Vheynnaris">
+                            <span>Vheynnaris</span>
+                        </div>
+                        <div class="dropdown-item" data-casa="Warlofh" data-img="reinosdemavul/warlofh.png">
+                            <img src="reinosdemavul/warlofh.png" alt="Warlofh">
+                            <span>Warlofh</span>
+                            
                         </div>
                     </div>
                 </div>
             </div>
 
+            <div class="form-group">
+                <label for="acc-nome">Nome completo *</label>
+                <input id="acc-nome" type="text" placeholder="Seu nome oficial">
+            </div>
+            <div class="form-group">
+                <label for="acc-endereco">Endereço</label>
+                <input id="acc-endereco" type="text" placeholder="Rua, Número, Bairro">
+            </div>
+            <div class="form-group">
+                <label for="acc-cep">CEP</label>
+                <input id="acc-cep" type="text" placeholder="00000-000">
+            </div>
+            <div class="form-group">
+                <label for="acc-telefone">Número de Telefone</label>
+                <input id="acc-telefone" type="text" placeholder="(00) 00000-0000">
+            </div>
+            <div class="form-group">
+                <label for="acc-cpf">CPF</label>
+                <input id="acc-cpf" type="text" placeholder="000.000.000-00">
+            </div>
             <div class="modal-actions">
-                <button type="button" class="btn-cancel" id="closeModalBtn">Fechar</button>
+                <button id="closeModalBtn" class="btn-cancel">Cancelar</button>
+                <button id="saveAccountBtn" class="forum-btn">Salvar</button>
             </div>
         </div>
     </div>
 
-    <!-- Script de registro do Service Worker seguro -->
+    <header>
+        <div class="borda-lateral borda-esquerda"></div>
+        <div class="borda-lateral borda-direita"></div>
+
+        <div class="logo-area">
+            <img src="triwo.png" alt="Triohnte" class="img-titulo">
+        </div>
+         
+        <nav>
+            <ul>
+                <li><a href="rm.html">Ruínas de Mavul</a></li>
+                <li><a href="tw.html">Terras de Walingardyn</a></li>
+                <li><a href="cw.html">Compêndio Walingardyano</a></li>
+                <li><a href="ap.html">Estruturas de Poder</a></li>
+                <li><a href="poe.html">Loja e Biblioteca</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="intro-text">
+            <h2>O Legado</h2>
+            <p>No mundo de hoje, todos nós precisamos em algum momento, de um motivo para continuar. Continuar a trabalhar, continuar a viver, continuar a se importar, e qualquer coisa pode se tornar este motivo; mas somente algo intenso demais para ser explicado em curtas palavras, merece ser um legado pelo qual valha a pena lutar.</p>
+            <p>Triohnte não nasceu numa mesa oval de um editorial profissional para publicidade panfletária. Nasceu na cabeça de uma criança que sonhava alto demais e que se convencia todos os dias de que sua existência não era em vão, ou mera escolha irresponsável de seus pais.</p>
+            <p> Com 17 anos, fujido da cidade de sua mãe, onde resisdia com a mesma, no meio de uma guerra silenciosa em favor da verdade que o podre sistema brasileiro lhe negou por 10 anos, Gabriel Aquino / Gabryell Aweryan escreveu Triohnte, como promessa a si mesmo de que a luz de suas palavras iluminariam os escombros obscurecidos de sua história enquanto escrevesse. Esse foi o seu início na literatura fantástica. O livro narra um caledário épico de acontecimento em um mundo até então existente apenas na cabeça de seu autor. Walingardyn. Nome imponente para uma obra de alta magnetude e densidade narrativa.</p>
+        </section>
+
+
+<div style="margin-top: 40px; margin-bottom: 120px; text-align: center;">
+    
+    <iframe 
+        width="100%" 
+        height="450" 
+        src="https://www.youtube.com/embed/k4uoauSAgcU?start=30" 
+        title="YouTube video player" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        allowfullscreen>
+    </iframe>
+
+    <!-- 🔻 BOTÃO DE DOAÇÃO -->
+    <div style="margin-top: 30px;">
+        <a href="investimento.html" 
+           style="
+                display: inline-block;
+                padding: 12px 30px;
+                font-family: 'Cinzel', serif;
+                font-size: 0.9rem;
+                letter-spacing: 2px;
+                text-decoration: none;
+                color: #050505;
+                background: linear-gradient(to bottom, #c59d5f, #e3c38f, #7a542a);
+                border: none;
+                box-shadow: 0 0 10px rgba(197, 157, 95, 0.4);
+                transition: 0.3s;
+           "
+           onmouseover="this.style.filter='brightness(1.2)'"
+           onmouseout="this.style.filter='brightness(1)'"
+        >
+            APOIAR O PROJETO
+        </a>
+    </div>
+
+</div>
+
+
+
+
+
+        
+        <section class="lore-grid">
+            <a href="panteao.html">
+                <div class="card">
+                    <h3>O Panteão dos Deuses</h3>
+                    <p>Onde estão os deuses quando as cidades queimam? Conheça os mitos sobre as divindades que ajudaram a moldar civilizações pelo mundo de Walingardyn.</p>
+                </div>
+            </a>
+
+            <a href="contorno.html">
+                <div class="card">
+                    <h3>Contorno de Triohnte</h3>
+                    <p>Uma exploração pelas regiões de Triohnte, onde a própria geografia e clima parecem conspirar contra a sanidade dos viajantes.</p>
+                </div>
+            </a>
+
+            <a href="conflito.html">
+                <div class="card">
+                    <h3>Conflitos Primordiais</h3>
+                    <p>O que sabemos sobre a profecia do herdeiro? Como ela interfere diretamente na história de Triohnte e de Walingardyn, mas não só a profecia é a mascara das guerras.</p>
+                </div>
+            </a>
+
+            <a href="motivos.html">
+                <div class="card">
+                    <h3>Motivos de Guerra</h3>
+                    <p>As casas nobres e facções que ainda lutam por power entre as ruínas do que um dia foi um grande império através das Eras.</p>
+                </div>
+            </a>
+
+            <a href="calen.html">
+                <div class="card">
+                    <h3>Calendário Triohntino</h3>
+                    <p>Entenda o tempo em Triohnte e em Walingardyn.</p>
+                </div>
+            </a>
+        </section>
+
+        <section class="progress-section">
+            <h2>Progresso de Triohnte até a publicação</h2>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="progress-text">60% Concluído</div>
+        </section>
+
+        <section class="forum-section">
+            <h2>Fórum</h2>
+             
+            <div id="forumFormWrapper" class="forum-form">
+                <textarea id="forumInput" rows="3" placeholder="Escreva uma nova atualização global sobre o volume..."></textarea>
+                <button type="button" id="publishBtn" class="forum-btn">Publicar</button>
+            </div>
+
+            <div id="forumPosts" class="forum-posts">
+            </div>
+        </section>
+
+        <section id="auth-section" class="auth-section">
+            <h2>Torne-se um aliado</h2>
+            <div id="auth-container" class="auth-container-block">
+                <input id="email-field" type="email" placeholder="E-mail">
+                <input id="pass-field" type="password" placeholder="Senha">
+                <div class="auth-actions">
+                    <button id="login-btn" class="auth-btn">Entrar</button>
+                    <button id="signup-btn" class="auth-btn">Registrar</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-logo">
+            <img src="triwo.png" alt="TRIOHNTE" class="footer-logo-img">
+        </div>
+        <p style="margin-top: 15px; font-size: 0.8rem; color: #444;">Copyright Triohnte &copy; 2026</p>
+    </footer>
+
+   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
+            authDomain: "triohnte-database.firebaseapp.com",
+            databaseURL: "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app", 
+            projectId: "triohnte-database",
+            appId: "1:127473963183:web:c071072d846a8d7240045a"
+        };
+
+        // ============================================================
+        // CONFIGURAÇÃO DO E-MAIL DAS MARCAÇÕES
+        // Crie uma conta no EmailJS e substitua os 3 valores abaixo.
+        // O restante do sistema não precisa ser alterado.
+        // ============================================================
+        const EMAILJS_PUBLIC_KEY = "COLOQUE_SUA_PUBLIC_KEY_AQUI";
+        const EMAILJS_SERVICE_ID = "COLOQUE_SEU_SERVICE_ID_AQUI";
+        const EMAILJS_TEMPLATE_ID = "COLOQUE_SEU_TEMPLATE_ID_AQUI";
+
+        if (window.emailjs && !EMAILJS_PUBLIC_KEY.includes("COLOQUE_")) {
+            emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+        }
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        let usuarioAtual = null;
+        let base64ImagemSelecionada = ""; 
+        let casaSelecionada = ""; 
+
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            const modal = document.getElementById('accountModal');
+            const accountBtn = document.getElementById('account-btn');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const saveAccountBtn = document.getElementById('saveAccountBtn');
+            
+            const dropzone = document.getElementById('dropzone');
+            const fotoFileInput = document.getElementById('acc-foto-file');
+            const triggerFileBtn = document.getElementById('triggerFileBtn');
+            const avatarPreview = document.getElementById('avatar-preview');
+            const filenameText = document.getElementById('preview-filename');
+            const userMiniAvatar = document.getElementById('user-mini-avatar');
+
+            // Dropdown de Linhagens
+            const casaDropdown = document.getElementById('casaDropdown');
+            const dropdownSelected = document.getElementById('dropdownSelected');
+            const selectedCasaImg = document.getElementById('selected-casa-img');
+            const selectedCasaNome = document.getElementById('selected-casa-nome');
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+            if (dropdownSelected) {
+                dropdownSelected.onclick = (e) => {
+                    e.stopPropagation();
+                    casaDropdown.classList.toggle('active');
+                };
+            }
+
+            window.addEventListener('click', () => {
+                if (casaDropdown) casaDropdown.classList.remove('active');
+            });
+
+            dropdownItems.forEach(item => {
+                item.onclick = (e) => {
+                    e.stopPropagation();
+                    casaSelecionada = item.getAttribute('data-casa');
+                    const imgPath = item.getAttribute('data-img');
+
+                    if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
+                    if (selectedCasaImg) selectedCasaImg.src = imgPath;
+
+                    dropdownItems.forEach(i => i.classList.remove('selected'));
+                    item.classList.add('selected');
+
+                    casaDropdown.classList.remove('active');
+                };
+            });
+
+            const processarArquivoImagem = (file) => {
+                if (!file) return;
+
+                if (!file.type.match('image.*')) {
+                    alert("Apenas arquivos de imagem são suportados.");
+                    return;
+                }
+
+                if (file.size > 2 * 1024 * 1024) { 
+                    alert("Por favor, selecione uma imagem de até 2MB.");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    base64ImagemSelecionada = event.target.result;
+                    if (avatarPreview) avatarPreview.src = base64ImagemSelecionada;
+                    if (filenameText) filenameText.textContent = file.name.length > 25 ? file.name.substring(0, 22) + "..." : file.name;
+                };
+                reader.readAsDataURL(file);
+            };
+
+            if (triggerFileBtn && fotoFileInput) {
+                triggerFileBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    fotoFileInput.click();
+                };
+                dropzone.onclick = () => {
+                    fotoFileInput.click();
+                };
+            }
+
+            if (fotoFileInput) {
+                fotoFileInput.onchange = (e) => {
+                    processarArquivoImagem(e.target.files[0]);
+                };
+            }
+
+            if (dropzone) {
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropzone.classList.add('dragover');
+                    }, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropzone.classList.remove('dragover');
+                    }, false);
+                });
+
+                dropzone.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    if (files.length > 0) {
+                        processarArquivoImagem(files[0]);
+                    }
+                }, false);
+            }
+
+            window.addEventListener('paste', (e) => {
+                if (!modal.classList.contains('active')) return;
+
+                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        const blob = items[i].getAsFile();
+                        const file = new File([blob], "imagem-colada.png", { type: "image/png" });
+                        processarArquivoImagem(file);
+                        break;
+                    }
+                }
+            });
+
+            if (accountBtn) {
+                accountBtn.onclick = () => {
+                    if (usuarioAtual) {
+                        database.ref('usuarios/' + usuarioAtual.uid).once('value').then((snap) => {
+                            const d = snap.val() || {};
+                            document.getElementById('acc-nome').value = d.nome || "";
+                            document.getElementById('acc-endereco').value = d.endereco || "";
+                            document.getElementById('acc-cep').value = d.cep || "";
+                            document.getElementById('acc-telefone').value = d.telefone || "";
+                            document.getElementById('acc-cpf').value = d.cpf || "";
+                            
+                            base64ImagemSelecionada = d.foto || "";
+                            if (avatarPreview) {
+                                avatarPreview.src = d.foto || "mu.png";
+                            }
+                            if (filenameText) {
+                                filenameText.textContent = d.foto ? "Imagem atual carregada" : "Nenhum arquivo modificado";
+                            }
+
+                            casaSelecionada = d.casa || "";
+                            if (casaSelecionada) {
+                                if (selectedCasaNome) selectedCasaNome.textContent = casaSelecionada;
+                                dropdownItems.forEach(item => {
+                                    if (item.getAttribute('data-casa') === casaSelecionada) {
+                                        item.classList.add('selected');
+                                        if (selectedCasaImg) selectedCasaImg.src = item.getAttribute('data-img');
+                                    } else {
+                                        item.classList.remove('selected');
+                                    }
+                                });
+                            } else {
+                                if (selectedCasaNome) selectedCasaNome.textContent = "Nenhuma linhagem escolhida";
+                                if (selectedCasaImg) selectedCasaImg.src = "mu.png";
+                                dropdownItems.forEach(i => i.classList.remove('selected'));
+                            }
+                        });
+                    }
+                    modal.classList.add('active');
+                };
+            }
+
+            if (closeModalBtn) {
+                closeModalBtn.onclick = () => modal.classList.remove('active');
+            }
+
+            if (saveAccountBtn) {
+                saveAccountBtn.onclick = () => {
+                    const nome = document.getElementById('acc-nome').value.trim();
+                    
+                    if (!nome) {
+                        alert("O campo Nome é obrigatório.");
+                        return;
+                    }
+
+                    const dadosAtualizados = {
+                        foto: base64ImagemSelecionada, 
+                        casa: casaSelecionada, 
+                        nome: nome,
+                        endereco: document.getElementById('acc-endereco').value.trim(),
+                        cep: document.getElementById('acc-cep').value.trim(),
+                        telefone: document.getElementById('acc-telefone').value.trim(),
+                        cpf: document.getElementById('acc-cpf').value.trim(),
+                        email: usuarioAtual.email
+                    };
+
+                    database.ref('usuarios/' + usuarioAtual.uid).update(dadosAtualizados)
+                        .then(() => {
+                            alert("Configurações updated com sucesso!");
+                            modal.classList.remove('active');
+                        })
+                        .catch(err => alert("Erro ao salvar: " + err.message));
+                };
+            }
+            
+            auth.onAuthStateChanged((user) => {
+                const authContainer = document.getElementById('auth-container');
+                const authSection = document.getElementById('auth-section');
+                const userInfo = document.getElementById('user-info');
+                const userGreeting = document.getElementById('user-greeting');
+                
+                if (!user) {
+                    usuarioAtual = null;
+                    if (authContainer) authContainer.classList.remove('hidden');
+                    if (authSection) authSection.classList.remove('hidden');
+                    if (userInfo) userInfo.classList.add('hidden');
+                    if (userMiniAvatar) userMiniAvatar.classList.add('hidden');
+                    modal.classList.remove('active');
+                    return;
+                }
+                
+                usuarioAtual = user;
+                if (authContainer) authContainer.classList.add('hidden');
+                if (authSection) authSection.classList.add('hidden');
+                if (userInfo) userInfo.classList.remove('hidden');
+                if (userGreeting) userGreeting.textContent = `Olá, ${user.email.split('@')[0]}`;
+
+                database.ref('usuarios/' + user.uid).on('value', (snap) => {
+                    const d = snap.val();
+                    if (d) {
+                        if (d.nome && userGreeting) {
+                            const tagCasa = d.casa ? `, da casa ${d.casa}` : '';
+                            userGreeting.textContent = `Olá, ${d.nome.split(' ')[0]}${tagCasa}`;
+                        }
+                        if (d.foto && userMiniAvatar) {
+                            userMiniAvatar.src = d.foto;
+                            userMiniAvatar.classList.remove('hidden');
+                        } else if (userMiniAvatar) {
+                            userMiniAvatar.classList.add('hidden');
+                        }
+
+                        // Sempre que o usuário alterar Nome Completo, foto ou casa na Conta,
+                        // o Fórum é redesenhado imediatamente com os dados atuais do Firebase.
+                        if (ultimoSnapshotPosts) {
+                            renderPosts(ultimoSnapshotPosts);
+                        }
+                    }
+                });
+            });
+
+            const loginBtn = document.getElementById('login-btn');
+            if (loginBtn) {
+                loginBtn.onclick = () => {
+                    const e = document.getElementById('email-field').value;
+                    const p = document.getElementById('pass-field').value;
+                    if (e && p) auth.signInWithEmailAndPassword(e, p).catch(err => alert("Erro: " + err.message));
+                };
+            }
+
+            const signupBtn = document.getElementById('signup-btn');
+            if (signupBtn) {
+                signupBtn.onclick = () => {
+                    const e = document.getElementById('email-field').value;
+                    const p = document.getElementById('pass-field').value;
+                    if (e && p) {
+                        auth.createUserWithEmailAndPassword(e, p).then(u => {
+                            database.ref('usuarios/' + u.user.uid).set({ email: e, nome: e.split('@')[0], foto: "", casa: "" });
+                        }).catch(err => alert("Erro: " + err.message));
+                    }
+                };
+            }
+
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.onclick = () => auth.signOut();
+            }
+
+            // --- FÓRUM ---
+            const input = document.getElementById("forumInput");
+            const btn = document.getElementById("publishBtn");
+            const container = document.getElementById("forumPosts");
+            const formWrapper = document.getElementById("forumFormWrapper");
+
+            // Lista dos usuários que já possuem publicações no Fórum.
+            let usuariosDoForum = {};
+            let sugestoesMarcacao = [];
+            let indiceSugestao = -1;
+
+            const formatarData = (timestamp) => {
+                const data = new Date(timestamp);
+                return data.toLocaleDateString('pt-BR') + " às " + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            };
+
+            const escaparHTML = (texto) => {
+                const div = document.createElement('div');
+                div.textContent = texto == null ? '' : String(texto);
+                return div.innerHTML;
+            };
+
+            const escaparRegExp = (texto) => texto.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+            // Caixa de sugestões posicionada abaixo do campo de publicação.
+            const compose = document.createElement('div');
+            compose.className = 'forum-compose';
+            if (input && input.parentNode) {
+                input.parentNode.insertBefore(compose, input);
+                compose.appendChild(input);
+            }
+
+            const mentionBox = document.createElement('div');
+            mentionBox.className = 'mention-box';
+            compose.appendChild(mentionBox);
+
+            const posicionarMentionBox = () => {
+                if (!input) return;
+                mentionBox.style.left = input.offsetLeft + 'px';
+                mentionBox.style.top = (input.offsetTop + input.offsetHeight + 5) + 'px';
+                mentionBox.style.width = Math.min(input.offsetWidth, 420) + 'px';
+            };
+
+            const esconderSugestoes = () => {
+                mentionBox.style.display = 'none';
+                mentionBox.innerHTML = '';
+                sugestoesMarcacao = [];
+                indiceSugestao = -1;
+            };
+
+            const obterTokenMarcacao = () => {
+                if (!input) return null;
+                const pos = input.selectionStart;
+                const antes = input.value.slice(0, pos);
+                const match = antes.match(/(?:^|\s)@([^\s@]*)$/u);
+                if (!match) return null;
+                return {
+                    termo: match[1].toLowerCase(),
+                    inicio: pos - match[1].length - 1,
+                    fim: pos
+                };
+            };
+
+            const selecionarUsuarioMarcado = (usuario) => {
+                if (!input) return;
+                const token = obterTokenMarcacao();
+                if (!token) return;
+
+                const nomeExibicao = usuario.nome || usuario.email || 'Usuário';
+                const antes = input.value.slice(0, token.inicio);
+                const depois = input.value.slice(token.fim);
+                input.value = antes + '@' + nomeExibicao + ' ' + depois;
+
+                const novaPosicao = antes.length + nomeExibicao.length + 2;
+                input.focus();
+                input.setSelectionRange(novaPosicao, novaPosicao);
+                esconderSugestoes();
+            };
+
+            const atualizarSugestoes = async () => {
+                const token = obterTokenMarcacao();
+                if (!token || !usuarioAtual) {
+                    esconderSugestoes();
+                    return;
+                }
+
+                const usuarios = Object.values(usuariosDoForum)
+                    .filter(u => u.uid && u.uid !== usuarioAtual.uid)
+                    .filter(u => {
+                        const nome = (u.nome || '').toLowerCase();
+                        const email = (u.email || '').toLowerCase();
+                        return !token.termo || nome.includes(token.termo) || email.includes(token.termo);
+                    })
+                    .sort((a, b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR'))
+                    .slice(0, 8);
+
+                sugestoesMarcacao = usuarios;
+                indiceSugestao = -1;
+                mentionBox.innerHTML = '';
+
+                if (!usuarios.length) {
+                    esconderSugestoes();
+                    return;
+                }
+
+                usuarios.forEach((usuario, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'mention-item';
+                    item.innerHTML = `
+                        <img src="${escaparHTML(usuario.foto || 'mu.png')}" alt="">
+                        <div>
+                            <div class="mention-item-name">${escaparHTML(usuario.nome || usuario.email || 'Usuário')}</div>
+                            ${usuario.casa ? `<span class="mention-item-house">${escaparHTML(usuario.casa)}</span>` : ''}
+                        </div>
+                    `;
+                    item.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        selecionarUsuarioMarcado(usuario);
+                    });
+                    mentionBox.appendChild(item);
+                });
+
+                posicionarMentionBox();
+                mentionBox.style.display = 'block';
+            };
+
+            if (input) {
+                input.addEventListener('input', atualizarSugestoes);
+                input.addEventListener('keyup', atualizarSugestoes);
+                input.addEventListener('click', atualizarSugestoes);
+                input.addEventListener('keydown', (e) => {
+                    if (mentionBox.style.display !== 'block' || !sugestoesMarcacao.length) return;
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        indiceSugestao = (indiceSugestao + 1) % sugestoesMarcacao.length;
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        indiceSugestao = (indiceSugestao - 1 + sugestoesMarcacao.length) % sugestoesMarcacao.length;
+                    } else if (e.key === 'Enter' && indiceSugestao >= 0) {
+                        e.preventDefault();
+                        selecionarUsuarioMarcado(sugestoesMarcacao[indiceSugestao]);
+                        return;
+                    } else if (e.key === 'Escape') {
+                        esconderSugestoes();
+                        return;
+                    } else {
+                        return;
+                    }
+
+                    Array.from(mentionBox.children).forEach((el, i) => {
+                        el.classList.toggle('active', i === indiceSugestao);
+                    });
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (!compose.contains(e.target)) esconderSugestoes();
+            });
+
+            window.addEventListener('resize', posicionarMentionBox);
+
+            const carregarUsuariosDosPosts = async (postsObj) => {
+                usuariosDoForum = {};
+                if (!postsObj) return;
+
+                const uids = [...new Set(Object.values(postsObj).map(p => p.uid).filter(Boolean))];
+                await Promise.all(uids.map(async (uid) => {
+                    try {
+                        const snap = await database.ref('usuarios/' + uid).once('value');
+                        const d = snap.val() || {};
+                        usuariosDoForum[uid] = {
+                            uid,
+                            nome: d.nome || '',
+                            email: d.email || '',
+                            foto: d.foto || 'mu.png',
+                            casa: d.casa || ''
+                        };
+                    } catch (erro) {
+                        console.error('Erro ao carregar usuário do fórum:', erro);
+                    }
+                }));
+            };
+
+            const extrairMarcacoes = (texto, postsObj) => {
+                const encontradas = [];
+                const usuarios = Object.values(usuariosDoForum);
+
+                usuarios.forEach(usuario => {
+                    const nome = (usuario.nome || '').trim();
+                    if (!nome) return;
+
+                    const regex = new RegExp('(^|\\s)@' + escaparRegExp(nome) + '(?=\\s|$|[.,!?;:])', 'iu');
+                    if (regex.test(texto) && usuario.uid !== (usuarioAtual ? usuarioAtual.uid : null)) {
+                        encontradas.push(usuario);
+                    }
+                });
+
+                return [...new Map(encontradas.map(u => [u.uid, u])).values()];
+            };
+
+            const montarConteudoComMarcacoes = (texto) => {
+                let resultado = escaparHTML(texto);
+
+                Object.values(usuariosDoForum).forEach(usuario => {
+                    const nome = (usuario.nome || '').trim();
+                    if (!nome) return;
+                    const padrao = new RegExp('(^|\\s)@' + escaparRegExp(nome) + '(?=\\s|$|[.,!?;:])', 'giu');
+                    resultado = resultado.replace(padrao, '$1<span class="post-mention">@$&'.replace('$&', escaparHTML(nome)) + '</span>');
+                });
+
+                return resultado;
+            };
+
+            const enviarEmailMarcacao = async (usuarioMarcado, autor, conteudo) => {
+                if (!usuarioMarcado || !usuarioMarcado.email) return;
+
+                if (!window.emailjs || EMAILJS_PUBLIC_KEY.includes('COLOQUE_') || EMAILJS_SERVICE_ID.includes('COLOQUE_') || EMAILJS_TEMPLATE_ID.includes('COLOQUE_')) {
+                    console.warn('EmailJS ainda não foi configurado. A notificação foi salva no Firebase, mas o e-mail não foi enviado.');
+                    return;
+                }
+
+                try {
+                    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                        to_email: usuarioMarcado.email,
+                        to_name: usuarioMarcado.nome || 'Usuário',
+                        from_name: autor.nome || autor.email || 'Usuário do Fórum',
+                        from_house: autor.casa || '',
+                        message: conteudo,
+                        forum_url: window.location.href
+                    });
+                } catch (erro) {
+                    console.error('Erro ao enviar e-mail da marcação:', erro);
+                }
+            };
+
+            const notificarMarcacoes = async (marcacoes, postId, conteudo, autor) => {
+                if (!marcacoes.length) return;
+
+                await Promise.all(marcacoes.map(async (usuarioMarcado) => {
+                    const notificacao = {
+                        tipo: 'marcacao_forum',
+                        postId,
+                        deUid: usuarioAtual ? usuarioAtual.uid : null,
+                        deNome: autor.nome || autor.email || '(Usuário)',
+                        deCasa: autor.casa || '',
+                        mensagem: conteudo,
+                        lida: false,
+                        timestamp: Date.now()
+                    };
+
+                    try {
+                        await database.ref('notificacoes/' + usuarioMarcado.uid).push(notificacao);
+                        await enviarEmailMarcacao(usuarioMarcado, autor, conteudo);
+                    } catch (erro) {
+                        console.error('Erro ao criar notificação:', erro);
+                    }
+                }));
+            };
+
+            if (btn) {
+                btn.onclick = async () => {
+                    if (!input) return;
+                    const texto = input.value.trim();
+                    if (!texto) return;
+
+                    let novoPost;
+                    let autor = {
+                        uid: usuarioAtual ? usuarioAtual.uid : null,
+                        nome: usuarioAtual ? usuarioAtual.email : '(Visitante)',
+                        email: usuarioAtual ? usuarioAtual.email : '',
+                        foto: 'mu.png',
+                        casa: ''
+                    };
+
+                    if (usuarioAtual) {
+                        try {
+                            const snapshot = await database.ref('usuarios/' + usuarioAtual.uid).once('value');
+                            const dadosUsuario = snapshot.val() || {};
+                            autor = {
+                                uid: usuarioAtual.uid,
+                                nome: dadosUsuario.nome || usuarioAtual.email,
+                                email: dadosUsuario.email || usuarioAtual.email,
+                                foto: dadosUsuario.foto || 'mu.png',
+                                casa: dadosUsuario.casa || ''
+                            };
+                        } catch (erro) {
+                            console.error('Erro ao carregar dados do usuário:', erro);
+                        }
+
+                        const marcacoes = extrairMarcacoes(texto);
+
+                        novoPost = {
+                            uid: usuarioAtual.uid,
+                            author: autor.nome,
+                            content: texto,
+                            timestamp: Date.now(),
+                            mentions: marcacoes.map(u => u.uid)
+                        };
+
+                        try {
+                            const referenciaPost = database.ref('posts').push();
+                            await referenciaPost.set(novoPost);
+                            input.value = '';
+                            esconderSugestoes();
+                            await notificarMarcacoes(marcacoes, referenciaPost.key, texto, autor);
+                        } catch (erro) {
+                            console.error(erro);
+                            alert('Erro ao publicar.');
+                        }
+                        return;
+                    }
+
+                    // Visitantes continuam podendo publicar, mas não podem marcar usuários.
+                    novoPost = {
+                        uid: null,
+                        author: '(Visitante)',
+                        content: texto,
+                        timestamp: Date.now(),
+                        mentions: []
+                    };
+
+                    database.ref('posts').push(novoPost)
+                        .then(() => { input.value = ''; esconderSugestoes(); })
+                        .catch((erro) => {
+                            console.error(erro);
+                            alert('Erro ao publicar.');
+                        });
+                };
+            }
+
+            const renderPosts = async (postsObj) => {
+                if (!container) return;
+                container.innerHTML = '';
+
+                if (!postsObj) {
+                    if (formWrapper) formWrapper.classList.remove('has-posts');
+                    usuariosDoForum = {};
+                    return;
+                }
+
+                if (formWrapper) formWrapper.classList.add('has-posts');
+                await carregarUsuariosDosPosts(postsObj);
+
+                const postsArray = Object.keys(postsObj)
+                    .map(key => ({ id: key, ...postsObj[key] }))
+                    .sort((a, b) => b.timestamp - a.timestamp);
+
+                const usuariosCache = {};
+
+                for (const post of postsArray) {
+                    let nomeAutor = post.author || '(Visitante)';
+                    let fotoAutor = 'mu.png';
+                    let casaAutor = '';
+
+                    if (post.uid) {
+                        if (!usuariosCache[post.uid]) {
+                            try {
+                                const snapshot = await database.ref('usuarios/' + post.uid).once('value');
+                                usuariosCache[post.uid] = snapshot.val() || {};
+                            } catch (erro) {
+                                console.error('Erro ao carregar usuário:', erro);
+                                usuariosCache[post.uid] = {};
+                            }
+                        }
+
+                        const dadosUsuario = usuariosCache[post.uid];
+                        nomeAutor = dadosUsuario.nome || nomeAutor;
+                        fotoAutor = dadosUsuario.foto || fotoAutor;
+                        casaAutor = dadosUsuario.casa || '';
+
+                        if (!usuariosDoForum[post.uid]) {
+                            usuariosDoForum[post.uid] = {
+                                uid: post.uid,
+                                nome: nomeAutor,
+                                email: dadosUsuario.email || '',
+                                foto: fotoAutor,
+                                casa: casaAutor
+                            };
+                        }
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = 'post-card';
+
+                    const header = document.createElement('div');
+                    header.className = 'post-header';
+
+                    const authorInfo = document.createElement('div');
+                    authorInfo.className = 'post-author-info';
+
+                    const avatar = document.createElement('img');
+                    avatar.className = 'post-author-avatar';
+                    avatar.src = fotoAutor;
+                    avatar.alt = 'Foto de ' + nomeAutor;
+
+                    const authorName = document.createElement('span');
+                    authorName.className = 'post-author-name';
+                    authorName.textContent = nomeAutor;
+
+                    authorInfo.appendChild(avatar);
+                    authorInfo.appendChild(authorName);
+
+                    if (casaAutor) {
+                        const house = document.createElement('span');
+                        house.className = 'post-author-house';
+                        house.textContent = '| ' + casaAutor;
+                        authorInfo.appendChild(house);
+                    }
+
+                    const date = document.createElement('span');
+                    date.className = 'post-date';
+                    date.textContent = formatarData(post.timestamp);
+
+                    header.appendChild(authorInfo);
+                    header.appendChild(date);
+
+                    const content = document.createElement('div');
+                    content.className = 'post-content';
+                    content.innerHTML = montarConteudoComMarcacoes(post.content || '');
+
+                    card.appendChild(header);
+                    card.appendChild(content);
+                    container.appendChild(card);
+                }
+            };
+
+            // Carrega e mantém o Fórum sincronizado com o Firebase.
+            database.ref('posts').on('value', (snapshot) => {
+                ultimoSnapshotPosts = snapshot.val();
+                renderPosts(ultimoSnapshotPosts);
+            });
+        });
+    </script>
+
+    <!-- Registo PWA: falhas do Service Worker não impedem a página de abrir. -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker registrado com sucesso!', reg))
-            .catch(err => console.log('Erro ao registrar Service Worker:', err));
+            .then(registration => {
+              console.info('Triohnte: Service Worker registado.', registration.scope);
+            })
+            .catch(error => {
+              console.error('Triohnte: não foi possível registar o Service Worker.', error);
+            });
         });
       }
     </script>
+
 </body>
 </html>
