@@ -868,7 +868,11 @@
     <div id="notificationsModal" class="notifications-overlay" role="dialog" aria-modal="true" aria-labelledby="notificationsTitle">
         <div class="notifications-panel">
             <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h2 id="notificationsTitle">Central de novidades</h2><button type="button" id="closeNotifications" class="notifications-close">Fechar</button></div>
-            <div id="notificationsList"><div class="notification-empty">Inicia sessão para consultar as novidades.</div></div>
+            <div style="margin:0 0 16px;padding:12px;border:1px solid #3a2b18;background:#100d08">
+                 <button type="button" id="enablePushNotifications" class="notifications-close">Ativar notificações neste dispositivo</button>
+                 <p id="pushNotificationsStatus" style="margin-top:8px;color:#aaa;font-size:.9rem">Ativa para receber avisos mesmo quando o Triohnte estiver fechado.</p>
+             </div>
+             <div id="notificationsList"><div class="notification-empty">Inicia sessão para consultar as novidades.</div></div>
         </div>
     </div>
 
@@ -1187,6 +1191,7 @@
    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -1194,7 +1199,8 @@
             authDomain: "triohnte-database.firebaseapp.com",
             databaseURL: "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app", 
             projectId: "triohnte-database",
-            appId: "1:127473963183:web:c071072d846a8d7240045a"
+            appId: "1:127473963183:web:c071072d846a8d7240045a",
+             messagingSenderId: "127473963183"
         };
 
         // ============================================================
@@ -2075,6 +2081,71 @@
             });
         });
       }
+    </script>
+
+
+    <!-- Ativação voluntária do Firebase Cloud Messaging neste dispositivo. -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const button = document.getElementById('enablePushNotifications');
+        const status = document.getElementById('pushNotificationsStatus');
+        if (!button || !status) return;
+
+        button.addEventListener('click', async () => {
+          if (!usuarioAtual) {
+            status.textContent = 'Inicia sessão antes de ativar as notificações.';
+            return;
+          }
+          if (!('serviceWorker' in navigator) || !('Notification' in window)) {
+            status.textContent = 'Este navegador não suporta notificações push neste dispositivo.';
+            return;
+          }
+          if (!firebase.messaging || !firebase.messaging.isSupported || !(await firebase.messaging.isSupported())) {
+            status.textContent = 'O Firebase Messaging não é suportado neste navegador.';
+            return;
+          }
+
+          button.disabled = true;
+          status.textContent = 'A solicitar autorização…';
+          try {
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') {
+              status.textContent = 'A autorização não foi concedida. Podes ativá-la nas definições do Chrome.';
+              return;
+            }
+
+            const registration = await navigator.serviceWorker.register('./sw.js');
+            const messaging = firebase.messaging();
+            const token = await messaging.getToken({
+              vapidKey: 'BGJIyRmcmkoUww7SYgMKGY_G2hr0ezxLwainQNoVFwCEUFHCI8fTHVa15TCVbUWMHtQZ8r5tjE5idA9AVnmveQs',
+              serviceWorkerRegistration: registration
+            });
+
+            if (!token) throw new Error('O Firebase não devolveu um token para este dispositivo.');
+
+            const tokensRef = database.ref('fcmTokens/' + usuarioAtual.uid);
+            const existing = await tokensRef.orderByChild('token').equalTo(token).once('value');
+            if (existing.exists()) {
+              const key = Object.keys(existing.val())[0];
+              await tokensRef.child(key).update({ active: true, updatedAt: Date.now() });
+            } else {
+              await tokensRef.push({
+                token: token,
+                active: true,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+                platform: 'web'
+              });
+            }
+            status.textContent = 'Notificações ativadas neste dispositivo. Já podes fechar o Triohnte.';
+          } catch (error) {
+            console.error('Triohnte: erro ao ativar notificações push:', error);
+            status.textContent = 'Não foi possível ativar: ' + (error.message || 'erro desconhecido') + '. Verifica as permissões e as regras do Firebase.';
+          } finally {
+            button.disabled = false;
+          }
+        });
+      });
     </script>
 
 </body>
