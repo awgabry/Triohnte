@@ -1302,36 +1302,43 @@
 
         let cacheNovidadesPublicas = {};
 
+        let cachePostsForum = {};
+        let cacheNovidadesPublicas = {};
+
+        function combinarFontesNovidades() {
+            const combinadas = { ...cacheNovidadesPublicas };
+            Object.entries(cachePostsForum).forEach(([id, post]) => {
+                if (!post || (usuarioAtual && post.uid === usuarioAtual.uid)) return;
+                combinadas['forum_' + id] = {
+                    titulo: 'Nova publicação no Fórum',
+                    tipo: 'Fórum',
+                    descricao: (post.author || 'Usuário') + ': ' + (post.content || ''),
+                    timestamp: post.timestamp || 0,
+                    link: '#forum'
+                };
+            });
+            cacheNovidades = combinadas;
+            atualizarContadorNovidades();
+            renderizarCentralNovidades();
+        }
+
         function iniciarNovidades(uid) {
             if (pararNovidades) pararNovidades();
             const novidadesRef = database.ref('novidades_publicas');
             const leiturasRef = database.ref('leituras_novidades/' + uid);
             const postsRef = database.ref('posts');
-
-            const onNovidades = snap => {
-                cacheNovidadesPublicas = snap.val() || {};
-                combinarFontesNovidades();
-            };
-            const onLeituras = snap => {
-                cacheLeituras = snap.val() || {};
-                combinarFontesNovidades();
-            };
-            const onPosts = snap => {
-                cachePostsForum = snap.val() || {};
-                combinarFontesNovidades();
-            };
-
+            const onNovidades = snap => { cacheNovidadesPublicas = snap.val() || {}; combinarFontesNovidades(); };
+            const onLeituras = snap => { cacheLeituras = snap.val() || {}; combinarFontesNovidades(); };
+            const onPosts = snap => { cachePostsForum = snap.val() || {}; combinarFontesNovidades(); };
             novidadesRef.on('value', onNovidades);
             leiturasRef.on('value', onLeituras);
             postsRef.on('value', onPosts);
-
             pararNovidades = () => {
                 novidadesRef.off('value', onNovidades);
                 leiturasRef.off('value', onLeituras);
                 postsRef.off('value', onPosts);
             };
         }
-
         document.addEventListener('DOMContentLoaded', () => {
             const trigger = document.getElementById('notificationsBtn');
             const panel = document.getElementById('notificationsModal');
