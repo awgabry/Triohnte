@@ -446,7 +446,7 @@
 
         /* Gestão de acesso sincronizada no Firebase Realtime Database */
         function chaveEmailAcesso(email) {
-            return (email || '').trim().toLowerCase().replace(/\\./g, ',');
+            return (email || '').trim().toLowerCase().replace(/\./g, ',');
         }
 
         async function permitirAcesso() {
