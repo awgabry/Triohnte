@@ -911,14 +911,32 @@
       e.preventDefault();
     });
 
-    document.body.addEventListener("pointermove", e => {
+    document.addEventListener("pointermove", e => {
       if (!arrastoVotacao || arrastoVotacao.pointerId !== e.pointerId) return;
-      const elemento = document.elementFromPoint(e.clientX, e.clientY);
-      const star = elemento && elemento.closest(".star");
-      if (star && star.closest(".rating-container") === arrastoVotacao.container) {
-        selecionarNota(arrastoVotacao.container, Number(star.dataset.value));
-      }
-    });
+
+      // Calcula a estrela pela posição horizontal, inclusive ao arrastar para trás
+      // ou passar pelo espaço entre duas estrelas.
+      const estrelas = [...arrastoVotacao.container.querySelectorAll(".star")];
+      if (!estrelas.length) return;
+
+      let nota = 1;
+      let menorDistancia = Infinity;
+      estrelas.forEach(star => {
+        const rect = star.getBoundingClientRect();
+        const centro = rect.left + rect.width / 2;
+        const distancia = Math.abs(e.clientX - centro);
+        if (distancia < menorDistancia) {
+          menorDistancia = distancia;
+          nota = Number(star.dataset.value);
+        }
+      });
+
+      const primeiro = estrelas[0].getBoundingClientRect();
+      const ultimo = estrelas[estrelas.length - 1].getBoundingClientRect();
+      if (e.clientX < primeiro.left) nota = 1;
+      if (e.clientX > ultimo.right) nota = 5;
+      selecionarNota(arrastoVotacao.container, nota);
+    }, true);
 
     function encerrarArrastoVotacao(e) {
       if (!arrastoVotacao || (e && arrastoVotacao.pointerId !== e.pointerId)) return;
@@ -955,7 +973,8 @@
     document.body.addEventListener("click", async e => {
       const star = e.target.closest(".star");
       if (star) {
-        selecionarNota(star.closest(".rating-container"), Number(star.dataset.value));
+        // A seleção por pointerdown já trata clique, toque e início do arrasto.
+        // Não reaplicar aqui a estrela inicial, pois isso desfaria um arrasto para trás.
         return;
       }
 
