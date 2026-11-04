@@ -106,8 +106,23 @@
     .btn-loja, .btn-admin {
       padding: 0.55rem 1rem;
       border-radius: 10px;
-      background: #111;
-      color: #d4af37;
+      background-color: #111;
+      color: transparent;
+      letter-spacing: 1px;
+      background-image: linear-gradient(
+        180deg,
+        #fff4c9 0%,
+        #f7e6b5 12%,
+        #e4c27d 28%,
+        #c89a4c 50%,
+        #a8732d 70%,
+        #8f5e22 84%,
+        #e1bd72 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.9);
       text-decoration: none;
       font-family: 'Cinzel', serif;
       font-size: 0.85rem;
