@@ -252,6 +252,7 @@
     .star.selected {
       background: linear-gradient(90deg, #f7e6b5 var(--star-fill, 0%), #444 var(--star-fill, 0%));
       color: transparent;
+      -webkit-text-fill-color: transparent;
       -webkit-background-clip: text;
       background-clip: text;
     }
@@ -742,7 +743,34 @@
 
     const btnAdmin = document.getElementById("btnAdmin");
     
-    auth.onAuthStateChanged(user => {
+    function chaveEmailAcesso(email) {
+      return (email || "").trim().toLowerCase().replace(/\\./g, ",");
+    }
+
+    async function usuarioPodeLer(livroId) {
+      if (!usuarioLogado || !usuarioLogado.email) return false;
+      try {
+        const chave = chaveEmailAcesso(usuarioLogado.email);
+        const snap = await db.ref("permissoes_leitura/" + chave + "/" + livroId).once("value");
+        return snap.val() === true || !!(snap.val() && snap.val().ativo === true);
+      } catch (erro) {
+        console.error("Não foi possível verificar a autorização de leitura:", erro);
+        return false;
+      }
+    }
+
+    async function atualizarBotoesLeitura() {
+      const botoes = [...document.querySelectorAll(".btn.ler")];
+      await Promise.all(botoes.map(async botao => {
+        const autorizado = await usuarioPodeLer(botao.dataset.id);
+        botao.disabled = !autorizado;
+        botao.textContent = autorizado ? "Ler" : "🔒 Acesso restrito";
+        botao.title = autorizado ? "Abrir livro" : "Este livro exige autorização de compra.";
+        botao.setAttribute("aria-label", botao.title);
+      }));
+    }
+
+    auth.onAuthStateChanged(async user => {
       usuarioLogado = user;
       btnAdmin.style.display = (user && EMAILS_AUTORIZADOS.includes((user.email || "").trim().toLowerCase())) ? "inline-block" : "none";
 
@@ -753,6 +781,7 @@
         document.getElementById("btnComment").disabled = false;
         document.getElementById("btnComment").innerText = "Entrar para comentar";
       }
+      await atualizarBotoesLeitura();
     });
 
     /* ===================================================== */
@@ -809,6 +838,7 @@
       `;
       container.appendChild(card);
       carregarMediaEstrelas(item.id);
+      atualizarBotoesLeitura();
     }
 
     livros.forEach(l => renderCard(l, grade));
@@ -920,6 +950,10 @@
     let rangeSelecionadoGlobal = null;
 
     async function openDrawer(item) {
+      if (!(await usuarioPodeLer(item.id))) {
+        alert("Este livro está protegido. Entre na sua conta e solicite a liberação após a confirmação da compra.");
+        return;
+      }
       livroAtualId = item.id;
       const drawer = document.getElementById("drawer");
       const content = document.getElementById("drawerContent");
