@@ -191,7 +191,24 @@
             color: #ffffff;
             font-weight: bold;
         }
-    </style>
+            .map-arrow-marker {
+            background: transparent;
+            border: 0;
+        }
+
+        .map-arrow-marker span {
+            display: block;
+            color: #000000;
+            font-size: 27px;
+            line-height: 30px;
+            font-weight: 900;
+            text-align: center;
+            text-shadow: 0 0 2px #ffffff, 0 0 4px #ffffff;
+            cursor: pointer;
+            user-select: none;
+        }
+
+</style>
 </head>
 <body>
 
@@ -745,28 +762,24 @@
         }
 
         function criarMarcadorNoMapa(lat, lng, dbKey) {
-            const yellowIcon = L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
+            const arrowIcon = L.divIcon({
+                className: 'map-arrow-marker',
+                html: '<span aria-label="Seta no mapa">➤</span>',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
             });
 
-            const marker = L.marker([lat, lng], { icon: yellowIcon }).addTo(map);
-            
-            marker.on('add', function() {
-                const el = marker.getElement();
-                if (el) {
-                    el.addEventListener('dblclick', function(e) {
-                        L.DomEvent.stopPropagation(e);
-                        removerPinDoBanco(dbKey);
-                    });
-                }
+            const marker = L.marker([lat, lng], {
+                icon: arrowIcon,
+                keyboard: true,
+                title: 'Dê dois cliques para remover esta seta'
+            }).addTo(map);
+
+            marker.on('dblclick', function(e) {
+                L.DomEvent.stopPropagation(e);
+                removerPinDoBanco(dbKey);
             });
 
-            markersGroup.number = (markersGroup.number || 0) + 1;
             markersGroup.push(marker);
         }
 
