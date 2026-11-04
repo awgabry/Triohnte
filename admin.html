@@ -452,7 +452,12 @@
         async function permitirAcesso() {
             const email = document.getElementById('userEmail').value.trim().toLowerCase();
             const bookId = document.getElementById('bookID').value.trim();
-            if (!email || !/^\\d+$/.test(bookId)) return alert("Informe um e-mail válido e o ID numérico do livro.");
+            const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            const idValido = /^\d+$/.test(bookId) && Number(bookId) > 0;
+
+            if (!currentUser) return alert("Faça login no painel administrativo antes de liberar um livro.");
+            if (!emailValido) return alert("Informe um endereço de e-mail válido.");
+            if (!idValido) return alert("Informe um ID numérico válido, como 777.");
 
             try {
                 const chave = chaveEmailAcesso(email);
