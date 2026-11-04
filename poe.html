@@ -249,8 +249,17 @@
       transition: color 0.2s;
     }
 
-    .star.selected, .star.hover {
+    .star.selected {
+      background: linear-gradient(90deg, #f7e6b5 var(--star-fill, 0%), #444 var(--star-fill, 0%));
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .star.hover {
       color: #f7e6b5;
+      background: none;
+      -webkit-text-fill-color: initial;
     }
 
     .rating-score {
@@ -340,6 +349,48 @@
       padding: 1rem;
       overflow-y: auto;
       flex-shrink: 0;
+      transition: width .22s ease, padding .22s ease, transform .22s ease;
+      position: relative;
+    }
+
+    .reader-sidebar-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 3;
+      width: 38px;
+      min-width: 38px;
+      height: 38px;
+      padding: 0;
+      border: 1px solid #c89a4c;
+      border-radius: 7px;
+      background: #111;
+      color: #f7e6b5;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .reader-sidebar.collapsed {
+      width: 0;
+      padding: 0;
+      border-left: 0;
+      overflow: visible;
+    }
+
+    .reader-sidebar.collapsed .comment-section {
+      display: none;
+    }
+
+    .reader-sidebar.collapsed .reader-sidebar-toggle {
+      right: 8px;
+      transform: translateX(100%);
+    }
+
+    @media (max-width: 700px) {
+      .drawer-body { min-width: 0; }
+      .drawer-content { min-width: 0; padding: .5rem; }
+      .reader-sidebar { width: min(82vw, 320px); }
+      .reader-sidebar.collapsed { width: 0; }
     }
 
     .reader-sidebar h3 {
@@ -605,7 +656,9 @@
     <div class="drawer-body">
       <div class="drawer-content" id="drawerContent"></div>
 
-      <aside class="reader-sidebar">
+      <aside class="reader-sidebar" id="readerSidebar">
+        <button type="button" class="reader-sidebar-toggle" id="toggleReaderSidebar"
+          aria-label="Recolher comentários" aria-expanded="true" title="Recolher comentários">›</button>
         <div class="comment-section">
           <h3>Comentários da Leitura</h3>
           <textarea id="commentText" placeholder="Escreva seu comentário sobre esta obra..."></textarea>
@@ -849,12 +902,13 @@
         const media = (soma / total).toFixed(1);
         scoreEl.textContent = `(${media} - ${total} voto${total > 1 ? 's' : ''})`;
 
+        // As estrelas representam a média global, igual para todas as contas.
+        const mediaNumerica = soma / total;
         container.querySelectorAll(".star").forEach(s => {
-          if (parseInt(s.dataset.value) <= meuVoto) {
-            s.classList.add("selected");
-          } else {
-            s.classList.remove("selected");
-          }
+          const valor = parseInt(s.dataset.value, 10);
+          const preenchimento = Math.max(0, Math.min(100, (mediaNumerica - (valor - 1)) * 100));
+          s.style.setProperty("--star-fill", preenchimento + "%");
+          s.classList.toggle("selected", preenchimento > 0);
         });
       });
     }
@@ -958,6 +1012,16 @@
         content.innerHTML = "<p style='color: #e74c3c; padding: 2rem;'>Erro ao carregar documento.</p>";
       }
     }
+
+    const readerSidebar = document.getElementById("readerSidebar");
+    const toggleReaderSidebar = document.getElementById("toggleReaderSidebar");
+    toggleReaderSidebar.addEventListener("click", () => {
+      const recolhida = readerSidebar.classList.toggle("collapsed");
+      toggleReaderSidebar.textContent = recolhida ? "‹" : "›";
+      toggleReaderSidebar.title = recolhida ? "Mostrar comentários" : "Recolher comentários";
+      toggleReaderSidebar.setAttribute("aria-label", recolhida ? "Mostrar comentários" : "Recolher comentários");
+      toggleReaderSidebar.setAttribute("aria-expanded", String(!recolhida));
+    });
 
     document.getElementById("closeDrawer").onclick = () => {
       document.getElementById("drawer").classList.remove("open");
