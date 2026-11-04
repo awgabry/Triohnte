@@ -247,8 +247,14 @@
       font-size: 1.1rem;
       color: #444;
       transition: color 0.2s;
-      cursor: pointer;
+      cursor: ew-resize;
       user-select: none;
+      -webkit-user-select: none;
+      touch-action: pan-y;
+    }
+
+    .rating-container.is-dragging {
+      cursor: ew-resize;
     }
 
     .votar {
@@ -883,11 +889,51 @@
       container.querySelectorAll(".star").forEach(s => s.classList.remove("hover"));
     });
 
+    function selecionarNota(container, nota) {
+      if (!container || nota < 1 || nota > 5) return;
+      container.dataset.notaSelecionada = String(nota);
+      container.querySelectorAll(".star").forEach(star => {
+        star.classList.toggle("vote-choice", Number(star.dataset.value) <= nota);
+        star.setAttribute("aria-pressed", Number(star.dataset.value) === nota ? "true" : "false");
+      });
+    }
+
+    let arrastoVotacao = null;
+
+    document.body.addEventListener("pointerdown", e => {
+      const star = e.target.closest(".star");
+      if (!star || e.button !== 0) return;
+      const container = star.closest(".rating-container");
+      arrastoVotacao = { container, pointerId: e.pointerId };
+      container.classList.add("is-dragging");
+      selecionarNota(container, Number(star.dataset.value));
+      try { star.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
+    });
+
+    document.body.addEventListener("pointermove", e => {
+      if (!arrastoVotacao || arrastoVotacao.pointerId !== e.pointerId) return;
+      const elemento = document.elementFromPoint(e.clientX, e.clientY);
+      const star = elemento && elemento.closest(".star");
+      if (star && star.closest(".rating-container") === arrastoVotacao.container) {
+        selecionarNota(arrastoVotacao.container, Number(star.dataset.value));
+      }
+    });
+
+    function encerrarArrastoVotacao(e) {
+      if (!arrastoVotacao || (e && arrastoVotacao.pointerId !== e.pointerId)) return;
+      arrastoVotacao.container.classList.remove("is-dragging");
+      arrastoVotacao = null;
+    }
+
+    document.addEventListener("pointerup", encerrarArrastoVotacao);
+    document.addEventListener("pointercancel", encerrarArrastoVotacao);
+
     document.body.addEventListener("keydown", e => {
       const star = e.target.closest(".star");
       if (star && (e.key === "Enter" || e.key === " ")) {
         e.preventDefault();
-        star.click();
+        selecionarNota(star.closest(".rating-container"), Number(star.dataset.value));
       }
     });
 
@@ -909,11 +955,7 @@
     document.body.addEventListener("click", async e => {
       const star = e.target.closest(".star");
       if (star) {
-        const container = star.closest(".rating-container");
-        container.dataset.notaSelecionada = star.dataset.value;
-        container.querySelectorAll(".star").forEach(s => {
-          s.classList.toggle("vote-choice", Number(s.dataset.value) <= Number(star.dataset.value));
-        });
+        selecionarNota(star.closest(".rating-container"), Number(star.dataset.value));
         return;
       }
 
