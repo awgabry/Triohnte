@@ -744,7 +744,7 @@
     const btnAdmin = document.getElementById("btnAdmin");
     
     function chaveEmailAcesso(email) {
-      return (email || "").trim().toLowerCase().replace(/\\./g, ",");
+      return (email || "").trim().toLowerCase().replace(/\./g, ",");
     }
 
     async function usuarioPodeLer(livroId) {
