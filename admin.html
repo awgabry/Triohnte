@@ -20,8 +20,8 @@
         body {
             margin: 0;
             font-family: 'Cinzel', serif;
-            background: #050505;
-            color: #e5c585;
+            background: #000000;
+            color: #ffffff;
         }
         
         .hidden {
@@ -39,61 +39,61 @@
         }
         
         .card {
-            background: #0d0d0d;
-            border: 1px solid #c59b27;
+            background: #000000;
+            border: 1px solid #ffffff;
             padding: 1.5rem;
             border-radius: 14px;
             margin-bottom: 1rem;
-            box-shadow: 0 0 15px rgba(197, 155, 39, 0.08);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
         }
         
         input, textarea, button, select {
             width: 100%;
             padding: .7rem;
             border-radius: 10px;
-            border: 1px solid #c59b27;
+            border: 1px solid #ffffff;
             margin-top: .5rem;
-            background: #141414;
-            color: #e5c585;
+            background: #000000;
+            color: #ffffff;
             font-family: 'Cinzel', serif;
         }
         
         input::placeholder, textarea::placeholder {
-            color: #7a652a;
+            color: #ffffff;
         }
         
         button {
-            background: #c59b27;
-            color: #050505;
+            background: #ffffff;
+            color: #000000;
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s;
         }
         
         button:hover {
-            background: #dfae30;
+            background: #e6e6e6;
         }
         
         .top {
             display: flex;
             gap: 1rem;
             padding: 1rem;
-            background: #0d0d0d;
-            border-bottom: 1px solid #c59b27;
+            background: #000000;
+            border-bottom: 1px solid #ffffff;
             flex-wrap: wrap;
         }
         
         .tab {
             cursor: pointer;
             opacity: .6;
-            color: #e5c585;
+            color: #ffffff;
         }
         
         .tab.active {
             opacity: 1;
             font-weight: bold;
-            color: #f3d06c;
-            border-bottom: 2px solid #c59b27;
+            color: #ffffff;
+            border-bottom: 2px solid #ffffff;
         }
         
         .section {
@@ -108,7 +108,7 @@
         #map {
             height: 420px;
             border-radius: 12px;
-            border: 1px solid #c59b27;
+            border: 1px solid #ffffff;
         }
 
         /* Oculta o selo/marca d'água do Leaflet */
@@ -122,7 +122,7 @@
         }
         
         .forum-post {
-            border-bottom: 1px solid #33260c;
+            border-bottom: 1px solid #ffffff;
             padding: .5rem 0;
             margin-top: 0.5rem;
         }
@@ -144,17 +144,17 @@
         th, td {
             text-align: left;
             padding: 8px;
-            border-bottom: 1px solid #33260c;
+            border-bottom: 1px solid #ffffff;
         }
         
         th {
-            color: #f3d06c;
+            color: #ffffff;
         }
         
         .btn-del {
-            background: #5a1a1a;
-            color: #ff9999;
-            border: 1px solid #ff4444;
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #ffffff;
             padding: 4px 8px;
             font-size: 10px;
             width: auto;
@@ -162,14 +162,14 @@
         }
         
         .btn-del:hover {
-            background: #ff4444;
-            color: #fff;
+            background: #e6e6e6;
+            color: #000000;
         }
 
         .btn-pdf {
-            background: #c59b27;
-            color: #050505;
-            border: 1px solid #dfae30;
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #ffffff;
             padding: 10px;
             margin-top: 1rem;
             font-family: 'Cinzel', serif;
@@ -177,18 +177,18 @@
         }
         
         .btn-pdf:hover {
-            background: #dfae30;
+            background: #e6e6e6;
         }
 
         .total-box {
             margin-top: 1rem;
             padding: 10px;
-            background: #141414;
-            border: 1px solid #c59b27;
+            background: #000000;
+            border: 1px solid #ffffff;
             border-radius: 10px;
             text-align: right;
             font-size: 1.1rem;
-            color: #f3d06c;
+            color: #ffffff;
             font-weight: bold;
         }
     </style>
@@ -201,7 +201,7 @@
             <h2 style="color:#ffffff; text-align:center; margin-top:0;">Admin Sistem</h2>
             <input id="code" placeholder="Código de acesso">
             <button onclick="login()">Entrar</button>
-            <p id="error" class="small" style="color:#ff9999; text-align:center;"></p>
+            <p id="error" class="small" style="color:#ffffff; text-align:center;"></p>
         </div>
     </div>
 
@@ -217,13 +217,13 @@
 
         <div id="demo" class="section active">
             <div class="card">
-                <h3 style="color:#f3d06c">Leitores / Compradores Globais</h3>
+                <h3 style="color:#ffffff">Leitores / Compradores Globais</h3>
                 <div id="map"></div>
             </div>
 
             <!-- Países onde Triohnte está vendendo -->
             <div class="card" style="margin-top: 1.5rem;">
-                <h3 style="color:#f3d06c">Países com Vendas Ativas</h3>
+                <h3 style="color:#ffffff">Países com Vendas Ativas</h3>
                 <div style="display:flex; gap:5px; flex-wrap: wrap; margin-bottom: 1rem;">
                     <input id="countryName" placeholder="Nome do País" style="flex: 2; min-width: 180px;">
                     <input id="countryCount" placeholder="Qtd. Leitores / Vendas" type="number" style="flex: 1; min-width: 120px;">
@@ -244,7 +244,7 @@
 
         <div id="fin" class="section">
             <div class="card">
-                <h3 style="color:#f3d06c">Histórico de Vendas</h3>
+                <h3 style="color:#ffffff">Histórico de Vendas</h3>
                 <div style="display:flex; gap:5px; flex-wrap: wrap;">
                     <input id="saleItem" placeholder="Item / Livro" style="flex: 1.8; min-width: 130px;">
                     <input id="saleEmail" placeholder="E-mail do Comprador" style="flex: 1.8; min-width: 140px;">
@@ -276,7 +276,7 @@
 
         <div id="plan" class="section">
             <div class="card">
-                <h3 style="color:#f3d06c">Publicar novidade no site</h3>
+                <h3 style="color:#ffffff">Publicar novidade no site</h3>
                 <p class="small">Esta publicação aparecerá na Central de Novidades dos usuários. Não é uma mensagem do Fórum Interno.</p>
                 <input id="publicUpdateTitle" type="text" maxlength="120" placeholder="Título da novidade">
                 <select id="publicUpdateType">
@@ -288,7 +288,7 @@
                 <div id="publicUpdateStatus" class="small" aria-live="polite"></div>
             </div>
             <div class="card">
-                <h3 style="color:#f3d06c">Fórum Interno</h3>
+                <h3 style="color:#ffffff">Fórum Interno</h3>
                 <textarea id="idea" placeholder="Escreva sua ideia ou planejamento..."></textarea>
                 <button onclick="postIdea()">Publicar</button>
                 <div id="forum"></div>
@@ -297,7 +297,7 @@
 
         <div id="gestao" class="section">
             <div class="card">
-                <h3 style="color:#f3d06c">Liberar Livros para Usuários</h3>
+                <h3 style="color:#ffffff">Liberar Livros para Usuários</h3>
                 <p class="small">A autorização é sincronizada pelo Firebase e aparece em outros dispositivos. Observação: enquanto os PDFs permanecerem públicos no GitHub Pages, isto bloqueia o leitor do site, mas não impede acesso por URL direta. A proteção definitiva exige PDFs em armazenamento privado.</p>
                 <div style="display:flex; gap:5px;">
                     <input id="userEmail" placeholder="E-mail do Usuário">
@@ -320,7 +320,7 @@
 
         <div id="conf" class="section">
             <div class="card">
-                <h3 style="color:#f3d06c">Conferência SW</h3>
+                <h3 style="color:#ffffff">Conferência SW</h3>
                 <button onclick="startCall()">Iniciar Sala</button>
                 <div id="callArea" class="hidden">
                     <iframe id="callFrame"></iframe>
@@ -701,7 +701,7 @@
                     const p = data[key];
                     const div = document.createElement('div');
                     div.className = 'forum-post';
-                    div.innerHTML = `<strong style="color:#f3d06c">${p.user}</strong> <span class="small">(${p.date})</span><p style="margin:5px 0 0 0">${p.text}</p>`;
+                    div.innerHTML = `<strong style="color:#ffffff">${p.user}</strong> <span class="small">(${p.date})</span><p style="margin:5px 0 0 0">${p.text}</p>`;
                     forum.appendChild(div);
                 });
             } catch (e) {
