@@ -907,7 +907,9 @@
       arrastoVotacao = { container, pointerId: e.pointerId };
       container.classList.add("is-dragging");
       selecionarNota(container, Number(star.dataset.value));
-      try { star.setPointerCapture(e.pointerId); } catch (_) {}
+      // Captura o gesto no conjunto inteiro para continuar recebendo o movimento
+      // mesmo quando o dedo ou mouse sai da área da estrela inicial.
+      try { container.setPointerCapture(e.pointerId); } catch (_) {}
       e.preventDefault();
     });
 
@@ -940,12 +942,14 @@
 
     function encerrarArrastoVotacao(e) {
       if (!arrastoVotacao || (e && arrastoVotacao.pointerId !== e.pointerId)) return;
-      arrastoVotacao.container.classList.remove("is-dragging");
+      const container = arrastoVotacao.container;
+      container.classList.remove("is-dragging");
+      // A nota escolhida permanece em data-nota-selecionada após soltar.
       arrastoVotacao = null;
     }
 
-    document.addEventListener("pointerup", encerrarArrastoVotacao);
-    document.addEventListener("pointercancel", encerrarArrastoVotacao);
+    document.addEventListener("pointerup", encerrarArrastoVotacao, true);
+    document.addEventListener("pointercancel", encerrarArrastoVotacao, true);
 
     document.body.addEventListener("keydown", e => {
       const star = e.target.closest(".star");
