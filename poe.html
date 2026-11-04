@@ -265,7 +265,7 @@
     }
 
     .star.selected {
-      background: linear-gradient(90deg, #f7e6b5 var(--star-fill, 0%), #444 var(--star-fill, 0%));
+      background: linear-gradient(90deg, #fff var(--star-fill, 0%), #444 var(--star-fill, 0%));
       color: transparent;
       -webkit-text-fill-color: transparent;
       -webkit-background-clip: text;
@@ -273,15 +273,15 @@
     }
 
     .star.hover {
-      color: #f7e6b5;
+      color: #fff;
       background: none;
-      -webkit-text-fill-color: initial;
+      -webkit-text-fill-color: #fff;
     }
 
     .rating-container .star.vote-choice {
-      color: #f7e6b5;
+      color: #fff;
       background: none;
-      -webkit-text-fill-color: #f7e6b5;
+      -webkit-text-fill-color: #fff;
     }
 
     .rating-score {
@@ -945,8 +945,11 @@
 
       const primeiro = estrelas[0].getBoundingClientRect();
       const ultimo = estrelas[estrelas.length - 1].getBoundingClientRect();
-      if (e.clientX < primeiro.left) nota = 1;
-      if (e.clientX > ultimo.right) nota = 5;
+
+      // A escala comeca exatamente na borda esquerda da primeira estrela.
+      // Fora da faixa das estrelas, nao atribui uma nota por aproximacao.
+      if (e.clientX < primeiro.left || e.clientX > ultimo.right) return;
+
       selecionarNota(arrastoVotacao.container, nota);
     }, true);
 
