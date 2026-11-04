@@ -247,6 +247,20 @@
       font-size: 1.1rem;
       color: #444;
       transition: color 0.2s;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .star.vote-choice {
+      color: #f7e6b5;
+      -webkit-text-fill-color: #f7e6b5;
+    }
+
+    .votar {
+      padding: 4px 9px;
+      margin-left: 5px;
+      font-size: 0.72rem;
+      line-height: 1.2;
     }
 
     .star.selected {
@@ -824,11 +838,12 @@
           <div class="author">Por: ${item.autor}</div>
           <div class="synopsis">${item.synopsis}</div>
           <div class="rating-container" data-id="${item.id}">
-            <span class="star" data-value="1">★</span>
-            <span class="star" data-value="2">★</span>
-            <span class="star" data-value="3">★</span>
-            <span class="star" data-value="4">★</span>
-            <span class="star" data-value="5">★</span>
+            <span class="star" data-value="1" role="button" tabindex="0" aria-label="1 estrela">★</span>
+            <span class="star" data-value="2" role="button" tabindex="0" aria-label="2 estrelas">★</span>
+            <span class="star" data-value="3" role="button" tabindex="0" aria-label="3 estrelas">★</span>
+            <span class="star" data-value="4" role="button" tabindex="0" aria-label="4 estrelas">★</span>
+            <span class="star" data-value="5" role="button" tabindex="0" aria-label="5 estrelas">★</span>
+            <button type="button" class="btn votar" data-id="${item.id}">Votar</button>
             <span class="rating-score" id="score-${item.id}">(0.0)</span>
           </div>
         </div>
@@ -867,30 +882,67 @@
       container.querySelectorAll(".star").forEach(s => s.classList.remove("hover"));
     });
 
+    document.body.addEventListener("keydown", e => {
+      const star = e.target.closest(".star");
+      if (star && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        star.click();
+      }
+    });
+
+    function obterIdentificadorVotante() {
+      if (usuarioLogado && usuarioLogado.uid) return usuarioLogado.uid;
+
+      const chaveLocal = "triohnte_visitante_votacao_id";
+      let visitanteId = localStorage.getItem(chaveLocal);
+      if (!visitanteId) {
+        const aleatorio = (typeof crypto !== "undefined" && crypto.randomUUID)
+          ? crypto.randomUUID().replace(/-/g, "")
+          : Date.now().toString(36) + Math.random().toString(36).slice(2);
+        visitanteId = "visitante_" + aleatorio;
+        localStorage.setItem(chaveLocal, visitanteId);
+      }
+      return visitanteId;
+    }
+
     document.body.addEventListener("click", async e => {
       const star = e.target.closest(".star");
       if (star) {
-        if (!usuarioLogado) {
-          alert("Você precisa estar conectado para votar com estrelas.");
+        const container = star.closest(".rating-container");
+        container.dataset.notaSelecionada = star.dataset.value;
+        container.querySelectorAll(".star").forEach(s => {
+          s.classList.toggle("vote-choice", Number(s.dataset.value) <= Number(star.dataset.value));
+        });
+        return;
+      }
+
+      const btnVotar = e.target.closest(".votar");
+      if (btnVotar) {
+        const container = btnVotar.closest(".rating-container");
+        const livroId = btnVotar.dataset.id;
+        const nota = Number(container && container.dataset.notaSelecionada);
+        if (!nota || nota < 1 || nota > 5) {
+          alert("Escolha de 1 a 5 estrelas antes de votar.");
           return;
         }
-        const container = star.closest(".rating-container");
-        const livroId = container.dataset.id;
-        const nota = parseInt(star.dataset.value);
 
+        btnVotar.disabled = true;
         try {
-          const safeUid = usuarioLogado.uid;
-          await db.ref(`avaliacoes_estrelas/${livroId}/${safeUid}`).set({
-            nota: nota,
-            email: usuarioLogado.email,
+          const votanteId = obterIdentificadorVotante();
+          await db.ref(`avaliacoes_estrelas/${livroId}/${votanteId}`).set({
+            nota,
+            tipoVotante: usuarioLogado ? "conta" : "visitante",
+            email: usuarioLogado ? (usuarioLogado.email || null) : null,
             data: Date.now()
           });
-
-          alert(`Você avaliou com ${nota} estrela(s)! Obrigado.`);
-          carregarMediaEstrelas(livroId);
+          alert("Seu voto foi registrado. Obrigado!");
+          container.dataset.notaSelecionada = "";
+          container.querySelectorAll(".star").forEach(s => s.classList.remove("vote-choice"));
         } catch (err) {
           console.error("Erro ao registrar avaliação:", err);
-          alert("Erro ao registrar voto.");
+          alert("Não foi possível registrar seu voto. Verifique a conexão e tente novamente.");
+        } finally {
+          btnVotar.disabled = false;
         }
         return;
       }
