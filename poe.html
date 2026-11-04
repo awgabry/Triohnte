@@ -904,6 +904,16 @@
       const star = e.target.closest(".star");
       if (!star || e.button !== 0) return;
       const container = star.closest(".rating-container");
+
+      // Ao iniciar uma nova avaliação, limpa a representação da média anterior
+      // para que ela não seja confundida com a escolha que está sendo feita.
+      container.querySelectorAll(".star").forEach(s => {
+        s.classList.remove("selected", "vote-choice", "hover");
+        s.style.removeProperty("--star-fill");
+        s.setAttribute("aria-pressed", "false");
+      });
+      container.dataset.notaSelecionada = "";
+
       arrastoVotacao = { container, pointerId: e.pointerId };
       container.classList.add("is-dragging");
       selecionarNota(container, Number(star.dataset.value));
