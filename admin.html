@@ -298,6 +298,7 @@
         <div id="gestao" class="section">
             <div class="card">
                 <h3 style="color:#f3d06c">Liberar Livros para Usuários</h3>
+                <p class="small">A autorização é sincronizada pelo Firebase e aparece em outros dispositivos. Observação: enquanto os PDFs permanecerem públicos no GitHub Pages, isto bloqueia o leitor do site, mas não impede acesso por URL direta. A proteção definitiva exige PDFs em armazenamento privado.</p>
                 <div style="display:flex; gap:5px;">
                     <input id="userEmail" placeholder="E-mail do Usuário">
                     <input id="bookID" placeholder="ID do Livro">
@@ -443,45 +444,68 @@
             }
         }
 
-        /* Lógica de Gestão de Acesso */
-        function permitirAcesso() {
+        /* Gestão de acesso sincronizada no Firebase Realtime Database */
+        function chaveEmailAcesso(email) {
+            return (email || '').trim().toLowerCase().replace(/\./g, ',');
+        }
+
+        async function permitirAcesso() {
             const email = document.getElementById('userEmail').value.trim().toLowerCase();
             const bookId = document.getElementById('bookID').value.trim();
+            if (!email || !/^\\d+$/.test(bookId)) return alert("Informe um e-mail válido e o ID numérico do livro.");
 
-            if (!email || !bookId) return alert("Preencha todos os campos");
-
-            let permissoes = JSON.parse(localStorage.getItem('sw_permissoes')) || [];
-            
-            if (!permissoes.find(p => p.email === email && p.bookId === bookId)) {
-                permissoes.push({ email, bookId });
-                localStorage.setItem('sw_permissoes', JSON.stringify(permissoes));
-                renderAccessList();
+            try {
+                const chave = chaveEmailAcesso(email);
+                const response = await fetch(`${DB_URL}/permissoes_leitura/${chave}/${bookId}.json`, {
+                    method: 'PUT',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ativo:true, email, livroId:Number(bookId), autorizadoEm:Date.now(), autorizadoPor:currentUser})
+                });
+                if (!response.ok) throw new Error('Firebase HTTP ' + response.status);
+                document.getElementById('userEmail').value = '';
+                document.getElementById('bookID').value = '';
+                await renderAccessList();
+                alert("Acesso registrado no Firebase.");
+            } catch (e) {
+                console.error("Erro ao liberar acesso:", e);
+                alert("Não foi possível gravar a autorização no Firebase. Verifique as regras do banco.");
             }
-            
-            document.getElementById('userEmail').value = '';
-            document.getElementById('bookID').value = '';
         }
 
-        function renderAccessList() {
+        async function renderAccessList() {
             const list = document.getElementById('accessList');
             list.innerHTML = '';
-            const permissoes = JSON.parse(localStorage.getItem('sw_permissoes')) || [];
-
-            permissoes.forEach((p, index) => {
-                const row = `<tr>
-                    <td>${p.email}</td>
-                    <td>${p.bookId}</td>
-                    <td><button class="btn-del" onclick="removerAcesso(${index})">Revogar</button></td>
-                </tr>`;
-                list.innerHTML += row;
-            });
+            try {
+                const response = await fetch(`${DB_URL}/permissoes_leitura.json`);
+                if (!response.ok) throw new Error('Firebase HTTP ' + response.status);
+                const dados = await response.json() || {};
+                Object.entries(dados).forEach(([chaveEmail, livros]) => {
+                    Object.entries(livros || {}).forEach(([bookId, registro]) => {
+                        if (!registro || registro.ativo !== true) return;
+                        const email = registro.email || chaveEmail.replace(/,/g, '.');
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td></td><td></td><td><button class="btn-del">Revogar</button></td>`;
+                        row.children[0].textContent = email;
+                        row.children[1].textContent = bookId;
+                        row.querySelector('button').addEventListener('click', () => removerAcesso(chaveEmail, bookId));
+                        list.appendChild(row);
+                    });
+                });
+            } catch (e) {
+                console.error("Erro ao listar autorizações:", e);
+                list.innerHTML = '<tr><td colspan="3">Não foi possível carregar as autorizações do Firebase.</td></tr>';
+            }
         }
 
-        function removerAcesso(index) {
-            let permissoes = JSON.parse(localStorage.getItem('sw_permissoes')) || [];
-            permissoes.splice(index, 1);
-            localStorage.setItem('sw_permissoes', JSON.stringify(permissoes));
-            renderAccessList();
+        async function removerAcesso(chaveEmail, bookId) {
+            try {
+                const response = await fetch(`${DB_URL}/permissoes_leitura/${chaveEmail}/${bookId}.json`, {method:'DELETE'});
+                if (!response.ok) throw new Error('Firebase HTTP ' + response.status);
+                await renderAccessList();
+            } catch (e) {
+                console.error("Erro ao revogar acesso:", e);
+                alert("Não foi possível revogar a autorização no Firebase.");
+            }
         }
 
         /* Lógica de Finanças / Histórico de Vendas (Firebase Realtime Database) */
