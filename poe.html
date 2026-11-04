@@ -234,6 +234,53 @@
       margin-bottom: 0.8rem;
     }
 
+    .synopsis-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      align-self: flex-start;
+      margin: -0.25rem 0 0.85rem;
+      padding: 0.35rem 0.55rem;
+      border: 1px solid #39332a;
+      border-radius: 20px;
+      background: transparent;
+      color: #d6b879;
+      font: inherit;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .synopsis-toggle:hover,
+    .synopsis-toggle:focus-visible {
+      background: #1b1710;
+      border-color: #9b7944;
+      outline: none;
+    }
+
+    .synopsis-toggle .arrow {
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+
+    .synopsis-toggle[aria-expanded="true"] .arrow {
+      transform: rotate(180deg);
+    }
+
+    .synopsis-full {
+      display: none;
+      margin: 0 0 0.9rem;
+      color: #c8c1b5;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      white-space: pre-line;
+    }
+
+    .synopsis-full.is-open {
+      display: block;
+    }
+
     /* SISTEMA DE ESTRELAS NOS CARDS */
     .rating-container {
       display: flex;
@@ -965,10 +1012,26 @@
     /* DADOS DOS LIVROS E RENDERIZAÇÃO                       */
     /* ===================================================== */
     const livros = [
-      { id: 777, titulo: "Triohnte", autor: "Gabriel Aweryan", capa: "Capa.png", arquivo: "triohnte.pdf", synopsis: "Em Walingardyn, o poder pertence àqueles que conseguem conquistá-lo..." }
+      {
+        id: 777,
+        titulo: "Triohnte",
+        autor: "Gabriel Aweryan",
+        capa: "Capa.png",
+        arquivo: "triohnte.pdf",
+        synopsis: "Em Walingardyn, o poder pertence àqueles que conseguem conquistá-lo...",
+        fullSynopsis: "Em Walingardyn, o poder pertence àqueles que conseguem conquistá-lo, e, sobretudo, mantê-lo. Reinos disputam fronteiras, lordes conspiram para elevar suas casas e a plebe sobrevive sob o peso de uma hierarquia que parece impossível de romper. Por gerações, guerras e intrigas moldaram um mundo onde honra, lealdade e justiça frequentemente cedem lugar à ambição.\n\nMas algo começa a mudar.\n\nSem aviso, quatro reis são alvo de ataques repentinos, distintos entre si, porém ligados por circunstâncias que desafiam qualquer explicação. O que a princípio parece ser apenas mais uma disputa pelo poder logo revela sinais de uma conspiração muito mais profunda.\n\nAté então separados por seus próprios interesses, os quatro soberanos começam a perceber aquilo que seus tronos os impediram de enxergar: há algo profundamente corrompido em Walingardyn. Por trás das guerras existem interesses ocultos. Por trás das alianças, traições. E por trás da própria ordem que sustenta os reinos, uma verdade que permaneceu escondida por tempo demais. Enquanto os ataques se intensificam e a confiança entre coroas começa a desaparecer, os quatro reis são obrigados a confrontar uma realidade inquietante: talvez seus maiores inimigos não estejam além de suas fronteiras. Talvez estejam dentro de seus próprios reinos. E quando a verdade finalmente começar a emergir, nenhum trono permanecerá seguro."
+      }
     ];
     const novels = [
-      { id: 101, titulo: "Contos de Walingardyn", autor: "Gabriel Aweryan", capa: "Coloque aqui seu png", arquivo: "Contos.pdf", synopsis: "Não, em Walingardyn não existe apenas um continente de nome Triohnte." }
+      {
+        id: 101,
+        titulo: "Contos de Walingardyn",
+        autor: "Gabriel Aweryan",
+        capa: "Coloque aqui seu png",
+        arquivo: "Contos.pdf",
+        synopsis: "Não, em Walingardyn não existe apenas um continente de nome Triohnte.",
+        fullSynopsis: "Não, em Walingardyn não existe apenas um continente de nome Triohnte."
+      }
     ];
 
     const grade = document.getElementById("grade");
@@ -983,6 +1046,11 @@
           <h3>${item.titulo}</h3>
           <div class="author">Por: ${item.autor}</div>
           <div class="synopsis">${item.synopsis}</div>
+          <button type="button" class="synopsis-toggle" aria-expanded="false" aria-controls="synopsis-full-${item.id}" data-id="${item.id}">
+            <span class="toggle-label">Ler sinopse completa</span>
+            <span class="arrow" aria-hidden="true">⌄</span>
+          </button>
+          <div class="synopsis-full" id="synopsis-full-${item.id}">${item.fullSynopsis || item.synopsis}</div>
           <div class="rating-container" data-id="${item.id}">
             <span class="star" data-value="1" role="button" tabindex="0" aria-label="1 estrela">★</span>
             <span class="star" data-value="2" role="button" tabindex="0" aria-label="2 estrelas">★</span>
@@ -1004,6 +1072,20 @@
 
     livros.forEach(l => renderCard(l, grade));
     novels.forEach(c => renderCard(c, novelGrid));
+
+    document.body.addEventListener("click", event => {
+      const toggle = event.target.closest(".synopsis-toggle");
+      if (!toggle) return;
+
+      const fullSynopsis = document.getElementById("synopsis-full-" + toggle.dataset.id);
+      if (!fullSynopsis) return;
+
+      const expanded = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!expanded));
+      fullSynopsis.classList.toggle("is-open", !expanded);
+      toggle.querySelector(".toggle-label").textContent =
+        expanded ? "Ler sinopse completa" : "Recolher sinopse";
+    });
 
     /* ===================================================== */
     /* LÓGICA DE VOTAÇÃO POR ESTRELAS                        */
