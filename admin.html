@@ -406,30 +406,52 @@
 
         function abrirPainelAdmin(nome) {
             currentUser = nome;
+
+            // Exibe o painel antes de carregar recursos externos ou dados.
             document.getElementById('login').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
-            initMap();
-            loadSales();
-            renderForum();
-            renderAccessList();
-            loadCountries();
+
+            // Uma falha isolada de mapa/Firebase não pode impedir a entrada.
+            const tarefasIniciais = [initMap, loadSales, renderForum, renderAccessList, loadCountries];
+            tarefasIniciais.forEach(tarefa => {
+                try {
+                    const resultado = tarefa();
+                    if (resultado && typeof resultado.catch === 'function') {
+                        resultado.catch(erro => console.error('Falha ao inicializar painel:', erro));
+                    }
+                } catch (erro) {
+                    console.error('Falha ao inicializar painel:', erro);
+                }
+            });
         }
 
         function login() {
-            const code = document.getElementById('code').value.trim();
+            const campoCodigo = document.getElementById('code');
+            const mensagemErro = document.getElementById('error');
+            const code = campoCodigo.value.trim();
+
             if (users[code]) {
-                localStorage.setItem(ADMIN_SESSION_KEY, users[code]);
+                try {
+                    localStorage.setItem(ADMIN_SESSION_KEY, users[code]);
+                } catch (erro) {
+                    console.warn('Não foi possível guardar a sessão neste navegador:', erro);
+                }
+                mensagemErro.innerText = '';
                 abrirPainelAdmin(users[code]);
             } else {
-                document.getElementById('error').innerText = 'Código inválido';
+                mensagemErro.innerText = 'Código inválido';
             }
         }
 
-        // Restaura o acesso após atualizar ou reabrir a página no mesmo navegador.
+        // Restaura o acesso sem bloquear a página se o armazenamento estiver indisponível.
         document.addEventListener('DOMContentLoaded', () => {
-            const sessaoSalva = localStorage.getItem(ADMIN_SESSION_KEY);
-            if (sessaoSalva && Object.values(users).includes(sessaoSalva)) {
-                abrirPainelAdmin(sessaoSalva);
+            try {
+                const sessaoSalva = localStorage.getItem(ADMIN_SESSION_KEY);
+                if (sessaoSalva && Object.values(users).includes(sessaoSalva)) {
+                    abrirPainelAdmin(sessaoSalva);
+                }
+            } catch (erro) {
+                console.warn('Não foi possível restaurar a sessão:', erro);
             }
         });
 
