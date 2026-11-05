@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login admin — Triohnte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html, body { width:100%; min-height:100%; margin:0; }
+        body {
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            background:#000;
+            color:#fff;
+            font-family:'Cinzel',serif;
+        }
+        .card {
+            width:min(100%,360px);
+            padding:28px;
+            border:1px solid #fff;
+            border-radius:14px;
+            background:#000;
+            box-shadow:0 0 18px rgba(255,255,255,.08);
+        }
+        h1 { margin:0 0 22px; text-align:center; font-size:1.35rem; }
+        input, button {
+            display:block;
+            width:100%;
+            margin-top:12px;
+            padding:13px;
+            border:1px solid #fff;
+            border-radius:9px;
+            font:inherit;
+        }
+        input { background:#000; color:#fff; }
+        input::placeholder { color:#bbb; }
+        button { background:#fff; color:#000; font-weight:700; cursor:pointer; }
+        button:hover { background:#e6e6e6; }
+        #error { min-height:1.3em; margin:14px 0 0; color:#ff7777; text-align:center; font-size:.8rem; }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <h1>Login admin</h1>
+        <form id="loginForm">
+            <input id="code" type="password" placeholder="Código de acesso" autocomplete="current-password" required>
+            <button type="submit">Entrar</button>
+            <p id="error" role="alert"></p>
+        </form>
+    </main>
+    <script>
+        const ADMIN_SESSION_KEY = 'triohnte_admin_session';
+        const users = { 'G200207': 'Gabriel' };
+
+        // Se já houver uma sessão válida, encaminha diretamente ao painel.
+        try {
+            if (localStorage.getItem(ADMIN_SESSION_KEY) === 'Gabriel') {
+                window.location.replace('admin.html');
+            }
+        } catch (erro) {
+            console.warn('Armazenamento de sessão indisponível:', erro);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const code = document.getElementById('code').value.trim();
+            const nome = users[code];
+
+            if (!nome) {
+                document.getElementById('error').textContent = 'Código inválido. Tente novamente.';
+                return;
+            }
+
+            try {
+                localStorage.setItem(ADMIN_SESSION_KEY, nome);
+            } catch (erro) {
+                document.getElementById('error').textContent = 'Não foi possível guardar a sessão neste navegador.';
+                return;
+            }
+
+            window.location.assign('admin.html');
+        });
+    </script>
+</body>
+</html>
