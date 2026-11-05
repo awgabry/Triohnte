@@ -17,8 +17,14 @@
             box-sizing: border-box;
         }
         
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
             margin: 0;
+            overflow: hidden;
+        }
+
+        body {
             font-family: 'Cinzel', serif;
             background: #000000;
             color: #ffffff;
@@ -29,7 +35,29 @@
         }
         
         #login, #app {
-            min-height: 100vh;
+            height: 100vh;
+            height: 100dvh;
+            min-height: 0;
+            width: 100%;
+        }
+
+        #login { overflow: hidden; }
+
+        #app {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #app.hidden { display: none; }
+
+        #app .top { flex: 0 0 auto; }
+
+        #app .section {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
         }
         
         .center {
@@ -103,6 +131,18 @@
         
         .section.active {
             display: block;
+        }
+
+        @media (max-width: 600px) {
+            .top {
+                gap: .65rem;
+                padding: .75rem;
+                font-size: .78rem;
+                justify-content: space-between;
+            }
+
+            .section { padding: .65rem; }
+            .card { padding: 1rem; }
         }
         
         #map {
