@@ -428,6 +428,8 @@
                         <option value="EUR">Euro (€)</option>
                         <option value="BRL" selected>Real (R$)</option>
                         <option value="USD">Dólar (US$)</option>
+                        <option value="PEN">Sol peruano (S/)</option>
+                        <option value="BOB">Boliviano (Bs)</option>
                     </select>
                     <input id="saleMonthYear" type="month" style="flex:1.1; min-width:120px;" title="Mês / Ano do Faturamento">
                     <button onclick="adicionarVenda()" style="width:130px">Adicionar</button>
@@ -458,12 +460,16 @@
                         <option value="EUR">Euro (€)</option>
                         <option value="BRL">Real (R$)</option>
                         <option value="USD">Dólar (US$)</option>
+                        <option value="PEN">Sol peruano (S/)</option>
+                        <option value="BOB">Boliviano (Bs)</option>
                     </select>
                     <span>para</span>
                     <select id="conversionTo" style="flex:1; min-width:120px;" aria-label="Moeda de destino">
                         <option value="BRL">Real (R$)</option>
                         <option value="EUR">Euro (€)</option>
                         <option value="USD">Dólar (US$)</option>
+                        <option value="PEN">Sol peruano (S/)</option>
+                        <option value="BOB">Boliviano (Bs)</option>
                     </select>
                     <button onclick="converterMoeda()" style="width:150px">Converter</button>
                 </div>
@@ -731,7 +737,401 @@
         const MOEDAS_ADMIN = {
             EUR: { simbolo: '€', nome: 'Euro' },
             BRL: { simbolo: 'R$', nome: 'Real' },
-            USD: { simbolo: 'US$', nome: 'Dólar' }
+            USD: { simbolo: 'US
+        const CONVERSION_HISTORY_KEY = 'triohnte_admin_conversion_history';
+
+        function valorNumericoVenda(valor) {
+            if (typeof valor === 'number') return Number.isFinite(valor) ? valor : 0;
+            let limpo = String(valor || '').replace(/[^0-9,.-]/g, '').trim();
+            if (limpo.includes(',') && limpo.includes('.')) {
+                limpo = limpo.lastIndexOf(',') > limpo.lastIndexOf('.')
+                    ? limpo.replace(/\./g, '').replace(',', '.')
+                    : limpo.replace(/,/g, '');
+            } else if (limpo.includes(',')) {
+                limpo = limpo.replace(',', '.');
+            }
+            return parseFloat(limpo) || 0;
+        }
+
+        function formatarMoedaAdmin(valor, moeda) {
+            const simbolo = (MOEDAS_ADMIN[moeda] || MOEDAS_ADMIN.BRL).simbolo;
+            return simbolo + ' ' + Number(valor || 0).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function obterHistoricoConversoes() {
+            try {
+                return JSON.parse(localStorage.getItem(CONVERSION_HISTORY_KEY) || '[]');
+            } catch (e) {
+                console.warn('Não foi possível ler o histórico de conversões:', e);
+                return [];
+            }
+        }
+
+        async function loadSales() {
+            try {
+                const response = await fetch(`${DB_URL}/vendas.json`);
+                if (!response.ok) throw new Error('Firebase HTTP ' + response.status);
+                const data = await response.json() || {};
+                const list = document.getElementById('salesList');
+                list.innerHTML = '';
+
+                const totais = { EUR: 0, BRL: 0, USD: 0, PEN: 0, BOB: 0 };
+                Object.keys(data).forEach(key => {
+                    const venda = data[key];
+                    const moeda = MOEDAS_ADMIN[venda.moeda] ? venda.moeda : 'BRL';
+                    const valor = valorNumericoVenda(venda.valor);
+                    totais[moeda] += valor;
+
+                    let mesAnoFormatado = '-';
+                    if (venda.mesAno) {
+                        const partes = venda.mesAno.split('-');
+                        mesAnoFormatado = partes.length === 2 ? `${partes[1]}/${partes[0]}` : venda.mesAno;
+                    }
+
+                    const row = document.createElement('tr');
+                    [venda.item || '', venda.email || '-', venda.formato || 'E-book', mesAnoFormatado,
+                     formatarMoedaAdmin(valor, moeda)].forEach(texto => {
+                        const cell = document.createElement('td');
+                        cell.textContent = texto;
+                        row.appendChild(cell);
+                    });
+                    const actionCell = document.createElement('td');
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'btn-del';
+                    deleteButton.textContent = 'Excluir';
+                    deleteButton.addEventListener('click', () => removerVenda(key));
+                    actionCell.appendChild(deleteButton);
+                    row.appendChild(actionCell);
+                    list.appendChild(row);
+                });
+
+                document.getElementById('salesTotal').innerText =
+                    'Totais por moeda: ' + ['EUR', 'BRL', 'USD', 'PEN', 'BOB'].map(m => formatarMoedaAdmin(totais[m], m)).join(' | ');
+            } catch (e) {
+                console.error('Erro ao carregar vendas:', e);
+            }
+        }
+
+        async function adicionarVenda() {
+            const item = document.getElementById('saleItem').value.trim();
+            const email = document.getElementById('saleEmail').value.trim().toLowerCase();
+            const formato = document.getElementById('saleFormat').value;
+            const valor = document.getElementById('saleValue').value.trim();
+            const moeda = document.getElementById('saleCurrency').value;
+            const mesAno = document.getElementById('saleMonthYear').value;
+
+            if (!item || !valor || !Number.isFinite(Number(valor)) || Number(valor) <= 0) {
+                return alert('Preencha o item e informe um valor válido maior que zero.');
+            }
+
+            try {
+                const response = await fetch(`${DB_URL}/vendas.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ item, email, formato, valor: Number(valor), moeda, mesAno })
+                });
+                if (!response.ok) throw new Error('Firebase HTTP ' + response.status);
+                document.getElementById('saleItem').value = '';
+                document.getElementById('saleEmail').value = '';
+                document.getElementById('saleValue').value = '';
+                document.getElementById('saleMonthYear').value = '';
+                await loadSales();
+            } catch (e) {
+                console.error('Erro ao adicionar venda:', e);
+                alert('Não foi possível registar a venda. Verifique a ligação.');
+            }
+        }
+
+        async function removerVenda(key) {
+            try {
+                const response = await fetch(`${DB_URL}/vendas/${key}.json`, { method: 'DELETE' });
+                if (!response.ok) throw new Error('Firebase HTTP ' + response.status);
+                await loadSales();
+            } catch (e) {
+                console.error('Erro ao remover venda:', e);
+                alert('Não foi possível excluir a venda.');
+            }
+        }
+
+        async function converterMoeda() {
+            const amount = Number(document.getElementById('conversionAmount').value);
+            const from = document.getElementById('conversionFrom').value;
+            const to = document.getElementById('conversionTo').value;
+            const resultBox = document.getElementById('conversionResult');
+            const rateBox = document.getElementById('conversionRate');
+
+            if (!Number.isFinite(amount) || amount <= 0) {
+                resultBox.textContent = 'Informe um valor maior que zero.';
+                rateBox.textContent = '';
+                return;
+            }
+            if (from === to) {
+                resultBox.textContent = formatarMoedaAdmin(amount, to);
+                rateBox.textContent = 'As moedas de origem e destino são iguais (taxa 1:1).';
+                return;
+            }
+
+            resultBox.textContent = 'Consultando taxa de câmbio...';
+            rateBox.textContent = '';
+            try {
+                const url = `https://open.er-api.com/v6/latest/${encodeURIComponent(from)}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Serviço de câmbio indisponível (HTTP ' + response.status + ')');
+                const data = await response.json();
+                if (data.result !== 'success') throw new Error('Taxas de câmbio indisponíveis.');
+                const rate = Number(data.rates && data.rates[to]);
+                if (!Number.isFinite(rate) || rate <= 0) throw new Error('Taxa de câmbio não recebida.');
+                const converted = amount * rate;
+                const date = data.time_last_update_utc || new Date().toISOString().slice(0, 10);
+                const registro = { amount, from, to, rate, result: converted, date, createdAt: new Date().toISOString() };
+
+                const history = obterHistoricoConversoes();
+                history.push(registro);
+                try {
+                    localStorage.setItem(CONVERSION_HISTORY_KEY, JSON.stringify(history));
+                } catch (storageError) {
+                    console.warn('Conversão feita, mas não foi possível guardar o histórico:', storageError);
+                }
+
+                resultBox.textContent = `${formatarMoedaAdmin(amount, from)} = ${formatarMoedaAdmin(converted, to)}`;
+                rateBox.textContent = `Taxa: 1 ${from} = ${rate.toLocaleString('pt-BR', { maximumFractionDigits: 6 })} ${to} | Referência: ${date}`;
+            } catch (e) {
+                console.error('Erro na conversão de moedas:', e);
+                resultBox.textContent = 'Não foi possível obter a taxa de câmbio. Tente novamente mais tarde.';
+                rateBox.textContent = 'A conversão depende de ligação à internet e do serviço de taxas.';
+            }
+        }
+
+        async function baixarPDFVendas() {
+            try {
+                const response = await fetch(`${DB_URL}/vendas.json`);
+                if (!response.ok) throw new Error('Firebase HTTP ' + response.status);
+                const data = await response.json() || {};
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: 'landscape' });
+
+                doc.setFont('Helvetica', 'bold');
+                doc.setFontSize(16);
+                doc.text('Historico Financeiro - Sistem Admin', 14, 16);
+                doc.setFont('Helvetica', 'normal');
+                doc.setFontSize(9);
+                let y = 25;
+                const headers = ['Item / Livro', 'E-mail', 'Formato', 'Mes/Ano', 'Valor', 'Moeda'];
+                const positions = [14, 88, 158, 198, 235, 270];
+                doc.setFont('Helvetica', 'bold');
+                headers.forEach((h, i) => doc.text(h, positions[i], y));
+                doc.line(14, y + 2, 282, y + 2);
+                y += 9;
+
+                const totais = { EUR: 0, BRL: 0, USD: 0 };
+                Object.keys(data).forEach(key => {
+                    const venda = data[key];
+                    const moeda = MOEDAS_ADMIN[venda.moeda] ? venda.moeda : 'BRL';
+                    const valor = valorNumericoVenda(venda.valor);
+                    totais[moeda] += valor;
+                    let mesAno = '-';
+                    if (venda.mesAno) {
+                        const partes = venda.mesAno.split('-');
+                        mesAno = partes.length === 2 ? `${partes[1]}/${partes[0]}` : venda.mesAno;
+                    }
+
+                    if (y > 190) {
+                        doc.addPage();
+                        y = 18;
+                    }
+                    doc.setFont('Helvetica', 'normal');
+                    const cells = [
+                        String(venda.item || '').slice(0, 38),
+                        String(venda.email || '-').slice(0, 38),
+                        String(venda.formato || 'E-book'),
+                        String(mesAno),
+                        valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+                        moeda
+                    ];
+                    cells.forEach((cell, i) => doc.text(cell, positions[i], y));
+                    y += 7;
+                });
+
+                y += 4;
+                if (y > 185) { doc.addPage(); y = 18; }
+                doc.line(14, y, 282, y);
+                y += 8;
+                doc.setFont('Helvetica', 'bold');
+                doc.text('Totais por moeda (nao somados entre si):', 14, y);
+                y += 7;
+                doc.setFont('Helvetica', 'normal');
+                ['EUR', 'BRL', 'USD', 'PEN', 'BOB'].forEach(m => {
+                    doc.text(`${m}: ${totais[m].toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 14, y);
+                    y += 6;
+                });
+
+                const conversoes = obterHistoricoConversoes();
+                y += 4;
+                if (y > 175) { doc.addPage(); y = 18; }
+                doc.setFont('Helvetica', 'bold');
+                doc.text('Historico de conversoes de moedas:', 14, y);
+                y += 7;
+                doc.setFont('Helvetica', 'normal');
+                if (!conversoes.length) {
+                    doc.text('Nenhuma conversao realizada neste navegador.', 14, y);
+                } else {
+                    conversoes.forEach((c, index) => {
+                        if (y > 190) { doc.addPage(); y = 18; }
+                        const linha = `${index + 1}. ${c.date} | ${c.amount} ${c.from} = ${Number(c.result).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${c.to} | Taxa: 1 ${c.from} = ${Number(c.rate).toLocaleString('pt-BR', { maximumFractionDigits: 6 })} ${c.to}`;
+                        doc.text(linha, 14, y);
+                        y += 6;
+                    });
+                }
+
+                doc.save('historico_financeiro_triohnte.pdf');
+            } catch (e) {
+                console.error('Erro ao gerar PDF:', e);
+                alert('Erro ao exportar o PDF financeiro.');
+            }
+        }
+
+        /* Lógica de Planejamentos / Fórum Interno (Sincronizado com o Firebase) */
+        async function postIdea() {
+            const text = document.getElementById('idea').value.trim();
+            if (!text) return alert("Escreva algo para publicar");
+
+            try {
+                await fetch(`${DB_URL}/forum.json`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        user: currentUser,
+                        text: text,
+                        date: new Date().toLocaleString()
+                    })
+                });
+                document.getElementById('idea').value = '';
+                renderForum();
+            } catch (e) {
+                console.error("Erro ao postar no fórum", e);
+            }
+        }
+
+        async function renderForum() {
+            const forum = document.getElementById('forum');
+            forum.innerHTML = '';
+            
+            try {
+                const response = await fetch(`${DB_URL}/forum.json`);
+                const data = await response.json() || {};
+                
+                const postsKeys = Object.keys(data);
+                postsKeys.reverse().forEach(key => {
+                    const p = data[key];
+                    const div = document.createElement('div');
+                    div.className = 'forum-post';
+                    div.innerHTML = `<strong style="color:#ffffff">${p.user}</strong> <span class="small">(${p.date})</span><p style="margin:5px 0 0 0">${p.text}</p>`;
+                    forum.appendChild(div);
+                });
+            } catch (e) {
+                console.error("Erro ao carregar fórum", e);
+            }
+        }
+
+        /* Lógica de Demografia / Leitores Globais */
+        let map;
+        let markersGroup = [];
+
+        function initMap() {
+            if (map) return;
+            map = L.map('map').setView([20, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(map);
+
+            carregarPins();
+
+            map.on('click', function(e) {
+                adicionarPinNoBanco(e.latlng.lat, e.latlng.lng);
+            });
+        }
+
+        async function carregarPins() {
+            markersGroup.forEach(m => map.removeLayer(m));
+            markersGroup = [];
+
+            try {
+                const response = await fetch(`${DB_URL}/pins.json`);
+                const data = await response.json() || {};
+
+                Object.keys(data).forEach(key => {
+                    const pos = data[key];
+                    criarMarcadorNoMapa(pos.lat, pos.lng, key);
+                });
+            } catch (e) {
+                console.error("Erro ao carregar alfinetes", e);
+            }
+        }
+
+        function criarMarcadorNoMapa(lat, lng, dbKey) {
+            const locationIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            const marker = L.marker([lat, lng], {
+                icon: locationIcon,
+                bubblingMouseEvents: false,
+                keyboard: true,
+                title: 'Dê dois cliques para remover esta localização'
+            }).addTo(map);
+
+            marker.on('click', function(e) {
+                L.DomEvent.stopPropagation(e);
+            });
+
+            marker.on('dblclick', function(e) {
+                L.DomEvent.stopPropagation(e);
+                removerPinDoBanco(dbKey);
+            });
+
+            markersGroup.push(marker);
+        }
+
+        async function adicionarPinNoBanco(lat, lng) {
+            try {
+                await fetch(`${DB_URL}/pins.json`, {
+                    method: 'POST',
+                    body: JSON.stringify({ lat, lng })
+                });
+                carregarPins();
+            } catch (e) {
+                console.error("Erro ao adicionar alfinete", e);
+            }
+        }
+
+        async function removerPinDoBanco(dbKey) {
+            try {
+                await fetch(`${DB_URL}/pins/${dbKey}.json`, {
+                    method: 'DELETE'
+                });
+                carregarPins();
+            } catch (e) {
+                console.error("Erro ao remover alfinete", e);
+            }
+        }
+        
+        function startCall() { 
+            const callArea = document.getElementById('callArea');
+            callArea.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
+, nome: 'Dólar' },
+            PEN: { simbolo: 'S/', nome: 'Sol peruano' },
+            BOB: { simbolo: 'Bs', nome: 'Boliviano' }
         };
         const CONVERSION_HISTORY_KEY = 'triohnte_admin_conversion_history';
 
