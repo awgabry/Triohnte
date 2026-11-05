@@ -362,21 +362,36 @@
             }
         }
 
+        const ADMIN_SESSION_KEY = 'triohnte_admin_session';
+
+        function abrirPainelAdmin(nome) {
+            currentUser = nome;
+            document.getElementById('login').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            initMap();
+            loadSales();
+            renderForum();
+            renderAccessList();
+            loadCountries();
+        }
+
         function login() {
             const code = document.getElementById('code').value.trim();
             if (users[code]) {
-                currentUser = users[code];
-                document.getElementById('login').classList.add('hidden');
-                document.getElementById('app').classList.remove('hidden');
-                initMap(); 
-                loadSales(); 
-                renderForum();
-                renderAccessList();
-                loadCountries();
+                localStorage.setItem(ADMIN_SESSION_KEY, users[code]);
+                abrirPainelAdmin(users[code]);
             } else {
                 document.getElementById('error').innerText = 'Código inválido';
             }
         }
+
+        // Restaura o acesso após atualizar ou reabrir a página no mesmo navegador.
+        document.addEventListener('DOMContentLoaded', () => {
+            const sessaoSalva = localStorage.getItem(ADMIN_SESSION_KEY);
+            if (sessaoSalva && Object.values(users).includes(sessaoSalva)) {
+                abrirPainelAdmin(sessaoSalva);
+            }
+        });
 
         function openTab(id, el) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
