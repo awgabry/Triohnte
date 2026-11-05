@@ -239,10 +239,16 @@
 
         body, #app, .section, .card, .top, .tab, p, h1, h2, h3, h4,
         label, th, td, button, input, select, textarea, .small, .total-box {
-            min-width: 0;
+            min-width: 0 !important;
             max-width: 100%;
             overflow-wrap: anywhere;
             word-break: normal;
+        }
+
+        .section > *, .card > *, .card > div,
+        .card [style*="display:flex"] > * {
+            min-width: 0 !important;
+            max-width: 100%;
         }
 
         #app {
