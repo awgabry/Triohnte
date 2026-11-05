@@ -235,16 +235,6 @@
 </head>
 <body>
 
-    <!-- Tela de Login -->
-    <div id="login" class="center">
-        <div class="card" style="width:320px">
-            <h2 style="color:#ffffff; text-align:center; margin-top:0;">Admin Sistem</h2>
-            <input id="code" placeholder="Código de acesso">
-            <button onclick="login()">Entrar</button>
-            <p id="error" class="small" style="color:#ffffff; text-align:center;"></p>
-        </div>
-    </div>
-
     <!-- Aplicação Principal -->
     <div id="app" class="hidden">
         <div class="top">
@@ -404,16 +394,25 @@
 
         const ADMIN_SESSION_KEY = 'triohnte_admin_session';
 
-        function abrirPainelAdmin(nome) {
-            currentUser = nome;
+        // O acesso é validado na página separada Login admin.
+        document.addEventListener('DOMContentLoaded', () => {
+            let sessao = '';
+            try {
+                sessao = localStorage.getItem(ADMIN_SESSION_KEY) || '';
+            } catch (erro) {
+                console.error('Não foi possível verificar a sessão administrativa:', erro);
+            }
 
-            // Exibe o painel antes de carregar recursos externos ou dados.
-            document.getElementById('login').classList.add('hidden');
+            if (sessao !== 'Gabriel') {
+                window.location.replace('login-admin.html');
+                return;
+            }
+
+            currentUser = sessao;
             document.getElementById('app').classList.remove('hidden');
 
-            // Uma falha isolada de mapa/Firebase não pode impedir a entrada.
-            const tarefasIniciais = [initMap, loadSales, renderForum, renderAccessList, loadCountries];
-            tarefasIniciais.forEach(tarefa => {
+            // Inicialização independente: falhas em serviços não bloqueiam a abertura.
+            [initMap, loadSales, renderForum, renderAccessList, loadCountries].forEach(tarefa => {
                 try {
                     const resultado = tarefa();
                     if (resultado && typeof resultado.catch === 'function') {
@@ -423,36 +422,6 @@
                     console.error('Falha ao inicializar painel:', erro);
                 }
             });
-        }
-
-        function login() {
-            const campoCodigo = document.getElementById('code');
-            const mensagemErro = document.getElementById('error');
-            const code = campoCodigo.value.trim();
-
-            if (users[code]) {
-                try {
-                    localStorage.setItem(ADMIN_SESSION_KEY, users[code]);
-                } catch (erro) {
-                    console.warn('Não foi possível guardar a sessão neste navegador:', erro);
-                }
-                mensagemErro.innerText = '';
-                abrirPainelAdmin(users[code]);
-            } else {
-                mensagemErro.innerText = 'Código inválido';
-            }
-        }
-
-        // Restaura o acesso sem bloquear a página se o armazenamento estiver indisponível.
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                const sessaoSalva = localStorage.getItem(ADMIN_SESSION_KEY);
-                if (sessaoSalva && Object.values(users).includes(sessaoSalva)) {
-                    abrirPainelAdmin(sessaoSalva);
-                }
-            } catch (erro) {
-                console.warn('Não foi possível restaurar a sessão:', erro);
-            }
         });
 
         function openTab(id, el) {
