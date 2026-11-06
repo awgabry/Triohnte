@@ -533,6 +533,22 @@
         </div>
     </div>
 
+    <!-- Firebase Authentication compartilhado com o index.html -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAajz5PVa79vH1FSWrC0pPrGxs0Q-9xkFk",
+            authDomain: "triohnte-database.firebaseapp.com",
+            databaseURL: "https://triohnte-database-default-rtdb.europe-west1.firebasedatabase.app", 
+            projectId: "triohnte-database",
+            appId: "1:127473963183:web:c071072d846a8d7240045a",
+             messagingSenderId: "127473963183"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const ADMIN_EMAILS = ['quielsc18@gmail.com'];
+    </script>
     <!-- Scripts da Aplicação -->
     <script>
         const users = { 'G200207': 'Gabriel' };
@@ -568,33 +584,27 @@
 
         const ADMIN_SESSION_KEY = 'triohnte_admin_session';
 
-        // O acesso é validado na página separada Login admin.
-        document.addEventListener('DOMContentLoaded', () => {
-            let sessao = '';
-            try {
-                sessao = localStorage.getItem(ADMIN_SESSION_KEY) || '';
-            } catch (erro) {
-                console.error('Não foi possível verificar a sessão administrativa:', erro);
-            }
-
-            if (sessao !== 'Gabriel') {
-                window.location.replace('login-admin.html');
-                return;
-            }
-
-            currentUser = sessao;
+        function abrirPainel(nome) {
+            currentUser = nome;
             document.getElementById('app').classList.remove('hidden');
-
-            // Inicialização independente: falhas em serviços não bloqueiam a abertura.
             [initMap, loadSales, renderForum, renderAccessList, loadCountries].forEach(tarefa => {
                 try {
                     const resultado = tarefa();
-                    if (resultado && typeof resultado.catch === 'function') {
-                        resultado.catch(erro => console.error('Falha ao inicializar painel:', erro));
-                    }
-                } catch (erro) {
-                    console.error('Falha ao inicializar painel:', erro);
+                    if (resultado && typeof resultado.catch === 'function') resultado.catch(erro => console.error('Falha ao inicializar painel:', erro));
+                } catch (erro) { console.error('Falha ao inicializar painel:', erro); }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.onAuthStateChanged(user => {
+                if (user && ADMIN_EMAILS.includes((user.email || '').toLowerCase())) {
+                    abrirPainel(user.email);
+                    return;
                 }
+                let sessao = '';
+                try { sessao = localStorage.getItem(ADMIN_SESSION_KEY) || ''; } catch (erro) { console.error(erro); }
+                if (sessao === 'Gabriel') abrirPainel('Gabriel');
+                else window.location.replace('login-admin.html');
             });
         });
 
