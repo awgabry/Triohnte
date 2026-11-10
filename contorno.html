@@ -19,14 +19,83 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: clamp(8px, 2vw, 28px);
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.map-frame {
+    width: min(76vw, 82vh);
+    height: min(76vw, 82vh);
+    min-width: 0;
+    min-height: 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 14px;
+    background: #000;
+    border: 2px solid #d4af37;
+    box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.22), 0 0 24px rgba(212, 175, 55, 0.16);
 }
 
 canvas {
     display: block;
-    max-width: 100vw;
-    max-height: 100vh;
-    object-fit: contain; 
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
     z-index: 1;
+}
+
+.map-arrow {
+    flex: 0 0 auto;
+    width: clamp(38px, 5vw, 58px);
+    height: clamp(48px, 7vw, 72px);
+    display: grid;
+    place-items: center;
+    color: #d4af37;
+    background: #080808;
+    border: 1px solid #d4af37;
+    border-radius: 4px;
+    font-size: clamp(25px, 3vw, 38px);
+    line-height: 1;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.map-arrow:hover {
+    color: #000;
+    background: #d4af37;
+    box-shadow: 0 0 16px rgba(212, 175, 55, .35);
+}
+.map-arrow:focus-visible, #musicToggle:focus-visible {
+    outline: 2px solid #fff1a8;
+    outline-offset: 4px;
+}
+
+#musicToggle {
+    position: fixed;
+    right: 22px;
+    bottom: 20px;
+    z-index: 20;
+    padding: 10px 15px;
+    color: #d4af37;
+    background: rgba(5, 5, 5, .94);
+    border: 1px solid #d4af37;
+    border-radius: 4px;
+    font: 600 13px 'Segoe UI', Tahoma, sans-serif;
+    cursor: pointer;
+}
+#musicToggle:hover { background: #191407; }
+
+@media (max-width: 600px) {
+    #viewport { gap: 7px; padding: 8px; }
+    .map-frame {
+        width: calc(100vw - 112px);
+        height: calc(100vw - 112px);
+        padding: 7px;
+    }
+    .map-arrow { width: 34px; height: 48px; font-size: 24px; }
+    #musicToggle { right: 10px; bottom: 10px; padding: 8px 11px; }
 }
 
 /* Info-Card Repaginado e Explicativo */
@@ -90,8 +159,14 @@ canvas {
 <body>
 
 <div id="viewport">
-    <canvas id="mapColorCanvas"></canvas>
+    <button class="map-arrow" id="previousMap" type="button" aria-label="Mapa anterior" title="Mapa anterior">‹</button>
+    <div class="map-frame">
+        <canvas id="mapColorCanvas" aria-label="Mapa interativo de Triohnte"></canvas>
+    </div>
+    <button class="map-arrow" id="nextMap" type="button" aria-label="Próximo mapa" title="Próximo mapa">›</button>
 </div>
+
+<button id="musicToggle" type="button" aria-pressed="false">♫ Desligar música</button>
 
 <div class="info-card" id="infoCard">
     <h3 id="cardTitle">Território</h3>
@@ -104,8 +179,15 @@ canvas {
 </div>
 
 <script>
-const MAP_WIDTH = 1441;
-const MAP_HEIGHT = 1311;
+let MAP_WIDTH = 1441;
+let MAP_HEIGHT = 1311;
+
+// Mapas já presentes no repositório. As setas percorrem esta sequência.
+const MAPS = [
+    { nome: "Mapa territorial", imagem: "dertyh.png" },
+    { nome: "Mapa 2", imagem: "dert.png" }
+];
+let currentMapIndex = 0;
 
 // BANCO DE DADOS DOS TERRITÓRIOS
 const databaseTerritorios = {
@@ -186,6 +268,10 @@ const databaseTerritorios = {
 // ELEMENTOS
 const canvas = document.getElementById('mapColorCanvas');
 const ctx = canvas.getContext('2d');
+const mapFrame = document.querySelector('.map-frame');
+const previousMapButton = document.getElementById('previousMap');
+const nextMapButton = document.getElementById('nextMap');
+const musicToggle = document.getElementById('musicToggle');
 
 const infoCard = document.getElementById('infoCard');
 const cardTitle = document.getElementById('cardTitle');
@@ -200,36 +286,74 @@ const cardDescricao = document.getElementById('cardDescricao');
 const bgMusic = new Audio('ae.mp3');
 bgMusic.loop = true;
 
+let musicEnabled = true;
+
 const selectSound = new Audio('lohy.mp3');
-selectSound.volume = 0.04; // Volume de seleção reduzido para 4% do volume do áudio.
+// Volume extremamente discreto: 0,5% do volume original, independentemente
+// do volume geral configurado no dispositivo.
+selectSound.volume = 0.005;
 
 // IMAGEM
 const imgColorida = new Image();
-imgColorida.src = 'dertyh.png';
+imgColorida.onload = init;
+imgColorida.onerror = () => {
+    console.error("Não foi possível carregar o mapa:", MAPS[currentMapIndex].imagem);
+};
+imgColorida.src = MAPS[currentMapIndex].imagem;
 
 let colorData = null;
 let activeColor = null;
 
-imgColorida.onload = init;
-
 function init(){
+    MAP_WIDTH = imgColorida.naturalWidth;
+    MAP_HEIGHT = imgColorida.naturalHeight;
     canvas.width = MAP_WIDTH;
     canvas.height = MAP_HEIGHT;
 
     resizeCanvasDisplay();
     drawBase();
-
     colorData = ctx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
+    activeColor = null;
+    infoCard.style.opacity = 0;
 }
 
 function resizeCanvasDisplay() {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    const scale = Math.min(windowWidth / MAP_WIDTH, windowHeight / MAP_HEIGHT);
+    const availableWidth = Math.max(1, mapFrame.clientWidth - 28);
+    const availableHeight = Math.max(1, mapFrame.clientHeight - 28);
+    const scale = Math.min(availableWidth / MAP_WIDTH, availableHeight / MAP_HEIGHT);
 
     canvas.style.width = Math.floor(MAP_WIDTH * scale) + "px";
     canvas.style.height = Math.floor(MAP_HEIGHT * scale) + "px";
 }
+
+function changeMap(direction) {
+    currentMapIndex = (currentMapIndex + direction + MAPS.length) % MAPS.length;
+    hideCard();
+    imgColorida.src = MAPS[currentMapIndex].imagem;
+}
+
+previousMapButton.addEventListener('click', () => changeMap(-1));
+nextMapButton.addEventListener('click', () => changeMap(1));
+
+function updateMusicButton() {
+    musicToggle.textContent = musicEnabled ? "♫ Desligar música" : "♫ Ligar música";
+    musicToggle.setAttribute('aria-pressed', String(!musicEnabled));
+}
+
+musicToggle.addEventListener('click', () => {
+    musicEnabled = !musicEnabled;
+    if (musicEnabled) {
+        bgMusic.play().catch(() => {
+            // O navegador pode exigir uma nova interação para liberar o áudio.
+        });
+    } else {
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+    }
+    updateMusicButton();
+});
+
+updateMusicButton();
 
 function drawBase(){
     ctx.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
@@ -277,8 +401,8 @@ function draw(){
 }
 
 function handlePointerMove(clientX, clientY, offsetX, offsetY) {
-    if (bgMusic.paused) {
-        bgMusic.play().catch(err => console.log("Aguardando interação do usuário para iniciar áudio."));
+    if (musicEnabled && bgMusic.paused) {
+        bgMusic.play().catch(() => console.log("Aguardando interação do usuário para iniciar áudio."));
     }
 
     const cw = canvas.clientWidth;
@@ -385,9 +509,7 @@ function hideCard() {
 }
 
 window.addEventListener('resize', () => {
-    if(colorData) {
-        resizeCanvasDisplay();
-    }
+    if(colorData) resizeCanvasDisplay();
 });
 </script>
 
