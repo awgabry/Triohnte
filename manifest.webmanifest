@@ -11,14 +11,10 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "mu.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "mu.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "mu-natal.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }
