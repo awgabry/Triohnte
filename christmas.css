@@ -1,0 +1,48 @@
+/* Triohnte — decoração sazonal de Natal. Camada visual independente. */
+#triohnte-christmas-garland {
+  position: fixed; inset: 0 0 auto; height: 34px; z-index: 9990;
+  pointer-events: none; overflow: hidden;
+  border-top: 2px solid rgba(197,157,95,.8);
+  background:
+    radial-gradient(circle at 5% 0, #a32626 0 5px, transparent 6px),
+    radial-gradient(circle at 17% 0, #d5b56c 0 4px, transparent 5px),
+    radial-gradient(circle at 29% 0, #1e6b43 0 5px, transparent 6px),
+    radial-gradient(circle at 41% 0, #a32626 0 5px, transparent 6px),
+    radial-gradient(circle at 53% 0, #d5b56c 0 4px, transparent 5px),
+    radial-gradient(circle at 65% 0, #1e6b43 0 5px, transparent 6px),
+    radial-gradient(circle at 77% 0, #a32626 0 5px, transparent 6px),
+    radial-gradient(circle at 89% 0, #d5b56c 0 4px, transparent 5px),
+    linear-gradient(174deg, transparent 0 13px, rgba(197,157,95,.8) 14px 15px, transparent 16px);
+  opacity: .78;
+}
+#triohnte-christmas-garland::after {
+  content: "✦  BOAS FESTAS  ✦";
+  position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
+  padding: 2px 13px; color: #e3c38f; background: rgba(5,5,5,.88);
+  border: 1px solid rgba(197,157,95,.55); border-radius: 2px;
+  font: 10px/1.5 'Cinzel', Georgia, serif; letter-spacing: 2px;
+  white-space: nowrap; text-shadow: 0 0 8px rgba(227,195,143,.45);
+}
+#triohnte-christmas-snow {
+  position: fixed; inset: 0; z-index: 9980; pointer-events: none;
+  overflow: hidden; opacity: .36;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, #fff 98%, transparent),
+    radial-gradient(1.5px 1.5px at 80px 110px, #f3e1b5 98%, transparent),
+    radial-gradient(2px 2px at 150px 70px, #fff 98%, transparent),
+    radial-gradient(1px 1px at 220px 160px, #fff 98%, transparent);
+  background-size: 260px 220px;
+  animation: triohnteSnowfall 18s linear infinite;
+}
+@keyframes triohnteSnowfall {
+  from { background-position: 0 -220px; }
+  to { background-position: 80px 100vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #triohnte-christmas-snow { animation: none; }
+}
+@media (max-width: 600px) {
+  #triohnte-christmas-garland { height: 28px; }
+  #triohnte-christmas-garland::after { top: 5px; font-size: 8px; }
+  #triohnte-christmas-snow { opacity: .24; }
+}
