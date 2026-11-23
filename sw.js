@@ -14,15 +14,13 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(payload => {
-  // Mensagens com payload de notificação são apresentadas automaticamente pelo FCM.
-  // Para mensagens apenas de dados, apresentamos a notificação aqui.
   if (payload.notification) return;
   const data = payload.data || {};
   const title = data.title || 'Novidade no Triohnte';
   const options = {
     body: data.body || 'Há uma nova atividade na comunidade.',
-    icon: './mu.png',
-    badge: './mu.png',
+    icon: './mu-natal.svg',
+    badge: './mu-natal.svg',
     data: { url: data.url || './index.html' },
     tag: data.tag || 'triohnte-novidade'
   };
@@ -48,12 +46,13 @@ self.addEventListener('notificationclick', event => {
   })());
 });
 
-const CACHE_NAME = 'triohnte-cache-v2';
+const CACHE_NAME = 'triohnte-cache-v3';
 const CACHE_PREFIX = 'triohnte-cache-';
 const APP_SHELL = [
   './index.html',
   './manifest.webmanifest',
   './mu.png',
+  './mu-natal.svg',
   './triwo.png'
 ];
 
@@ -81,9 +80,7 @@ self.addEventListener('fetch', event => {
   const request = event.request;
   const url = new URL(request.url);
 
-  if (request.method !== 'GET' || url.origin !== self.location.origin) {
-    return;
-  }
+  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
 
   if (request.mode === 'navigate') {
     event.respondWith(
