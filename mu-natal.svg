@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <image href="./mu.png" x="0" y="0" width="512" height="512" preserveAspectRatio="xMidYMid meet"/>
+  <g transform="translate(318 8) rotate(22 84 88)">
+    <path d="M20 145 C34 91 68 34 124 8 C139 1 155 12 151 29 C143 67 149 103 171 139 Z" fill="#b51f2b" stroke="#6f1019" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M119 10 C139 -2 158 9 153 29 C149 44 137 53 123 48 C108 43 105 21 119 10Z" fill="#fff8e9" stroke="#d8cbb8" stroke-width="7"/>
+    <path d="M17 139 C52 117 126 111 176 137 C191 145 186 168 169 174 C113 194 54 187 15 165 C1 157 3 146 17 139Z" fill="#fff8e9" stroke="#d8cbb8" stroke-width="8"/>
+    <path d="M37 145 C75 131 129 131 162 145" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+  </g>
+</svg>
