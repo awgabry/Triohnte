@@ -1,9 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <image href="./mu.png" x="0" y="0" width="512" height="512" preserveAspectRatio="xMidYMid meet"/>
-  <g transform="translate(318 8) rotate(22 84 88)">
-    <path d="M20 145 C34 91 68 34 124 8 C139 1 155 12 151 29 C143 67 149 103 171 139 Z" fill="#b51f2b" stroke="#6f1019" stroke-width="9" stroke-linejoin="round"/>
-    <path d="M119 10 C139 -2 158 9 153 29 C149 44 137 53 123 48 C108 43 105 21 119 10Z" fill="#fff8e9" stroke="#d8cbb8" stroke-width="7"/>
-    <path d="M17 139 C52 117 126 111 176 137 C191 145 186 168 169 174 C113 194 54 187 15 165 C1 157 3 146 17 139Z" fill="#fff8e9" stroke="#d8cbb8" stroke-width="8"/>
-    <path d="M37 145 C75 131 129 131 162 145" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#ffffff"/>
+  <image href="./mu.png" xlink:href="./mu.png" x="56" y="76" width="400" height="400" preserveAspectRatio="xMidYMid meet"/>
+  <g transform="translate(0 0) rotate(18 334 112)">
+    <path d="M235 147 C253 96 294 44 353 19 C372 11 390 25 383 45 C371 83 381 117 404 151 Z" fill="#c51f30" stroke="#861522" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M348 20 C368 5 391 17 386 39 C382 57 366 66 350 59 C334 52 332 33 348 20Z" fill="#fffaf0" stroke="#d8cdbd" stroke-width="7"/>
+    <path d="M230 143 C278 120 365 116 413 145 C431 156 424 181 404 188 C342 208 267 199 226 171 C210 160 213 151 230 143Z" fill="#fffaf0" stroke="#d8cdbd" stroke-width="8"/>
+    <path d="M252 150 C299 135 369 136 401 153" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity=".9"/>
   </g>
 </svg>
