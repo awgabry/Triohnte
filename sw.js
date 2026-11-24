@@ -14,8 +14,24 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(payload => {
-  if (payload.notification) return;
   const data = payload.data || {};
+
+  // Atualiza o número de publicações não lidas mesmo com o PWA em segundo plano.
+  const quantidade = Number.parseInt(data.badgeCount || '0', 10);
+  if (Number.isFinite(quantidade) && typeof self.registration.setAppBadge === 'function') {
+    const atualizacao = quantidade > 0
+      ? self.registration.setAppBadge(quantidade)
+      : (typeof self.registration.clearAppBadge === 'function'
+          ? self.registration.clearAppBadge()
+          : self.registration.setAppBadge(0));
+    if (atualizacao && typeof atualizacao.catch === 'function') {
+      atualizacao.catch(error => console.warn('Triohnte: não foi possível atualizar o emblema em segundo plano.', error));
+    }
+  }
+
+  // Mensagens com payload de notificação são exibidas automaticamente pelo navegador.
+  if (payload.notification) return;
+
   const title = data.title || 'Novidade no Triohnte';
   const options = {
     body: data.body || 'Há uma nova atividade na comunidade.',
