@@ -70,7 +70,7 @@ async function readDatabase(path, accessToken) {
   if (!response.ok) throw new Error("Falha ao consultar os dados do Firebase.");
   return response.json();
 }
-async function sendPush(token, title, body, link, accessToken) {
+async function sendPush(token, title, body, link, accessToken, badgeCount) {
   return fetch("https://fcm.googleapis.com/v1/projects/" + PROJECT_ID + "/messages:send", {
     method: "POST",
     headers: { authorization: "Bearer " + accessToken, "content-type": "application/json" },
@@ -78,6 +78,13 @@ async function sendPush(token, title, body, link, accessToken) {
       message: {
         token,
         notification: { title, body },
+        data: {
+          badgeCount: String(badgeCount),
+          title,
+          body,
+          url: link,
+          tag: "triohnte-forum"
+        },
         webpush: {
           fcm_options: { link },
           notification: { icon: "https://awgabry.github.io/Triohnte/mu.png", badge: "https://awgabry.github.io/Triohnte/mu.png" }
@@ -127,6 +134,7 @@ export default {
       const body = String(rawBody).replace(/\s+/g, " ").slice(0, 150) || "Há conteúdo novo no Triohnte.";
       const link = source === "forum" ? "https://awgabry.github.io/Triohnte/#forum" : "https://awgabry.github.io/Triohnte/index.html";
       const tokenGroups = await readDatabase("fcmTokens", accessToken) || {};
+      const allPosts = source === "forum" ? (await readDatabase("posts", accessToken) || {}) : {};
       const targets = [];
       for (const [userId, records] of Object.entries(tokenGroups)) {
         if (!records || typeof records !== "object") continue;
@@ -139,7 +147,14 @@ export default {
 
       let sent = 0;
       await Promise.all(targets.map(async target => {
-        const response = await sendPush(target.token, title, body, link, accessToken);
+        let badgeCount = 0;
+        if (source === "forum") {
+          const reads = await readDatabase("leituras_novidades/" + target.userId, accessToken) || {};
+          badgeCount = Object.entries(allPosts).filter(([postId, post]) =>
+            post && !reads["forum_" + postId] && post.uid !== target.userId
+          ).length;
+        }
+        const response = await sendPush(target.token, title, body, link, accessToken, badgeCount);
         if (response.ok) sent++;
         else if (response.status === 404 || response.status === 400) {
           // Tokens expirados serão ignorados; o utilizador pode voltar a ativar no dispositivo.
