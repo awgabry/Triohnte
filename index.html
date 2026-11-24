@@ -1027,6 +1027,12 @@
                 <label for="acc-cpf">CPF</label>
                 <input id="acc-cpf" type="text" placeholder="000.000.000-00">
             </div>
+            <div class="form-group" style="margin-top:24px;padding:18px;border:1px solid #3a2b18;background:#080706;">
+                <label style="color:#e3c38f;">Aplicativo Triohnte</label>
+                <p style="color:#a39b8f;font-size:.95rem;margin:4px 0 12px;">A versão APK para Android está em preparação. Enquanto isso, você pode instalar a versão web no seu dispositivo.</p>
+                <button type="button" id="installAppBtn" class="forum-btn" style="width:100%;align-self:stretch;">Instalar aplicativo</button>
+                <small id="installAppStatus" style="display:block;color:#8c8579;margin-top:10px;">Instalação disponível em dispositivos e navegadores compatíveis.</small>
+            </div>
             <div class="modal-actions">
                 <button id="closeModalBtn" class="btn-cancel">Cancelar</button>
                 <button id="saveAccountBtn" class="forum-btn">Salvar</button>
@@ -2093,6 +2099,45 @@
                 renderPosts(ultimoSnapshotPosts);
             });
         });
+    </script>
+
+    <!-- Instalação do Triohnte pela opção Aplicativo na Conta. -->
+    <script>
+      let triohnteInstallPrompt = null;
+      window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        triohnteInstallPrompt = event;
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const installButton = document.getElementById('installAppBtn');
+        const installStatus = document.getElementById('installAppStatus');
+        if (!installButton || !installStatus) return;
+
+        installButton.addEventListener('click', async () => {
+          if (triohnteInstallPrompt) {
+            triohnteInstallPrompt.prompt();
+            const choice = await triohnteInstallPrompt.userChoice;
+            installStatus.textContent = choice.outcome === 'accepted'
+              ? 'Instalação iniciada. Siga as instruções do Android.'
+              : 'Instalação cancelada. Você pode tentar novamente quando quiser.';
+            triohnteInstallPrompt = null;
+            return;
+          }
+
+          if (window.matchMedia('(display-mode: standalone)').matches) {
+            installStatus.textContent = 'O Triohnte já está instalado neste dispositivo.';
+          } else {
+            installStatus.textContent = 'No Android, abra o Triohnte pelo Chrome, toque no menu ⋮ e escolha “Instalar app” ou “Adicionar à tela inicial”.';
+          }
+        });
+
+        window.addEventListener('appinstalled', () => {
+          installStatus.textContent = 'Triohnte instalado com sucesso neste dispositivo.';
+          installButton.textContent = 'Aplicativo instalado';
+          installButton.disabled = true;
+        });
+      });
     </script>
 
     <!-- Registo PWA: falhas do Service Worker não impedem a página de abrir. -->
