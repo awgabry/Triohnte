@@ -153,12 +153,65 @@ canvas {
     line-height: 1.4;
     text-align: justify;
 }
+
+/* Painel lateral de identificação do continente */
+#continentPanel {
+    position: fixed;
+    left: clamp(16px, 2.2vw, 34px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(170px, 17vw, 250px);
+    max-height: 72vh;
+    box-sizing: border-box;
+    padding: 18px 16px;
+    color: #d8c9a2;
+    background: linear-gradient(145deg, rgba(12, 12, 12, .94), rgba(4, 4, 4, .82));
+    border-left: 2px solid #d4af37;
+    box-shadow: 0 0 18px rgba(212, 175, 55, .08);
+    z-index: 5;
+}
+#continentPanel h1 {
+    margin: 0;
+    color: #d4af37;
+    font-family: 'Cinzel', 'Times New Roman', serif;
+    font-size: clamp(18px, 1.7vw, 25px);
+    font-weight: 600;
+    letter-spacing: 2px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+#continentDetails {
+    min-height: 260px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(212, 175, 55, .28);
+}
+@media (max-width: 900px) {
+    #continentPanel {
+        left: 10px;
+        top: 10px;
+        transform: none;
+        width: 145px;
+        max-height: 28vh;
+        padding: 10px;
+        background: rgba(5, 5, 5, .88);
+    }
+    #continentPanel h1 { font-size: 15px; letter-spacing: 1px; }
+    #continentDetails { min-height: 9vh; margin-top: 8px; padding-top: 7px; }
+}
+
 </style>
 
 <link rel="stylesheet" href="./christmas.css">
 </head>
 
 <body>
+
+
+<aside id="continentPanel" aria-label="Informações do continente">
+    <h1>TRIOHNTE</h1>
+    <div id="continentDetails" aria-label="Espaço reservado para informações do continente"></div>
+</aside>
 
 <div id="viewport">
     <button class="map-arrow" id="previousMap" type="button" aria-label="Mapa anterior" title="Mapa anterior">‹</button>
