@@ -35,8 +35,10 @@ messaging.onBackgroundMessage(payload => {
   const title = data.title || 'Novidade no Triohnte';
   const options = {
     body: data.body || 'Há uma nova atividade na comunidade.',
-    icon: './pot.png',
-    badge: './pot.png',
+    icon: './pot-icon.svg',
+  './pot-icon.svg',
+    badge: './pot-icon.svg',
+  './pot-icon.svg',
     data: { url: data.url || './index.html' },
     tag: data.tag || 'triohnte-novidade'
   };
@@ -62,12 +64,13 @@ self.addEventListener('notificationclick', event => {
   })());
 });
 
-const CACHE_NAME = 'triohnte-cache-v6';
+const CACHE_NAME = 'triohnte-cache-v7';
 const CACHE_PREFIX = 'triohnte-cache-';
 const APP_SHELL = [
   './index.html',
   './manifest.webmanifest',
   './pot.png',
+  './pot-icon.svg',
   './mu.png',
   './triwo.png'
 ];
