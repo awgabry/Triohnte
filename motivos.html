@@ -8,14 +8,19 @@
     <link rel="icon" type="image/png" href="mu.png">
     
     <style>
-        body {
+                :root {
+            --gold-gradient: linear-gradient(to bottom, #c59d5f 0%, #e3c38f 40%, #f3e1b5 48%, #7a542a 52%, #b88640 60%, #8a5d2e 100%);
+            --gold-shadow: drop-shadow(0 2px 2px rgba(0,0,0,0.8));
+        }
+
+body {
             background-color: black;
             color: white;
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start;
+            align-items: stretch;
             min-height: 100vh;
             margin: 0;
             padding: 40px 20px;
@@ -34,13 +39,15 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             margin-bottom: 50px;
-            text-align: center;
+            width: 100%;
+            text-align: left;
             font-weight: bold;
-            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            background: var(--gold-gradient);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            color: #bf953f;
+            color: transparent;
+            filter: var(--gold-shadow);
         }
 
         /* Container da lista de conflitos */
@@ -70,7 +77,7 @@
             
             /* Formato geométrico idêntico ao enviado */
             clip-path: polygon(0% 15%, 55% 50%, 0% 85%, 25% 50%, 0% 15%, 100% 50%);
-            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            background: var(--gold-gradient);
         }
 
         /* Título que fica à frente de cada seta */
@@ -78,11 +85,12 @@
             font-size: 1.6rem;
             font-weight: bold;
             margin: 0;
-            background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            background: var(--gold-gradient);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            color: #bf953f;
+            color: transparent;
+            filter: var(--gold-shadow);
             transition: opacity 0.2s;
         }
 
