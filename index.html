@@ -521,6 +521,30 @@
             font-size: 0.85rem;
             cursor: pointer;
         }
+
+        .download-app-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            margin-left: 2px;
+            color: #c59d5f;
+            background: transparent;
+            border: 1px solid #5a4326;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: color .2s ease, border-color .2s ease, background .2s ease;
+            flex-shrink: 0;
+        }
+        .download-app-icon:hover {
+            color: #f3e1b5;
+            border-color: #c59d5f;
+            background: rgba(197,157,95,.10);
+        }
+        .download-app-icon svg { display: block; }
+
         .logout-link:hover { text-shadow: 0 0 5px #ff4a4a; }
         .hidden { display: none !important; }
 
@@ -853,6 +877,11 @@
                 <span id="user-greeting">Olá, ...</span>
                 <span id="account-btn" class="account-link">[Conta]</span>
                 <span id="logout-btn" class="logout-link">[Sair]</span>
+                <button type="button" id="downloadAppIconBtn" class="download-app-icon" aria-label="Instalar aplicativo Triohnte" title="Instalar aplicativo Triohnte">
+                    <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 19h14"></path>
+                    </svg>
+                </button>
                 <button type="button" id="notificationsBtn" class="notification-trigger" aria-label="Abrir novidades">Novidades <span id="notificationsBadge" class="notification-badge">0</span></button>
             </div>
         </div>
@@ -1026,12 +1055,6 @@
             <div class="form-group">
                 <label for="acc-cpf">CPF</label>
                 <input id="acc-cpf" type="text" placeholder="000.000.000-00">
-            </div>
-            <div class="form-group" style="margin-top:24px;padding:18px;border:1px solid #3a2b18;background:#080706;">
-                <label style="color:#e3c38f;">Aplicativo Triohnte</label>
-                <p style="color:#a39b8f;font-size:.95rem;margin:4px 0 12px;">A versão APK para Android está em preparação. Enquanto isso, você pode instalar a versão web no seu dispositivo.</p>
-                <button type="button" id="installAppBtn" class="forum-btn" style="width:100%;align-self:stretch;">Instalar aplicativo</button>
-                <small id="installAppStatus" style="display:block;color:#8c8579;margin-top:10px;">Instalação disponível em dispositivos e navegadores compatíveis.</small>
             </div>
             <div class="modal-actions">
                 <button id="closeModalBtn" class="btn-cancel">Cancelar</button>
@@ -2101,7 +2124,7 @@
         });
     </script>
 
-    <!-- Instalação do Triohnte pela opção Aplicativo na Conta. -->
+    <!-- Instalação do Triohnte pelo ícone ao lado de Sair. -->
     <script>
       let triohnteInstallPrompt = null;
       window.addEventListener('beforeinstallprompt', (event) => {
@@ -2110,32 +2133,26 @@
       });
 
       document.addEventListener('DOMContentLoaded', () => {
-        const installButton = document.getElementById('installAppBtn');
-        const installStatus = document.getElementById('installAppStatus');
-        if (!installButton || !installStatus) return;
+        const installButton = document.getElementById('downloadAppIconBtn');
+        if (!installButton) return;
 
         installButton.addEventListener('click', async () => {
+          if (window.matchMedia('(display-mode: standalone)').matches) {
+            alert('O Triohnte já está instalado neste dispositivo.');
+            return;
+          }
+
           if (triohnteInstallPrompt) {
             triohnteInstallPrompt.prompt();
             const choice = await triohnteInstallPrompt.userChoice;
-            installStatus.textContent = choice.outcome === 'accepted'
-              ? 'Instalação iniciada. Siga as instruções do Android.'
-              : 'Instalação cancelada. Você pode tentar novamente quando quiser.';
+            if (choice.outcome !== 'accepted') {
+              alert('A instalação foi cancelada. Você pode tentar novamente quando quiser.');
+            }
             triohnteInstallPrompt = null;
             return;
           }
 
-          if (window.matchMedia('(display-mode: standalone)').matches) {
-            installStatus.textContent = 'O Triohnte já está instalado neste dispositivo.';
-          } else {
-            installStatus.textContent = 'No Android, abra o Triohnte pelo Chrome, toque no menu ⋮ e escolha “Instalar app” ou “Adicionar à tela inicial”.';
-          }
-        });
-
-        window.addEventListener('appinstalled', () => {
-          installStatus.textContent = 'Triohnte instalado com sucesso neste dispositivo.';
-          installButton.textContent = 'Aplicativo instalado';
-          installButton.disabled = true;
+          alert('Para instalar o Triohnte, abra este site no Chrome, toque no menu ⋮ e escolha “Instalar app” ou “Adicionar à tela inicial”.');
         });
       });
     </script>
