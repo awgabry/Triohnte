@@ -5,15 +5,15 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#050505",
+  "background_color": "#ffffff",
   "theme_color": "#1a1a1a",
   "lang": "pt-BR",
   "dir": "ltr",
   "icons": [
     {
-      "src": "./pot.png",
-      "sizes": "1105x1469",
-      "type": "image/png",
+      "src": "./pot-icon.svg?v=2",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "any"
     }
   ]
