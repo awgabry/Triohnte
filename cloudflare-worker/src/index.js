@@ -134,7 +134,7 @@ export default {
       const body = String(rawBody).replace(/\s+/g, " ").slice(0, 150) || "Há conteúdo novo no Triohnte.";
       const link = source === "forum" ? "https://awgabry.github.io/Triohnte/#forum" : "https://awgabry.github.io/Triohnte/index.html";
       const tokenGroups = await readDatabase("fcmTokens", accessToken) || {};
-      const allPosts = source === "forum" ? (await readDatabase("posts", accessToken) || {}) : {};
+      const allPosts = await readDatabase("posts", accessToken) || {};
       const targets = [];
       for (const [userId, records] of Object.entries(tokenGroups)) {
         if (!records || typeof records !== "object") continue;
@@ -148,12 +148,10 @@ export default {
       let sent = 0;
       await Promise.all(targets.map(async target => {
         let badgeCount = 0;
-        if (source === "forum") {
-          const reads = await readDatabase("leituras_novidades/" + target.userId, accessToken) || {};
-          badgeCount = Object.entries(allPosts).filter(([postId, post]) =>
-            post && !reads["forum_" + postId] && post.uid !== target.userId
-          ).length;
-        }
+        const reads = await readDatabase("leituras_novidades/" + target.userId, accessToken) || {};
+        badgeCount = Object.entries(allPosts).filter(([postId, post]) =>
+          post && !reads["forum_" + postId] && post.uid !== target.userId
+        ).length;
         const response = await sendPush(target.token, title, body, link, accessToken, badgeCount);
         if (response.ok) sent++;
         else if (response.status === 404 || response.status === 400) {
