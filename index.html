@@ -72,9 +72,7 @@
             height: 300px; 
             max-width: 100%;
             display: block;
-            margin: 0 auto;
-            animation: flicker 4s infinite alternate;
-        }
+            margin: 0 auto;\n            }
 
         body {
             background-color: #050505;
@@ -125,14 +123,7 @@
         }
 
         .borda-esquerda { left: 10px; }
-        .borda-direita { right: 10px; transform: scaleX(-1); }
-
-        @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-            20%, 24%, 55% { opacity: 0.8; }
-        }
-
-        nav { margin-top: 50px; }
+        .borda-direita { right: 10px; transform: scaleX(-1); }\n        nav { margin-top: 50px; }
         nav ul { list-style: none; display: flex; gap: 40px; }
         nav a {
             text-decoration: none;
