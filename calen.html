@@ -69,11 +69,29 @@
         #d2 {
             width: 580px;
             height: 580px;
-            background-image: url('detalhes/pedra.jpg'), url('detalhes/disco2.png');
-            background-blend-mode: overlay;
+            background-image: url('detalhes/disco2.png');
             background-size: cover;
             background-position: center;
             z-index: 3;
+            overflow: hidden;
+        }
+
+        /* Textura pétrea aplicada diretamente ao disco, sem arquivo externo. */
+        #d2::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse at 22% 28%, rgba(225, 215, 190, 0.30) 0 1.5%, transparent 13%),
+                radial-gradient(ellipse at 72% 64%, rgba(12, 10, 8, 0.48) 0 2%, transparent 17%),
+                radial-gradient(ellipse at 48% 82%, rgba(205, 194, 170, 0.22) 0 1%, transparent 12%),
+                repeating-linear-gradient(17deg, rgba(235, 225, 205, 0.08) 0 2px, rgba(10, 9, 8, 0.13) 3px 5px, transparent 6px 13px),
+                repeating-linear-gradient(103deg, rgba(8, 7, 6, 0.16) 0 1px, transparent 2px 9px);
+            background-blend-mode: screen, multiply, screen, overlay, multiply;
+            opacity: 0.78;
+            box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.72);
         }
 
         #d3 {
