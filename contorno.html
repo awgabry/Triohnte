@@ -12,6 +12,18 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+:root {
+    --gold-gradient: linear-gradient(
+        to bottom,
+        #c59d5f 0%,
+        #e3c38f 40%,
+        #f3e1b5 48%,
+        #7a542a 52%,
+        #b88640 60%,
+        #8a5d2e 100%
+    );
+}
+
 #viewport {
     width: 100vw;
     height: 100vh;
@@ -35,7 +47,8 @@ body {
     align-items: center;
     padding: 14px;
     background: #000;
-    border: 2px solid #d4af37;
+    border: 2px solid transparent;
+    border-image: var(--gold-gradient) 1;
     box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.22), 0 0 24px rgba(212, 175, 55, 0.16);
 }
 
@@ -53,9 +66,9 @@ canvas {
     height: clamp(48px, 7vw, 72px);
     display: grid;
     place-items: center;
-    color: #d4af37;
+    color: #e3c38f;
     background: #080808;
-    border: 1px solid #d4af37;
+    border: 1px solid #b88640;
     border-radius: 4px;
     font-size: clamp(25px, 3vw, 38px);
     line-height: 1;
@@ -64,7 +77,7 @@ canvas {
 }
 .map-arrow:hover {
     color: #000;
-    background: #d4af37;
+    background: var(--gold-gradient);
     box-shadow: 0 0 16px rgba(212, 175, 55, .35);
 }
 .map-arrow:focus-visible, #musicToggle:focus-visible {
@@ -78,14 +91,15 @@ canvas {
     bottom: 20px;
     z-index: 20;
     padding: 10px 15px;
-    color: #d4af37;
-    background: rgba(5, 5, 5, .94);
-    border: 1px solid #d4af37;
+    color: #160f06;
+    background: var(--gold-gradient);
+    border: 1px solid #e3c38f;
+    font-weight: 700;
     border-radius: 4px;
     font: 600 13px 'Segoe UI', Tahoma, sans-serif;
     cursor: pointer;
 }
-#musicToggle:hover { background: #191407; }
+#musicToggle:hover { filter: brightness(1.12); box-shadow: 0 0 14px rgba(212, 175, 55, .28); }
 
 @media (max-width: 600px) {
     #viewport { gap: 7px; padding: 8px; }
@@ -167,13 +181,18 @@ canvas {
     padding: 18px 16px;
     color: #d8c9a2;
     background: linear-gradient(145deg, rgba(12, 12, 12, .94), rgba(4, 4, 4, .82));
-    border-left: 2px solid #d4af37;
+    border-left: 3px solid transparent;
+    border-image: var(--gold-gradient) 1;
     box-shadow: 0 0 18px rgba(212, 175, 55, .08);
     z-index: 5;
 }
 #continentPanel h1 {
     margin: 0;
-    color: #d4af37;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
     font-family: 'Cinzel', 'Times New Roman', serif;
     font-size: clamp(18px, 1.7vw, 25px);
     font-weight: 600;
