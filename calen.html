@@ -26,10 +26,19 @@
         }
 
         .viewport {
-            flex: 1;
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .mecanismo {
+            pointer-events: auto;
         }
 
         .mecanismo {
