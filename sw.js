@@ -35,10 +35,8 @@ messaging.onBackgroundMessage(payload => {
   const title = data.title || 'Novidade no Triohnte';
   const options = {
     body: data.body || 'Há uma nova atividade na comunidade.',
-    icon: 
-  
-    badge: 
-  
+    icon: './pot.png?v=3',
+    badge: './pot.png?v=3',
     data: { url: data.url || './index.html' },
     tag: data.tag || 'triohnte-novidade'
   };
