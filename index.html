@@ -1981,11 +1981,15 @@
                 };
             }
 
+            // Evita que renderizações assíncronas concorrentes desenhem os mesmos posts mais de uma vez.
+            let versaoRenderizacaoForum = 0;
+
             const renderPosts = async (postsObj) => {
                 if (!container) return;
-                container.innerHTML = '';
+                const minhaVersao = ++versaoRenderizacaoForum;
 
                 if (!postsObj) {
+                    container.innerHTML = '';
                     if (formWrapper) formWrapper.classList.remove('has-posts');
                     usuariosDoForum = {};
                     return;
@@ -1993,6 +1997,10 @@
 
                 if (formWrapper) formWrapper.classList.add('has-posts');
                 await carregarUsuariosDosPosts(postsObj);
+
+                // Descarta qualquer renderização ultrapassada por uma atualização mais recente.
+                if (minhaVersao !== versaoRenderizacaoForum) return;
+                container.innerHTML = '';
 
                 const postsArray = Object.keys(postsObj)
                     .map(key => ({ id: key, ...postsObj[key] }))
