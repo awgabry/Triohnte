@@ -287,6 +287,70 @@
 
 <script>
 
+// EFEITO SONORO: pedra raspando contra pedra durante a rotação
+let scrapeAudioContext = null;
+let scrapeNoiseBuffer = null;
+let scrapeNodes = [];
+
+function playStoneScrape() {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    if (!scrapeAudioContext) {
+        scrapeAudioContext = new AudioContextClass();
+    }
+
+    const ctx = scrapeAudioContext;
+    if (ctx.state === "suspended") ctx.resume().catch(() => {});
+
+    // Interrompe o efeito anterior caso outra era seja selecionada rapidamente.
+    scrapeNodes.forEach(node => {
+        try { node.stop(); } catch (e) {}
+        try { node.disconnect(); } catch (e) {}
+    });
+    scrapeNodes = [];
+
+    if (!scrapeNoiseBuffer) {
+        const duration = 1.9;
+        const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * duration), ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < data.length; i++) {
+            data[i] = (Math.random() * 2 - 1) * (0.65 + Math.random() * 0.35);
+        }
+        scrapeNoiseBuffer = buffer;
+    }
+
+    const now = ctx.currentTime;
+    const noise = ctx.createBufferSource();
+    noise.buffer = scrapeNoiseBuffer;
+
+    const highpass = ctx.createBiquadFilter();
+    highpass.type = "highpass";
+    highpass.frequency.setValueAtTime(90, now);
+
+    const grit = ctx.createBiquadFilter();
+    grit.type = "bandpass";
+    grit.Q.value = 0.8;
+    grit.frequency.setValueAtTime(780, now);
+    grit.frequency.exponentialRampToValueAtTime(190, now + 1.75);
+
+    const volume = ctx.createGain();
+    volume.gain.setValueAtTime(0.001, now);
+    volume.gain.linearRampToValueAtTime(0.22, now + 0.12);
+    volume.gain.setValueAtTime(0.16, now + 0.42);
+    volume.gain.linearRampToValueAtTime(0.10, now + 1.35);
+    volume.gain.exponentialRampToValueAtTime(0.001, now + 1.85);
+
+    noise.connect(highpass);
+    highpass.connect(grit);
+    grit.connect(volume);
+    volume.connect(ctx.destination);
+    noise.start(now);
+    noise.stop(now + 1.9);
+
+    scrapeNodes = [noise];
+}
+
 const eras = [
     { 
         nome: "I Era Imperial", 
@@ -359,7 +423,8 @@ eras.forEach(era => {
     card.onclick = (e) => {
         e.stopPropagation();
         
-        // Gira o mecanismo
+        // Gira o mecanismo com som de pedra raspando contra pedra
+        playStoneScrape();
         discoPai.style.transform = `translate(-50%, -50%) rotate(${-era.ang}deg)`;
 
         // Atualiza Painel Direito (Informações)
