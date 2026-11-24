@@ -261,16 +261,16 @@
 /* Painel de Curiosidades (Esquerda) */
 .painel-curiosidades {
     position: fixed;
-    right: 320px;
+    left: 0;
     top: 0;
     width: 280px;
     height: 100vh;
-    background: linear-gradient(to left, #080808, transparent);
-    border-left: 2px solid transparent;
+    background: linear-gradient(to right, #080808, transparent);
+    border-right: 2px solid transparent;
     border-image: var(--gold-gradient) 1;
     padding: 40px 20px;
     box-sizing: border-box;
-    transform: translateX(100%);
+    transform: translateX(-100%);
     visibility: hidden;
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.8s;
     z-index: 90;
