@@ -11,9 +11,9 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "mu-natal.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "./pot.png",
+      "sizes": "1105x1469",
+      "type": "image/png",
       "purpose": "any"
     }
   ]
