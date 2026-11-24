@@ -62,7 +62,7 @@ self.addEventListener('notificationclick', event => {
   })());
 });
 
-const CACHE_NAME = 'triohnte-cache-v4';
+const CACHE_NAME = 'triohnte-cache-v5';
 const CACHE_PREFIX = 'triohnte-cache-';
 const APP_SHELL = [
   './index.html',
