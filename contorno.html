@@ -156,6 +156,7 @@ canvas {
 
 /* Painel lateral de identificação do continente */
 #continentPanel {
+    display: none;
     position: fixed;
     left: clamp(16px, 2.2vw, 34px);
     top: 50%;
@@ -209,8 +210,8 @@ canvas {
 
 
 <aside id="continentPanel" aria-label="Informações do continente">
-    <h1>TRIOHNTE</h1>
-    <div id="continentDetails" aria-label="Espaço reservado para informações do continente"></div>
+    <h1 id="continentTitle"></h1>
+    <div id="continentDetails" aria-label="Espaço reservado para informações e curiosidades do mapa"></div>
 </aside>
 
 <div id="viewport">
@@ -239,8 +240,8 @@ let MAP_HEIGHT = 1311;
 
 // Mapas já presentes no repositório. As setas percorrem esta sequência.
 const MAPS = [
-    { nome: "Mapa territorial", imagem: "dertyh.png" },
-    { nome: "Mapa 2", imagem: "dert.png" }
+    { nome: "TRIOHNTE", imagem: "dertyh.png", curiosidades: [] },
+    { nome: "Mapa 2", imagem: "dert.png", curiosidades: [] }
 ];
 let currentMapIndex = 0;
 
@@ -327,6 +328,21 @@ const mapFrame = document.querySelector('.map-frame');
 const previousMapButton = document.getElementById('previousMap');
 const nextMapButton = document.getElementById('nextMap');
 const musicToggle = document.getElementById('musicToggle');
+const continentPanel = document.getElementById('continentPanel');
+const continentTitle = document.getElementById('continentTitle');
+const continentDetails = document.getElementById('continentDetails');
+
+function updateContinentPanel() {
+    const selectedMap = MAPS[currentMapIndex];
+    continentTitle.textContent = selectedMap.nome;
+    continentDetails.replaceChildren();
+    (selectedMap.curiosidades || []).forEach((curiosidade) => {
+        const item = document.createElement('p');
+        item.textContent = curiosidade;
+        continentDetails.appendChild(item);
+    });
+    continentPanel.style.display = 'block';
+}
 
 const infoCard = document.getElementById('infoCard');
 const cardTitle = document.getElementById('cardTitle');
@@ -367,6 +383,7 @@ function init(){
 
     resizeCanvasDisplay();
     drawBase();
+    updateContinentPanel();
     colorData = ctx.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT).data;
     activeColor = null;
     infoCard.style.opacity = 0;
