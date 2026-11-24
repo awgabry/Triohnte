@@ -1,8 +1,10 @@
 (() => {
   const existingAudio = document.getElementById('audio-tema');
   const audio = existingAudio || new Audio();
+
   audio.loop = true;
   audio.preload = 'auto';
+  audio.autoplay = true;
   audio.volume = 0.24;
 
   if (existingAudio) {
@@ -32,16 +34,33 @@
   }
 
   const setLabel = (playing) => {
-    if (!button) return;
-    button.textContent = playing ? '♫ PAUSAR MÚSICA' : '♫ ATIVAR MÚSICA';
-    button.setAttribute('aria-label', playing ? 'Pausar música de fundo' : 'Ativar música de fundo');
+    if (button) {
+      button.textContent = playing ? '♫ PAUSAR MÚSICA' : '♫ ATIVAR MÚSICA';
+      button.setAttribute('aria-label', playing ? 'Pausar música de fundo' : 'Ativar música de fundo');
+    }
+    const status = document.getElementById('music-status');
+    if (status) status.textContent = playing ? '♫ MUSIC: ON' : '♫ MUSIC: OFF';
+  };
+
+  const startMusic = async () => {
+    if (!audio.paused) return true;
+    try {
+      await audio.play();
+      setLabel(true);
+      document.removeEventListener('pointerdown', startMusic);
+      document.removeEventListener('keydown', startMusic);
+      document.removeEventListener('touchstart', startMusic);
+      return true;
+    } catch (error) {
+      setLabel(false);
+      return false;
+    }
   };
 
   if (button) {
     button.addEventListener('click', async () => {
       if (audio.paused) {
-        try { await audio.play(); setLabel(true); }
-        catch (error) { setLabel(false); }
+        await startMusic();
       } else {
         audio.pause();
         setLabel(false);
@@ -49,5 +68,10 @@
     });
   }
 
-  audio.play().then(() => setLabel(true)).catch(() => setLabel(false));
+  audio.play().then(() => setLabel(true)).catch(() => {
+    setLabel(false);
+    document.addEventListener('pointerdown', startMusic);
+    document.addEventListener('keydown', startMusic);
+    document.addEventListener('touchstart', startMusic);
+  });
 })();
