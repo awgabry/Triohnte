@@ -1238,7 +1238,9 @@
 
         // Novidades públicas: /novidades_publicas/{id}; leituras individuais: /leituras_novidades/{uid}/{id}
         function atualizarContadorNovidades() {
-            const pendentes = Object.keys(cacheNovidades).filter(id => !cacheLeituras[id]).length;
+            const pendentes = Object.entries(cachePostsForum || {}).filter(([id, post]) =>
+                post && !cacheLeituras['forum_' + id] && (!usuarioAtual || post.uid !== usuarioAtual.uid)
+            ).length;
 
             // Atualiza também o emblema do ícone do Triohnte instalado pelo Chrome (PWA).
             // A API só produz efeito quando o navegador/SO oferece suporte a emblemas de aplicações.
