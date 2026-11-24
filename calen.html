@@ -9,7 +9,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
 
     <style>
-        :root { --ouro: #b38728; --bg: #050505; }
+        :root {
+            --ouro: #b38728;
+            --bg: #050505;
+            --gold-gradient: linear-gradient(to bottom, #c59d5f 0%, #e3c38f 40%, #f3e1b5 48%, #7a542a 52%, #b88640 60%, #8a5d2e 100%);
+        }
 
         body {
             background: var(--bg);
@@ -126,7 +130,11 @@
             width: 40px;
             height: 60px;
             background: rgba(0, 0, 0, 0.9);
-            border: 1px solid var(--ouro);
+            border: 1px solid transparent;
+            background:
+                linear-gradient(rgba(8, 8, 8, 0.96), rgba(8, 8, 8, 0.96)) padding-box,
+                var(--gold-gradient) border-box;
+            box-shadow: 0 0 8px rgba(179, 135, 40, 0.28), inset 0 0 8px rgba(179, 135, 40, 0.12);
             left: 50%; top: 50%;
             cursor: pointer;
             display: flex;
@@ -145,7 +153,11 @@
 
         .card-no-disco span {
             font-size: 7px;
-            color: var(--ouro);
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
             text-align: center;
             margin-top: 2px;
             font-weight: bold;
@@ -155,7 +167,8 @@
         .painel {
             width: 320px;
             background: #080808;
-            border-left: 2px solid var(--ouro);
+            border-left: 2px solid transparent;
+            border-image: var(--gold-gradient) 1;
             transform: translateX(100%);
             transition: 0.6s ease;
             z-index: 100;
@@ -169,7 +182,8 @@
             height: 180px;
             overflow: hidden;
             position: relative;
-            border-bottom: 1px solid var(--ouro);
+            border-bottom: 1px solid transparent;
+            border-image: var(--gold-gradient) 1;
         }
 /* --- CSS CORRIGIDO PARA POSICIONAMENTO DA IMAGEM --- */
         .banner img {
@@ -197,7 +211,11 @@
         }
 
         .info h2 {
-            color: #fcf6ba;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
             margin: 15px 0 10px 0;
             font-size: 1.2em;
             text-transform: uppercase;
@@ -229,7 +247,8 @@
     width: 280px;
     height: 100vh;
     background: linear-gradient(to right, #080808, transparent);
-    border-right: 1px solid rgba(179, 135, 40, 0.3);
+    border-right: 2px solid transparent;
+    border-image: var(--gold-gradient) 1;
     padding: 40px 20px;
     box-sizing: border-box;
     transform: translateX(-100%); /* Escondido por padrão */
@@ -242,10 +261,15 @@
 }
 
 .painel-curiosidades h3 {
-    color: var(--ouro);
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
     font-size: 14px;
     letter-spacing: 2px;
-    border-bottom: 1px solid var(--ouro);
+    border-bottom: 1px solid transparent;
+    border-image: var(--gold-gradient) 1;
     padding-bottom: 5px;
     margin-bottom: 20px;
 }
@@ -268,8 +292,11 @@
     gap: 10px;
     background: rgba(0,0,0,0.6);
     padding: 8px 15px;
-    border: 1px solid var(--ouro);
+    border: 1px solid transparent;
     border-radius: 20px;
+    background:
+        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)) padding-box,
+        var(--gold-gradient) border-box;
     cursor: pointer;
     transition: 0.3s;
 }
