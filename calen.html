@@ -174,12 +174,17 @@
 
         /* PAINEL LATERAL */
         .painel {
+            position: fixed;
+            top: 0;
+            right: 0;
             width: 320px;
+            height: 100vh;
+            box-sizing: border-box;
             background: #080808;
             border-left: 2px solid transparent;
             border-image: var(--gold-gradient) 1;
             transform: translateX(100%);
-            transition: 0.6s ease;
+            transition: transform 0.6s ease;
             z-index: 100;
         }
 
